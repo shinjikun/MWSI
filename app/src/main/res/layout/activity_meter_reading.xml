@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.indra.rover.mwsi.ui.activities.MeterReadingActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+
+        <include layout="@layout/toolbar_layout"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
+            />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_meter_reading"
+        android:layout_marginTop="55dp"
+        android:layout_marginBottom="70dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        />
+
+    <include layout="@layout/pnl_meter_reading_ctr"
+        android:layout_gravity="bottom|center"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"/>
+
+
+</android.support.design.widget.CoordinatorLayout>

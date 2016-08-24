@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomDetailView">
+        <attr name="textlabel" format="string" localization="suggested" />
+        <attr name="textcontent" format="string" localization="suggested" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.toolbar.MainActivity">
+    <item android:id="@+id/action_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/action_search"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="1"
+        android:menuCategory="secondary"/>
+    <item
+        android:id="@+id/action_customer"
+        android:orderInCategory="100"
+        android:title="@string/action_customer"
+        app:showAsAction="never"
+        android:menuCategory="secondary"/>
+
+    <item
+        android:id="@+id/action_oc"
+        android:orderInCategory="100"
+        android:title="@string/action_oc"
+        app:showAsAction="never"
+        android:menuCategory="secondary"/>
+
+    <item
+        android:id="@+id/action_remarks"
+        android:orderInCategory="100"
+        android:title="@string/action_remarks"
+        app:showAsAction="never"
+        android:menuCategory="secondary"/>
+
+    <item
+        android:id="@+id/action_delivery"
+        android:orderInCategory="100"
+        android:title="@string/action_delivery"
+        app:showAsAction="never"
+        android:menuCategory="secondary"/>
+</menu>

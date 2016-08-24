@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fadeScrollbars="false"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.activities.MeterReadingActivity"
+    tools:showIn="@layout/activity_meter_reading"
+    android:scrollbarSize="8dp"
+    android:scrollbarThumbVertical="@drawable/scrollbar"
+    android:id="@+id/scroller"
+   >
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+        <include
+            android:id="@+id/pnl_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            layout="@layout/pnl_meter_reading_info"
+            />
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/custom_tab_layout_height"
+            app:tabMode="scrollable"
+            app:tabGravity="center"
+            style="@style/AppTabLayout"
+            app:tabTextAppearance="@style/AppTabTextAppearance"
+            />
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            />
+
+    </LinearLayout>
+</ScrollView>

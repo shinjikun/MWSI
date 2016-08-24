@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/material_grey_50">
+
+    <ImageButton
+        android:id="@+id/dlg_btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_close"
+        android:background="@android:color/transparent"
+        android:layout_marginRight="@dimen/layout_margins"
+        android:layout_marginEnd="@dimen/layout_margins"/>
+
+    <TextView
+        android:id="@+id/dlg_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/layout_margins"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Delete your cover letter"
+        android:layout_below="@+id/dlg_btn_close"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/dlg_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/layout_margins"
+        android:layout_marginRight="@dimen/layout_margins"
+        android:layout_marginStart="@dimen/layout_margins"
+        android:layout_marginEnd="@dimen/layout_margins"
+        android:layout_marginBottom="@dimen/layout_margins"
+        android:padding="@dimen/layout_margins"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Are you sure you want to delete your cover letter?"
+        android:layout_below="@+id/dlg_title"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/panel_rounded_border"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="OK"
+        android:id="@+id/dlg_btn_yes"
+        android:textAllCaps="false"
+        android:background="@drawable/btn_orange_rounded"
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/dlg_body"
+        android:layout_centerHorizontal="true"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_margins"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/dlg_btn_yes" />
+</RelativeLayout>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.activities.MainActivity"
+    tools:showIn="@layout/activity_main"
+    android:background="@drawable/bg_dot_pattern"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/str_deviceID"
+        android:id="@+id/txtDeviceID"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:textStyle="bold"/>
+
+
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:rowCount="2"
+        android:orientation="horizontal"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/txtDeviceID">
+        <Button
+            android:layout_width="133dp"
+            android:layout_height="133dp"
+            android:id="@+id/btnMeterReading"
+            android:drawableTop="@drawable/ic_meter"
+            android:onClick="onClick"
+            android:text="@string/menu_item_mru"
+            />
+
+        <Button
+            android:layout_width="133dp"
+            android:layout_height="133dp"
+            android:id="@+id/btnStatus"
+            android:onClick="onClick"
+            android:drawableTop="@drawable/ic_device_info"
+            android:text="@string/menu_item_status"
+            />
+        <Button
+            android:layout_width="133dp"
+            android:layout_height="133dp"
+            android:id="@+id/btnSettings"
+            android:onClick="onClick"
+            android:drawableTop="@drawable/ic_settings"
+            android:text="@string/menu_item_settings"
+            />
+        <Button
+            android:layout_width="133dp"
+            android:layout_height="133dp"
+            android:id="@+id/btnExit"
+            android:onClick="onClick"
+            android:drawableTop="@drawable/ic_exit"
+            android:text="@string/menu_item_exit"
+            />
+
+    </GridLayout>
+</RelativeLayout>

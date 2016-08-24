@@ -1,0 +1,96 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="com.indra.rover.mwsi.ui.fragments.MRRemarksFragment"
+    android:padding="10dp"
+    android:background="@drawable/bg_dot_pattern">
+
+
+    <Button
+        android:layout_width="70dp"
+        android:layout_height="35dp"
+        android:text="@string/mr_edit"
+        android:id="@+id/btnEditMRRemarks"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:drawableStart="@drawable/ic_edit"
+        android:drawableLeft="@drawable/ic_edit"
+        android:background="@drawable/btn_active_pink"
+        android:textColor="@android:color/white"
+        android:visibility="gone"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/str_sample_text"
+        android:id="@+id/lblMRCDesc"
+        android:layout_below="@+id/btnEditMRRemarks"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:padding="4dp"
+        android:background="@drawable/panel_rounded_border"
+        android:visibility="gone"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnDelMRDesc"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_remove_outline"
+        android:background="@drawable/btn_active_pink"
+        android:padding="4dp"
+        android:layout_marginTop="20dp"
+      />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:id="@+id/txtMRCDesc"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/panel_rounded_border"
+        android:layout_toLeftOf="@+id/btnDelMRDesc"
+        android:layout_toStartOf="@+id/btnDelMRDesc"
+        android:hint="@string/mr_c_description"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:padding="8dp"/>
+
+    <Space
+        android:layout_width="5dp"
+        android:layout_height="5dp"
+        android:layout_below="@+id/txtMRCDesc"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/spacer1"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnOKMRDesc"
+        android:layout_below="@+id/txtMRCDesc"
+        android:layout_toLeftOf="@+id/spacer1"
+        android:layout_toStartOf="@+id/spacer1"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_check"/>
+
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnCancelMRDesc"
+        android:layout_below="@+id/txtMRCDesc"
+        android:layout_toRightOf="@+id/spacer1"
+        android:layout_toEndOf="@+id/spacer1"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_close_black"/>
+
+
+</RelativeLayout>
