@@ -56,11 +56,19 @@
     <string name="mr_c_info_oc2">OC2 : </string>
     <string name="mr_c_info_remarks">Remarks : </string>
     <string name="print">Print</string>
-    <string name="title_activity_main2">Main2Activity</string>
 
+
+    <!--  meter reading delivery remarks section -->
+    <string name="mr_c_dev_rem_desc">Description : </string>
+    <string name="mr_c_dev_rem_">Remarks : </string>
+    <string name="mr_c_dev_code">Delivery Code : </string>
 
     <string name="mr_c_remarks">Remarks</string>
     <string name="mr_c_description">Description</string>
+    
+    <!-- meter reading OC section -->
+    <string name="mr_oc_oc1">OC1 : </string>
+    <string name="mr_oc_oc2">OC2 : </string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -75,5 +83,8 @@
     <string name="search_by">Search By</string>
     <string name="search_value">Value</string>
     <string name="search">Search</string>
-
+    <string name="ok">OK</string>
+    <string name="content_desc">a button</string>
+    <string name="enter_meter_reading">Enter meter reading</string>
+    <string name="submit">Submit</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.indra.rover.mwsi.ui.activities;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,19 +11,29 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.adapters.StatusViewPagerAdapter;
 import com.indra.rover.mwsi.ui.fragments.MRCustomerInfoFragment;
+import com.indra.rover.mwsi.ui.fragments.MRDeliveryRFragment;
+import com.indra.rover.mwsi.ui.fragments.MROCFragment;
 import com.indra.rover.mwsi.ui.fragments.MRRemarksFragment;
 import com.indra.rover.mwsi.ui.fragments.MeterStatusFragment;
+import com.indra.rover.mwsi.utils.DialogUtils;
 
-public class MeterReadingActivity extends AppCompatActivity {
+public class MeterReadingActivity extends AppCompatActivity implements View.OnClickListener
+{
 
     ViewPager mViewPager;
     TabLayout mTabLayout;
     ScrollView mScrollView;
+    Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +65,9 @@ public class MeterReadingActivity extends AppCompatActivity {
             }
         });
 
+        Button btn =  (Button)findViewById(R.id.btnMREdit);
+        btn.setOnClickListener(this);
+
     }
 
     private int[] getViewLocations(View view) {
@@ -62,20 +76,57 @@ public class MeterReadingActivity extends AppCompatActivity {
         return locations;
     }
     public void scrollUp(){
-       // mScrollView.fullScroll(View.FOCUS_DOWN);
+        // mScrollView.fullScroll(View.FOCUS_DOWN);
         int[] locations = getViewLocations(mTabLayout);
         int x = locations[0]; // x position of left
         int y = locations[1]-130; // y position of top
-       mScrollView.smoothScrollBy(x,y);
+        mScrollView.smoothScrollBy(x,y);
     }
 
     public void setupViewPager(ViewPager mViewPager){
         StatusViewPagerAdapter adapter = new StatusViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(MRCustomerInfoFragment.newInstance("2"), "Customer Info");
-        adapter.addFragment(MeterStatusFragment.newInstance(1), "OC");
+        adapter.addFragment(MROCFragment.newInstance("2"), "OC");
         adapter.addFragment(new MRRemarksFragment(), "Remarks");
-        adapter.addFragment(MeterStatusFragment.newInstance(2), "Delivery Remarks");
+        adapter.addFragment(MRDeliveryRFragment.newInstance("2"), "Delivery Remarks");
         mViewPager.setAdapter(adapter);
+    }
+
+
+    public void showOKDialog(){
+        dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_change_reading);
+        dialog.setCancelable(false);
+        final EditText txtDlg = (EditText)dialog.findViewById(R.id.dlg_body);
+        ImageButton dlgBtnClose = (ImageButton)dialog.findViewById(R.id.dlg_btn_close);
+        dlgBtnClose.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        Button btn =  (Button)dialog.findViewById(R.id.dlg_btn_yes);
+        btn.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                String value =   txtDlg.getText().toString();
+                setReadingValue(value);
+                dialog.dismiss();
+            }
+        });
+
+        TextView txt = (TextView)dialog.findViewById(R.id.dlg_title);
+
+        dialog.show();
+    }
+
+
+
+    public void setReadingValue(String value){
+        TextView txt = (TextView)findViewById(R.id.txtReading);
+        txt.setText(value);
     }
 
     @Override
@@ -118,6 +169,18 @@ public class MeterReadingActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
+
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        switch(id){
+            case R.id.btnMREdit:
+                showOKDialog();
+                break;
+        }
+    }
+
 
 
 

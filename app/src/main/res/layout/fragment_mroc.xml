@@ -1,0 +1,125 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.indra.rover.mwsi.ui.fragments.MROCFragment"
+    android:padding="10dp">
+
+    <Button
+        android:layout_width="70dp"
+        android:layout_height="35dp"
+        android:text="@string/mr_edit"
+        android:id="@+id/btnEditMROC"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:drawableStart="@drawable/ic_edit"
+        android:drawableLeft="@drawable/ic_edit"
+        android:background="@drawable/btn_active_pink"
+        android:textColor="@android:color/white"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/mr_oc_oc1"
+        android:id="@+id/textView24"
+        android:layout_below="@+id/btnEditMROC"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"/>
+
+    <Spinner
+        android:layout_width="80dp"
+        android:layout_height="35dp"
+        android:id="@+id/spinner3"
+        android:layout_alignTop="@+id/textView24"
+        android:layout_toRightOf="@+id/textView24"
+        android:layout_toEndOf="@+id/textView24"
+        android:background="@color/material_blue_100"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"/>
+
+    <ImageButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/imageButton"
+        android:layout_below="@+id/btnEditMROC"
+        android:layout_toRightOf="@+id/spinner3"
+        android:layout_toEndOf="@+id/spinner3"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/ic_camera"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/mr_c_description"
+        android:id="@+id/textView25"
+        android:textStyle="bold"
+        android:layout_below="@+id/imageButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/txtOC1Desc"
+        android:layout_alignParentStart="true"
+        android:padding="4dp"
+        android:hint="@string/mr_c_description"
+        android:background="@drawable/panel_rounded_border"
+        android:layout_below="@+id/textView25"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/mr_oc_oc2"
+        android:id="@+id/textView26"
+        android:textStyle="bold"
+        android:layout_below="@+id/txtOC1Desc"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"/>
+
+    <Spinner
+        android:layout_width="80dp"
+        android:layout_height="35dp"
+        android:id="@+id/spinner4"
+        android:background="@color/material_blue_100"
+        android:layout_alignTop="@+id/textView26"
+        android:layout_toRightOf="@+id/textView26"
+        android:layout_toEndOf="@+id/textView26"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/mr_c_remarks"
+        android:id="@+id/textView27"
+        android:textStyle="bold"
+        android:layout_below="@+id/spinner4"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/editText2"
+        android:layout_alignParentStart="true"
+        android:padding="4dp"
+        android:hint="@string/mr_c_remarks"
+        android:background="@drawable/panel_rounded_border"
+        android:layout_below="@+id/textView27"
+        android:layout_alignParentLeft="true" />
+
+
+</RelativeLayout>

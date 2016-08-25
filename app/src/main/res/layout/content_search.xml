@@ -36,14 +36,14 @@
 
     <Spinner
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="35dp"
         android:id="@+id/spn"
         android:layout_alignTop="@+id/textView18"
         android:layout_toRightOf="@+id/textView18"
         android:layout_toEndOf="@+id/textView18"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:background="@drawable/panel_rounded_border"
+        android:background="@color/material_blue_100"
         android:entries="@array/search_filter"
         />
 
