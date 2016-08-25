@@ -1,0 +1,7 @@
+BEGIN TRANSACTION;
+CREATE TABLE `test` (
+	`Field1`	TEXT
+);
+CREATE TABLE "android_metadata" ("locale" TEXT DEFAULT 'en_US');
+INSERT INTO `android_metadata` (locale) VALUES ('en_US');
+COMMIT;

@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     tools:context=".ui.fragments.MRCustomerInfoFragment"
     android:padding="10dp"
+    android:background="@drawable/bg_dot_pattern"
     >
 
 

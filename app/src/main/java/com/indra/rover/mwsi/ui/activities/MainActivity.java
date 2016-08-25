@@ -1,13 +1,17 @@
 package com.indra.rover.mwsi.ui.activities;
 
 import android.content.Intent;
+import android.database.SQLException;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.data.db.DatabaseHelper;
 import com.indra.rover.mwsi.utils.DialogUtils;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener , DialogUtils.DialogListener{
 
@@ -19,13 +23,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
         mDialogUtils = new DialogUtils(this);
         mDialogUtils.setListener(this);
-
+        initDB();
     }
 
+
+    public void initDB(){
+        DatabaseHelper myDbHelper;
+        myDbHelper = new DatabaseHelper(this);
+
+        try {
+
+            myDbHelper.createDataBase();
+
+        } catch (IOException ioe) {
+
+            throw new Error("Unable to create database");
+        }
+
+        try {
+            myDbHelper.openDataBase();
+            System.out.println("im opening");
+
+        } catch (SQLException sqle) {
+
+            throw sqle;
+
+        } finally {
+
+            myDbHelper.close();
+        }
+    }
 
     @Override
     public void onClick(View view) {

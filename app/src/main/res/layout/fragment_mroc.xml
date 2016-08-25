@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.indra.rover.mwsi.ui.fragments.MROCFragment"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:background="@drawable/bg_dot_pattern">
 
     <Button
         android:layout_width="70dp"
@@ -45,7 +46,7 @@
     <ImageButton
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:id="@+id/imageButton"
+        android:id="@+id/btnImageCapture"
         android:layout_below="@+id/btnEditMROC"
         android:layout_toRightOf="@+id/spinner3"
         android:layout_toEndOf="@+id/spinner3"
@@ -60,7 +61,7 @@
         android:text="@string/mr_c_description"
         android:id="@+id/textView25"
         android:textStyle="bold"
-        android:layout_below="@+id/imageButton"
+        android:layout_below="@+id/btnImageCapture"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
