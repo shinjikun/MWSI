@@ -18,7 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //The Android's default system path of your application database.
     private static String DB_PATH = "/data/data/com.indra.rover.mwsi/databases/";
 
-    private static String DB_NAME = "myDBName";
+    private static String DB_NAME = "MCFSRNB";
 
     private SQLiteDatabase myDataBase;
 
@@ -135,10 +135,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
     // to you to create adapters for your views.
     public void fetchData(){
-        String selectSql = "Select * from R_BILL_CLASS";
+        String selectSql = "Select * from R_SP_COMP";
         Cursor cursor = myDataBase.rawQuery(selectSql, null);
         while (cursor.moveToNext()){
-            Log.i("Test",   cursor.getString(0));
+            Log.i("Test",   cursor.getString(0)+" "+ cursor.getString(1));
+
         }
         cursor.close();
     }

@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         mDialogUtils = new DialogUtils(this);
         mDialogUtils.setListener(this);
-       // initDB();
+        initDB();
     }
 
 
@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         try {
             myDbHelper.openDataBase();
+            myDbHelper.fetchData();
             System.out.println("im opening");
 
         } catch (SQLException sqle) {
