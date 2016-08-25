@@ -42,4 +42,13 @@
         <item>UNPRINTED</item>
         <item>No Delivery Code</item>
     </string-array>
+
+    <string-array name="mru_filler">
+        <item>3230</item>
+        <item>3231</item>
+        <item>3232</item>
+        <item>3233</item>
+        <item>3234</item>
+        <item>3235</item>
+    </string-array>
 </resources>

@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         mDialogUtils = new DialogUtils(this);
         mDialogUtils.setListener(this);
-        initDB();
+       // initDB();
     }
 
 

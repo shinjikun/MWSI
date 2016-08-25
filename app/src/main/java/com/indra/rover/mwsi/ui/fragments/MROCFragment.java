@@ -59,6 +59,13 @@ public class MROCFragment extends Fragment {
                 launchCamera();
             }
         });
+        imgCapture = (ImageButton)mView.findViewById(R.id.btnImageCapture1);
+        imgCapture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchCamera();
+            }
+        });
         return mView;
     }
 

@@ -36,4 +36,15 @@
         android:layout_below="@+id/txtTitle"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/splash_readwrite"
+        android:id="@+id/textView28"
+        android:layout_below="@+id/txtVersion"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:textStyle="bold"/>
+
 </RelativeLayout>

@@ -2,6 +2,9 @@
     <string name="app_name">MWSI</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Splash Screen -->
+    <string name="splash_readwrite">Read and Write</string>
+
     <!-- Menu Item Labels-->
     <string name="menu_item_mru">Meter Reading</string>
     <string name="menu_item_status">Status</string>

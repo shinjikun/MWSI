@@ -122,5 +122,12 @@
         android:layout_below="@+id/textView27"
         android:layout_alignParentLeft="true" />
 
-
+    <ImageButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/btnImageCapture1"
+        android:src="@drawable/ic_camera"
+        android:layout_below="@+id/txtOC1Desc"
+        android:layout_alignLeft="@+id/btnImageCapture"
+        android:layout_alignStart="@+id/btnImageCapture" />
 </RelativeLayout>

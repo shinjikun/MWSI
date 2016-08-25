@@ -1,10 +1,11 @@
 package com.indra.rover.mwsi.data.db;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -133,5 +134,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Add your public helper methods to access and get content from the database.
     // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
     // to you to create adapters for your views.
-
+    public void fetchData(){
+        String selectSql = "Select * from R_BILL_CLASS";
+        Cursor cursor = myDataBase.rawQuery(selectSql, null);
+        while (cursor.moveToNext()){
+            Log.i("Test",   cursor.getString(0));
+        }
+        cursor.close();
+    }
 }

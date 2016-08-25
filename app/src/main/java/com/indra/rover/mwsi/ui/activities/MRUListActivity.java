@@ -51,21 +51,21 @@ public class MRUListActivity extends AppCompatActivity  implements OnItemClickLi
 
 
     private void prepareData(){
-        MRU mru = new MRU("324342",3,3,3,9);
+        MRU mru = new MRU("3230",3,3,3,9);
+        mruList.add(mru);
+
+        mru = new MRU("3431",3,3,3,9);
+        mruList.add(mru);
+
+        mru = new MRU("3432",3,3,3,9);
         mruList.add(mru);
 
         mru = new MRU("3433",3,3,3,9);
         mruList.add(mru);
 
-        mru = new MRU("3433",3,3,3,9);
+        mru = new MRU("3434",3,3,3,9);
         mruList.add(mru);
-
-        mru = new MRU("3433",3,3,3,9);
-        mruList.add(mru);
-
-        mru = new MRU("3433",3,3,3,9);
-        mruList.add(mru);
-        mru = new MRU("3433",3,3,3,9);
+        mru = new MRU("3435",3,3,3,9);
         mruList.add(mru);
         mAdapter.notifyDataSetChanged();
 

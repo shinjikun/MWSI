@@ -18,8 +18,8 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try{
-                    //Display for 5 seconds
-                    sleep(5000);
+                    //Display for 3 seconds
+                    sleep(3000);
                 }catch (InterruptedException e){
                     e.printStackTrace();
                 }finally {
