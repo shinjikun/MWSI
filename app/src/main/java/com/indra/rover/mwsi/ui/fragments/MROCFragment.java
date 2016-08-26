@@ -7,20 +7,25 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.data.db.DeliveryDao;
+import com.indra.rover.mwsi.data.pojo.DeliveryCode;
+import com.indra.rover.mwsi.data.pojo.ObservationCode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MROCFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_ID = "id";
 
     View mView;
-    // TODO: Rename and change types of parameters
     private String mParamID;
-
-
+    private DeliveryDao deliveryDao;
+    Spinner spnOC1,spnOC2;
     public MROCFragment() {
     }
 
@@ -38,6 +43,7 @@ public class MROCFragment extends Fragment {
         if (getArguments() != null) {
             mParamID = getArguments().getString(ARG_ID);
         }
+        deliveryDao = new DeliveryDao(getActivity());
     }
 
 
@@ -66,7 +72,43 @@ public class MROCFragment extends Fragment {
                 launchCamera();
             }
         });
+
+        spnOC1 = (Spinner)mView.findViewById(R.id.spnOC1);
+        spnOC2 = (Spinner)mView.findViewById(R.id.spnOC2);
+        initContent();
         return mView;
     }
+
+    private void initContent(){
+        List<ObservationCode> arrayList = deliveryDao.getOCodes();
+        // Spinner Drop down elements
+        List<String> arryOC1 = new ArrayList<>();
+        List<String> arryOC2 = new ArrayList<>();
+        for(int i = 0;i<arrayList.size();i++){
+            ObservationCode ocCode = arrayList.get(i);
+            String value = ocCode.getFf_code() + " - "+ocCode.getFf_desc();
+            if(ocCode.getBill_related() == 1){
+                arryOC1.add(value);
+            }
+            else {
+                arryOC2.add(value);
+            }
+
+        }
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, arryOC1);
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // attaching data adapter to spinner
+        spnOC1.setAdapter(dataAdapter);
+
+        dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, arryOC2);
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // attaching data adapter to spinner
+        spnOC2.setAdapter(dataAdapter);
+    }
+
+
 
 }

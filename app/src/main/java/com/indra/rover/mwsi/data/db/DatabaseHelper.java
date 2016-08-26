@@ -1,11 +1,9 @@
 package com.indra.rover.mwsi.data.db;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,11 +14,11 @@ import java.io.OutputStream;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     //The Android's default system path of your application database.
-    private static String DB_PATH = "/data/data/com.indra.rover.mwsi/databases/";
+    public final static String DB_PATH = "/data/data/com.indra.rover.mwsi/databases/";
 
-    private static String DB_NAME = "MCFSRNB";
+    public final static String DB_NAME = "MCFSRNB";
 
-    private SQLiteDatabase myDataBase;
+    public SQLiteDatabase myDataBase;
 
     private final Context myContext;
 
@@ -103,11 +101,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public SQLiteDatabase openDB() throws SQLException {
+
+        //Open the database
+        String myPath = DB_PATH + DB_NAME;
+        return  SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
+
+    }
+
     public void openDataBase() throws SQLException {
 
         //Open the database
         String myPath = DB_PATH + DB_NAME;
-        myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+        myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
 
     }
 
@@ -131,16 +137,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    // Add your public helper methods to access and get content from the database.
-    // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
-    // to you to create adapters for your views.
-    public void fetchData(){
-        String selectSql = "Select * from R_SP_COMP";
-        Cursor cursor = myDataBase.rawQuery(selectSql, null);
-        while (cursor.moveToNext()){
-            Log.i("Test",   cursor.getString(0)+" "+ cursor.getString(1));
-
-        }
-        cursor.close();
-    }
 }

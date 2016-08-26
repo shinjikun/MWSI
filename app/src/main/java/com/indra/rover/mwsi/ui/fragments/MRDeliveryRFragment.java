@@ -5,15 +5,23 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.data.db.DeliveryDao;
+import com.indra.rover.mwsi.data.pojo.DeliveryCode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MRDeliveryRFragment extends Fragment {
     private static final String ARG_ID = "id";
 
     private String mParamID;
 
-
+    private DeliveryDao deliveryDao;
+    View mView;
     public MRDeliveryRFragment() {
         // Required empty public constructor
     }
@@ -40,14 +48,40 @@ public class MRDeliveryRFragment extends Fragment {
         if (getArguments() != null) {
             mParamID = getArguments().getString(ARG_ID);
         }
+        deliveryDao = new DeliveryDao(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_mrdelivery, container, false);
+         mView = inflater.inflate(R.layout.fragment_mrdelivery, container, false);
+
+
+        initContent();
+        return mView;
     }
+
+
+
+    private void initContent(){
+        Spinner spinDelivery =  (Spinner)mView.findViewById(R.id.spnDevCode);
+        List<DeliveryCode> arrayList = deliveryDao.getDeliveryCodes();
+        // Spinner Drop down elements
+        List<String> arryDevCodes = new ArrayList<>();
+        for(int i = 0;i<arrayList.size();i++){
+            DeliveryCode deliveryCode = arrayList.get(i);
+            arryDevCodes.add(deliveryCode.getDel_code()+" - "+deliveryCode.getDel_desc());
+
+        }
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arryDevCodes);
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // attaching data adapter to spinner
+        spinDelivery.setAdapter(dataAdapter);
+    }
+
 
 
 }

@@ -28,37 +28,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         mDialogUtils = new DialogUtils(this);
         mDialogUtils.setListener(this);
-        initDB();
+
     }
 
 
-    public void initDB(){
-        DatabaseHelper myDbHelper;
-        myDbHelper = new DatabaseHelper(this);
 
-        try {
-
-            myDbHelper.createDataBase();
-
-        } catch (IOException ioe) {
-
-            throw new Error("Unable to create database");
-        }
-
-        try {
-            myDbHelper.openDataBase();
-            myDbHelper.fetchData();
-            System.out.println("im opening");
-
-        } catch (SQLException sqle) {
-
-            throw sqle;
-
-        } finally {
-
-            myDbHelper.close();
-        }
-    }
 
     @Override
     public void onClick(View view) {
