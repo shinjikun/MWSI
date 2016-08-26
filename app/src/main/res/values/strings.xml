@@ -68,7 +68,7 @@
 
     <string name="mr_c_remarks">Remarks</string>
     <string name="mr_c_description">Description</string>
-    
+
     <!-- meter reading OC section -->
     <string name="mr_oc_oc1">OC1 : </string>
     <string name="mr_oc_oc2">OC2 : </string>
@@ -90,4 +90,11 @@
     <string name="content_desc">a button</string>
     <string name="enter_meter_reading">Enter meter reading</string>
     <string name="submit">Submit</string>
+    <string name="title_activity_mreaders_list">MReadersListActivity</string>
+
+    <string name="m_readers_title">Meter Readers</string>
+    <string name="m_readers_assigned">Code :</string>
+    <string name="m_readers_assign">Assign a Code</string>
+    <string name="m_readers_meter_id">ID :</string>
+    <string name="m_readers_name">Name :</string>
 </resources>

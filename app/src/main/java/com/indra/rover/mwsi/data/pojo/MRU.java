@@ -3,7 +3,7 @@ package com.indra.rover.mwsi.data.pojo;
 /**
  * Created by Indra on 8/22/2016.
  */
-public class MRU {
+public class MRU  extends Item{
 
 
     public MRU(String id,int unread,int unprinted,int undelivered,int total){

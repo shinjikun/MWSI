@@ -109,7 +109,7 @@
     <color name="material_blue_300">#ff7baaf7</color>
     <color name="material_blue_500">#ff4285f4</color>
     <color name="material_blue_700">#ff3367d6</color>
-    <color name="material_blue_A200">#ff448aff</color>
+    <color name="material_blue_A200">#448aff</color>
     <color name="material_blue_A400">#ff2979ff</color>
 
     <color name="material_light_blue_A200">#ff40c4ff</color>
@@ -122,12 +122,12 @@
     <color name="material_teal_A400">#ff00e5ff</color>
 
 
-    <color name="material_dark_teal_A400">#ff009688</color> <!-- Accent color used by Settings -->
+    <color name="material_dark_teal_A400">#009688</color> <!-- Accent color used by Settings -->
 
     <color name="material_green_100">#ffb7e1cd</color>
     <color name="material_green_300">#ff57bb8a</color>
     <color name="material_green_500">#ff0f9d58</color>
-    <color name="material_green_700">#ff0b8043</color>
+    <color name="material_green_700">#0b8043</color>
     <color name="material_green_A200">#ff69f0ae</color>
     <color name="material_green_A400">#ff00e676</color>
 
