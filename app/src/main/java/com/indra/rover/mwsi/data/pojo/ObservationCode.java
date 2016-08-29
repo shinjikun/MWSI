@@ -6,9 +6,9 @@ import android.database.Cursor;
  * Created by Indra on 8/26/2016.
  */
 public class ObservationCode extends Item {
-    String ff_code;
-    String ff_desc;
-    short bill_related;
+    private String ff_code;
+    private String ff_desc;
+    private short bill_related;
 
 
     public ObservationCode(){

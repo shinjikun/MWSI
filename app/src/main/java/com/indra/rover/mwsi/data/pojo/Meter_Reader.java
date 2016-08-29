@@ -5,9 +5,9 @@ package com.indra.rover.mwsi.data.pojo;
  */
 public class Meter_Reader extends Item {
 
-    String id;
-    String name;
-    String assignCode;
+    private String id;
+    private String name;
+    private String assignCode;
 
 
     public Meter_Reader(String id, String name, String assignCode){

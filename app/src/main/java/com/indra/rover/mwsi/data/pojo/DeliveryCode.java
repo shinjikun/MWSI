@@ -6,9 +6,9 @@ import android.database.Cursor;
  * Created by Indra on 8/26/2016.
  */
 public class DeliveryCode {
-    String del_code;
-    String del_desc;
-    int del_signreq_flag;
+    private String del_code;
+    private String del_desc;
+    private int del_signreq_flag;
 
 
     public DeliveryCode(){

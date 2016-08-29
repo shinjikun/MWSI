@@ -11,23 +11,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+ class DatabaseHelper extends SQLiteOpenHelper {
 
     //The Android's default system path of your application database.
-    public final static String DB_PATH = "/data/data/com.indra.rover.mwsi/databases/";
+    private final static String DB_PATH = "/data/data/com.indra.rover.mwsi/databases/";
 
-    public final static String DB_NAME = "MCFSRNB";
+    private final static String DB_NAME = "MCFSRNB";
 
-    public SQLiteDatabase myDataBase;
+    private SQLiteDatabase myDataBase;
 
     private final Context myContext;
 
     /**
      * Constructor
      * Takes and keeps a reference of the passed context in order to access to the application assets and resources.
-     * @param context
+     * @param context context
      */
-    public DatabaseHelper(Context context) {
+     DatabaseHelper(Context context) {
 
         super(context, DB_NAME, null, 1);
         this.myContext = context;
@@ -36,7 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Creates a empty database on the system and rewrites it with your own database.
      * */
-    public void createDataBase() throws IOException {
+     void createDataBase() throws IOException {
 
         boolean dbExist = checkDataBase();
 
@@ -101,7 +101,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public SQLiteDatabase openDB() throws SQLException {
+     SQLiteDatabase openDB() throws SQLException {
 
         //Open the database
         String myPath = DB_PATH + DB_NAME;
@@ -109,13 +109,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void openDataBase() throws SQLException {
 
-        //Open the database
-        String myPath = DB_PATH + DB_NAME;
-        myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
-
-    }
 
     @Override
     public synchronized void close() {

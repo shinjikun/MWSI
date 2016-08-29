@@ -17,24 +17,24 @@ public class MRU  extends Item{
     /**
      * MRU ID
      */
-    String id;
+   private String id;
 
     /**
      * total unread meter reading
      */
-    int unread;
+    private  int unread;
     /**
      * total count of all Meter Reading
      */
-   int total;
+   private int total;
     /**
      * total number of unprinted meter reader
      */
-   int unprinted;
+   private int unprinted;
     /**
      * total number of undelivered meter reader
      */
-    int undelivered;
+   private int undelivered;
 
     public void setId(String id) {
         this.id = id;

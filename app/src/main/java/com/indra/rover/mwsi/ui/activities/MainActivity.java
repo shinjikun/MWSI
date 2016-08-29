@@ -1,17 +1,14 @@
 package com.indra.rover.mwsi.ui.activities;
 
 import android.content.Intent;
-import android.database.SQLException;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.indra.rover.mwsi.R;
-import com.indra.rover.mwsi.data.db.DatabaseHelper;
 import com.indra.rover.mwsi.utils.DialogUtils;
 
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener , DialogUtils.DialogListener{
 

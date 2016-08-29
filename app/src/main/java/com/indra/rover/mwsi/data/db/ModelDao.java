@@ -8,12 +8,12 @@ import java.io.IOException;
 /**
  * Created by Indra on 8/26/2016.
  */
-public  abstract  class ModelDao {
+  abstract  class ModelDao {
 
-    public DatabaseHelper dbHelper;
-    public SQLiteDatabase database;
+     DatabaseHelper dbHelper;
+     SQLiteDatabase database;
 
-    public ModelDao(Context context) {
+     ModelDao(Context context) {
         dbHelper = new DatabaseHelper(context);
         try {
 
