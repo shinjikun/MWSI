@@ -98,4 +98,9 @@
     <string name="m_readers_meter_id">ID :</string>
     <string name="m_readers_name">Name :</string>
     <string name="title_activity_settings">Settings</string>
+
+    <!--Settings -->
+    <string name="setting_btn_login">Login as Rover Admin</string>
+    <string name="setting_btn_login1">Login</string>
+    <string name="setting_password_hint">Enter Password</string>
 </resources>
