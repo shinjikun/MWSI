@@ -36,4 +36,11 @@
         android:title="@string/action_delivery"
         app:showAsAction="never"
         android:menuCategory="secondary"/>
+
+    <item
+        android:id="@+id/action_new_seq"
+        android:orderInCategory="100"
+        android:title="@string/action_new_seq"
+        app:showAsAction="never"
+        android:menuCategory="secondary"/>
 </menu>

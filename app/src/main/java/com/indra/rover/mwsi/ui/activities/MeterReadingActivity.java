@@ -158,6 +158,9 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 mViewPager.setCurrentItem(3);
                 scrollUp();
                 break;
+            case R.id.action_new_seq:
+                showNeqSeqDialog();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -179,6 +182,45 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 showOKDialog();
                 break;
         }
+    }
+
+
+
+    Dialog dlgSeqNumber;
+    public void showNeqSeqDialog(){
+        dlgSeqNumber = new Dialog(this);
+        dlgSeqNumber.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dlgSeqNumber.setContentView(R.layout.dialog_new_sequence);
+        dlgSeqNumber.setCancelable(false);
+        final EditText txtDlg = (EditText)dlgSeqNumber.findViewById(R.id.dlg_body);
+        ImageButton dlgBtnClose = (ImageButton)dlgSeqNumber.findViewById(R.id.dlg_btn_close);
+        dlgBtnClose.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                dlgSeqNumber.dismiss();
+            }
+        });
+        Button btn =  (Button)dlgSeqNumber.findViewById(R.id.dlg_btn_yes);
+        btn.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                String value =   txtDlg.getText().toString();
+
+                dlgSeqNumber.dismiss();
+            }
+        });
+
+        btn =  (Button)dlgSeqNumber.findViewById(R.id.dlg_btn_no);
+        btn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                dlgSeqNumber.dismiss();
+            }
+        });
+
+
+        dlgSeqNumber.show();
     }
 
 

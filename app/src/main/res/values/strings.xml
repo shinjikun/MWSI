@@ -82,6 +82,8 @@
     <string name="action_oc">OC</string>
     <string name="action_remarks">Remarks</string>
     <string name="action_delivery">Delivery Remarks</string>
+    <string name="action_new_seq">New Sequence</string>
+
     <string name="search_title">Search</string>
     <string name="search_by">Search By</string>
     <string name="search_value">Value</string>
@@ -103,4 +105,7 @@
     <string name="setting_btn_login">Login as Rover Admin</string>
     <string name="setting_btn_login1">Login</string>
     <string name="setting_password_hint">Enter Password</string>
+
+    <string name="dlg_new_seq_entry">New Sequence Entry</string>
+    <string name="dlog_seq_num">Sequence Number</string>
 </resources>
