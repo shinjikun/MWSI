@@ -129,7 +129,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        Intent intent;
         int id = item.getItemId();
         switch(id){
             // handle arrow click here
@@ -137,7 +137,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 finish(); // close this activity and return to preview activity (if there is any)
                 break;
             case R.id.action_search:
-                Intent intent = new Intent(this, SearchActivity.class);
+               intent = new Intent(this, SearchActivity.class);
                 startActivity(intent);
                 break;
             case R.id.action_customer:
@@ -158,6 +158,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.action_new_seq:
                 showNewSeqDialog();
+                break;
+            case R.id.action_new:
+                intent = new Intent(this,NewFoundMeterActivity.class);
+                startActivity(intent);
                 break;
         }
 

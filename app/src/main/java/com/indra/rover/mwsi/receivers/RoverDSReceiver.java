@@ -29,7 +29,7 @@ public class RoverDSReceiver extends BroadcastReceiver {
             if(action!=null){
                 if(action.equals("download")){
                     Intent i = new Intent();
-                    i.setClassName("com.indra.rover.mwsi","com.indra.rover.mwsi.ui.activities.LockActivity");
+                    i.setClassName("com.indra.rover.mwsi","com.indra.rover.mwsi.ui.activities.LockedAppActivity");
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(i);
                    // download_content(context,status);

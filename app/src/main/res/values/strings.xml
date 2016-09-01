@@ -78,6 +78,7 @@
 
     <!-- action menus labels-->
     <string name="action_search">Search</string>
+    <string name="action_new_meter">New Found Meter</string>
     <string name="action_customer">Customer Info</string>
     <string name="action_oc">OC</string>
     <string name="action_remarks">Remarks</string>
@@ -110,4 +111,7 @@
     <string name="dlg_seq_num">Sequence Number</string>
     <string name="dlg_meter_code_enter">Enter Meter Code</string>
     <string name="dlg_meter_code">Meter Code</string>
+
+    <string name="new_meter_found_seq">Seq Number</string>
+    <string name="new_meter_found">Found Connected</string>
 </resources>
