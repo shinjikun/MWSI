@@ -107,5 +107,7 @@
     <string name="setting_password_hint">Enter Password</string>
 
     <string name="dlg_new_seq_entry">New Sequence Entry</string>
-    <string name="dlog_seq_num">Sequence Number</string>
+    <string name="dlg_seq_num">Sequence Number</string>
+    <string name="dlg_meter_code_enter">Enter Meter Code</string>
+    <string name="dlg_meter_code">Meter Code</string>
 </resources>

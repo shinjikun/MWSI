@@ -24,8 +24,6 @@ import com.indra.rover.mwsi.ui.fragments.MRCustomerInfoFragment;
 import com.indra.rover.mwsi.ui.fragments.MRDeliveryRFragment;
 import com.indra.rover.mwsi.ui.fragments.MROCFragment;
 import com.indra.rover.mwsi.ui.fragments.MRRemarksFragment;
-import com.indra.rover.mwsi.ui.fragments.MeterStatusFragment;
-import com.indra.rover.mwsi.utils.DialogUtils;
 
 public class MeterReadingActivity extends AppCompatActivity implements View.OnClickListener
 {
@@ -93,7 +91,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-    public void showOKDialog(){
+    public void showMeterRdgDialog(){
         dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_change_reading);
@@ -159,7 +157,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 scrollUp();
                 break;
             case R.id.action_new_seq:
-                showNeqSeqDialog();
+                showNewSeqDialog();
                 break;
         }
 
@@ -179,7 +177,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         int id = view.getId();
         switch(id){
             case R.id.btnMREdit:
-                showOKDialog();
+                showMeterRdgDialog();
                 break;
         }
     }
@@ -187,7 +185,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
 
     Dialog dlgSeqNumber;
-    public void showNeqSeqDialog(){
+    public void showNewSeqDialog(){
         dlgSeqNumber = new Dialog(this);
         dlgSeqNumber.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dlgSeqNumber.setContentView(R.layout.dialog_new_sequence);

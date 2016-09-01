@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/material_grey_50">
-
-    <ImageButton
-        android:id="@+id/dlg_btn_close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/ic_close_black"
-        android:background="@android:color/transparent"
-        android:layout_marginRight="@dimen/layout_margins"
-        android:layout_marginEnd="@dimen/layout_margins"/>
 
     <TextView
         android:id="@+id/dlg_title"
@@ -24,10 +13,11 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_below="@+id/dlg_btn_close"
         android:layout_centerHorizontal="true"
-        android:textColor="@android:color/black"
         android:gravity="center"
-        android:text="@string/dlg_new_seq_entry"
-        android:textStyle="bold" />
+        tools:text="@string/enter_meter_reading"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:text="@string/dlg_meter_code_enter" />
 
     <EditText
         android:id="@+id/dlg_body"
@@ -44,38 +34,38 @@
         android:layout_below="@+id/dlg_title"
         android:layout_centerHorizontal="true"
         android:background="@drawable/panel_rounded_border"
-        android:hint="@string/dlg_seq_num"
+        android:inputType="number"
+        android:hint="@string/dlg_meter_code"
         android:maxLength="7"
-        android:inputType="number" />
+        />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:text="Change"
+        android:text="@string/submit"
         android:id="@+id/dlg_btn_yes"
         android:textAllCaps="false"
         android:background="@drawable/btn_active_rounded"
         android:textColor="@android:color/white"
         android:layout_below="@+id/dlg_body"
-        android:layout_alignStart="@+id/dlg_body"
-        android:layout_alignLeft="@+id/dlg_body"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:text="Cancel"
-        android:textAllCaps="false"
-        android:id="@+id/dlg_btn_no"
-        android:layout_below="@+id/dlg_body"
-        android:layout_alignEnd="@+id/dlg_body"
-        android:layout_alignRight="@+id/dlg_body"
-        android:background="@drawable/btn_grey_rounded"/>
+        android:layout_centerHorizontal="true"/>
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_margins"
-        android:layout_below="@+id/dlg_btn_no"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        />
+        android:layout_below="@+id/dlg_btn_yes" />
+
+    <ImageButton
+        android:id="@+id/dlg_btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_close_black"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/content_desc"
+        tools:src="@drawable/ic_close_black"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/dlg_title"
+        android:layout_alignEnd="@+id/dlg_title" />
 </RelativeLayout>

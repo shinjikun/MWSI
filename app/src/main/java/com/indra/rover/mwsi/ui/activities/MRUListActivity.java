@@ -1,5 +1,6 @@
 package com.indra.rover.mwsi.ui.activities;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.adapters.MRUListAdapter;
@@ -100,6 +107,38 @@ public class MRUListActivity extends AppCompatActivity  implements OnItemClickLi
     @Override
     public void onItemClick(MRU item, int position) {
         MRU  mru =  mruList.get(position);
-        loadConsumerInfo(mru);
+      showMeterCodeDialog(mru);
+    }
+
+
+
+    Dialog dialog;
+    public void showMeterCodeDialog(final MRU mru){
+        dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_meter_code);
+        dialog.setCancelable(false);
+        final EditText txtDlg = (EditText)dialog.findViewById(R.id.dlg_body);
+        ImageButton dlgBtnClose = (ImageButton)dialog.findViewById(R.id.dlg_btn_close);
+        dlgBtnClose.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        Button btn =  (Button)dialog.findViewById(R.id.dlg_btn_yes);
+        btn.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                String value =   txtDlg.getText().toString();
+                loadConsumerInfo(mru);
+                dialog.dismiss();
+            }
+        });
+
+        TextView txt = (TextView)dialog.findViewById(R.id.dlg_title);
+
+        dialog.show();
     }
 }
