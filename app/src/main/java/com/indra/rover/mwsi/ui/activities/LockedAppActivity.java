@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.indra.rover.mwsi.R;
@@ -16,47 +18,48 @@ import com.indra.rover.mwsi.R;
 public class LockedAppActivity extends AppCompatActivity {
 
     String TAG="rai";
+    ImageView img;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lock);
+        img = (ImageView)findViewById(R.id.img);
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
-        IntentFilter deviceAttachedFilter = new IntentFilter();
-        deviceAttachedFilter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
-        deviceAttachedFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
-        registerReceiver(mUsbReceiver, deviceAttachedFilter);
+        IntentFilter deviceAttachedFilter = new IntentFilter("com.indra.rover.mwsi.LOCKED");
+        registerReceiver(broadcastReceiver, deviceAttachedFilter);
     }
 
+    public void setDrawable(int drawable){
+        img.setImageDrawable(ContextCompat.getDrawable(this, drawable));
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mUsbReceiver);
+        unregisterReceiver(broadcastReceiver);
     }
 
-    BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
+    // Add this inside your class
+    BroadcastReceiver broadcastReceiver =  new BroadcastReceiver() {
+        @Override
         public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            Log.d(TAG, "broadcastReceiver action:" + action.toString() + " taskID=" + getTaskId() + " this=" + this);
 
-            if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
-                UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                if (device != null) {
-                    Log.d(TAG, "device attached");
-                    Toast.makeText(context, "Device disconnected", Toast.LENGTH_LONG).show();
-                }
-            } else if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
-                UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                if (device != null) {
-                    Log.d(TAG, "device detached");
-                    Toast.makeText(context, "Device attached", Toast.LENGTH_LONG).show();
-                }
+            Bundle b = intent.getExtras();
+
+            String action = b.getString("action");
+            String status = b.getString("status");
+            if(action.equals("download")){
+                setDrawable(R.drawable.ic_download);
             }
+            else if(action.equals("upload")){
+                setDrawable(R.drawable.ic_upload);
+            }
+
         }
     };
 }

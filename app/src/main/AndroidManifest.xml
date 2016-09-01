@@ -54,13 +54,23 @@
 
         <receiver
             android:name=".receivers.RoverDSReceiver"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter android:priority="999">
                 <action android:name="com.indra.rover.mwsi.ROVER_MESSAGE" />
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.activities.LockedAppActivity"/>
+        <activity android:name=".ui.activities.LockedAppActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme"
+            android:exported="true"
+            >
+            <intent-filter android:priority="999">
+                <action android:name="com.indra.rover.mwsi.LOCKED" />
+            </intent-filter>
+          </activity>
+
         <activity
             android:name=".ui.activities.NewFoundMeterActivity"
             android:label="@string/app_name"

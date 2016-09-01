@@ -1,6 +1,5 @@
 @rem Rover-Android Util Script
 @rem A script that will install  apk, upload  and download file to  a connected  android device via usb 
-
 @echo off
 setlocal ENABLEEXTENSIONS EnableDelayedExpansion
 set rover_content_dir=c:\directory_of_contents\
@@ -22,7 +21,7 @@ set rover_android_apk=android.apk
 set rover_package=com.indra.rover.mwsi
 
 @rem rover android app start activity name
-set rover_activity=.ui.activities.SplashActivity
+set rover_activity=.ui.activities.LockedAppActivity
 
 
 @rem variable that checks if there is a connected device
@@ -32,6 +31,7 @@ set is_device=0
 set is_installed=1
 
 
+set actiontype=download
 
 @rem List of COMMANDS ARE LISTED BELOW
 @rem  install - to install the apk use the 'install' command
@@ -83,8 +83,10 @@ if /I "%cmd_arg%"=="updatedb" (
 goto :skip
 
 :pull_files
+
 	call :start_app
 	if  "!is_installed!"=="1" (
+			set actiontype=download
 			call :send_broadmsg
 			@rem call :end_app
 			)else (
@@ -96,6 +98,7 @@ exit /B 0
 :push_files
 	call :start_app
 	if  "!is_installed!"=="1" (
+			set actiontype=upload
 			call :send_broadmsg
 		@rem	call :end_app
 			)else (
@@ -120,7 +123,7 @@ exit /B 0
 
 @rem force the device to start the application
 :start_app
-	set cmd_r='adb shell am start -n %rover_package%/%rover_activity%'
+	set cmd_r='adb shell am start -n %rover_package%/%rover_activity% --activity-clear-task --activity-clear-top --activity-single-top'
 	for /f "delims=" %%i in (%cmd_r%) do (
 		set output=%%i
 		for /f "tokens=1" %%d in ("!output!") do (
@@ -160,7 +163,7 @@ exit /B 0
 
 @rem send broadcast  message to a device
 :send_broadmsg
-	adb shell am broadcast -a com.indra.rover.mwsi.ROVER_MESSAGE  -p %rover_package% --es action upload --es status started
+	adb shell am broadcast -a com.indra.rover.mwsi.ROVER_MESSAGE  -p %rover_package% --es action %actiontype% --es status started
 exit /B 0
 
 
