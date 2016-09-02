@@ -114,4 +114,8 @@
 
     <string name="new_meter_found_seq">Seq Number</string>
     <string name="new_meter_found">Found Connected</string>
+
+    <string name="lock_title_started">Started</string>
+    <string name="lock_title_inprogress">In Progress</string>
+    <string name="lock_title_completed">Completed</string>
 </resources>

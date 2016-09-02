@@ -13,9 +13,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.utils.Constants;
+import com.indra.rover.mwsi.utils.PreferenceKeys;
 
-public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
+public class SettingsActivity extends AppCompatActivity implements View.OnClickListener,Constants {
 
+    PreferenceKeys prefs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +32,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+        prefs = PreferenceKeys.getInstance(this);
+        init();
     }
 
 
@@ -89,6 +94,11 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
 
         dialog.show();
+    }
+
+
+    private void init(){
+
     }
 
 }

@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.utils.DialogUtils;
+import com.indra.rover.mwsi.utils.GPSTracker;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener , DialogUtils.DialogListener{
@@ -25,7 +27,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         mDialogUtils = new DialogUtils(this);
         mDialogUtils.setListener(this);
+        GPSTracker gpsTracker = new GPSTracker(this);
 
+        if(gpsTracker.canGetLocation()){
+            Log.i("Test","Longitude"+gpsTracker.getLongitude());
+            Log.i("Test","Latitude"+gpsTracker.getLatitude());
+        }
+        else {
+            gpsTracker.showSettingsAlert();
+        }
     }
 
 

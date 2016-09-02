@@ -2,13 +2,15 @@
 @rem A script that will install  apk, upload  and download file to  a connected  android device via usb 
 @echo off
 setlocal ENABLEEXTENSIONS EnableDelayedExpansion
-set rover_content_dir=c:\directory_of_contents\
 
-@rem rover content upload directory location
-set rover_content_u_dir=%rover_content_dir%upload\
+@rem ds content directory
+set ds_content_dir=c:\directory_of_contents\
 
-@rem rover content download directory location
-set rover_content_d_dir=%rover_content_dir%download
+@rem ds content upload directory location
+set ds_upload_dir=%ds_content_dir%uploads
+
+@rem ds content download directory location
+set ds_download_dir=%ds_content_dir%downloads
 
 @rem rover database dump  file name
 set rover_db_dump=DBDUMP
@@ -30,8 +32,15 @@ set is_device=0
 @rem variable that checks if the rover application is installed on the device
 set is_installed=1
 
+@rem rover directory
+set rover_app_dir=/sdcard/%rover_package%
+
+@rem rover download directory. where DS will pull files inside the android directory
+set rover_app_d_dir=%rover_app_dir%/downloads/
 
 set actiontype=download
+set statustype=started
+set file=.
 
 @rem List of COMMANDS ARE LISTED BELOW
 @rem  install - to install the apk use the 'install' command
@@ -40,6 +49,7 @@ set actiontype=download
 @rem updatedb - to update the db of the rover app
 
 SET cmd_arg=%1
+SET param2=%2
 
 if /I "%cmd_arg%"=="install" (
 	call :check_devices
@@ -54,7 +64,7 @@ if /I "%cmd_arg%"=="install" (
 if /I "%cmd_arg%"=="download" (
 	call :check_devices
 	if  "!is_device!"=="1" (
-			call :pull_files
+			call :pull_files_block
 		) else (
 		echo No connected device
 		)
@@ -63,7 +73,7 @@ if /I "%cmd_arg%"=="download" (
 if /I "%cmd_arg%"=="upload" (
 	call :check_devices
 	if  "!is_device!"=="1" (
-			call :push_files
+			call :push_files_block
 		) else (
 		echo No connected device
 		)
@@ -82,25 +92,33 @@ if /I "%cmd_arg%"=="updatedb" (
 
 goto :skip
 
-:pull_files
+:pull_files_block
 
 	call :start_app
 	if  "!is_installed!"=="1" (
 			set actiontype=download
 			call :send_broadmsg
-			@rem call :end_app
+			call :send_broadmsg
+			set statustype=ended
+			call :send_broadmsg
 			)else (
 			echo Rover App not installed
 	)
 
 exit /B 0
 
-:push_files
+:push_files_block
 	call :start_app
 	if  "!is_installed!"=="1" (
 			set actiontype=upload
+			set statustype=started
 			call :send_broadmsg
-		@rem	call :end_app
+
+
+			call :push_file
+
+			set statustype=ended
+			call :send_broadmsg
 			)else (
 			echo Rover App not installed
 	)
@@ -115,6 +133,17 @@ exit /B 0
 			echo Rover App not installed
 	)
 exit /B 0
+
+:push_file
+
+	if  "%param2%"=="" (
+		adb push %ds_upload_dir% %rover_app_dir%
+	)else (
+		adb push %param2% %rover_app_dir%/uploads/
+	)
+
+exit /B 0
+
 
 
 :install_app
@@ -163,7 +192,10 @@ exit /B 0
 
 @rem send broadcast  message to a device
 :send_broadmsg
-	adb shell am broadcast -a com.indra.rover.mwsi.ROVER_MESSAGE  -p %rover_package% --es action %actiontype% --es status started
+	set cmd_r= 'adb shell am broadcast -a com.indra.rover.mwsi.ROVER_MESSAGE  -p %rover_package% --es action %actiontype% --es status %statustype% --es file %file%'
+	for /f "delims=" %%i in (%cmd_r%) do (
+		set output=%%i
+	)
 exit /B 0
 
 
