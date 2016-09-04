@@ -8,12 +8,13 @@ import android.view.Window;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.utils.Constants;
+import com.indra.rover.mwsi.utils.FileParser;
 import com.indra.rover.mwsi.utils.FileUtils;
 import com.indra.rover.mwsi.utils.GPSTracker;
 import com.indra.rover.mwsi.utils.PreferenceKeys;
 import com.indra.rover.mwsi.utils.Utils;
 
-public class SplashActivity extends AppCompatActivity  implements Constants{
+public class SplashActivity extends AppCompatActivity  implements Constants, FileParser.Downloadlistener{
 
     PreferenceKeys prefs;
     @Override
@@ -64,7 +65,8 @@ public class SplashActivity extends AppCompatActivity  implements Constants{
     }
 
 
+    @Override
+    public void onPostDownloadResult(boolean status) {
 
-
-
+    }
 }
