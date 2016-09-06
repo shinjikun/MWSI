@@ -34,6 +34,10 @@ public class MRUDao  extends  ModelDao{
     public long insertMRU(MRU mru){
         open();
         long rowInsert = 0;
+        if(isExistData("T_MRU_INFO","MRU",mru.getId())){
+            return -1 ;
+        }
+
         ContentValues values = new ContentValues();
         values.put("MRU", mru.getId());
         values.put("BC_CODE",mru.getBc_code());
@@ -54,6 +58,25 @@ public class MRUDao  extends  ModelDao{
         return rowInsert;
     }
 
+    public MRU getMRU(String mruID){
+        MRU mru=null;
+        try{
+            open();
+            String sql_stmt = "SELECT * from T_MRU_INFO where MRU ="+mruID ;
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    mru = new MRU(cursor);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch(SQLException sql){
+            sql.printStackTrace();
+        }finally {
+            close();
+        }
+        return mru;
+    }
 
     public List<MRU>  getMRUs(){
         List<MRU> arryList= new ArrayList<>();
@@ -74,6 +97,15 @@ public class MRUDao  extends  ModelDao{
             close();
         }
         return arryList;
+    }
+
+
+    public boolean isExistData(String tablename,String columnname,String param){
+        String selectSql = String.format(
+                "SELECT "+columnname+" from "+tablename+" where "+columnname+" = \"%s\" limit 1", param);
+        Cursor cursor = database.rawQuery(selectSql, null);
+        boolean result = cursor.moveToFirst();
+        return result;
     }
 
 

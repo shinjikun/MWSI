@@ -1,6 +1,7 @@
 package com.indra.rover.mwsi.data.pojo;
 
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.Date;
 
@@ -30,9 +31,12 @@ public class MRU  extends Item{
 
     public MRU(Cursor cursor){
         this.id =cursor.getString(cursor.getColumnIndexOrThrow("MRU"));
+        Log.i("Test","im mru"+this.id);
         this.bc_code = cursor.getString(cursor.getColumnIndexOrThrow("BC_CODE"));
         this.reader_code = cursor.getString(cursor.getColumnIndexOrThrow("READER_CODE"));
+
         this.reader_name = cursor.getString(cursor.getColumnIndexOrThrow("READER_NAME"));
+        Log.i("Test",this.reader_name);
         this.reading_date = cursor.getString(cursor.getColumnIndexOrThrow("SCHED_RDG_DATE"));
         this.due_date = cursor.getString(cursor.getColumnIndexOrThrow("DUE_DATE"));
         this.kam_mru = cursor.getShort(cursor.getColumnIndexOrThrow("KAM_MRU_FLAG"));
@@ -41,6 +45,7 @@ public class MRU  extends Item{
         this.active_count = cursor.getInt(cursor.getColumnIndexOrThrow("ACTIVE_COUNT"));
         this.blocked_count =cursor.getInt(cursor.getColumnIndexOrThrow("BLOCKED_COUNT"));
         this.read = cursor.getInt(cursor.getColumnIndexOrThrow("READ_METERS"));
+        Log.i("Test","read"+this.read);
         this.unread = cursor.getInt(cursor.getColumnIndexOrThrow("UNREAD_METERS"));
         this.undelivered =cursor.getInt(cursor.getColumnIndexOrThrow("UNDELIV_BILLS"));
     }

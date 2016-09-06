@@ -47,9 +47,11 @@ set file=.
 @rem download - to pull data files from the connected device
 @rem upload - to push files from pc to device
 @rem updatedb - to update the db of the rover app
-
+@rem checkversion check version installed inside the app versus the version app in DS
 SET cmd_arg=%1
 SET param2=%2
+
+
 
 if /I "%cmd_arg%"=="install" (
 	call :check_devices
@@ -61,6 +63,18 @@ if /I "%cmd_arg%"=="install" (
 	goto :skip
 
 )
+
+if /I "%cmd_arg%"=="checkversion" (
+	call :check_devices
+	if  "!is_device!"=="1" (
+			call :checkversion
+		) else (
+		echo No connected device
+		)
+	goto :skip
+
+)
+
 if /I "%cmd_arg%"=="download" (
 	call :check_devices
 	if  "!is_device!"=="1" (
@@ -91,6 +105,25 @@ if /I "%cmd_arg%"=="updatedb" (
 		)
 
 goto :skip
+
+:checkversion
+
+ set cmd_r='adb shell  "dumpsys package %rover_package% |grep versionCode"'
+ for /f "delims=" %%i in (%cmd_r%) do (
+		set output=%%i
+	)
+
+ if  "%param2%"=="" (
+		echo You need to supply an app version
+	)else (
+		for /f "tokens=1" %%d in ("!output!") do (
+				set app_status=%%d
+			)
+		echo !app_status!
+	)
+
+exit /B 0
+
 
 :pull_files_block
 

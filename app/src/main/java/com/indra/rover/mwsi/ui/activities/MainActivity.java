@@ -29,13 +29,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDialogUtils.setListener(this);
         GPSTracker gpsTracker = new GPSTracker(this);
 
-        if(gpsTracker.canGetLocation()){
-            Log.i("Test","Longitude"+gpsTracker.getLongitude());
-            Log.i("Test","Latitude"+gpsTracker.getLatitude());
-        }
-        else {
+        if(!gpsTracker.canGetLocation()){
             gpsTracker.showSettingsAlert();
         }
+
     }
 
 

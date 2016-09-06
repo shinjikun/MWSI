@@ -15,11 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.utils.Constants;
+import com.indra.rover.mwsi.utils.PreferenceKeys;
 
-public class LockedAppActivity extends AppCompatActivity {
+public class LockedAppActivity extends AppCompatActivity implements Constants {
 
     ImageView img;
     TextView txtTitle,txtSubTitle,txtFiles;
+    PreferenceKeys prefs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +31,7 @@ public class LockedAppActivity extends AppCompatActivity {
         txtTitle = (TextView)findViewById(R.id.txtTitle);
         txtSubTitle = (TextView)findViewById(R.id.txtSubTitle);
         txtFiles =  (TextView)findViewById(R.id.txtFiles);
+        prefs = new PreferenceKeys(this);
     }
 
 
@@ -79,6 +83,7 @@ public class LockedAppActivity extends AppCompatActivity {
                 txtSubTitle.setText("");
                 txtFiles.setText("");
                 setDrawable(R.drawable.ic_completed);
+                prefs.setData(HAS_ROVER_UPDATE,true);
             }
 
         }

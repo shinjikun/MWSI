@@ -31,6 +31,12 @@ public class FileUtils {
         if(!downloadDir.exists()){
             downloadDir.mkdirs();
         }
+        //this will contain the capture images of reported OCs
+        File imagesDir = new File(downloadDir,"images");
+        if(!imagesDir.exists()){
+            imagesDir.mkdirs();
+        }
+
         //create directory for downloaded files
         db = new File(contentDir,"db");
         if(!db.exists()){

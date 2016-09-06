@@ -2,11 +2,12 @@ package com.indra.rover.mwsi.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.indra.rover.mwsi.data.db.MRUDao;
 import com.indra.rover.mwsi.data.pojo.MRU;
+import com.opencsv.CSVReader;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,19 +16,20 @@ import java.io.IOException;
  * Created by leonardoilagan on 04/09/2016.
  */
 
-public class FileParser extends AsyncTask<String,Integer,String> {
+public class FileParser extends AsyncTask<File,Integer,String> {
 
     Context context;
-    Downloadlistener listener;
+    DownloadListener listener;
     MRUDao mruDao;
-    File file;
-    public FileParser(File file, Context context,Downloadlistener listener){
+
+    public FileParser(Context context){
         this.context = context;
-        this.listener = listener;
-        this.file = file;
         mruDao = new MRUDao(context);
     }
 
+    public void setListener(DownloadListener listener){
+        this.listener =listener;
+    }
 
     @Override
     protected void onPreExecute() {
@@ -35,9 +37,14 @@ public class FileParser extends AsyncTask<String,Integer,String> {
     }
 
     @Override
-    protected String doInBackground(String... strings) {
-        String path =  file.getAbsolutePath();
-        parseFile(file);
+    protected String doInBackground(File... files) {
+        for (File file : files) {
+            if (!file.isDirectory()) {
+                if(file.getName().endsWith(".txt")){
+                    parseFile(file);
+                }
+            }
+        }
         return null;
     }
 
@@ -45,10 +52,11 @@ public class FileParser extends AsyncTask<String,Integer,String> {
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
         listener.onPostDownloadResult(true);
+
     }
 
-    public interface  Downloadlistener {
-        public void onPostDownloadResult(boolean status);
+    public interface DownloadListener {
+         void onPostDownloadResult(boolean status);
 
     }
 
@@ -56,11 +64,12 @@ public class FileParser extends AsyncTask<String,Integer,String> {
     private void parseFile(File file){
         try {
 
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
+            CSVReader reader = new CSVReader(new FileReader(file), '|', '\"', 1);
 
-            while ((line = br.readLine()) != null) {
-               String record[] = line.split("\\|");
+            String [] record;
+            while ((record = reader.readNext()) != null) {
+                // nextLine[] is an array of values from the line
+                Log.i("Test","im inserting"+record[0]);
                 MRU mru = new MRU();
                 mru.setId(record[0]);
                 mru.setBc_code(record[1]);
@@ -77,8 +86,11 @@ public class FileParser extends AsyncTask<String,Integer,String> {
                 mru.setUnread(Integer.parseInt(record[12]));
                 mru.setUndelivered(Integer.parseInt(record[13]));
                 mruDao.insertMRU(mru);
+
+
             }
-            br.close();
+
+
         }
         catch (IOException e) {
 

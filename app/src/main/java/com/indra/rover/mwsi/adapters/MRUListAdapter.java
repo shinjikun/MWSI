@@ -37,7 +37,7 @@ public class MRUListAdapter  extends RecyclerView.Adapter<MRUListAdapter.MyViewH
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         MRU mru = arryList.get(position);
-        holder.txtMruTotal.setText(String.valueOf(mru.getTotal()));
+        holder.txtMruTotal.setText(String.valueOf(mru.getCustomer_count()));
         holder.txtUnDelivered.setText(String.valueOf(mru.getUndelivered()));
         holder.txtMruTotal.setText(String.valueOf(mru.getTotal()));
         holder.txtUnPrinted.setText(String.valueOf(mru.getUnprinted()));

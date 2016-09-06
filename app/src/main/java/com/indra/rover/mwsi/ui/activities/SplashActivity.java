@@ -4,17 +4,17 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Window;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.FileParser;
 import com.indra.rover.mwsi.utils.FileUtils;
-import com.indra.rover.mwsi.utils.GPSTracker;
 import com.indra.rover.mwsi.utils.PreferenceKeys;
-import com.indra.rover.mwsi.utils.Utils;
 
-public class SplashActivity extends AppCompatActivity  implements Constants, FileParser.Downloadlistener{
+import java.io.File;
+
+public class SplashActivity extends AppCompatActivity  implements Constants,
+        FileParser.DownloadListener {
 
     PreferenceKeys prefs;
     @Override
@@ -28,7 +28,8 @@ public class SplashActivity extends AppCompatActivity  implements Constants, Fil
         //check first if there is downloaded files from DS that needs to insert on db
         boolean mhas_update = prefs.getData(HAS_ROVER_UPDATE,false);
         if(mhas_update){
-            Log.i("test","has update");
+            Log.i("Test","reading files");
+            parseFiles();
         }
         else {
             Thread startThread =  new Thread(){
@@ -55,6 +56,16 @@ public class SplashActivity extends AppCompatActivity  implements Constants, Fil
         startActivity(intent);
         finish();
     }
+    File[] files;
+    int ctr =0;
+    private void parseFiles(){
+        String dir = android.os.Environment.getExternalStorageDirectory()+"/"+getPackageName()+"/uploads";
+        File parentDir = new File(dir);
+         files = parentDir.listFiles();
+         FileParser fileParser = new FileParser(this);
+        fileParser.setListener(this);
+         fileParser.execute(files);
+    }
 
     /**
      * initialize method
@@ -67,6 +78,8 @@ public class SplashActivity extends AppCompatActivity  implements Constants, Fil
 
     @Override
     public void onPostDownloadResult(boolean status) {
+        prefs.setData(HAS_ROVER_UPDATE,false);
+        loadMainScreen();
 
     }
 }

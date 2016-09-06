@@ -48,7 +48,7 @@
     <Spinner
         android:layout_width="70dp"
         android:layout_height="35dp"
-        android:id="@+id/spinner5"
+        android:id="@+id/spnMRUs"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -66,9 +66,9 @@
         android:id="@+id/textView29"
         android:layout_marginRight="5dp"
         android:layout_marginEnd="5dp"
-        android:layout_alignTop="@+id/spinner5"
-        android:layout_toLeftOf="@+id/spinner5"
-        android:layout_toStartOf="@+id/spinner5" />
+        android:layout_alignTop="@+id/spnMRUs"
+        android:layout_toLeftOf="@+id/spnMRUs"
+        android:layout_toStartOf="@+id/spnMRUs" />
 
 
 </RelativeLayout>

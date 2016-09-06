@@ -8,6 +8,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -18,20 +19,25 @@ import android.widget.TextView;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.adapters.MRUListAdapter;
+import com.indra.rover.mwsi.data.db.MRUDao;
 import com.indra.rover.mwsi.data.pojo.Item;
 import com.indra.rover.mwsi.data.pojo.MRU;
+import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.OnItemClickListener;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MRUListActivity extends AppCompatActivity  implements OnItemClickListener {
+public class MRUListActivity extends AppCompatActivity  implements OnItemClickListener,
+        DialogUtils.DialogListener {
 
     RecyclerView mRecycleview;
 
     private List<MRU> mruList = new ArrayList<>();
     private MRUListAdapter mAdapter;
-
+    DialogUtils dialogUtils;
+    final int DLG_SUCCESS=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +58,8 @@ public class MRUListActivity extends AppCompatActivity  implements OnItemClickLi
         mRecycleview.setLayoutManager(mLayoutManager);
         mRecycleview.setItemAnimator(new DefaultItemAnimator());
         mRecycleview.setAdapter(mAdapter);
+        dialogUtils = new DialogUtils(this);
+        dialogUtils.setListener(this);
         prepareData();
 
 
@@ -59,22 +67,11 @@ public class MRUListActivity extends AppCompatActivity  implements OnItemClickLi
 
 
     private void prepareData(){
-        MRU mru = new MRU("3230",3,3,3,9);
-        mruList.add(mru);
-
-        mru = new MRU("3431",3,3,3,9);
-        mruList.add(mru);
-
-        mru = new MRU("3432",3,3,3,9);
-        mruList.add(mru);
-
-        mru = new MRU("3433",3,3,3,9);
-        mruList.add(mru);
-
-        mru = new MRU("3434",3,3,3,9);
-        mruList.add(mru);
-        mru = new MRU("3435",3,3,3,9);
-        mruList.add(mru);
+        MRUDao mruDao = new MRUDao(this);
+       List<MRU> mMRU = mruDao.getMRUs();
+        for (MRU mru : mMRU) {
+            mruList.add(mru);
+        }
         mAdapter.notifyDataSetChanged();
 
     }
@@ -132,13 +129,31 @@ public class MRUListActivity extends AppCompatActivity  implements OnItemClickLi
             @Override
             public void onClick(View view) {
                 String value =   txtDlg.getText().toString();
-                loadConsumerInfo(mru);
-                dialog.dismiss();
+                if(value.equals(mru.getReader_code())){
+                    //dialogUtils.showOKDialog(DLG_SUCCESS,"Welcome!!",mru.getReader_name(),new Bundle());
+                    dialog.dismiss();
+                    loadConsumerInfo(mru);
+                }
+                else {
+                    dialogUtils.showOKDialog(111,"","Wrong Meter Code",new Bundle());
+                    dialog.dismiss();
+                }
+
             }
         });
 
         TextView txt = (TextView)dialog.findViewById(R.id.dlg_title);
 
         dialog.show();
+    }
+
+    @Override
+    public void dialog_confirm(int dialog_id, Bundle params) {
+
+    }
+
+    @Override
+    public void dialog_cancel(int dialog_id, Bundle params) {
+
     }
 }

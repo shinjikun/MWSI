@@ -10,4 +10,6 @@ public interface  Constants {
    String GPS_LOGGING_ENABLED="gpslogging";
 
    String PRINT_STUB_ENABLED="printstub";
+
+   String APP_STATUS = "app_status";
 }
