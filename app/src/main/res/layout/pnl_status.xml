@@ -82,10 +82,57 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Medium Text"
-        android:id="@+id/textView38"
+        android:id="@+id/txtMRUnum"
         android:layout_below="@+id/txtStatusTitle"
         android:layout_toRightOf="@+id/textView33"
         android:layout_toEndOf="@+id/textView33"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtBillMonth"
+        android:layout_below="@+id/txtMRUnum"
+        android:layout_toRightOf="@+id/textView34"
+        android:layout_toEndOf="@+id/textView34"
+        android:textStyle="bold"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtReadDate"
+        android:layout_below="@+id/txtBillMonth"
+        android:layout_toRightOf="@+id/textView35"
+        android:layout_toEndOf="@+id/textView35"
+        android:textStyle="bold"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtStartTime"
+        android:layout_below="@+id/txtReadDate"
+        android:layout_toRightOf="@+id/textView36"
+        android:layout_toEndOf="@+id/textView36"
+        android:textStyle="bold"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtEndTime"
+        android:layout_below="@+id/txtStartTime"
+        android:layout_toRightOf="@+id/textView37"
+        android:layout_toEndOf="@+id/textView37"
+        android:textStyle="bold"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"/>
+
 </RelativeLayout>

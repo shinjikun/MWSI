@@ -4,8 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-
-import com.indra.rover.mwsi.data.pojo.DeliveryCode;
 import com.indra.rover.mwsi.data.pojo.MRU;
 
 import java.util.ArrayList;
@@ -58,6 +56,37 @@ public class MRUDao  extends  ModelDao{
         return rowInsert;
     }
 
+    public MRU getMRUStats(String mruID){
+        MRU mru=null;
+        try{
+            open();
+            boolean isStatus = false;
+            String sql_stmt = "SELECT * from T_MRU_INFO where MRU ="+mruID ;
+            if(mruID.equals("All")){
+                sql_stmt = "select  sum(CUST_COUNT) as CUST_COUNT, sum(ACTIVE_COUNT) as ACTIVE_COUNT, " +
+                        "sum(BLOCKED_COUNT) as BLOCKED_COUNT, sum(READ_METERS) as READ_METERS, " +
+                        "sum(UNREAD_METERS) as UNREAD_METERS ,sum(UNDELIV_BILLS) as" +
+                        " UNDELIV_BILLS from T_MRU_INFO";
+                isStatus = true;
+            }
+
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    mru = new MRU(cursor,isStatus);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch(SQLException sql){
+            sql.printStackTrace();
+        }finally {
+            close();
+        }
+        return mru;
+
+    }
+
+
     public MRU getMRU(String mruID){
         MRU mru=null;
         try{
@@ -97,6 +126,27 @@ public class MRUDao  extends  ModelDao{
             close();
         }
         return arryList;
+    }
+
+    /**
+     * returns how many MRUs are stored in T_MRU_INFO table
+     */
+    public int countMRUs(){
+        int count =0;
+        try {
+            open();
+            String sql_stmt = "SELECT count(*) as count  from T_MRU_INFO";
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if(cursor.moveToFirst()){
+                count =2;
+            }
+            cursor.close();
+        }catch (SQLException sql){
+            sql.printStackTrace();
+        }finally {
+            close();
+        }
+        return  count;
     }
 
 

@@ -11,6 +11,7 @@ import com.opencsv.CSVReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Created by leonardoilagan on 04/09/2016.
@@ -69,7 +70,7 @@ public class FileParser extends AsyncTask<File,Integer,String> {
             String [] record;
             while ((record = reader.readNext()) != null) {
                 // nextLine[] is an array of values from the line
-                Log.i("Test","im inserting"+record[0]);
+
                 MRU mru = new MRU();
                 mru.setId(record[0]);
                 mru.setBc_code(record[1]);

@@ -26,7 +26,7 @@
     <string name="str_start_time">Start Time : </string>
     <string name="str_end_time">End Time : </string>
     <!-- MRU List Strings-->
-    <string name="str_mru_list_title">MRU List</string>
+    <string name="str_mru_list_title">MRU(s)</string>
     <string name="str_mru_unread">Unread</string>
     <string name="str_mru_unprinted">Unprinted :</string>
     <string name="str_mru_undelivered">Undelivered:</string>

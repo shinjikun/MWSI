@@ -1,18 +1,21 @@
 package com.indra.rover.mwsi.ui.fragments;
 
-
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.MRUDao;
 import com.indra.rover.mwsi.data.pojo.MRU;
+
 import com.indra.rover.mwsi.ui.view.CustomItemView;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 
 /**
@@ -44,6 +47,7 @@ public class MeterStatusFragment extends Fragment {
         args.putInt(ARG_PARAM1, param);
         args.putString(ARG_IDPARAM,mruID);
         fragment.setArguments(args);
+
         return fragment;
     }
     public MeterStatusFragment() {
@@ -59,7 +63,7 @@ public class MeterStatusFragment extends Fragment {
             mruID = getArguments().getString(ARG_IDPARAM);
             selectedMRU = mruDao.getMRU(mruID);
         }
-
+        MainApp.bus.register(this);
     }
 
     @Override
@@ -70,17 +74,14 @@ public class MeterStatusFragment extends Fragment {
          mLayout= (LinearLayout) view.findViewById(R.id.pnl_status);
 
         setup();
+
         return  view;
     }
 
 
     private void setup(){
-        int index ;
         switch(mParam){
-            case 0:
-              infoScreen();
-                break;
-            case 1 :
+           case 1 :
                meterScreen();
                 break;
             case 2 :
@@ -91,34 +92,9 @@ public class MeterStatusFragment extends Fragment {
     }
 
 
-    private void infoScreen(){
-        LinearLayout.LayoutParams layoutParams= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        CustomItemView item = new CustomItemView(getActivity());
-        item.setLabel("MRU LOADED :");
-        item.setValue("DOWNLOADED");
-        item.setLayoutParams(layoutParams);
-        mLayout.addView(item);
-        item = new CustomItemView(getActivity());
-        item.setLabel("Bill Month :");
-        item.setValue("September");
-        item.setLayoutParams(layoutParams);
-        mLayout.addView(item);
-
-        item = new CustomItemView(getActivity());
-        item.setLabel("Reading Date :");
-        item.setValue(selectedMRU.getReading_date());
-        item.setLayoutParams(layoutParams);
-        mLayout.addView(item);
-
-        item = new CustomItemView(getActivity());
-        item.setLabel("Due Reading Date :");
-        item.setValue(selectedMRU.getDue_date());
-        item.setLayoutParams(layoutParams);
-        mLayout.addView(item);
-    }
-
     private void meterScreen(){
+        //start with a clean slate( no views added to  this layout
+        mLayout.removeAllViews();
         LinearLayout.LayoutParams layoutParams= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
 
@@ -130,7 +106,7 @@ public class MeterStatusFragment extends Fragment {
         mLayout.addView(item);
 
         item = new CustomItemView(getActivity());
-        item.setLabel("Found Connection :");
+        item.setLabel("Found Connected :");
         String foundConnect = String.valueOf(selectedMRU.getActive_count());
         item.setValue(foundConnect);
         item.setLayoutParams(layoutParams);
@@ -165,6 +141,8 @@ public class MeterStatusFragment extends Fragment {
     }
 
     private void deliveryScreen(){
+        //start with a clean slate( no views added to  this layout
+        mLayout.removeAllViews();
         LinearLayout.LayoutParams layoutParams= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
 
@@ -211,7 +189,19 @@ public class MeterStatusFragment extends Fragment {
 
 
 
+    @Subscribe
+    public void getMessage(String mruID) {
+            selectedMRU = mruDao.getMRUStats(mruID);
+
+            setup();
+
+    }
 
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        MainApp.bus.unregister(this);
 
+    }
 }
