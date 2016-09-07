@@ -22,7 +22,7 @@
 
 
     <Spinner
-        android:layout_width="70dp"
+        android:layout_width="100dp"
         android:layout_height="35dp"
         android:id="@+id/spnMRUs"
         android:layout_below="@+id/pnl1"

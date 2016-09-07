@@ -2,7 +2,6 @@ package com.indra.rover.mwsi.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.indra.rover.mwsi.data.db.MRUDao;
 import com.indra.rover.mwsi.data.pojo.MRU;
@@ -11,7 +10,6 @@ import com.opencsv.CSVReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Created by leonardoilagan on 04/09/2016.
@@ -63,6 +61,18 @@ public class FileParser extends AsyncTask<File,Integer,String> {
 
 
     private void parseFile(File file){
+        String fileName =  file.getName();
+        if(fileName.startsWith("BK")){
+
+        }
+        //MRU file
+        else if(fileName.startsWith("BNFO"))  {
+           parseMRUFile(file);
+        }
+
+    }
+
+    private void parseMRUFile(File file){
         try {
 
             CSVReader reader = new CSVReader(new FileReader(file), '|', '\"', 1);
