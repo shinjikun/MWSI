@@ -138,6 +138,12 @@ public class MeterStatusFragment extends Fragment {
         item.setValue("0");
         item.setLayoutParams(layoutParams);
         mLayout.addView(item);
+
+        item = new CustomItemView(getActivity());
+        item.setLabel("With OC :");
+        item.setValue("0");
+        item.setLayoutParams(layoutParams);
+        mLayout.addView(item);
     }
 
     private void deliveryScreen(){
@@ -163,13 +169,13 @@ public class MeterStatusFragment extends Fragment {
 
 
         item = new CustomItemView(getActivity());
-        item.setLabel("Printed :");
+        item.setLabel("Billed :");
         item.setValue("0");
         item.setLayoutParams(layoutParams);
         mLayout.addView(item);
 
         item = new CustomItemView(getActivity());
-        item.setLabel("UnPrinted :");
+        item.setLabel("UnBilled :");
         item.setValue("0");
         item.setLayoutParams(layoutParams);
         mLayout.addView(item);

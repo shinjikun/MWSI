@@ -2,20 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="5dp">
+    android:layout_marginBottom="2dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/txtLabelTitle"
         android:textStyle="bold"
         android:layout_marginRight="@dimen/spacing"
-        android:layout_marginEnd="@dimen/spacing"/>
+        android:layout_marginEnd="@dimen/spacing"
+        android:textSize="16sp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/txtValue" />
+        android:id="@+id/txtValue"
+        android:textSize="16sp"/>
 </LinearLayout>

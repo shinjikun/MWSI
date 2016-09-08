@@ -20,12 +20,17 @@ public class PreviousData {
         prevconsline2 = records[71];
         previous_Remarks = records[37];
         previous_invoice_num = records[38];
-        prevFF1 = Integer.parseInt(records[28]);
-        prevFF2 = Integer.parseInt(records[29]);
+        if(!records[28].isEmpty())
+            prevFF1 = Integer.parseInt(records[28]);
+        if(!records[29].isEmpty())
+            prevFF2 = Integer.parseInt(records[29]);
         //bill previous reading date
-        setBillprevRDG(Integer.parseInt(records[19]));
-        setBillprevRG2(Integer.parseInt(records[20]));
-        setBillprevactag(Integer.parseInt(records[21]));
+        if(!records[19].isEmpty())
+            setBillprevRDG(Integer.parseInt(records[19]));
+        if(!records[20].isEmpty())
+            setBillprevRG2(Integer.parseInt(records[20]));
+        if(!records[21].isEmpty())
+            setBillprevactag(Integer.parseInt(records[21]));
     }
 
     public void setPrevconsline1(String prevconsline1) {

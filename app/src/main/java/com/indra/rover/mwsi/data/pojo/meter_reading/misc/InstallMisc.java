@@ -1,5 +1,7 @@
 package com.indra.rover.mwsi.data.pojo.meter_reading.misc;
 
+import android.text.TextUtils;
+
 /**
  * Created by Indra on 9/8/2016.
  */
@@ -36,11 +38,14 @@ public class InstallMisc {
 
     public InstallMisc(String records[]){
         install_wtr_ind = records[50];
-        install_sewer_due = Float.parseFloat(records[51]);
+        if(!records[51].isEmpty())
+            install_sewer_due = Float.parseFloat(records[51]);
         install_sew_ind = records[52];
-        install_ar_due = Float.parseFloat(records[53]);
+        if(!records[53].isEmpty())
+            install_ar_due = Float.parseFloat(records[53]);
         install_ar_ind = records[54];
-        install_adv_due = Float.parseFloat(records[55]);
+        if(!records[55].isEmpty())
+            install_adv_due = Float.parseFloat(records[55]);
         install_adv_ind = records[56];
     }
 

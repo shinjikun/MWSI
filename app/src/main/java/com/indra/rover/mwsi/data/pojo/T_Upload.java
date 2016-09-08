@@ -60,6 +60,18 @@ public class T_Upload {
 
     public T_Upload(String[] record){
 
+        this.mru_id = record[0];
+        this.septic_charge = Float.parseFloat(record[44]);
+        this.changesize_charge = Float.parseFloat(record[45]);
+        this.restoration_charge = Float.parseFloat(record[46]);
+        this.misc_charge = Float.parseFloat(record[47]);
+        this.install_sewer_charge = Float.parseFloat(record[48]);
+        this.advance = Float.parseFloat(record[49]);
+        installMisc = new InstallMisc(record);
+        this.reopening_fee = Float.parseFloat(record[59]);
+        this.meter_charges = Float.parseFloat(record[60]);
+        this.gd_charge = Float.parseFloat(record[61]);
+        this.other_charges = Float.parseFloat(record[62]);
     }
 
 

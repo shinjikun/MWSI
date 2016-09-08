@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/fragments_margin"
+    android:padding="8dp"
     android:orientation="vertical"
     tools:context="com.indra.rover.mwsi.ui.fragments.MeterStatusFragment"
     android:id="@+id/pnl_status">
