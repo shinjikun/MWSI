@@ -28,7 +28,7 @@ public class SplashActivity extends AppCompatActivity  implements Constants,
         //check first if there is downloaded files from DS that needs to insert on db
         boolean mhas_update = prefs.getData(HAS_ROVER_UPDATE,false);
         if(mhas_update){
-            Log.i("Test","reading files");
+
             parseFiles();
         }
         else {

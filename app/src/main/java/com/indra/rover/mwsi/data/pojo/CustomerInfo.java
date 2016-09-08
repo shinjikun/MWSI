@@ -5,7 +5,7 @@ import android.database.Cursor;
 /**
  * Created by Indra on 9/7/2016.
  */
-public class Customer {
+public class CustomerInfo {
 
     /**
      *  customer account number
@@ -20,8 +20,11 @@ public class Customer {
      */
     String address;
 
+    public CustomerInfo(){
 
-    public Customer(Cursor cursor){
+    }
+
+    public CustomerInfo(Cursor cursor){
         this.accn =cursor.getString(cursor.getColumnIndexOrThrow("ACCTNUM"));
         this.cname = cursor.getString(cursor.getColumnIndexOrThrow("CUSTNAME"));
         this.address = cursor.getString(cursor.getColumnIndexOrThrow("CUSTADDRESS"));

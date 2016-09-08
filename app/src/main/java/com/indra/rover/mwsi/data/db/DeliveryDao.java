@@ -4,8 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 
-import com.indra.rover.mwsi.data.pojo.DeliveryCode;
-import com.indra.rover.mwsi.data.pojo.ObservationCode;
+import com.indra.rover.mwsi.data.pojo.meter_reading.references.DeliveryCode;
+import com.indra.rover.mwsi.data.pojo.meter_reading.references.ObservationCode;
 
 import java.util.ArrayList;
 import java.util.List;

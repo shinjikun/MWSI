@@ -1,6 +1,7 @@
 package com.indra.rover.mwsi.data.pojo;
 
 /**
+ * Class used to REFER the PERSON who uses this app ..albeit MWSI personnel
  * Created by Indra on 8/26/2016.
  */
 public class Meter_Reader extends Item {

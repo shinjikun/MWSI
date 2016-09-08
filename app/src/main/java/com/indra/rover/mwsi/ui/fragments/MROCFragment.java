@@ -13,8 +13,7 @@ import android.widget.Spinner;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.DeliveryDao;
-import com.indra.rover.mwsi.data.pojo.DeliveryCode;
-import com.indra.rover.mwsi.data.pojo.ObservationCode;
+import com.indra.rover.mwsi.data.pojo.meter_reading.references.ObservationCode;
 
 import java.util.ArrayList;
 import java.util.List;

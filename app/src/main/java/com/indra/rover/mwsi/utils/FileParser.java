@@ -2,9 +2,16 @@ package com.indra.rover.mwsi.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.indra.rover.mwsi.data.db.MRUDao;
+import com.indra.rover.mwsi.data.pojo.meter_reading.misc.InstallMisc;
+import com.indra.rover.mwsi.data.pojo.MeterReading;
+import com.indra.rover.mwsi.data.pojo.CustomerInfo;
 import com.indra.rover.mwsi.data.pojo.MRU;
+import com.indra.rover.mwsi.data.pojo.meter_reading.misc.PreviousData;
+import com.indra.rover.mwsi.data.pojo.meter_reading.misc.ProRate;
+import com.indra.rover.mwsi.data.pojo.T_Download_Info;
 import com.opencsv.CSVReader;
 
 import java.io.File;
@@ -62,8 +69,9 @@ public class FileParser extends AsyncTask<File,Integer,String> {
 
     private void parseFile(File file){
         String fileName =  file.getName();
+        Log.i("Test",fileName);
         if(fileName.startsWith("BK")){
-
+            parseBKFile(file);
         }
         //MRU file
         else if(fileName.startsWith("BNFO"))  {
@@ -71,6 +79,104 @@ public class FileParser extends AsyncTask<File,Integer,String> {
         }
 
     }
+
+    private void parseBKFile(File file){
+        try {
+            CSVReader reader = new CSVReader(new FileReader(file), '|', '\"', 1);
+
+
+            String [] record;
+            while ((record = reader.readNext()) != null) {
+                // nextLine[] is an array of values from the line
+                T_Download_Info t_download_info = new T_Download_Info();
+                MeterReading currentReading = new MeterReading();
+                CustomerInfo customerInfo = new CustomerInfo();
+
+                //mru id
+                String mru = record[0];
+                t_download_info.setMru_id(mru);
+                currentReading.setMru(mru);
+
+                //seq number
+                t_download_info.setSeq_number(record[1]);
+
+                //customer account number
+                String acct_number =  record[2];
+                customerInfo.setAccn(acct_number);
+                currentReading.setAcctnum(acct_number);
+
+                //customer account name
+                customerInfo.setCname(record[3]);
+
+                //customer address
+                customerInfo.setAddress(record[4]);
+                t_download_info.setCustomer(customerInfo);
+
+                //bill class
+                t_download_info.setBill_class(record[5]);
+                //rate type
+                t_download_info.setRate_type(record[6]);
+                //bulk flag
+                t_download_info.setBulk_flag(record[7]);
+                //account status
+                t_download_info.setAcct_status(Integer.parseInt(record[8]));
+                //NODIALS|
+                //meter number
+                t_download_info.setMeter_number(record[9]);
+                currentReading.setMeterno(record[9]);
+                //dlcdocno
+                t_download_info.setDldocno(record[10]);
+                currentReading.setCrdocno(record[10]);
+                //material no
+                t_download_info.setMterial_number(record[11]);
+                //meter size
+                t_download_info.setMeter_size(Integer.parseInt(record[12]));
+                //num dials
+                t_download_info.setNum_dials(Integer.parseInt(record[13]));
+                //grp flag
+                t_download_info.setGrp_flag(record[14]);
+                //block flag
+                t_download_info.setBlock_tag(record[15]);
+                //disc tag flag
+                t_download_info.setDisc_tag(record[16]);
+                //previous reading date
+                t_download_info.setPrevRDGdate(record[17]);
+                //actual previous reading
+                t_download_info.setActprevRDG(Integer.parseInt(record[18]));
+
+                t_download_info.setPracflag(Short.parseShort(record[22]));
+                t_download_info.setPconsavgflag(Short.parseShort(record[23]));
+                t_download_info.setAve_consumpstions(Integer.parseInt(record[24]));
+                t_download_info.setDpreplmtr_code(Integer.parseInt(record[25]));
+
+
+
+
+                t_download_info.setNmintRDG(Integer.parseInt(record[26]));
+
+                t_download_info.setNmConsfactor(Integer.parseInt(record[27]));
+                t_download_info.setGt34factor(Integer.parseInt(record[31]));
+                t_download_info.setGt34flag(Integer.parseInt(record[30]));
+
+
+                t_download_info.setProrates(new ProRate(record));
+
+                //Installation Misellanious
+                InstallMisc installMisc = new InstallMisc(record);
+                t_download_info.setInstallMisc(installMisc);
+                currentReading.setInstallMisc(installMisc);
+
+                //previous reading details
+                PreviousData previousData = new PreviousData(record);
+                t_download_info.setPrevReading(previousData);
+
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     private void parseMRUFile(File file){
         try {
