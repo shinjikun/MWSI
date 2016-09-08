@@ -56,24 +56,98 @@ public class T_Upload {
     float total_amt_due;
     int print_count;
     int print_tag;
+    String ULDOCNO;
     InstallMisc installMisc;
 
     public T_Upload(String[] record){
 
         this.mru_id = record[0];
-        this.septic_charge = Float.parseFloat(record[44]);
-        this.changesize_charge = Float.parseFloat(record[45]);
-        this.restoration_charge = Float.parseFloat(record[46]);
-        this.misc_charge = Float.parseFloat(record[47]);
-        this.install_sewer_charge = Float.parseFloat(record[48]);
-        this.advance = Float.parseFloat(record[49]);
+        if(!record[44].isEmpty())
+            this.septic_charge = Float.parseFloat(record[44]);
+        if(!record[45].isEmpty())
+            this.changesize_charge = Float.parseFloat(record[45]);
+        if(!record[46].isEmpty())
+            this.restoration_charge = Float.parseFloat(record[46]);
+        if(!record[47].isEmpty())
+            this.misc_charge = Float.parseFloat(record[47]);
+        if(!record[48].isEmpty())
+            this.install_sewer_charge = Float.parseFloat(record[48]);
+        if(!record[49].isEmpty())
+            this.advance = Float.parseFloat(record[49]);
+
+        if(!record[59].isEmpty())
+            this.reopening_fee = Float.parseFloat(record[59]);
+        if(!record[60].isEmpty())
+            this.meter_charges = Float.parseFloat(record[60]);
+        if(!record[61].isEmpty())
+            this.gd_charge = Float.parseFloat(record[61]);
+        if(!record[62].isEmpty())
+            this.other_charges = Float.parseFloat(record[62]);
+
+        this.ULDOCNO = record[10];
+
         installMisc = new InstallMisc(record);
-        this.reopening_fee = Float.parseFloat(record[59]);
-        this.meter_charges = Float.parseFloat(record[60]);
-        this.gd_charge = Float.parseFloat(record[61]);
-        this.other_charges = Float.parseFloat(record[62]);
+
+    }
+
+    public String getULDOCNO() {
+        return ULDOCNO;
+    }
+
+    public String getMru_id() {
+        return mru_id;
+    }
+
+    public InstallMisc getInstallMisc() {
+        return installMisc;
+    }
+
+    public String getAcct_num() {
+        return acct_num;
+    }
+
+    public float getPrevunpaid() {
+        return prevunpaid;
+    }
+
+    public float getSeptic_charge() {
+        return septic_charge;
     }
 
 
+    public float getChangesize_charge() {
+        return changesize_charge;
+    }
 
+    public float getRestoration_charge() {
+        return restoration_charge;
+    }
+
+    public float getMisc_charge() {
+        return misc_charge;
+    }
+
+    public float getInstall_sewer_charge() {
+        return install_sewer_charge;
+    }
+
+    public float getAdvance() {
+        return advance;
+    }
+
+    public float getReopening_fee() {
+        return reopening_fee;
+    }
+
+    public float getMeter_charges() {
+        return meter_charges;
+    }
+
+    public float getGd_charge() {
+        return gd_charge;
+    }
+
+    public float getOther_charges() {
+        return other_charges;
+    }
 }

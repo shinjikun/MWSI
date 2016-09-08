@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.indra.rover.mwsi.data.db.MRUDao;
+import com.indra.rover.mwsi.data.db.MeterReadingDao;
+import com.indra.rover.mwsi.data.pojo.T_Upload;
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.InstallMisc;
 import com.indra.rover.mwsi.data.pojo.MeterReading;
 import com.indra.rover.mwsi.data.pojo.CustomerInfo;
@@ -27,10 +29,11 @@ public class FileParser extends AsyncTask<File,Integer,String> {
     Context context;
     DownloadListener listener;
     MRUDao mruDao;
-
+    MeterReadingDao mRDao;
     public FileParser(Context context){
         this.context = context;
         mruDao = new MRUDao(context);
+        mRDao = new MeterReadingDao(context);
     }
 
     public void setListener(DownloadListener listener){
@@ -85,6 +88,7 @@ public class FileParser extends AsyncTask<File,Integer,String> {
 
 
             String [] record;
+            int i =0;
             while ((record = reader.readNext()) != null) {
                 // nextLine[] is an array of values from the line
                 T_Download_Info t_download_info = new T_Download_Info(record);
@@ -120,6 +124,8 @@ public class FileParser extends AsyncTask<File,Integer,String> {
                 //previous reading details
                 PreviousData previousData = new PreviousData(record);
                 t_download_info.setPrevReading(previousData);
+                T_Upload t_upload = new T_Upload(record);
+                mRDao.insertTUploadData(t_upload,i++);
 
             }
 

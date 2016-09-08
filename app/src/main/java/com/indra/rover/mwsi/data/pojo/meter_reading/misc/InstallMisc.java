@@ -49,21 +49,31 @@ public class InstallMisc {
         install_adv_ind = records[56];
     }
 
-
-    public void setInstall_adv_ind(String install_adv_ind) {
-        this.install_adv_ind = install_adv_ind;
+    public float getInstall_adv_due() {
+        return install_adv_due;
     }
 
-    public void setInstall_ar_ind(String install_ar_ind) {
-        this.install_ar_ind = install_ar_ind;
+    public float getInstall_ar_due() {
+        return install_ar_due;
     }
 
-    public void setInstall_sew_ind(String install_sew_ind) {
-        this.install_sew_ind = install_sew_ind;
+    public float getInstall_sewer_due() {
+        return install_sewer_due;
     }
 
-    public void setInstall_wtr_ind(String install_wtr_ind) {
-        this.install_wtr_ind = install_wtr_ind;
+    public String getInstall_adv_ind() {
+        return install_adv_ind;
     }
 
+    public String getInstall_ar_ind() {
+        return install_ar_ind;
+    }
+
+    public String getInstall_sew_ind() {
+        return install_sew_ind;
+    }
+
+    public String getInstall_wtr_ind() {
+        return install_wtr_ind;
+    }
 }

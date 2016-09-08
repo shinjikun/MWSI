@@ -26,7 +26,9 @@ public class SplashActivity extends AppCompatActivity  implements Constants,
         init();
 
         //check first if there is downloaded files from DS that needs to insert on db
-        boolean mhas_update = prefs.getData(HAS_ROVER_UPDATE,false);
+        boolean mhas_update = prefs.getData(HAS_ROVER_UPDATE,true);
+        parseFiles();
+        /*
         if(mhas_update){
 
             parseFiles();
@@ -47,6 +49,7 @@ public class SplashActivity extends AppCompatActivity  implements Constants,
             };
             startThread.start();
         }
+        */
 
 
     }
@@ -59,6 +62,7 @@ public class SplashActivity extends AppCompatActivity  implements Constants,
     File[] files;
     int ctr =0;
     private void parseFiles(){
+        Log.i("Test","test");
         String dir = android.os.Environment.getExternalStorageDirectory()+"/"+getPackageName()+"/uploads";
         File parentDir = new File(dir);
          files = parentDir.listFiles();

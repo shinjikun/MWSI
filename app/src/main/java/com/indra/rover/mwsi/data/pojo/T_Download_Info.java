@@ -24,7 +24,7 @@ public class T_Download_Info {
     /**
      * Bill class
      */
-    String bill_class;
+    private String bill_class;
     String rate_type;
     String bulk_flag;
     int acct_status;
@@ -68,17 +68,17 @@ public class T_Download_Info {
     public T_Download_Info(String[] record){
 
         //mru id
-        setMru_id(record[0]);
+        this.mru_id =record[0];
 
         //seq number
-        setSeq_number(record[1]);
+        this.seq_number = record[1];
 
         //bill class
-        setBill_class(record[5]);
+       this.bill_class = record[5];
         //rate type
-        setRate_type(record[6]);
+        this.rate_type = record[6];
         //bulk flag
-        setBulk_flag(record[7]);
+       this.bulk_flag = record[7];
         //account status
         setAcct_status(Integer.parseInt(record[8]));
         //NODIALS|
