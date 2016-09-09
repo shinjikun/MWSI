@@ -48,9 +48,33 @@ set file=.
 @rem upload - to push files from pc to device
 @rem updatedb - to update the db of the rover app
 @rem checkversion check version installed inside the app versus the version app in DS
+@rem pull app's db
 SET cmd_arg=%1
 SET param2=%2
 
+
+if /I "%cmd_arg%"=="pulldb" (
+	call :check_devices
+	if  "!is_device!"=="1" (
+			call :push_files_block
+		) else (
+		echo No connected device
+		)
+	goto :skip
+		)
+
+
+
+if /I "%cmd_arg%"=="checkdevice" (
+	call :check_devices
+	if  "!is_device!"=="1" (
+			echo success
+		) else (
+		echo No connected device
+		)
+	goto :skip
+
+)
 
 
 if /I "%cmd_arg%"=="install" (
@@ -93,6 +117,8 @@ if /I "%cmd_arg%"=="upload" (
 		)
 	goto :skip
 		)
+
+
 if /I "%cmd_arg%"=="updatedb" (
 	call :check_devices
 	if  "!is_device!"=="1" (
