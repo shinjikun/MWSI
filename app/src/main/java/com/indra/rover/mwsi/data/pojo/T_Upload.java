@@ -59,36 +59,6 @@ public class T_Upload {
     String ULDOCNO;
     InstallMisc installMisc;
 
-    public T_Upload(String[] record){
-
-        this.mru_id = record[0];
-        if(!record[44].isEmpty())
-            this.septic_charge = Float.parseFloat(record[44]);
-        if(!record[45].isEmpty())
-            this.changesize_charge = Float.parseFloat(record[45]);
-        if(!record[46].isEmpty())
-            this.restoration_charge = Float.parseFloat(record[46]);
-        if(!record[47].isEmpty())
-            this.misc_charge = Float.parseFloat(record[47]);
-        if(!record[48].isEmpty())
-            this.install_sewer_charge = Float.parseFloat(record[48]);
-        if(!record[49].isEmpty())
-            this.advance = Float.parseFloat(record[49]);
-
-        if(!record[59].isEmpty())
-            this.reopening_fee = Float.parseFloat(record[59]);
-        if(!record[60].isEmpty())
-            this.meter_charges = Float.parseFloat(record[60]);
-        if(!record[61].isEmpty())
-            this.gd_charge = Float.parseFloat(record[61]);
-        if(!record[62].isEmpty())
-            this.other_charges = Float.parseFloat(record[62]);
-
-        this.ULDOCNO = record[10];
-
-        installMisc = new InstallMisc(record);
-
-    }
 
     public String getULDOCNO() {
         return ULDOCNO;

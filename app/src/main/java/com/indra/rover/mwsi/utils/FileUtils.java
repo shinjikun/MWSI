@@ -37,10 +37,16 @@ public class FileUtils {
             imagesDir.mkdirs();
         }
 
-        //create directory for downloaded files
+        //create directory for database files
         db = new File(contentDir,"db");
         if(!db.exists()){
             db.mkdirs();
         }
+        //create directory for db dump files
+        db = new File(contentDir,"dbdump");
+        if(!db.exists()){
+            db.mkdirs();
+        }
+
     }
 }

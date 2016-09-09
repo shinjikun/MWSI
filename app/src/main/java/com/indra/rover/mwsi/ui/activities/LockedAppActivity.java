@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,11 @@ import android.widget.Toast;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.PreferenceKeys;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
 
 public class LockedAppActivity extends AppCompatActivity implements Constants {
 
@@ -52,6 +58,33 @@ public class LockedAppActivity extends AppCompatActivity implements Constants {
         unregisterReceiver(broadcastReceiver);
     }
 
+
+
+    private void extractDB(){
+        try {
+            File    contentDir=new File(android.os.Environment.getExternalStorageDirectory(),getPackageName()+"/dbdump");
+
+            if (contentDir.canWrite()) {
+                String currentDBPath = "/data/data/" + getPackageName() + "/databases/MCFSRNB";
+                String backupDBPath = "backupname.db";
+                File currentDB = new File(currentDBPath);
+                File backupDB = new File(contentDir, backupDBPath);
+
+                if (currentDB.exists()) {
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+                }
+            }
+        } catch (Exception e) {
+
+        }
+
+
+    }
+
     // Add this inside your class
     BroadcastReceiver broadcastReceiver =  new BroadcastReceiver() {
         @Override
@@ -70,9 +103,12 @@ public class LockedAppActivity extends AppCompatActivity implements Constants {
                 setDrawable(R.drawable.ic_download);
                 txtSubTitle.setText(String.valueOf("Downloading files to DS"));
             }
-            else if(action.equals("db_update")){
+            else if(action.equals("updatedb")){
                 setDrawable(R.drawable.ic_db_update);
                 txtSubTitle.setText(String.valueOf("Fetching DB dump file to DS"));
+            }
+            else if(action.equals("pulldb")){
+                setDrawable(R.drawable.ic_db_update);
             }
 
             if(status.equals("started")){

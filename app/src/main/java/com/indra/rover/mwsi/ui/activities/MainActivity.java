@@ -2,6 +2,7 @@ package com.indra.rover.mwsi.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -10,6 +11,11 @@ import android.view.View;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.GPSTracker;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener , DialogUtils.DialogListener{
