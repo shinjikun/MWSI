@@ -20,10 +20,16 @@ import android.widget.TextView;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.adapters.StatusViewPagerAdapter;
+import com.indra.rover.mwsi.data.db.MeterReadingDao;
+import com.indra.rover.mwsi.data.pojo.CustomerInfo;
+import com.indra.rover.mwsi.data.pojo.T_Download_Info;
 import com.indra.rover.mwsi.ui.fragments.MRCustomerInfoFragment;
 import com.indra.rover.mwsi.ui.fragments.MRDeliveryRFragment;
 import com.indra.rover.mwsi.ui.fragments.MROCFragment;
 import com.indra.rover.mwsi.ui.fragments.MRRemarksFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MeterReadingActivity extends AppCompatActivity implements View.OnClickListener
 {
@@ -32,12 +38,20 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     TabLayout mTabLayout;
     ScrollView mScrollView;
     Dialog dialog;
+    String mru_id;
+    MeterReadingDao meterDao;
+    int current =0;
+    T_Download_Info currentDisplay;
+    List<T_Download_Info> arry;
+    FloatingActionButton fabLeft, fabRight;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meter_reading);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
 
         // add back arrow to toolbar
         if (getSupportActionBar() != null){
@@ -47,25 +61,87 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
         }
 
-        mScrollView = (ScrollView)findViewById(R.id.scroller);
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mViewPager.setOffscreenPageLimit(4);
-        setupViewPager(mViewPager);
 
-        mTabLayout = (TabLayout) findViewById(R.id.tabs);
-        mTabLayout.setupWithViewPager(mViewPager);
-        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fabRight);
-        fab.setOnClickListener(new View.OnClickListener(){
+       fabRight = (FloatingActionButton)findViewById(R.id.fabRight);
+        fabRight.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
+                if(current< arry.size()-1){
+                    current++;
+                    prepareData(current);
+                    fabLeft.setEnabled(true);
+                }
+                else {
+                    fabRight.setEnabled(false);
+                }
+            }
+        });
 
+
+
+        fabLeft = (FloatingActionButton) findViewById(R.id.fabLeft);
+        fabLeft.setEnabled(false);
+        fabLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(current!=0){
+                    current--;
+                    prepareData(current);
+                }
             }
         });
 
         Button btn =  (Button)findViewById(R.id.btnMREdit);
         btn.setOnClickListener(this);
+        Bundle extras = getIntent().getExtras();
+        meterDao = new MeterReadingDao(this);
+        arry = new ArrayList<>();
+        if (extras != null) {
+            this.mru_id = extras.getString("mru_id");
+            this.arry = meterDao.fetchInfos(this.mru_id);
+            fabLeft.setEnabled(false);
+            prepareData(current);
+        }
 
+        mScrollView = (ScrollView)findViewById(R.id.scroller);
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager.setOffscreenPageLimit(4);
+        if(!arry.isEmpty())
+            setupViewPager(mViewPager);
+
+        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        mTabLayout.setupWithViewPager(mViewPager);
+
+
+    }
+
+    private void prepareData(int index){
+       if(!arry.isEmpty()){
+           currentDisplay = this.arry.get(index);
+           CustomerInfo  customerInfo = currentDisplay.getCustomer();
+           TextView txt = (TextView)findViewById(R.id.txtCAN);
+           txt.setText(customerInfo.getAccn());
+           txt = (TextView)findViewById(R.id.txtName);
+           txt.setText(customerInfo.getCname());
+           txt = (TextView)findViewById(R.id.txtAddress);
+           txt.setText(customerInfo.getAddress());
+           txt = (TextView)findViewById(R.id.txtMeterNumber);
+           txt.setText(currentDisplay.getMeter_number());
+           txt = (TextView)findViewById(R.id.txtMeterNumber);
+           txt.setText(currentDisplay.getMeter_number());
+           txt = (TextView)findViewById(R.id.txtMRUID);
+           txt.setText(currentDisplay.getMru_id());
+           txt = (TextView)findViewById(R.id.txtSeqNum);
+           txt.setText(currentDisplay.getSeq_number());
+           String page = (current+1)+"/"+arry.size();
+
+           txt = (TextView)findViewById(R.id.txtPagination);
+           txt.setText(page);
+           txt = (TextView)findViewById(R.id.txtRateCode);
+           txt.setText(currentDisplay.getBillClass().getDesc());
+
+       }
     }
 
     private int[] getViewLocations(View view) {
@@ -83,8 +159,9 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     public void setupViewPager(ViewPager mViewPager){
         StatusViewPagerAdapter adapter = new StatusViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(MRCustomerInfoFragment.newInstance("2"), "Customer Info");
-        adapter.addFragment(MROCFragment.newInstance("2"), "OC");
+         String dldcono = currentDisplay.getDldocno();
+        adapter.addFragment(MRCustomerInfoFragment.newInstance(currentDisplay), "Customer Info");
+        adapter.addFragment(MROCFragment.newInstance(dldcono), "OC");
         adapter.addFragment(new MRRemarksFragment(), "Remarks");
         adapter.addFragment(MRDeliveryRFragment.newInstance("2"), "Delivery Remarks");
         mViewPager.setAdapter(adapter);
@@ -115,7 +192,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
-        TextView txt = (TextView)dialog.findViewById(R.id.dlg_title);
+
 
         dialog.show();
     }

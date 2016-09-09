@@ -45,7 +45,7 @@
     <string name="str_ebs">E B S</string>
     <!-- meter reading info  -->
     <string name="mr_meter_no">Meter no : </string>
-    <string name="mr_rate_code">Rate Code : </string>
+    <string name="mr_rate_code">Bill Class : </string>
     <string name="mr_mru_number">MRU Number : </string>
     <string name="mr_mru_installation">Installation : </string>
     <string name="mr_can">CAN : </string>

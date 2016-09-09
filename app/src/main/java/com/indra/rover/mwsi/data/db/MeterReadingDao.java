@@ -4,6 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.indra.rover.mwsi.data.pojo.MRU;
+import com.indra.rover.mwsi.data.pojo.T_Download_Info;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -166,6 +171,30 @@ public class MeterReadingDao extends ModelDao {
         return rowInsert;
     }
 
+
+    public List<T_Download_Info> fetchInfos(String mruID){
+        List<T_Download_Info> arry = new ArrayList<>();
+        String sql_stmt = "select r.BILL_CLASS_DESC,  t.* from T_DOWNLOAD t, R_BILL_CLASS r " +
+                "where t.BILL_CLASS = r.BILL_CLASS and MRU="+mruID;
+        try{
+            open();
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    T_Download_Info  download_info = new T_Download_Info(cursor);
+                    arry.add(download_info);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            close();
+        }
+
+
+        return arry;
+    }
 
     public boolean isExistData(String tablename,String columnname,String param){
         String selectSql = String.format(

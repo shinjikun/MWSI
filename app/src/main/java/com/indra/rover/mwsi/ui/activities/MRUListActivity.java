@@ -92,6 +92,7 @@ public class MRUListActivity extends AppCompatActivity  implements OnItemClickLi
 
     public void loadConsumerInfo(MRU item){
         Intent intent = new Intent(this,MeterReadingActivity.class);
+        intent.putExtra("mru_id", item.getId());
         startActivity(intent);
     }
 

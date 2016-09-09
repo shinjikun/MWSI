@@ -141,7 +141,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/str_sample_text"
-        android:id="@+id/textView16"
+        android:id="@+id/txtPrevRemarks"
         android:layout_below="@+id/textView15"
         android:layout_alignLeft="@+id/textView15"
         android:layout_alignStart="@+id/textView15"
