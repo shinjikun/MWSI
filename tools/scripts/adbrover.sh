@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 
 #start the application
@@ -13,7 +14,7 @@ adb shell dumpsys package com.indra.rover.mwsi |grep versionCode
 
 
 #send broadcast
-adb shell am broadcast -a com.indra.rover.mwsi.ROVER_MESSAGE  -p com.indra.rover.mwsi --es action upload --es status started --es file dd
+adb shell am broadcast -a com.indra.rover.mwsi.ROVER_MESSAGE  -p com.indra.rover.mwsi --es action upload --es status started --es file BNFOMULTBOOK.txt
 
 
 #install apk

@@ -9,13 +9,18 @@ import android.util.Log;
 import android.view.View;
 
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.utils.DialogUtils;
+import com.indra.rover.mwsi.utils.FileUploader;
 import com.indra.rover.mwsi.utils.GPSTracker;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener , DialogUtils.DialogListener{
@@ -62,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.btnSettings:
-                intent = new Intent(this, SettingsActivity.class);
+                intent =  new Intent(this,SettingsActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -79,6 +84,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void dialog_cancel(int dialog_id, Bundle params) {
+
+    }
+
+
+
+
+    private void extractDB(){
+        try {
+            File    contentDir=new File(android.os.Environment.getExternalStorageDirectory(),getPackageName()+"/dbdump");
+
+            if (contentDir.canWrite()) {
+                String currentDBPath = "/data/data/" + getPackageName() + "/databases/MCFSRNB";
+                String backupDBPath = "backupname.db";
+                File currentDB = new File(currentDBPath);
+                File backupDB = new File(contentDir, backupDBPath);
+
+                if (currentDB.exists()) {
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+                }
+            }
+        } catch (Exception e) {
+
+        }
+
 
     }
 }

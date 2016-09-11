@@ -51,4 +51,50 @@
         <item>3234</item>
         <item>3235</item>
     </string-array>
+
+    <string-array name="column_names">
+        <item>BOOKNO</item>
+        <item>ACCTNUM</item>
+        <item>DOCNO</item>
+        <item>METERNO</item>
+        <item>READTAG</item>
+        <item>RDGDATE</item>
+        <item>RDGTIME</item>
+        <item>SEQNO</item>
+        <item>BILLR_OC</item>
+        <item>FFCODE</item>
+        <item>REMARKS</item>
+        <item>BILLED_RDG</item>
+        <item>TRIES</item>
+        <item>BILLED_CONS</item>
+        <item>RANGECODE</item>
+        <item>CONSTAG</item>
+        <item>NEWMTRBRAND</item>
+        <item>NEWMTRNUM</item>
+        <item>DEL_CODE</item>
+        <item>DELIVERY_DATE</item>
+        <item>DELIVERY_TIME</item>
+        <item>DEL_REMARKS</item>
+        <item>SANZPER</item>
+        <item>BASECHRG</item>
+        <item>DISCOUNT</item>
+        <item>CERA</item>
+        <item>FCDA</item>
+        <item>ENVCHRG</item>
+        <item>SEWERCHRG</item>
+        <item>PREPAYADJ</item>
+        <item>MSC</item>
+        <item>SCDISC</item>
+        <item>TOTCHRGWOTAX</item>
+        <item>VAT</item>
+        <item>PIA</item>
+        <item>TOTCURRCHRG</item>
+        <item>TOTAMTDUE</item>
+        <item>BPRINTCNT</item>
+        <item>PRINT_TAG</item>
+        <item>READERNO</item>
+        <item>PRINT_DATE</item>
+        <item>SP_BILL_RULE</item>
+        <item>SP_COMP</item>
+    </string-array>
 </resources>

@@ -3,7 +3,6 @@ package com.indra.rover.mwsi.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -19,7 +18,7 @@ public class RoverDSReceiver extends BroadcastReceiver {
             String action =  bundle.getString("action");
             String status = bundle.getString("status");
             if(action!=null){
-                download_content(context,status,action);
+                sendBroadcast(context,status,action);
             }
         }
 
@@ -34,7 +33,7 @@ public class RoverDSReceiver extends BroadcastReceiver {
     context.startActivity(i);
     */
 
-    private void download_content(Context context, String status,String action){
+    private void sendBroadcast(Context context, String status, String action){
 
         Intent i = new Intent("com.indra.rover.mwsi.LOCKED");
         // Data you need to pass to activity

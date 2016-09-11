@@ -6,7 +6,9 @@ import android.database.Cursor;
 
 import com.indra.rover.mwsi.data.pojo.MRU;
 import com.indra.rover.mwsi.data.pojo.T_Download_Info;
+import com.opencsv.CSVWriter;
 
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -200,8 +202,46 @@ public class MeterReadingDao extends ModelDao {
         String selectSql = String.format(
                 "SELECT "+columnname+" from "+tablename+" where "+columnname+" = \"%s\" limit 1", param);
         Cursor cursor = database.rawQuery(selectSql, null);
+
         boolean result = cursor.moveToFirst();
         return result;
+    }
+
+
+    public List<String[]> query_upload(){
+        List<String[]> arry = new ArrayList<>();
+        String selectstmt = "Select u.mru as BOOKNO, u.ACCTNUM,u.ULDOCNO, c.METERNO,c.MR_TYPE_CODE as READTAG , c.RDG_DATE as RDGDATE ,c.RDG_TIME as RDGTIME ," +
+                "c.RECMD_SEQNO as SEQNO, c.FFCODE1 as BILLR_OC, c.FFCODE2 as FFCODE,c.REMARKS, c.PRESRDG as BILLED_RDG, c.RDG_TRIES as TRIES," +
+                "c.BILLED_CONS as BILLED_CONS, c.RANGE_CODE as RANDECODE, c.CONSTYPE_CODE as CONSTAG, c.MR_TYPE_CODE as NEWMTRBRAND," +
+                "c.NEW_METERNO as NEWMTRNUM, c.DEL_CODE as DEL_CODE,c.DELIV_DATE as DELIVERY_DATE, c.DELIV_TIME as DELIVERY_TIME, c.DELIV_REMARKS as DEL_REMARKS," +
+                "1 as SANZPER,u.BASIC_CHARGE as BASECHRG, u.DISCOUNT,u.CERA,u.FCDA,u.ENV_CHARGE as ENVCHRG, u.SEWER_CHARGE as SEWERCHRG, 1 as PREPAYADJ," +
+                "u.METER_CHARGES as MSC, u.SC_DISCOUNT as SCDISC, u.TOTCHRG_WO_TAX as TOTCHRGWOTAX , u.VAT_CHARGE as VAT ,1 as PIA," +
+                "u.SUBTOTAL_AMT as TOTCURRCHRG, u.TOTAL_AMT_DUE as TOTAMT_DUE, u.PRINT_COUNT as BPRINTCNT, u.PRINT_TAG ,c.BILLPRINT_DATE as PRINT_DATE," +
+                "1 as SP_BILL_RULE , c.SP_COMP from T_UPLOAD u, T_CURRENT_RDG c where u.ULDOCNO = c.CRDOCNO;";
+        try{
+            open();
+            Cursor cursor = database.rawQuery(selectstmt, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    int size = cursor.getColumnCount();
+                    String[] records = new String[size]  ;
+
+                    for(int i=0;i<size;i++){
+                        String data = cursor.getString(i);
+                        records[i]= data;
+                    }
+                    arry.add(records);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+
+        return arry;
+
     }
 
 

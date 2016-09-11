@@ -80,11 +80,9 @@ public class FileParser extends AsyncTask<File,Integer,String> {
 
 
             String [] record;
-            int i =0;
             while ((record = reader.readNext()) != null) {
                 // nextLine[] is an array of values from the line
 
-                i= i+1;
                 mRDao.insertTUploadData(record);
                 mRDao.insertTDLData(record);
                 mRDao.insertTCurrRDGData(record);

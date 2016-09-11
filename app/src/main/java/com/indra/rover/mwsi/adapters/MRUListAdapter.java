@@ -54,7 +54,7 @@ public class MRUListAdapter  extends RecyclerView.Adapter<MRUListAdapter.MyViewH
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView txtUnRead , txtMRUID, txtUnPrinted,txtUnDelivered,txtMruTotal;
+         TextView txtUnRead , txtMRUID, txtUnPrinted,txtUnDelivered,txtMruTotal;
         public MyViewHolder(View itemView) {
             super(itemView);
             txtMRUID =  (TextView) itemView.findViewById(R.id.txtMRUID);
@@ -64,7 +64,7 @@ public class MRUListAdapter  extends RecyclerView.Adapter<MRUListAdapter.MyViewH
             txtMruTotal = (TextView)itemView.findViewById(R.id.txtMruTotal);
         }
 
-        public void bind(final MRU item,final  int position, final OnItemClickListener listener) {
+         void bind(final MRU item,final  int position, final OnItemClickListener listener) {
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
