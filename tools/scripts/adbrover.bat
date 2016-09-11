@@ -1,5 +1,13 @@
+:: Name:     adbrover.bat
+:: Purpose:  Rover-Android Utility script
+::           A script that will install  apk, upload  and download file to  a connected
+::           android device via usb
+:: Author:   leonardo.ilagan@gmail.com
+:: Revision: September 2016 - initial version
+::
+
+
 @rem Rover-Android Util Script
-@rem A script that will install  apk, upload  and download file to  a connected  android device via usb 
 @echo off
 setlocal ENABLEEXTENSIONS EnableDelayedExpansion
 

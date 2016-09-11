@@ -2,10 +2,12 @@ package com.indra.rover.mwsi.data.pojo.meter_reading.misc;
 
 import android.database.Cursor;
 
+import java.io.Serializable;
+
 /**
  * Created by Indra on 9/8/2016.
  */
-public class PreviousData {
+public class PreviousData implements Serializable {
     String prevRemarks;
     int prevFF1;
     int prevFF2;

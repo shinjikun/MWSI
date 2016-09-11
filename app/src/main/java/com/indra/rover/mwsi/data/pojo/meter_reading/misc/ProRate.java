@@ -1,9 +1,11 @@
 package com.indra.rover.mwsi.data.pojo.meter_reading.misc;
 
+import java.io.Serializable;
+
 /**
  * Created by Indra on 9/8/2016.
  */
-public class ProRate {
+public class ProRate implements Serializable{
 
     short tarif_prorate;
     short fcda_prorate;

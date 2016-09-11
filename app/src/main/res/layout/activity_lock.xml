@@ -15,7 +15,8 @@
         android:id="@+id/img"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_lock" />
+        android:src="@drawable/ic_lock"
+        android:contentDescription="@string/cnt_app_locked" />
 
     <TextView
         android:layout_width="wrap_content"

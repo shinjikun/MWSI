@@ -46,7 +46,7 @@
         android:background="@drawable/btn_active_pink"
         android:padding="4dp"
         android:layout_marginTop="20dp"
-      />
+        android:contentDescription="" />
 
     <EditText
         android:layout_width="match_parent"

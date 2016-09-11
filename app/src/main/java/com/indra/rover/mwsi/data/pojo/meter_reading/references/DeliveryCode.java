@@ -2,10 +2,12 @@ package com.indra.rover.mwsi.data.pojo.meter_reading.references;
 
 import android.database.Cursor;
 
+import java.io.Serializable;
+
 /**
  * Created by Indra on 8/26/2016.
  */
-public class DeliveryCode {
+public class DeliveryCode implements Serializable {
     private String del_code;
     private String del_desc;
     private int del_signreq_flag;

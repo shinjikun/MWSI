@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cnt_delete">Delete Content</string>
+    <string name="cnt_app_locked">App is in Locked Mode</string>
+    <string name="cntr_splash">MWSS Logo</string>
+    <string name="app_version">ver 1.00</string>
+</resources>

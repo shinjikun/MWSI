@@ -2,39 +2,41 @@ package com.indra.rover.mwsi.data.pojo.meter_reading.misc;
 
 import android.text.TextUtils;
 
+import java.io.Serializable;
+
 /**
  * Created by Indra on 9/8/2016.
  */
-public class InstallMisc {
+public class InstallMisc implements Serializable {
     /**
      * Installment for Installation Charges Indicator
      */
 
-    String install_wtr_ind;
+    private String install_wtr_ind;
     /**
      * Installment for Sewer Installation Charges Amount
      */
-    float install_sewer_due;
+   private float install_sewer_due;
     /**
      * Installment for Sewer Installation Charges Indicator
      */
-    String install_sew_ind;
+    private String install_sew_ind;
     /**
      * Installment for A/R Amount
      */
-    float install_ar_due;
+    private float install_ar_due;
     /**
      * Installment for A/R Indicator
      */
-    String install_ar_ind;
+    private String install_ar_ind;
     /**
      * Installment for Advances Amount
      */
-    float install_adv_due;
+    private float install_adv_due;
     /**
      * Installment for Advances Indicator
      */
-    String install_adv_ind;
+    private String install_adv_ind;
 
     public InstallMisc(String records[]){
         install_wtr_ind = records[50];

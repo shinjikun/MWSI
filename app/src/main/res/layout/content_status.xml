@@ -22,8 +22,8 @@
 
 
     <Spinner
-        android:layout_width="100dp"
-        android:layout_height="35dp"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
         android:id="@+id/spnMRUs"
         android:layout_below="@+id/pnl1"
         android:layout_alignParentRight="true"
@@ -32,7 +32,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="5dp"
         android:entries="@array/mru_filler"
-        android:background="@color/material_blue_100"/>
+        style="@style/SpinnerTheme"/>
 
     <TextView
         android:layout_width="wrap_content"

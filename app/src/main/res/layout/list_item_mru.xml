@@ -15,7 +15,7 @@
         android:layout_width="@dimen/mru_unread"
         android:layout_height="@dimen/mru_unread"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="33"
+        android:text="@string/str_default_val"
         android:id="@+id/txtUnRead"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
@@ -81,7 +81,7 @@
         android:layout_toRightOf="@+id/textView4"
         android:layout_toEndOf="@+id/textView4"
         android:maxLength="3"
-        android:text="0"
+        android:text="@string/str_default_val"
         android:layout_marginLeft="@dimen/spacing"
         android:layout_marginStart="@dimen/spacing"/>
 
@@ -102,7 +102,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtUnDelivered"
         android:maxLength="3"
-        android:text="0"
+        android:text="@string/str_default_val"
         android:layout_alignTop="@+id/textView5"
         android:layout_toRightOf="@+id/textView6"
         android:layout_toEndOf="@+id/textView6"
@@ -125,12 +125,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="0"
+        android:text="@string/str_default_val"
         android:id="@+id/txtMruTotal"
         android:textStyle="bold"
         android:layout_marginStart="@dimen/spacing"
         android:layout_marginLeft="@dimen/spacing"
         android:layout_alignTop="@+id/textView8"
         android:layout_toRightOf="@+id/textView8"
-        android:layout_toEndOf="@+id/textView8" />
+        android:layout_toEndOf="@+id/textView8"
+        android:layout_toLeftOf="@+id/txtUnRead"
+        android:layout_toStartOf="@+id/txtUnRead"/>
 </RelativeLayout>

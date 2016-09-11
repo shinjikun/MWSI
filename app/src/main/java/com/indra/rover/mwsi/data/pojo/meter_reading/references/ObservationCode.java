@@ -4,11 +4,13 @@ import android.database.Cursor;
 
 import com.indra.rover.mwsi.data.pojo.Item;
 
+import java.io.Serializable;
+
 /**
  *
  * Created by Indra on 8/26/2016.
  */
-public class ObservationCode extends Item {
+public class ObservationCode extends Item  implements Serializable{
     private String ff_code;
     private String ff_desc;
     private short bill_related;

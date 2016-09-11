@@ -2,13 +2,15 @@ package com.indra.rover.mwsi.data.pojo.meter_reading.references;
 
 import android.database.Cursor;
 
+import java.io.Serializable;
+
 /**
  * Created by Indra on 9/9/2016.
  */
-public class BillClass {
+public class BillClass implements Serializable{
 
-    String bill_class;
-    String bill_class_desc;
+    private String bill_class;
+    private String bill_class_desc;
 
     public BillClass(Cursor cursor){
         this.bill_class =cursor.getString(cursor.getColumnIndexOrThrow("BILL_CLASS"));

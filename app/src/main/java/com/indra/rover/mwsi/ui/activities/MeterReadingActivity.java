@@ -106,12 +106,15 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
         mScrollView = (ScrollView)findViewById(R.id.scroller);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mViewPager.setOffscreenPageLimit(4);
-        if(!arry.isEmpty())
-            setupViewPager(mViewPager);
-
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
-        mTabLayout.setupWithViewPager(mViewPager);
+        mViewPager.setOffscreenPageLimit(4);
+        if(!arry.isEmpty()){
+            setupViewPager(mViewPager);
+            mTabLayout.setupWithViewPager(mViewPager);
+
+        }
+
+
 
 
     }
