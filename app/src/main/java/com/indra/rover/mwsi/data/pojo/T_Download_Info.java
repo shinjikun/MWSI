@@ -2,6 +2,7 @@ package com.indra.rover.mwsi.data.pojo;
 
 import android.database.Cursor;
 
+import com.indra.rover.mwsi.data.pojo.meter_reading.misc.CustomerInfo;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.BillClass;
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.InstallMisc;
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.PreviousData;

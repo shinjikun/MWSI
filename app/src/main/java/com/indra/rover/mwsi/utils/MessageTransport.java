@@ -7,9 +7,9 @@ import android.os.Bundle;
  */
 public class MessageTransport {
 
-    String action;
-    String message;
-    Bundle bundle;
+    private String action;
+    private String message;
+    private Bundle bundle;
 
     public MessageTransport(String action,Bundle bundle){
         this.action = action;
@@ -21,4 +21,11 @@ public class MessageTransport {
         this.message = message;
     }
 
+    public String getAction() {
+        return action;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }

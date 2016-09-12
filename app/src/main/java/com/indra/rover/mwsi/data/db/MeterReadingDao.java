@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.indra.rover.mwsi.data.pojo.T_Download_Info;
+import com.indra.rover.mwsi.data.pojo.meter_reading.CustomerHistory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,4 +52,29 @@ public class MeterReadingDao extends ModelDao {
 
         return arry;
     }
+
+
+    public CustomerHistory fetchConHistory(String dldocno){
+        CustomerHistory customerHistory = null;
+        String sql_stmt = "Select MRU,DLDOCNO,METERNO,ACCTNUM,CUSTNAME,CUSTADDRESS," +
+                "PREV_REMARKS,PREVRDGDATE,PREVFF1,PREVFF2,ACTPREVRDG " +
+                "from T_DOWNLOAD where DLDOCNO="+dldocno;
+        try{
+            open();
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    customerHistory = new CustomerHistory(cursor);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+        return customerHistory;
+    }
+
+
 }

@@ -36,7 +36,7 @@ public class StatusActivity extends AppCompatActivity implements
      MRUDao mruDao;
      List<MRU> mruList;
     Spinner spn;
-    public static Bus bus;
+
     PreferenceKeys preferenceKeys;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +44,7 @@ public class StatusActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_status);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        bus = new Bus(ThreadEnforcer.MAIN);
-        bus.register(this);
+
         setSupportActionBar(toolbar);
 
 

@@ -8,11 +8,11 @@ import java.io.Serializable;
  * Created by Indra on 9/8/2016.
  */
 public class PreviousData implements Serializable {
-    String prevRemarks;
-    int prevFF1;
-    int prevFF2;
-    int actPrevReading;
-    String prevRDGDate;
+   private String prevRemarks;
+   private int prevFF1;
+   private int prevFF2;
+   private int actPrevReading;
+   private String prevRDGDate;
 
 
     public PreviousData(Cursor cursor){

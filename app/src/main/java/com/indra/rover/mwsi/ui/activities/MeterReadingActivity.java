@@ -18,16 +18,17 @@ import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.adapters.StatusViewPagerAdapter;
-import com.indra.rover.mwsi.data.db.ConnectDao;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
-import com.indra.rover.mwsi.data.pojo.CustomerInfo;
+import com.indra.rover.mwsi.data.pojo.meter_reading.misc.CustomerInfo;
 import com.indra.rover.mwsi.data.pojo.T_Download_Info;
 import com.indra.rover.mwsi.ui.fragments.MRCustomerInfoFragment;
 import com.indra.rover.mwsi.ui.fragments.MRDeliveryRFragment;
 import com.indra.rover.mwsi.ui.fragments.MROCFragment;
 import com.indra.rover.mwsi.ui.fragments.MRRemarksFragment;
+import com.indra.rover.mwsi.utils.MessageTransport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,6 +121,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     }
 
+    private void navigate(String dldocno){
+        MainApp.bus.post(new MessageTransport("navigate",dldocno));
+    }
+
     private void prepareData(int index){
        if(!arry.isEmpty()){
            currentDisplay = this.arry.get(index);
@@ -144,7 +149,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
            txt.setText(page);
            txt = (TextView)findViewById(R.id.txtRateCode);
            txt.setText(currentDisplay.getBillClass().getDesc());
-
+           navigate(currentDisplay.getDldocno());
        }
     }
 
@@ -164,7 +169,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     public void setupViewPager(ViewPager mViewPager){
         StatusViewPagerAdapter adapter = new StatusViewPagerAdapter(getSupportFragmentManager());
          String dldcono = currentDisplay.getDldocno();
-        adapter.addFragment(MRCustomerInfoFragment.newInstance(currentDisplay), "Customer Info");
+        adapter.addFragment(MRCustomerInfoFragment.newInstance(dldcono), "Customer Info");
         adapter.addFragment(MROCFragment.newInstance(dldcono), "OC");
         adapter.addFragment(new MRRemarksFragment(), "Remarks");
         adapter.addFragment(MRDeliveryRFragment.newInstance("2"), "Delivery Remarks");

@@ -8,9 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.pojo.T_Download_Info;
+import com.indra.rover.mwsi.data.pojo.meter_reading.CustomerHistory;
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.PreviousData;
+import com.indra.rover.mwsi.utils.MessageTransport;
+import com.squareup.otto.Subscribe;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,19 +23,20 @@ import com.indra.rover.mwsi.data.pojo.meter_reading.misc.PreviousData;
  * create an instance of this fragment.
  */
 public class MRCustomerInfoFragment extends Fragment {
-    private static final String DLDCONO = "id";
-    T_Download_Info download_info;
+    private static final String IDPARAM = "id";
+    String dldocno;
     private View mLayout;
-
+    CustomerHistory customerHistory;
+    MeterReadingDao meterReadingDao;
     public MRCustomerInfoFragment() {
         // Required empty public constructor
     }
 
 
-    public static MRCustomerInfoFragment newInstance(T_Download_Info download_info) {
+    public static MRCustomerInfoFragment newInstance(String  dldcono) {
         MRCustomerInfoFragment fragment = new MRCustomerInfoFragment();
         Bundle args = new Bundle();
-        args.putSerializable(DLDCONO,download_info);
+        args.putString(IDPARAM,dldcono);
         fragment.setArguments(args);
         return fragment;
     }
@@ -39,8 +45,11 @@ public class MRCustomerInfoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            download_info = (T_Download_Info)getArguments().getSerializable(DLDCONO);
+            dldocno = getArguments().getString(IDPARAM);
+             meterReadingDao = new MeterReadingDao(getActivity());
+            customerHistory = meterReadingDao.fetchConHistory(dldocno);
         }
+        MainApp.bus.register(this);
     }
 
     @Override
@@ -54,10 +63,12 @@ public class MRCustomerInfoFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        MainApp.bus.unregister(this);
     }
 
     private void setUp(){
-        PreviousData previousData = download_info.getPreviousData();
+
+        PreviousData previousData = customerHistory.getPreviousData();
         TextView txt = (TextView)mLayout.findViewById(R.id.txtPReadingDate);
         txt.setText(previousData.getPrevRDGDate());
         txt = (TextView)mLayout.findViewById(R.id.txtPrevRemarks);
@@ -68,5 +79,22 @@ public class MRCustomerInfoFragment extends Fragment {
         txt.setText(String.valueOf(previousData.getPrevFF1()));
         txt = (TextView)mLayout.findViewById(R.id.txtMRCOC2);
         txt.setText(String.valueOf(previousData.getPrevFF2()));
+
     }
+
+
+    @Subscribe
+    public void getMessage(MessageTransport msgTransport) {
+
+        String action = msgTransport.getAction();
+        if(action.equals("navigate")){
+            String id = msgTransport.getMessage();
+             customerHistory =meterReadingDao.fetchConHistory(id);
+             setUp();
+        }
+
+
+    }
+
+
 }
