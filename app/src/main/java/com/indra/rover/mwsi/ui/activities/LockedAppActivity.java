@@ -11,15 +11,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.data.db.ConnectDao;
 import com.indra.rover.mwsi.utils.Constants;
+import com.indra.rover.mwsi.utils.FileUploader;
 import com.indra.rover.mwsi.utils.PreferenceKeys;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
+import java.util.List;
 
-public class LockedAppActivity extends AppCompatActivity implements Constants {
+public class LockedAppActivity extends AppCompatActivity implements Constants,FileUploader.UploadListener {
 
     ImageView img;
     TextView txtTitle,txtSubTitle,txtFiles;
@@ -81,7 +84,18 @@ public class LockedAppActivity extends AppCompatActivity implements Constants {
     }
 
     private void downloadAction(String status, Bundle b){
+        if(status.equals("started")){
+            txtTitle.setText(getResources().getText(R.string.lock_title_inprogress));
+           fileUploader();
+        } else if(status.equals("ended")){
 
+            prefs.setData(Constants.APP_STATUS,"UPLOADED");
+            txtTitle.setText(getResources().getText(R.string.lock_title_completed));
+            txtSubTitle.setText("");
+            txtFiles.setText("");
+            setDrawable(R.drawable.ic_completed);
+            prefs.setData(HAS_ROVER_UPDATE,false);
+        }
     }
 
     private void uploadAction(String status, Bundle b){
@@ -98,12 +112,19 @@ public class LockedAppActivity extends AppCompatActivity implements Constants {
                 prefs.setData(Constants.APP_STATUS,"DOWNLOADED");
                 prefs.setData(HAS_ROVER_UPDATE,true);
             }
-            else {
+            else if(appStatus.equals("MODIFIED")){
                 txtTitle.setText("Halted");
                 txtSubTitle.setText("Can't Load New MRU.\n There  are still unread meters");
                 txtFiles.setText("");
                 setDrawable(R.drawable.ic_error);
 
+                prefs.setData(HAS_ROVER_UPDATE,false);
+            }
+             else if(appStatus.equals("ALL READ")){
+                txtTitle.setText("Halted");
+                txtSubTitle.setText("Can't Load New MRU.\n Upload your Reading to DS");
+                txtFiles.setText("");
+                setDrawable(R.drawable.ic_error);
                 prefs.setData(HAS_ROVER_UPDATE,false);
             }
 
@@ -155,4 +176,21 @@ public class LockedAppActivity extends AppCompatActivity implements Constants {
 
         }
     };
+
+    @Override
+    public void onPostUploadResult(boolean status) {
+
+    }
+
+    private void fileUploader(){
+
+            FileUploader fileUploader = new FileUploader(this);
+            fileUploader.setListener(this);
+            ConnectDao mr = new ConnectDao(this);
+            List<String> arry =  mr.fetchMRUs();
+            String[] lst = new String[arry.size()];
+            lst = arry.toArray(lst);
+            fileUploader.execute(lst);
+
+    }
 }

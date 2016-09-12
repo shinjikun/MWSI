@@ -25,9 +25,7 @@ public class DialogUtils  implements View.OnClickListener{
     TextView txtdlg_title,txtdlg_body;
     Bundle params;
     Context context;
-    public DialogUtils(int dialog_id,Bundle params){
 
-    }
 
 
 
@@ -64,6 +62,10 @@ public class DialogUtils  implements View.OnClickListener{
         txt = (TextView)dialog.findViewById(R.id.dlg_body);
         txt.setText(message);
         dialog.show();
+    }
+
+    public void showOKDialog(String message){
+        showOKDialog(0,null,message, new Bundle());
     }
 
 

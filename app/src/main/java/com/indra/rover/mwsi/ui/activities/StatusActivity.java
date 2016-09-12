@@ -63,6 +63,9 @@ public class StatusActivity extends AppCompatActivity implements
 
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
+        TextView txt =  (TextView)findViewById(R.id.txtStatusTitle);
+        txt.setText(preferenceKeys.getData(APP_STATUS,"DOWNLOADED"));
+
 
     }
 

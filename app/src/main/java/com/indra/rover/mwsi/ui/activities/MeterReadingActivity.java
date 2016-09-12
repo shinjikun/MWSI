@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.adapters.StatusViewPagerAdapter;
+import com.indra.rover.mwsi.data.db.ConnectDao;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.pojo.CustomerInfo;
 import com.indra.rover.mwsi.data.pojo.T_Download_Info;

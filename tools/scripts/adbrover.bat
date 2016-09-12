@@ -162,8 +162,9 @@ exit /B 0
 	call :start_app
 	if  "!is_installed!"=="1" (
 			set actiontype=download
+			set statustype=started
 			call :send_broadmsg
-			call :send_broadmsg
+            adb pull %rover_app_dir%/downloads/	%ds_download_dir%
 			set statustype=ended
 			call :send_broadmsg
 			)else (

@@ -9,16 +9,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Switch;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.utils.Constants;
+import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.PreferenceKeys;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener,Constants {
 
     PreferenceKeys prefs;
+    DialogUtils dialogUtils;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +37,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
         prefs = PreferenceKeys.getInstance(this);
+        dialogUtils = new DialogUtils(this);
         init();
     }
 
@@ -98,7 +103,26 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
 
     private void init(){
+        Switch switch1 = (Switch)findViewById(R.id.swtgps);
+        switch1.setChecked(prefs.getData(GPS_LOGGING_ENABLED,true));
+        switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+               prefs.setData(GPS_LOGGING_ENABLED,isChecked);
+                String message = isChecked?"Enabled":"Disabled";
+               dialogUtils.showOKDialog("GPS LOGGING: "+message);
+            }
+        });
 
+       Switch switch2 = (Switch)findViewById(R.id.swtmrStub);
+        switch2.setChecked(prefs.getData(PRINT_STUB_ENABLED,true));
+        switch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                prefs.setData(PRINT_STUB_ENABLED,isChecked);
+                String message = isChecked?"Enabled":"Disabled";
+
+                dialogUtils.showOKDialog("MR PRINT STUB: "+message);
+            }
+        });
     }
 
 }

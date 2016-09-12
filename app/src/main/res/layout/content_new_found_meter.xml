@@ -52,7 +52,7 @@
             android:layout_toRightOf="@+id/textView9"
             android:layout_toEndOf="@+id/textView9"
             android:inputType="numberSigned"
-            android:background="@drawable/panel_rounded_border"
+            android:background="@drawable/txt_rounded_border"
             android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"
             android:padding="10dp"/>
@@ -90,7 +90,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
             android:inputType="text"
-            android:background="@drawable/panel_rounded_border"
+            android:background="@drawable/txt_rounded_border"
             android:padding="10dp"/>
 
 
@@ -116,7 +116,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
             android:inputType="text"
-            android:background="@drawable/panel_rounded_border"
+            android:background="@drawable/txt_rounded_border"
 
             android:padding="10dp"
             />
@@ -151,7 +151,7 @@
             android:layout_toRightOf="@+id/textView10"
             android:layout_toEndOf="@+id/textView10"
             android:inputType="numberSigned"
-            android:background="@drawable/panel_rounded_border"
+            android:background="@drawable/txt_rounded_border"
             android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"
             android:padding="10dp"/>

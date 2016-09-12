@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.indra.rover.mwsi.data.db.MRUDao;
-import com.indra.rover.mwsi.data.db.MeterReadingDao;
+import com.indra.rover.mwsi.data.db.ConnectDao;
 import com.indra.rover.mwsi.data.pojo.MRU;
 import com.opencsv.CSVReader;
 
@@ -21,11 +21,11 @@ public class FileParser extends AsyncTask<File,Integer,String> {
     Context context;
     DownloadListener listener;
     MRUDao mruDao;
-    MeterReadingDao mRDao;
+    ConnectDao mRDao;
     public FileParser(Context context){
         this.context = context;
         mruDao = new MRUDao(context);
-        mRDao = new MeterReadingDao(context);
+        mRDao = new ConnectDao(context);
     }
 
     public void setListener(DownloadListener listener){

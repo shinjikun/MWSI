@@ -43,7 +43,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_below="@+id/dlg_title"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/panel_rounded_border"
+        android:background="@drawable/txt_rounded_border"
         android:inputType="textPassword"
         android:hint="@string/setting_password_hint"
         android:maxLength="7"

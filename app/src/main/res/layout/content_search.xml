@@ -43,8 +43,9 @@
         android:layout_toEndOf="@+id/textView18"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:background="@color/material_blue_100"
+        android:background="@drawable/spinner_rounded"
         android:entries="@array/search_filter"
+
         />
 
     <TextView
@@ -61,11 +62,13 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:id="@+id/editText"
         android:layout_alignTop="@+id/textView19"
         android:layout_toRightOf="@+id/textView19"
-        android:layout_toEndOf="@+id/textView19" />
+        android:layout_toEndOf="@+id/textView19"
+        android:inputType="text"
+        android:background="@drawable/txt_rounded_border"/>
 
     <Button
         android:layout_width="wrap_content"

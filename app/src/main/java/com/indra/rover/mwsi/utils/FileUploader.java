@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.indra.rover.mwsi.R;
-import com.indra.rover.mwsi.data.db.MeterReadingDao;
+import com.indra.rover.mwsi.data.db.ConnectDao;
 import com.opencsv.CSVWriter;
 
 import java.io.File;
@@ -18,10 +18,10 @@ import java.util.List;
 public class FileUploader  extends AsyncTask<String[],Integer,String> {
 
     private  UploadListener listener;
-    private  MeterReadingDao mrDao;
+    private ConnectDao mrDao;
     private Context mContext;
     public FileUploader(Context context){
-        mrDao = new MeterReadingDao(context);
+        mrDao = new ConnectDao(context);
         this.mContext = context;
     }
 

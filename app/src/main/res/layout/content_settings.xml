@@ -18,7 +18,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pair to Bluetooth Printer"
+        android:text="@string/settings_pair_bluetooth"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/button2" />
 
@@ -37,28 +37,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Rover Administrator Account"
+            android:text="@string/settings_rover_admin_account"
             android:id="@+id/textView30" />
         <Switch
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="GPS Logging"
-            android:id="@+id/switch1"
+            android:text="@string/settings_gps_logging"
+            android:id="@+id/swtgps"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold"/>
 
         <Switch
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="Print MR Stub Option"
-            android:id="@+id/switch2"
+            android:text="@string/settings_mr_stub"
+            android:id="@+id/swtmrStub"
             android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Change Password"
+            android:text="@string/settings_change_password"
             android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:background="@drawable/btn_active_rounded"
@@ -95,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Rover Admin Settings"
+            android:text="@string/settings_rover_admin"
             android:id="@+id/textView31"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"

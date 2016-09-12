@@ -33,7 +33,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_below="@+id/dlg_title"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/panel_rounded_border"
+        android:background="@drawable/txt_rounded_border"
         android:inputType="number"
         android:hint="@string/dlg_meter_code"
         android:maxLength="7"
