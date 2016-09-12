@@ -47,6 +47,8 @@ public class MeterReadingDao extends ModelDao {
             values.put("CSMB_TYPE_CODE",records[67]);
             values.put("CSMB_PARENT",records[68]);
             values.put("MB_PREF_FLAG",records[69]);
+            //default of REASTAT is U = UnRead
+            values.put("READSTAT","U");
             rowInsert = database.insert("T_CURRENT_RDG", null, values);
         }catch (Exception e){
             e.printStackTrace();
@@ -173,6 +175,27 @@ public class MeterReadingDao extends ModelDao {
         return rowInsert;
     }
 
+    public List<String> fetchMRUs(){
+        List<String> arry = new ArrayList<>();
+        String sql_stmt = "select MRU from T_MRU_INFO";
+        try {
+            open();
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    String mruID = cursor.getString(0);
+                    arry.add(mruID);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+        return arry;
+    }
+
 
     public List<T_Download_Info> fetchInfos(String mruID){
         List<T_Download_Info> arry = new ArrayList<>();
@@ -208,16 +231,16 @@ public class MeterReadingDao extends ModelDao {
     }
 
 
-    public List<String[]> query_upload(){
+    public List<String[]> query_upload(String mruNO){
         List<String[]> arry = new ArrayList<>();
-        String selectstmt = "Select u.mru as BOOKNO, u.ACCTNUM,u.ULDOCNO, c.METERNO,c.MR_TYPE_CODE as READTAG , c.RDG_DATE as RDGDATE ,c.RDG_TIME as RDGTIME ," +
+        String selectstmt = "Select u.MRU as BOOKNO, u.ACCTNUM,u.ULDOCNO, c.METERNO,c.MR_TYPE_CODE as READTAG , c.RDG_DATE as RDGDATE ,c.RDG_TIME as RDGTIME ," +
                 "c.RECMD_SEQNO as SEQNO, c.FFCODE1 as BILLR_OC, c.FFCODE2 as FFCODE,c.REMARKS, c.PRESRDG as BILLED_RDG, c.RDG_TRIES as TRIES," +
                 "c.BILLED_CONS as BILLED_CONS, c.RANGE_CODE as RANDECODE, c.CONSTYPE_CODE as CONSTAG, c.MR_TYPE_CODE as NEWMTRBRAND," +
                 "c.NEW_METERNO as NEWMTRNUM, c.DEL_CODE as DEL_CODE,c.DELIV_DATE as DELIVERY_DATE, c.DELIV_TIME as DELIVERY_TIME, c.DELIV_REMARKS as DEL_REMARKS," +
                 "1 as SANZPER,u.BASIC_CHARGE as BASECHRG, u.DISCOUNT,u.CERA,u.FCDA,u.ENV_CHARGE as ENVCHRG, u.SEWER_CHARGE as SEWERCHRG, 1 as PREPAYADJ," +
                 "u.METER_CHARGES as MSC, u.SC_DISCOUNT as SCDISC, u.TOTCHRG_WO_TAX as TOTCHRGWOTAX , u.VAT_CHARGE as VAT ,1 as PIA," +
                 "u.SUBTOTAL_AMT as TOTCURRCHRG, u.TOTAL_AMT_DUE as TOTAMT_DUE, u.PRINT_COUNT as BPRINTCNT, u.PRINT_TAG ,c.BILLPRINT_DATE as PRINT_DATE," +
-                "1 as SP_BILL_RULE , c.SP_COMP from T_UPLOAD u, T_CURRENT_RDG c where u.ULDOCNO = c.CRDOCNO;";
+                "1 as SP_BILL_RULE , c.SP_COMP from T_UPLOAD u, T_CURRENT_RDG c where u.ULDOCNO = c.CRDOCNO and  u.MRU="+mruNO;
         try{
             open();
             Cursor cursor = database.rawQuery(selectstmt, null);

@@ -12,7 +12,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import com.indra.rover.mwsi.R;
-import com.indra.rover.mwsi.data.db.DeliveryDao;
+import com.indra.rover.mwsi.data.db.RefTableDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.ObservationCode;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class MROCFragment extends Fragment {
 
     View mView;
     private String mParamID;
-    private DeliveryDao deliveryDao;
+    private RefTableDao refTableDao;
     Spinner spnOC1,spnOC2;
     public MROCFragment() {
     }
@@ -42,7 +42,7 @@ public class MROCFragment extends Fragment {
         if (getArguments() != null) {
             mParamID = getArguments().getString(ARG_ID);
         }
-        deliveryDao = new DeliveryDao(getActivity());
+        refTableDao = new RefTableDao(getActivity());
     }
 
 
@@ -79,7 +79,7 @@ public class MROCFragment extends Fragment {
     }
 
     private void initContent(){
-        List<ObservationCode> arrayList = deliveryDao.getOCodes();
+        List<ObservationCode> arrayList = refTableDao.getOCodes();
         // Spinner Drop down elements
         List<String> arryOC1 = new ArrayList<>();
         List<String> arryOC2 = new ArrayList<>();

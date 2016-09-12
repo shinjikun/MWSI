@@ -23,7 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener , DialogUtils.DialogListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener ,
+        DialogUtils.DialogListener, FileUploader.UploadListener{
 
     DialogUtils mDialogUtils;
     private final int DLG_CLOSE = 1;
@@ -67,8 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.btnSettings:
-                intent =  new Intent(this,SettingsActivity.class);
-                startActivity(intent);
+               extractDB();
                 break;
         }
     }
@@ -112,6 +112,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
 
+
+    }
+
+
+    public void test(){
+        FileUploader fileUploader = new FileUploader(this);
+        fileUploader.setListener(this);
+        MeterReadingDao mr = new MeterReadingDao(this);
+        List<String> arry =  mr.fetchMRUs();
+        String[] lst = new String[arry.size()];
+        lst = arry.toArray(lst);
+        fileUploader.execute(lst);
+    }
+
+    @Override
+    public void onPostUploadResult(boolean status) {
 
     }
 }

@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.indra.rover.mwsi.R;
-import com.indra.rover.mwsi.data.db.DeliveryDao;
+import com.indra.rover.mwsi.data.db.RefTableDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.DeliveryCode;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class MRDeliveryRFragment extends Fragment {
 
     private String mParamID;
 
-    private DeliveryDao deliveryDao;
+    private RefTableDao refTableDao;
     View mView;
     public MRDeliveryRFragment() {
         // Required empty public constructor
@@ -48,7 +48,7 @@ public class MRDeliveryRFragment extends Fragment {
         if (getArguments() != null) {
             mParamID = getArguments().getString(ARG_ID);
         }
-        deliveryDao = new DeliveryDao(getActivity());
+        refTableDao = new RefTableDao(getActivity());
     }
 
     @Override
@@ -66,7 +66,7 @@ public class MRDeliveryRFragment extends Fragment {
 
     private void initContent(){
         Spinner spinDelivery =  (Spinner)mView.findViewById(R.id.spnDevCode);
-        List<DeliveryCode> arrayList = deliveryDao.getDeliveryCodes();
+        List<DeliveryCode> arrayList = refTableDao.getDeliveryCodes();
         // Spinner Drop down elements
         List<String> arryDevCodes = new ArrayList<>();
         for(int i = 0;i<arrayList.size();i++){

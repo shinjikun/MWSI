@@ -11,12 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * DAO Helper class Use to query  data from reference table
  * Created by Indra on 8/26/2016.
  */
-public class DeliveryDao extends ModelDao  {
+public class RefTableDao extends ModelDao  {
 
 
-    public DeliveryDao(Context context){
+    public RefTableDao(Context context){
         super(context);
 
     }

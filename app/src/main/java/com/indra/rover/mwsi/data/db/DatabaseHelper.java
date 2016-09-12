@@ -18,7 +18,6 @@ import java.io.OutputStream;
 
     private final static String DB_NAME = "MCFSRNB";
 
-    private SQLiteDatabase myDataBase;
 
     private final Context myContext;
 
@@ -40,11 +39,7 @@ import java.io.OutputStream;
 
         boolean dbExist = checkDataBase();
 
-        if(dbExist){
-            System.out.println("i exist");
-            //do nothing - database already exist
-        }else{
-
+        if(!dbExist){
             //By calling this method and empty database will be created into the default system path
             //of your application so we are gonna be able to overwrite that database with our database.
             this.getReadableDatabase();
@@ -110,16 +105,6 @@ import java.io.OutputStream;
     }
 
 
-
-    @Override
-    public synchronized void close() {
-
-        if(myDataBase != null)
-            myDataBase.close();
-
-        super.close();
-
-    }
 
     @Override
     public void onCreate(SQLiteDatabase db) {

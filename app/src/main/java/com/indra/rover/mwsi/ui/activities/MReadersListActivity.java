@@ -1,6 +1,5 @@
 package com.indra.rover.mwsi.ui.activities;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -10,14 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.indra.rover.mwsi.R;
-import com.indra.rover.mwsi.adapters.MRUListAdapter;
 import com.indra.rover.mwsi.adapters.MReaderListAdapter;
 import com.indra.rover.mwsi.data.pojo.Item;
 import com.indra.rover.mwsi.data.pojo.MRU;

@@ -15,7 +15,7 @@ public class MainApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+      //  Fabric.with(this, new Crashlytics());
 
     }
 }

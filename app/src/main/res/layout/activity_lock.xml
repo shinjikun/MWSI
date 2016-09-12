@@ -39,6 +39,7 @@
         android:layout_centerHorizontal="true"
         android:textStyle="bold"
         android:layout_margin="10dp"
+        android:gravity="center"
         />
 
     <TextView
@@ -48,6 +49,8 @@
 
         android:id="@+id/txtFiles"
         android:layout_below="@+id/txtSubTitle"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        />
 
 </RelativeLayout>

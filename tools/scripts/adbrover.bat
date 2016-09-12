@@ -6,8 +6,6 @@
 :: Revision: September 2016 - initial version
 
 
-
-@rem Rover-Android Util Script
 @echo off
 setlocal ENABLEEXTENSIONS EnableDelayedExpansion
 

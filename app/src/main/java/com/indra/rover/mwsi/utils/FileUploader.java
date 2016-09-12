@@ -36,9 +36,8 @@ public class FileUploader  extends AsyncTask<String[],Integer,String> {
         String[] files = param[0];
         for(int i= 0; i<size;i++){
             String filename = files[i];
-            if(filename.startsWith("BK")){
                 generate_uploadfile(filename);
-            }
+                generate_fconnfile(filename);
         }
         return null;
     }
@@ -54,17 +53,18 @@ public class FileUploader  extends AsyncTask<String[],Integer,String> {
 
     }
 
-    private void generate_uploadfile(String fileName){
+    private void generate_uploadfile(String mruNo){
 
         try {
+            String fileName = "BK"+mruNo.substring(mruNo.length()-4)+"U.txt";
             File contentDir=new File(android.os.Environment.getExternalStorageDirectory(),mContext.getPackageName()+"/downloads");
             File file = new File(contentDir, fileName);
 
-            CSVWriter writer = new CSVWriter(new FileWriter(file), '|');
+            CSVWriter writer = new CSVWriter(new FileWriter(file), '|',CSVWriter.NO_QUOTE_CHARACTER);
 
-            String[] column_names =    mContext.getResources().getStringArray(R.array.column_names);
+            String[] column_names =    mContext.getResources().getStringArray(R.array.upload_columns);
             writer.writeNext(column_names);
-            List<String[]> mete = mrDao.query_upload();
+            List<String[]> mete = mrDao.query_upload(mruNo);
             int size = mete.size();
             for(int i=0;i<size;i++){
                 String[] record = mete.get(i);
@@ -75,5 +75,20 @@ public class FileUploader  extends AsyncTask<String[],Integer,String> {
             e.printStackTrace();
         }
 
+    }
+    private void generate_fconnfile(String mruNo){
+        try{
+            String fileName = "FC"+mruNo.substring(mruNo.length()-4)+".txt";
+            File contentDir=new File(android.os.Environment.getExternalStorageDirectory(),mContext.getPackageName()+"/downloads");
+            File file = new File(contentDir, fileName);
+            CSVWriter writer = new CSVWriter(new FileWriter(file), '|',CSVWriter.NO_QUOTE_CHARACTER);
+            String[] column_names =    mContext.getResources().getStringArray(R.array.upload_columns);
+            writer.writeNext(column_names);
+
+            writer.close();
+
+        }catch (Exception e){
+
+        }
     }
 }

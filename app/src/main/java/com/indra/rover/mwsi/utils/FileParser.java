@@ -35,6 +35,8 @@ public class FileParser extends AsyncTask<File,Integer,String> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        listener.onPreDownloadResult();
+
     }
 
     @Override
@@ -53,11 +55,6 @@ public class FileParser extends AsyncTask<File,Integer,String> {
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
         listener.onPostDownloadResult(true);
-
-    }
-
-    public interface DownloadListener {
-         void onPostDownloadResult(boolean status);
 
     }
 
@@ -134,6 +131,11 @@ public class FileParser extends AsyncTask<File,Integer,String> {
         catch (IOException e) {
 
         }
+    }
+
+    public interface DownloadListener {
+        void onPostDownloadResult(boolean status);
+        void onPreDownloadResult();
     }
 
 

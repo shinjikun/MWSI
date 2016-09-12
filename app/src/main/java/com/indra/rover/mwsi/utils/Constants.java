@@ -11,7 +11,7 @@ public interface  Constants {
 
    String PRINT_STUB_ENABLED="printstub";
 
-   String APP_STATUS = "app_status";
+   public static final String APP_STATUS = "app_status";
 
    String READ_START_TIME ="start_time";
 

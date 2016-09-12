@@ -52,7 +52,7 @@
         <item>3235</item>
     </string-array>
 
-    <string-array name="column_names">
+    <string-array name="upload_columns">
         <item>BOOKNO</item>
         <item>ACCTNUM</item>
         <item>DOCNO</item>
@@ -96,5 +96,16 @@
         <item>PRINT_DATE</item>
         <item>SP_BILL_RULE</item>
         <item>SP_COMP</item>
+    </string-array>
+    
+    <string-array name="fc_columns">
+        <item>BOOKNO</item>
+        <item>MTRNO</item>
+        <item>SEQNO</item>
+        <item>RDGDATE</item>
+        <item>RDGTIME</item>
+        <item>CUSTNAME</item>
+        <item>ADDRESS</item>
+        <item>READING</item>
     </string-array>
 </resources>
