@@ -12,6 +12,7 @@ import io.fabric.sdk.android.Fabric;
 public class MainApp extends Application {
 
     public static Bus   bus = new Bus();
+    public static String selectedMRU;
     @Override
     public void onCreate() {
         super.onCreate();

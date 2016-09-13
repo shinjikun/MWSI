@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.adapters.MRUListAdapter;
 import com.indra.rover.mwsi.data.db.MRUDao;
@@ -105,7 +106,13 @@ public class MRUListActivity extends AppCompatActivity  implements OnItemClickLi
     @Override
     public void onItemClick(MRU item, int position) {
         MRU  mru =  mruList.get(position);
-      showMeterCodeDialog(mru);
+        if(mru.getId().equals(MainApp.selectedMRU)){
+            loadConsumerInfo(mru);
+        }
+        else {
+            showMeterCodeDialog(mru);
+        }
+
     }
 
 
@@ -131,6 +138,7 @@ public class MRUListActivity extends AppCompatActivity  implements OnItemClickLi
             public void onClick(View view) {
                 String value =   txtDlg.getText().toString();
                 if(value.equals(mru.getReader_code())){
+                    MainApp.selectedMRU= mru.getId();
                     //dialogUtils.showOKDialog(DLG_SUCCESS,"Welcome!!",mru.getReader_name(),new Bundle());
                     dialog.dismiss();
                     loadConsumerInfo(mru);

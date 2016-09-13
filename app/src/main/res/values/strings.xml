@@ -127,7 +127,13 @@
     <string name="settings_change_password">Change Password</string>
     <string name="settings_gps_logging">GPS Logging</string>
     <string name="settings_pair_bluetooth">Pair to Bluetooth Printer</string>
-    <string name="settings_mr_stub">Print MR Stub Option</string>
+    <string name="settings_mr_stub">Print MR Stub</string>
     <string name="settings_rover_admin">Rover Admin Settings</string>
+    <string name="settings_eod_printing">Print EOD Report</string>
     <string name="settings_rover_admin_account">Rover Administrator Account</string>
+
+    <string name="changepass_title">Change Password</string>
+    <string name="changepass_oldpass">Old Password</string>
+    <string name="changepass_newpass">New Password</string>
+    <string name="changepass_retypepass">Re-type Password</string>
 </resources>

@@ -39,7 +39,8 @@ set is_device=0
 set is_installed=1
 
 @rem rover directory
-set rover_app_dir=/sdcard/%rover_package%
+set rover_app_dir=/storage/emulated/legacy/%rover_package%
+
 
 @rem rover download directory. where DS will pull files inside the android directory
 set rover_app_d_dir=%rover_app_dir%/downloads/
@@ -62,7 +63,7 @@ SET param2=%2
 if /I "%cmd_arg%"=="pulldb" (
 	call :check_devices
 	if  "!is_device!"=="1" (
-			call :push_files_block
+			call :pulldb
 		) else (
 		echo No connected device
 		)
@@ -156,6 +157,24 @@ goto :skip
 
 exit /B 0
 
+:pulldb
+
+	call :start_app
+	if  "!is_installed!"=="1" (
+			set actiontype=pulldb
+			set statustype=started
+			call :send_broadmsg
+            adb pull %rover_app_dir%/dbdump/	%ds_download_dir%
+			set statustype=ended
+			call :send_broadmsg
+			echo Completed
+			)else (
+			echo Rover App not installed
+	)
+
+exit /B 0
+
+
 
 :pull_files_block
 
@@ -167,6 +186,7 @@ exit /B 0
             adb pull %rover_app_dir%/downloads/	%ds_download_dir%
 			set statustype=ended
 			call :send_broadmsg
+			echo Completed
 			)else (
 			echo Rover App not installed
 	)
@@ -185,6 +205,7 @@ exit /B 0
 
 			set statustype=ended
 			call :send_broadmsg
+			echo Completed
 			)else (
 			echo Rover App not installed
 	)
@@ -264,7 +285,7 @@ exit /B 0
 
 @rem send broadcast  message to a device
 :send_broadmsg
-	set cmd_r= 'adb shell am broadcast -a com.indra.rover.mwsi.ROVER_MESSAGE  -p %rover_package% --es action %actiontype% --es status %statustype% --es file %file%'
+	set cmd_r= 'adb shell am broadcast -a com.indra.rover.mwsi.ROVER_MESSAGE   --es action %actiontype% --es status %statustype% --es file %file%'
 	for /f "delims=" %%i in (%cmd_r%) do (
 		set output=%%i
 	)

@@ -128,7 +128,7 @@ public class MeterStatusFragment extends Fragment {
         mLayout.addView(item);
 
         item = new CustomItemView(getActivity());
-        item.setLabel("Zero Connections :");
+        item.setLabel("Zero Consumption :");
         item.setValue("0");
         item.setLayoutParams(layoutParams);
         mLayout.addView(item);

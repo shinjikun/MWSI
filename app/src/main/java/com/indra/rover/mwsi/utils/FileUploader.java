@@ -82,7 +82,7 @@ public class FileUploader  extends AsyncTask<String[],Integer,String> {
             File contentDir=new File(android.os.Environment.getExternalStorageDirectory(),mContext.getPackageName()+"/downloads");
             File file = new File(contentDir, fileName);
             CSVWriter writer = new CSVWriter(new FileWriter(file), '|',CSVWriter.NO_QUOTE_CHARACTER);
-            String[] column_names =    mContext.getResources().getStringArray(R.array.upload_columns);
+            String[] column_names =    mContext.getResources().getStringArray(R.array.fc_columns);
             writer.writeNext(column_names);
 
             writer.close();

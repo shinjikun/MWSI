@@ -60,6 +60,7 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
 
     private void extractDB(){
         try {
+
             File    contentDir=new File(android.os.Environment.getExternalStorageDirectory(),getPackageName()+"/dbdump");
 
             if (contentDir.canWrite()) {
@@ -137,7 +138,17 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
     }
 
     private void pulldbAction(String status , Bundle b){
+        if(status.equals("started")){
+            txtTitle.setText(getResources().getText(R.string.lock_title_inprogress));
+            extractDB();
+        } else if(status.equals("ended")){
 
+            txtTitle.setText(getResources().getText(R.string.lock_title_completed));
+            txtSubTitle.setText("");
+            txtFiles.setText("");
+            setDrawable(R.drawable.ic_completed);
+
+        }
     }
 
 
@@ -169,6 +180,7 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
             }
             else if(action.equals("pulldb")){
                 setDrawable(R.drawable.ic_db_update);
+                txtSubTitle.setText(String.valueOf("Dumping Rover DB to DS"));
                 pulldbAction(status,b);
             }
 

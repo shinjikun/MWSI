@@ -2,6 +2,7 @@ package com.indra.rover.mwsi.ui.activities;
 
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +24,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     PreferenceKeys prefs;
     DialogUtils dialogUtils;
+    final int STAT_CHANGE_PASS =888;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,9 +85,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onClick(View view) {
                 String value =   txtDlg.getText().toString();
-                findViewById(R.id.pnl_admin_settings).setVisibility(View.VISIBLE);
-                findViewById(R.id.pnl_admin_login).setVisibility(View.GONE);
-                dialog.dismiss();
+               validate(value);
             }
         });
 
@@ -101,6 +101,19 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         dialog.show();
     }
 
+    private void validate(String value){
+        String password = prefs.getData(ADMIN_PASSWORD,ADMIN_DEFAULT_PASS);
+        if(password.equals(value)){
+            findViewById(R.id.pnl_admin_settings).setVisibility(View.VISIBLE);
+            findViewById(R.id.pnl_admin_login).setVisibility(View.GONE);
+            dialog.dismiss();
+        }
+        else {
+            DialogUtils dlg = new DialogUtils(this);
+            dlg.showOKDialog("Wrong Password");
+        }
+
+    }
 
     private void init(){
         Switch switch1 = (Switch)findViewById(R.id.swtgps);
@@ -123,6 +136,33 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 dialogUtils.showOKDialog("MR PRINT STUB: "+message);
             }
         });
+
+        Switch switch3 = (Switch)findViewById(R.id.swteod);
+        switch3.setChecked(prefs.getData(PRINT_EOD_ENABLED,true));
+        switch3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                prefs.setData(PRINT_EOD_ENABLED,isChecked);
+                String message = isChecked?"Enabled":"Disabled";
+
+                dialogUtils.showOKDialog("EOD PRINTING : "+message);
+            }
+        });
+
+        Button  btn = (Button)findViewById(R.id.btnChangePass);
+        btn.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                loadChangePass();
+            }
+        });
     }
+
+    private void loadChangePass(){
+        Intent intent = new Intent(this, ChangePasswordActivity.class);
+        startActivityForResult(intent,STAT_CHANGE_PASS);
+
+    }
+
 
 }
