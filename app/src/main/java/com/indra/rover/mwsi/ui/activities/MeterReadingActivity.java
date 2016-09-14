@@ -3,6 +3,7 @@ package com.indra.rover.mwsi.ui.activities;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -47,7 +48,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     int current =0;
     T_Download_Info currentDisplay;
     List<T_Download_Info> arry;
-    FloatingActionButton fabLeft, fabRight;
+    ImageButton fabLeft, fabRight;
     final int SEARCH_REQ =99;
     final int DLG_RESET=75;
     DialogUtils dlgUtils;
@@ -72,7 +73,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         dlgUtils.setListener(this);
 
 
-       fabRight = (FloatingActionButton)findViewById(R.id.fabRight);
+       fabRight = (ImageButton)findViewById(R.id.fabRight);
         fabRight.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -91,7 +92,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
         txtFilter  = (TextView)findViewById(R.id.txtFiltered);
         txtFilter.setOnClickListener(this);
-        fabLeft = (FloatingActionButton) findViewById(R.id.fabLeft);
+        fabLeft = (ImageButton) findViewById(R.id.fabLeft);
         fabLeft.setEnabled(false);
         fabLeft.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +100,12 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 if(current!=0){
                     current--;
                     prepareData(current);
+
                 }
+                else{
+                    fabLeft.setEnabled(false);
+                }
+                fabRight.setEnabled(true);
             }
         });
 

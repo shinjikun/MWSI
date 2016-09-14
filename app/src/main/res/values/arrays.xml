@@ -1,43 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="data_comm">
-        <item>Upload files to DS</item>
-        <item>Download files from DS</item>
-    </string-array>
-
-
-    <string-array name="status_screen_1">
-        <item>MRU LOADED : </item>
-        <item>Bill Month : </item>
-        <item>Reading Date : </item>
-        <item>Start Time : </item>
-        <item>End Time : </item>
-    </string-array>
-
-
-    <string-array name="status_screen_2">
-        <item>Total Accounts : </item>
-        <item>Found Connection : </item>
-        <item>Unread Meter : </item>
-        <item>Read Meter : </item>
-        <item>Zero Consumption :</item>
-        <item>Out of Range : </item>
-    </string-array>
-
-    <string-array name="status_screen_3">
-        <item>Total Accounts : </item>
-        <item>Printable : </item>
-        <item>Printed : </item>
-        <item>UnPrinted : </item>
-        <item>Delivered : </item>
-        <item>Undelivered : </item>
-    </string-array>
 
     <string-array name="search_filter_ids">
         <item>SEQNO</item>
         <item>ACCTNUM</item>
         <item>METERNO</item>
         <item>CUSTNAME</item>
+        <item>CUSTADDRESS</item>
     </string-array>
 
 
@@ -46,6 +15,7 @@
         <item>Account Number</item>
         <item>Meter Number</item>
         <item>Customer Name</item>
+        <item>Address</item>
     </string-array>
 
     <string-array name="upload_columns">

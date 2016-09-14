@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
 
     <!-- Splash Screen -->
-    <string name="splash_readwrite">Read and Write</string>
+    <string name="splash_readwrite">Read and Bill</string>
 
     <!-- Menu Item Labels-->
     <string name="menu_item_mru">Meter Reading</string>

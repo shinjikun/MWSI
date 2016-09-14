@@ -3,6 +3,7 @@ package com.indra.rover.mwsi.ui.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,15 @@ import android.widget.TextView;
 import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
+import com.indra.rover.mwsi.data.db.RefTableDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.CustomerHistory;
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.PreviousData;
+import com.indra.rover.mwsi.data.pojo.meter_reading.references.ObservationCode;
 import com.indra.rover.mwsi.utils.MessageTransport;
 import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +33,8 @@ public class MRCustomerInfoFragment extends Fragment {
     private View mLayout;
     CustomerHistory customerHistory;
     MeterReadingDao meterReadingDao;
+
+    List<ObservationCode> arryOCs;
     public MRCustomerInfoFragment() {
         // Required empty public constructor
     }
@@ -47,6 +55,8 @@ public class MRCustomerInfoFragment extends Fragment {
             dldocno = getArguments().getString(IDPARAM);
              meterReadingDao = new MeterReadingDao(getActivity());
             customerHistory = meterReadingDao.fetchConHistory(dldocno);
+            RefTableDao refDao = new RefTableDao(getActivity());
+            arryOCs = refDao.getOCodes();
         }
         MainApp.bus.register(this);
     }
@@ -75,9 +85,12 @@ public class MRCustomerInfoFragment extends Fragment {
         txt = (TextView)mLayout.findViewById(R.id.txtPReading);
         txt.setText(String.valueOf(previousData.getActPrevReading()));
         txt = (TextView)mLayout.findViewById(R.id.txtMRCOC1);
-        txt.setText(String.valueOf(previousData.getPrevFF1()));
+        String ocCode = String.valueOf(previousData.getPrevFF1());
+
+        txt.setText(previousData.getPrevFF1()+" - "+findOCdesc("03"));
         txt = (TextView)mLayout.findViewById(R.id.txtMRCOC2);
-        txt.setText(String.valueOf(previousData.getPrevFF2()));
+        ocCode = String.valueOf(previousData.getPrevFF2());
+        txt.setText(previousData.getPrevFF2()+" - "+findOCdesc("04"));
 
     }
 
@@ -93,6 +106,21 @@ public class MRCustomerInfoFragment extends Fragment {
         }
 
 
+    }
+
+
+    private String findOCdesc(String ocCode){
+        int size =  arryOCs.size();
+        String str="";
+        for(int i=0;i<size;i++){
+            String str2 = arryOCs.get(i).getFf_code();
+            if(ocCode.equals(str2)){
+                return  arryOCs.get(i).getFf_desc();
+
+            }
+
+        }
+    return str;
     }
 
 

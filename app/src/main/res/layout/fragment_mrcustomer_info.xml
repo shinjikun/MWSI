@@ -128,7 +128,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/mr_c_info_remarks"
         android:id="@+id/textView15"
-        android:layout_below="@+id/textView14"
+        android:layout_below="@+id/txtMRCOC2"
         android:layout_alignLeft="@+id/textView12"
         android:layout_alignStart="@+id/textView12"
         android:layout_marginTop="10dp" />
