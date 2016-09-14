@@ -20,7 +20,7 @@
         <item>Found Connection : </item>
         <item>Unread Meter : </item>
         <item>Read Meter : </item>
-        <item>Zero Connections :</item>
+        <item>Zero Consumption :</item>
         <item>Out of Range : </item>
     </string-array>
 
@@ -33,14 +33,19 @@
         <item>Undelivered : </item>
     </string-array>
 
-    <string-array name="search_filter">
+    <string-array name="search_filter_ids">
         <item>SEQNO</item>
-        <item>ACCTNO</item>
+        <item>ACCTNUM</item>
         <item>METERNO</item>
         <item>CUSTNAME</item>
-        <item>UNREAD</item>
-        <item>UNPRINTED</item>
-        <item>No Delivery Code</item>
+    </string-array>
+
+
+    <string-array name="search_filter_names">
+        <item>Sequence Number</item>
+        <item>Account Number</item>
+        <item>Meter Number</item>
+        <item>Customer Name</item>
     </string-array>
 
     <string-array name="upload_columns">

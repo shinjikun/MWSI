@@ -73,6 +73,8 @@ public class T_Download_Info implements Serializable {
         this.seq_number = cursor.getString(cursor.getColumnIndexOrThrow("SEQNO"));
         this.meter_number = cursor.getString(cursor.getColumnIndexOrThrow("METERNO"));
         this.dldocno = cursor.getString(cursor.getColumnIndexOrThrow("DLDOCNO"));
+        this.grp_flag = cursor.getString(cursor.getColumnIndexOrThrow("GRP_FLAG"));
+        this.block_tag = cursor.getString(cursor.getColumnIndexOrThrow("BLOCK_TAG"));
         this.customerInfo = new CustomerInfo(cursor);
         this.billClass = new BillClass(cursor);
         this.previousData = new PreviousData(cursor);
@@ -106,5 +108,25 @@ public class T_Download_Info implements Serializable {
 
     public PreviousData getPreviousData() {
         return previousData;
+    }
+
+
+    public String getBlock_tag() {
+        return block_tag;
+    }
+
+    public String getGrp_flag() {
+        return grp_flag;
+    }
+
+    //read stat
+    String readStat;
+
+    public void setReadStat(String readStat) {
+        this.readStat = readStat;
+    }
+
+    public String getReadStat() {
+        return readStat;
     }
 }

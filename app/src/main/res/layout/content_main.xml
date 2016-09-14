@@ -39,6 +39,7 @@
             android:drawableTop="@drawable/ic_meter"
             android:onClick="onClick"
             android:text="@string/menu_item_mru"
+            android:nextFocusRight="@+id/btnStatus"
             />
 
         <Button
@@ -48,6 +49,8 @@
             android:onClick="onClick"
             android:drawableTop="@drawable/ic_device_info"
             android:text="@string/menu_item_status"
+            android:nextFocusLeft="@+id/btnMeterReading"
+            android:nextFocusRight="@+id/btnSettings"
             />
         <Button
             android:layout_width="133dp"
@@ -56,6 +59,8 @@
             android:onClick="onClick"
             android:drawableTop="@drawable/ic_settings"
             android:text="@string/menu_item_settings"
+            android:nextFocusRight="@+id/btnExit"
+            android:nextFocusLeft="@+id/btnStatus"
             />
         <Button
             android:layout_width="133dp"
@@ -64,6 +69,7 @@
             android:onClick="onClick"
             android:drawableTop="@drawable/ic_exit"
             android:text="@string/menu_item_exit"
+            android:nextFocusLeft="@+id/btnSettings"
             />
 
     </GridLayout>

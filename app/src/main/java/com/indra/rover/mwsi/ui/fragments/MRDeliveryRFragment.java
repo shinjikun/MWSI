@@ -18,7 +18,6 @@ import java.util.List;
 public class MRDeliveryRFragment extends Fragment {
     private static final String ARG_ID = "id";
 
-    private String mParamID;
 
     private RefTableDao refTableDao;
     View mView;
@@ -46,7 +45,7 @@ public class MRDeliveryRFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParamID = getArguments().getString(ARG_ID);
+         String   mParamID = getArguments().getString(ARG_ID);
         }
         refTableDao = new RefTableDao(getActivity());
     }
@@ -75,7 +74,7 @@ public class MRDeliveryRFragment extends Fragment {
 
         }
         // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arryDevCodes);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, arryDevCodes);
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // attaching data adapter to spinner

@@ -47,6 +47,7 @@ public class MRU  extends Item{
         }
 
         this.customer_count = cursor.getInt(cursor.getColumnIndexOrThrow("CUST_COUNT"));
+        this.total = this.customer_count;
         this.active_count = cursor.getInt(cursor.getColumnIndexOrThrow("ACTIVE_COUNT"));
         this.blocked_count =cursor.getInt(cursor.getColumnIndexOrThrow("BLOCKED_COUNT"));
         this.read = cursor.getInt(cursor.getColumnIndexOrThrow("READ_METERS"));

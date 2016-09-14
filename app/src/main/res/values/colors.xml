@@ -7,7 +7,7 @@
     <color name="dlg_title_color">@android:color/white</color>
     <color name="mru_unreadcolor">@android:color/holo_red_light</color>
 
-
+    <color name="red_colr">@android:color/holo_red_light</color>
     <color name="tab_unselected">#a1a1a1</color>
 
     <color name="windowBackground">#FFFFFF</color>

@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
-import com.indra.rover.mwsi.data.pojo.T_Download_Info;
 import com.indra.rover.mwsi.data.pojo.meter_reading.CustomerHistory;
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.PreviousData;
 import com.indra.rover.mwsi.utils.MessageTransport;

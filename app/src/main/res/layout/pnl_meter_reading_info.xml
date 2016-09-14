@@ -16,6 +16,9 @@
         android:layout_alignParentStart="true"
         android:textStyle="bold"/>
 
+
+
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,8 +28,8 @@
         android:layout_alignTop="@+id/txtPagination"
         android:layout_toRightOf="@+id/txtPagination"
         android:layout_toEndOf="@+id/txtPagination"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         />
 
 
@@ -73,20 +76,42 @@
         android:id="@+id/pnl3"
         />
 
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+
+        android:id="@+id/txtFiltered"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:padding="2dp"
+       />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/str_ebs"
-        android:id="@+id/textView17"
-        android:layout_alignTop="@+id/txtSeqNum"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
+        android:id="@+id/txtMeterStatus"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/txtFiltered"
+        android:layout_toStartOf="@+id/txtFiltered"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:textStyle="bold"
+        android:layout_toEndOf="@+id/txtSeqNum"
         android:layout_toRightOf="@+id/txtSeqNum"
-        android:layout_toEndOf="@+id/txtSeqNum"/>
+        android:gravity="end"
+
+     />
 
 
 </RelativeLayout>

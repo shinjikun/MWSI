@@ -2,7 +2,6 @@ package com.indra.rover.mwsi.ui.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import com.indra.rover.mwsi.data.db.MRUDao;
 import com.indra.rover.mwsi.data.pojo.MRU;
 
 import com.indra.rover.mwsi.ui.view.CustomItemView;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 
@@ -34,7 +32,7 @@ public class MeterStatusFragment extends Fragment {
      */
     private int mParam;
 
-    private String mruID;
+
     private LinearLayout mLayout;
     MRUDao mruDao;
     MRU selectedMRU;
@@ -60,7 +58,7 @@ public class MeterStatusFragment extends Fragment {
         mruDao = new MRUDao(getActivity());
         if (getArguments() != null) {
             mParam = getArguments().getInt(ARG_PARAM1);
-            mruID = getArguments().getString(ARG_IDPARAM);
+         String   mruID = getArguments().getString(ARG_IDPARAM);
             selectedMRU = mruDao.getMRU(mruID);
         }
         MainApp.bus.register(this);

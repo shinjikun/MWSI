@@ -37,6 +37,7 @@
     <string name="str_deviceID">WSSSS-SSSS</string>
     <string name="str_version">ver 1.00</string>
     <string name="str_pagination">1/100</string>
+    <string name="str_filterd">Filtered</string>
     <string name="str_sequence_num">SEQ Number</string>
     <string name="str_name">José Protasio Rizal Mercado y Alonso Realonda</string>
     <string name="str_address">MWSS Compound, Katipunan Avenue, Balara, Quezon City</string>
@@ -56,9 +57,9 @@
 
 
     <!-- meter reading custom info section -->
-    <string name="mr_c_info_p_read_date">Previous  Date : </string>
-    <string name="mr_c_info_p_reading">Previous Reading : </string>
-    <string name="mr_c_info_observation">Previous Observation : </string>
+    <string name="mr_c_info_p_read_date">PREV RDG Date : </string>
+    <string name="mr_c_info_p_reading">PREV RDG : </string>
+    <string name="mr_c_info_observation">PREV Observation : </string>
     <string name="mr_c_info_oc1">OC1 : </string>
     <string name="mr_c_info_oc2">OC2 : </string>
     <string name="mr_c_info_remarks">Remarks : </string>
@@ -90,8 +91,8 @@
     <string name="action_new_seq">New Sequence</string>
 
     <string name="search_title">Search</string>
-    <string name="search_by">Search By</string>
-    <string name="search_value">Value</string>
+    <string name="search_by">Search By :</string>
+    <string name="search_value">Value :</string>
     <string name="search">Search</string>
     <string name="ok">OK</string>
     <string name="content_desc">a button</string>

@@ -22,7 +22,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/str_sample_text"
         android:id="@+id/txtPReadingDate"
         android:layout_alignTop="@+id/textView2"
         android:layout_toRightOf="@+id/textView2"
@@ -54,7 +53,7 @@
         android:layout_toRightOf="@+id/textView10"
         android:layout_toEndOf="@+id/textView10"
         android:textStyle="bold"
-        android:text="XXXXX"/>
+       />
 
     <TextView
         android:layout_width="wrap_content"
@@ -87,7 +86,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/str_sample_text"
         android:id="@+id/txtMRCOC1"
         android:layout_alignTop="@+id/textView13"
         android:layout_toRightOf="@+id/textView13"
@@ -117,7 +115,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/str_sample_text"
         android:id="@+id/txtMRCOC2"
         android:layout_alignTop="@+id/textView14"
         android:layout_toRightOf="@+id/textView14"
@@ -138,9 +135,8 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/str_sample_text"
         android:id="@+id/txtPrevRemarks"
         android:layout_below="@+id/textView15"
         android:layout_alignLeft="@+id/textView15"

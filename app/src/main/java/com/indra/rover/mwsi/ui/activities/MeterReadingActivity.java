@@ -1,5 +1,6 @@
 package com.indra.rover.mwsi.ui.activities;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,12 +29,13 @@ import com.indra.rover.mwsi.ui.fragments.MRCustomerInfoFragment;
 import com.indra.rover.mwsi.ui.fragments.MRDeliveryRFragment;
 import com.indra.rover.mwsi.ui.fragments.MROCFragment;
 import com.indra.rover.mwsi.ui.fragments.MRRemarksFragment;
+import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.MessageTransport;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MeterReadingActivity extends AppCompatActivity implements View.OnClickListener
+public class MeterReadingActivity extends AppCompatActivity implements View.OnClickListener ,DialogUtils.DialogListener
 {
 
     ViewPager mViewPager;
@@ -46,6 +48,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     T_Download_Info currentDisplay;
     List<T_Download_Info> arry;
     FloatingActionButton fabLeft, fabRight;
+    final int SEARCH_REQ =99;
+    final int DLG_RESET=75;
+    DialogUtils dlgUtils;
+    TextView txtFilter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +68,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         }
+        dlgUtils = new DialogUtils(this);
+        dlgUtils.setListener(this);
 
 
        fabRight = (FloatingActionButton)findViewById(R.id.fabRight);
@@ -81,7 +89,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         });
 
 
-
+        txtFilter  = (TextView)findViewById(R.id.txtFiltered);
+        txtFilter.setOnClickListener(this);
         fabLeft = (FloatingActionButton) findViewById(R.id.fabLeft);
         fabLeft.setEnabled(false);
         fabLeft.setOnClickListener(new View.OnClickListener() {
@@ -149,8 +158,26 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
            txt.setText(page);
            txt = (TextView)findViewById(R.id.txtRateCode);
            txt.setText(currentDisplay.getBillClass().getDesc());
+           meterStatus();
            navigate(currentDisplay.getDldocno());
        }
+    }
+
+
+    private void meterStatus(){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(currentDisplay.getReadStat());
+
+        if(!currentDisplay.getBlock_tag().isEmpty()){
+            stringBuilder.append(' ');
+            stringBuilder.append('B');
+        }
+        if(!currentDisplay.getGrp_flag().isEmpty()){
+            stringBuilder.append(' ');
+            stringBuilder.append('G');
+        }
+        TextView txt = (TextView)findViewById(R.id.txtMeterStatus);
+        txt.setText(stringBuilder.toString());
     }
 
     private int[] getViewLocations(View view) {
@@ -224,7 +251,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.action_search:
                intent = new Intent(this, SearchActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,SEARCH_REQ);
                 break;
             case R.id.action_customer:
                 mViewPager.setCurrentItem(0);
@@ -269,6 +296,12 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             case R.id.btnMREdit:
                 showMeterRdgDialog();
                 break;
+            case R.id.txtFiltered:
+                String str = txtFilter.getText().toString();
+                if(!str.isEmpty()){
+                    dlgUtils.showOKDialog(DLG_RESET,"","Resetting Search...", new Bundle());
+                }
+                break;
         }
     }
 
@@ -311,7 +344,60 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         dlgSeqNumber.show();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == SEARCH_REQ){
+            if(resultCode ==  Activity.RESULT_OK){
+               Bundle  bundle = data.getExtras();
+                String columnSearch = bundle.getString("key");
+                String searchValue = bundle.getString("value");
+                List<T_Download_Info> temp= meterDao.fetchInfos(this.mru_id,columnSearch,searchValue);
+                if(temp.isEmpty()){
+                    dlgUtils.showOKDialog("No Search Found");
+                    showFilterSign(false);
+                }
+                else {
+                    dlgUtils.showOKDialog(temp.size()+ " record(s) Found!!");
+                    this.arry = temp;
+                    current = 0;
+                    fabLeft.setEnabled(false);
+                    prepareData(current);
+                    showFilterSign(true);
+                }
 
 
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
+    private void showFilterSign(boolean isShow){
+
+        if(isShow){
+            txtFilter.setText("Filtered");
+            txtFilter.setBackgroundColor(getResources().getColor(R.color.red_colr));
+        }
+        else {
+            txtFilter.setText("");
+            txtFilter.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        }
+    }
+
+    @Override
+    public void dialog_confirm(int dialog_id, Bundle params) {
+        switch(dialog_id){
+            case DLG_RESET:
+                 this.arry =   meterDao.fetchInfos(this.mru_id);
+                showFilterSign(false);
+                current =0;
+                fabLeft.setEnabled(false);
+                prepareData(current);
+                break;
+        }
+    }
+
+    @Override
+    public void dialog_cancel(int dialog_id, Bundle params) {
+
+    }
 }
