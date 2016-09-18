@@ -4,11 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.indra.rover.mwsi.data.pojo.MRU;
-import com.indra.rover.mwsi.data.pojo.T_Download_Info;
-import com.opencsv.CSVWriter;
-
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 

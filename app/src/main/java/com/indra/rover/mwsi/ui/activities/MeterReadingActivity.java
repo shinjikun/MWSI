@@ -204,7 +204,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
          String dldcono = currentDisplay.getDldocno();
         adapter.addFragment(MRCustomerInfoFragment.newInstance(dldcono), "Customer Info");
         adapter.addFragment(MROCFragment.newInstance(dldcono), "OC");
-        adapter.addFragment(new MRRemarksFragment(), "Remarks");
+        adapter.addFragment(MRRemarksFragment.newInstance(dldcono), "Remarks");
         adapter.addFragment(MRDeliveryRFragment.newInstance("2"), "Delivery Remarks");
         mViewPager.setAdapter(adapter);
     }

@@ -2,12 +2,20 @@ package com.indra.rover.mwsi.ui.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.data.db.MeterReadingDao;
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterRemarks;
+import com.indra.rover.mwsi.utils.MessageTransport;
+import com.squareup.otto.Subscribe;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,12 +23,32 @@ import com.indra.rover.mwsi.R;
 public class MRRemarksFragment extends Fragment  implements View.OnClickListener{
 
 
+    private static final String IDPARAM = "id";
     View mView;
+    MeterReadingDao meterReadingDao;
+    MeterRemarks meterRemarks;
     public MRRemarksFragment() {
     }
 
-    private enum visibility{
 
+    public static MRRemarksFragment newInstance(String crdocno){
+        MRRemarksFragment fragment = new MRRemarksFragment();
+        Bundle args = new Bundle();
+        args.putString(IDPARAM, crdocno);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        meterReadingDao = new MeterReadingDao(getActivity());
+        if (getArguments() != null) {
+            String   mParamID = getArguments().getString(IDPARAM);
+             meterRemarks = meterReadingDao.getRemarks(mParamID);
+        }
+
+        MainApp.bus.register(this);
     }
 
     @Override
@@ -32,8 +60,19 @@ public class MRRemarksFragment extends Fragment  implements View.OnClickListener
         mView.findViewById(R.id.btnOKMRDesc).setOnClickListener(this);
         mView.findViewById(R.id.btnCancelMRDesc).setOnClickListener(this);
         mView.findViewById(R.id.btnEditMRRemarks).setOnClickListener(this);
-        setEditMode(false);
+        setUp();
         return mView;
+    }
+
+
+    private void setUp(){
+        if(meterRemarks!=null){
+            EditText editText=  (EditText) mView.findViewById(R.id.txtMRCDesc);
+            editText.setText(meterRemarks.getRemarks());
+            TextView txt =   (TextView) mView.findViewById(R.id.lblMRCDesc);
+            txt.setText(meterRemarks.getRemarks());
+        }
+        setEditMode(false);
     }
 
     @Override
@@ -41,21 +80,53 @@ public class MRRemarksFragment extends Fragment  implements View.OnClickListener
         int id = view.getId();
        switch (id){
            case R.id.btnDelMRDesc:
+               clearRemarks();
                break;
-
            case R.id.btnOKMRDesc:
-               setEditMode(false);
+               editRemarks();
                break;
            case R.id.btnCancelMRDesc:
-               setEditMode(false);
+               cancelRemarks();
                break;
-
            case R.id.btnEditMRRemarks:
                setEditMode(true);
                break;
        }
 
     }
+
+    private void cancelRemarks(){
+        TextView txt =   (TextView) mView.findViewById(R.id.lblMRCDesc);
+        String remarks = String.valueOf(txt.getText());
+        EditText editText=  (EditText) mView.findViewById(R.id.txtMRCDesc);
+        editText.setText(remarks);
+        setEditMode(false);
+    }
+
+    private void editRemarks(){
+        EditText editText=  (EditText) mView.findViewById(R.id.txtMRCDesc);
+        String remarks = String.valueOf(editText.getText());
+        editText.setText(remarks);
+        TextView txt =   (TextView) mView.findViewById(R.id.lblMRCDesc);
+        txt.setText(remarks);
+        if(meterRemarks!=null){
+            meterReadingDao.addRemarks(remarks,meterRemarks.getCrdodcno());
+            meterRemarks.setRemarks(remarks);
+        }
+        setEditMode(false);
+    }
+
+    private void clearRemarks(){
+        if(meterRemarks!=null){
+            meterReadingDao.addRemarks("",meterRemarks.getCrdodcno());
+        }
+        EditText editText=  (EditText) mView.findViewById(R.id.txtMRCDesc);
+        editText.setText("");
+        TextView txt =   (TextView) mView.findViewById(R.id.lblMRCDesc);
+        txt.setText("");
+    }
+
+
 
 
     private void setEditMode(boolean isEditable){
@@ -78,4 +149,16 @@ public class MRRemarksFragment extends Fragment  implements View.OnClickListener
        }
 
     }
+
+
+    @Subscribe
+    public void getMessage(MessageTransport msgTransport) {
+        String action = msgTransport.getAction();
+        if(action.equals("navigate")){
+            String id = msgTransport.getMessage();
+            meterRemarks = meterReadingDao.getRemarks(id);
+            setUp();
+        }
+    }
+
 }

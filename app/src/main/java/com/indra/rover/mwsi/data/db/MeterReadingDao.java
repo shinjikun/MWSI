@@ -1,10 +1,13 @@
 package com.indra.rover.mwsi.data.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.indra.rover.mwsi.data.pojo.T_Download_Info;
-import com.indra.rover.mwsi.data.pojo.meter_reading.CustomerHistory;
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterRHistory;
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterRemarks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,8 +86,8 @@ public class MeterReadingDao extends ModelDao {
     }
 
 
-    public CustomerHistory fetchConHistory(String dldocno){
-        CustomerHistory customerHistory = null;
+    public MeterRHistory fetchConHistory(String dldocno){
+        MeterRHistory meterRHistory = null;
         String sql_stmt = "Select MRU,DLDOCNO,METERNO,ACCTNUM,CUSTNAME,CUSTADDRESS," +
                 "PREV_REMARKS,PREVRDGDATE,PREVFF1,PREVFF2,ACTPREVRDG " +
                 "from T_DOWNLOAD where DLDOCNO="+dldocno;
@@ -93,7 +96,7 @@ public class MeterReadingDao extends ModelDao {
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
                 do {
-                    customerHistory = new CustomerHistory(cursor);
+                    meterRHistory = new MeterRHistory(cursor);
                 } while (cursor.moveToNext());
             }
             cursor.close();
@@ -102,8 +105,55 @@ public class MeterReadingDao extends ModelDao {
         }finally {
             close();
         }
-        return customerHistory;
+        return meterRHistory;
     }
+
+
+    /**
+     * insert the specified messsage/remarks to Current Reading table
+     * @param message
+     * @param crdocid id of current reading on which remarks/message should be added
+     */
+    public void addRemarks(String message , String crdocid){
+        //String sql_stmt = "UPDATE T_CURRENT_RDG set REMARKS='"+message+"' where CRDOCNO="+crdocid;
+        try{
+            open();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("REMARKS",message);
+            String where= "CRDOCNO=?";
+            database.update("T_CURRENT_RDG",contentValues,where,new String[]{crdocid});
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+
+    }
+
+    public MeterRemarks getRemarks(String crdocno){
+        MeterRemarks meterRemarks = null;
+        try {
+            open();
+            String sql_stmt = "SELECT CRDOCNO, ACCTNUM,METERNO,REMARKS  from  T_CURRENT_RDG where CRDOCNO="+crdocno;
+            Log.i("Test",sql_stmt);
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    meterRemarks = new MeterRemarks(cursor);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+        return meterRemarks;
+    }
+
+
+
+
 
 
 }

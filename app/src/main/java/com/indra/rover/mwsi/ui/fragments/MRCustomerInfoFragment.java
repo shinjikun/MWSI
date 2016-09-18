@@ -3,7 +3,6 @@ package com.indra.rover.mwsi.ui.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +12,12 @@ import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.db.RefTableDao;
-import com.indra.rover.mwsi.data.pojo.meter_reading.CustomerHistory;
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterRHistory;
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.PreviousData;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.ObservationCode;
 import com.indra.rover.mwsi.utils.MessageTransport;
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +29,7 @@ public class MRCustomerInfoFragment extends Fragment {
     private static final String IDPARAM = "id";
     String dldocno;
     private View mLayout;
-    CustomerHistory customerHistory;
+    MeterRHistory meterRHistory;
     MeterReadingDao meterReadingDao;
 
     List<ObservationCode> arryOCs;
@@ -54,7 +52,7 @@ public class MRCustomerInfoFragment extends Fragment {
         if (getArguments() != null) {
             dldocno = getArguments().getString(IDPARAM);
              meterReadingDao = new MeterReadingDao(getActivity());
-            customerHistory = meterReadingDao.fetchConHistory(dldocno);
+            meterRHistory = meterReadingDao.fetchConHistory(dldocno);
             RefTableDao refDao = new RefTableDao(getActivity());
             arryOCs = refDao.getOCodes();
         }
@@ -77,7 +75,7 @@ public class MRCustomerInfoFragment extends Fragment {
 
     private void setUp(){
 
-        PreviousData previousData = customerHistory.getPreviousData();
+        PreviousData previousData = meterRHistory.getPreviousData();
         TextView txt = (TextView)mLayout.findViewById(R.id.txtPReadingDate);
         txt.setText(previousData.getPrevRDGDate());
         txt = (TextView)mLayout.findViewById(R.id.txtPrevRemarks);
@@ -101,7 +99,7 @@ public class MRCustomerInfoFragment extends Fragment {
         String action = msgTransport.getAction();
         if(action.equals("navigate")){
             String id = msgTransport.getMessage();
-             customerHistory =meterReadingDao.fetchConHistory(id);
+             meterRHistory =meterReadingDao.fetchConHistory(id);
              setUp();
         }
 
