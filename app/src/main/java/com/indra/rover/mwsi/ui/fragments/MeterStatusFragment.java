@@ -12,7 +12,7 @@ import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.MRUDao;
 import com.indra.rover.mwsi.data.pojo.MRU;
 
-import com.indra.rover.mwsi.ui.view.CustomItemView;
+import com.indra.rover.mwsi.ui.widgets.CustomItemView;
 import com.squareup.otto.Subscribe;
 
 

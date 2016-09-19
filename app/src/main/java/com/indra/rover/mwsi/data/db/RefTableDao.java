@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DAO Helper class Use to query  data from reference table
+ * DAO Helper class Use to query  data from reference tables
  * Created by Indra on 8/26/2016.
  */
 public class RefTableDao extends ModelDao  {

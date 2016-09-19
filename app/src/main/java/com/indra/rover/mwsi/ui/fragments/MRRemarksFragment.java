@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
-import com.indra.rover.mwsi.data.pojo.meter_reading.MeterRemarks;
+import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterRemarks;
 import com.indra.rover.mwsi.utils.MessageTransport;
 import com.squareup.otto.Subscribe;
 

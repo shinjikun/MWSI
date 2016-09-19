@@ -12,7 +12,7 @@ import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.db.RefTableDao;
-import com.indra.rover.mwsi.data.pojo.meter_reading.MeterRHistory;
+import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterRHistory;
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.PreviousData;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.ObservationCode;
 import com.indra.rover.mwsi.utils.MessageTransport;

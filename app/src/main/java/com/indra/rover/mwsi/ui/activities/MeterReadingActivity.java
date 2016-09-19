@@ -3,9 +3,7 @@ package com.indra.rover.mwsi.ui.activities;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +23,7 @@ import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.adapters.StatusViewPagerAdapter;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.CustomerInfo;
-import com.indra.rover.mwsi.data.pojo.T_Download_Info;
+import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 import com.indra.rover.mwsi.ui.fragments.MRCustomerInfoFragment;
 import com.indra.rover.mwsi.ui.fragments.MRDeliveryRFragment;
 import com.indra.rover.mwsi.ui.fragments.MROCFragment;
@@ -46,8 +44,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     String mru_id;
     MeterReadingDao meterDao;
     int current =0;
-    T_Download_Info currentDisplay;
-    List<T_Download_Info> arry;
+    MeterInfo currentDisplay;
+    List<MeterInfo> arry;
     ImageButton fabLeft, fabRight;
     final int SEARCH_REQ =99;
     final int DLG_RESET=75;
@@ -357,7 +355,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                Bundle  bundle = data.getExtras();
                 String columnSearch = bundle.getString("key");
                 String searchValue = bundle.getString("value");
-                List<T_Download_Info> temp= meterDao.fetchInfos(this.mru_id,columnSearch,searchValue);
+                List<MeterInfo> temp= meterDao.fetchInfos(this.mru_id,columnSearch,searchValue);
                 if(temp.isEmpty()){
                     dlgUtils.showOKDialog("No Search Found");
                     showFilterSign(false);

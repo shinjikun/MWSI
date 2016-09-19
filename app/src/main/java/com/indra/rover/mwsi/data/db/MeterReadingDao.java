@@ -5,9 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
-import com.indra.rover.mwsi.data.pojo.T_Download_Info;
-import com.indra.rover.mwsi.data.pojo.meter_reading.MeterRHistory;
-import com.indra.rover.mwsi.data.pojo.meter_reading.MeterRemarks;
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
+import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
+import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterRHistory;
+import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterRemarks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,8 @@ public class MeterReadingDao extends ModelDao {
         database.close();
     }
 
-    public List<T_Download_Info> fetchInfos(String mruID){
-        List<T_Download_Info> arry = new ArrayList<>();
+    public List<MeterInfo> fetchInfos(String mruID){
+        List<MeterInfo> arry = new ArrayList<>();
         String sql_stmt = "select r.BILL_CLASS_DESC,  t.*,c.* from T_DOWNLOAD t, R_BILL_CLASS r,T_CURRENT_RDG c " +
                 "where t.BILL_CLASS = r.BILL_CLASS and t.DLDOCNO = c.CRDOCNO and MRU="+mruID;
         try{
@@ -41,7 +42,7 @@ public class MeterReadingDao extends ModelDao {
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
                 do {
-                    T_Download_Info  download_info = new T_Download_Info(cursor);
+                    MeterInfo download_info = new MeterInfo(cursor);
                     String readStat = cursor.getString(cursor.getColumnIndexOrThrow("READSTAT"));
                     download_info.setReadStat(readStat);
                     arry.add(download_info);
@@ -59,8 +60,8 @@ public class MeterReadingDao extends ModelDao {
     }
 
 
-    public List<T_Download_Info> fetchInfos(String mruID,String column,String searchValue){
-        List<T_Download_Info> arry = new ArrayList<>();
+    public List<MeterInfo> fetchInfos(String mruID, String column, String searchValue){
+        List<MeterInfo> arry = new ArrayList<>();
         String sql_stmt = "select r.BILL_CLASS_DESC,  t.*,c.* from T_DOWNLOAD t, R_BILL_CLASS r,T_CURRENT_RDG c " +
                 "where t.BILL_CLASS = r.BILL_CLASS and t.DLDOCNO = c.CRDOCNO and MRU="+mruID+ " and "+column+" like '%"+searchValue+"%'";
         try{
@@ -68,7 +69,7 @@ public class MeterReadingDao extends ModelDao {
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
                 do {
-                    T_Download_Info  download_info = new T_Download_Info(cursor);
+                    MeterInfo download_info = new MeterInfo(cursor);
                     String readStat = cursor.getString(cursor.getColumnIndexOrThrow("READSTAT"));
                     download_info.setReadStat(readStat);
                     arry.add(download_info);
@@ -149,6 +150,34 @@ public class MeterReadingDao extends ModelDao {
             close();
         }
         return meterRemarks;
+    }
+
+
+    public MeterConsumption getConsumption(String dldocno){
+        MeterConsumption meterConsumption =null;
+        try{
+            open();
+            String sql_stmt ="select d.DLDOCNO,d.ACCT_STATUS,d.METERNO,d.GRP_FLAG,d.BLOCK_TAG," +
+                    "d.BLOCK_TAG,d.DISC_TAG,d.PREVRDGDATE,d.ACTPREVRDG,d.BILLPREVRDG," +
+                    "d.BILLPREVRDG2,d.BILLPREVACTTAG,d.PRACTFLAG,d.AVECONS,d.NMINITRDG," +
+                    "d.NMCONSFACTOR,d.PREVFF1,d.PREVFF2,d.NODIALS,nd.maxcap,c.FFCODE1,c.FFCODE2,c.PRESRDG," +
+                    "c.BILLED_CONS,c.CONSTYPE_CODE " +
+                    "from T_DOWNLOAD d,R_NUM_DIALS nd ,T_CURRENT_RDG c " +
+                    "where d.nodials = nd.nodials and d.DLDOCNO=c.CRDOCNO and d.DLDOCNO="+dldocno+";";
+            Cursor cursor =database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    meterConsumption = new MeterConsumption(cursor);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+
+        return meterConsumption;
     }
 
 

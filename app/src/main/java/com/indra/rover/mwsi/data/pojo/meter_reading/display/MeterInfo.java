@@ -1,4 +1,4 @@
-package com.indra.rover.mwsi.data.pojo;
+package com.indra.rover.mwsi.data.pojo.meter_reading.display;
 
 import android.database.Cursor;
 
@@ -13,7 +13,7 @@ import java.io.Serializable;
 /**
  * Created by Indra on 9/7/2016.
  */
-public class T_Download_Info implements Serializable {
+public class MeterInfo implements Serializable {
 
     /**
      * MRU ID
@@ -26,49 +26,15 @@ public class T_Download_Info implements Serializable {
     String seq_number;
 
 
-
-    String rate_type;
-    String bulk_flag;
-    int acct_status;
     String meter_number;
-    String mterial_number;
-    int meter_size;
-    int num_dials;
     String grp_flag;
     String block_tag;
-    String disc_tag;
-    short pracflag;
-    short pconsavgflag;
-    int ave_consumpstions;
-    int dpreplmtr_code;
-
-    ProRate prorates;
-    PreviousData prevReading;
-    String wbpaydtls1;
-    String wbpaydtls2;
-    String miscpaydtls;
-    String gdpaydtls;
-    InstallMisc installMisc;
-    String tin;
-    short vat_exempt;
-    short djscheck_flg;
-    int numuser;
-
-    int nmintRDG;
-
-    int nmConsfactor;
-    int gt34flag;
-    int gt34factor;
-
-    String soa_number;
-    int spbill_rule;
-    String spbill_eff_date;
     String dldocno;
     CustomerInfo customerInfo;
 
     BillClass billClass;
     PreviousData previousData;
-    public T_Download_Info(Cursor cursor){
+    public MeterInfo(Cursor cursor){
         this.mru_id =cursor.getString(cursor.getColumnIndexOrThrow("MRU"));
         this.seq_number = cursor.getString(cursor.getColumnIndexOrThrow("SEQNO"));
         this.meter_number = cursor.getString(cursor.getColumnIndexOrThrow("METERNO"));

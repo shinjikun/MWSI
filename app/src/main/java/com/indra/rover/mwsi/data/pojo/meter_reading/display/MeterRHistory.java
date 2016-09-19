@@ -1,4 +1,4 @@
-package com.indra.rover.mwsi.data.pojo.meter_reading;
+package com.indra.rover.mwsi.data.pojo.meter_reading.display;
 
 import android.database.Cursor;
 
