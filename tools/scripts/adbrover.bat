@@ -146,14 +146,11 @@ goto :skip
 		set output=%%i
 	)
 
- if  "%param2%"=="" (
-		echo You need to supply an app version
-	)else (
+
 		for /f "tokens=1" %%d in ("!output!") do (
 				set app_status=%%d
 			)
 		echo !app_status!
-	)
 
 exit /B 0
 
