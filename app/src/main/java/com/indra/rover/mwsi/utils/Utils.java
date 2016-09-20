@@ -3,6 +3,7 @@ package com.indra.rover.mwsi.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Vibrator;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 
@@ -87,7 +88,16 @@ public class Utils {
     }
 
 
-
+    /**
+     *
+     * vibrate utils
+     * @param context
+     */
+   public static void vibrate(Context context){
+       Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+       // Vibrate for 500 milliseconds
+       v.vibrate(500);
+   }
 
     public static boolean isValidEmail(String email) {
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();

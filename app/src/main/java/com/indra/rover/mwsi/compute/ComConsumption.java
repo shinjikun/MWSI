@@ -39,6 +39,9 @@ public class ComConsumption extends Compute{
                         ComBlockAccn blockAccount = new ComBlockAccn(meterConsObj);
                         blockAccount.compute();
                    }
+                   else {
+                       computeReadBill();
+                   }
                }
                 else {
                    computeReadBill();
@@ -150,6 +153,39 @@ public class ComConsumption extends Compute{
                     decisionB();
                 }
 
+            }
+        }else {
+           String dreplmtr_code  =    meterConsObj.getDreplmtr_code();
+            if(dreplmtr_code.equals("1")){
+                if(checkValues2()){
+                    //if yes use secnario3 to get the bill consumption
+                    int bill_consumption = scenario2();
+                    meterConsObj.setBilled_cons(bill_consumption);
+                    //tag as adjusted
+                    decisionC();
+                }
+               int bill_consumption =   scenario2();
+                meterConsObj.setBilled_cons(bill_consumption);
+                //tag as adjusted
+                decisionC();
+            }
+            else if(dreplmtr_code.equals("2")){
+                //tag as average
+                decisionB();
+
+            }else if(dreplmtr_code.equals("3")){
+                //check values/component for compution is present
+                if(checkValues()){
+                    //if yes use secnario3 to get the bill consumption
+                    int bill_consumption = scenario3();
+                    meterConsObj.setBilled_cons(bill_consumption);
+                    //tag as adjusted
+                    decisionC();
+                }
+                else {
+                    //otherwise tag as AVERAGE
+                    decisionB();
+                }
             }
         }
     }
