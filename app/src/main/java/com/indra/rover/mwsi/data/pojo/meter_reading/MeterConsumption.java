@@ -2,9 +2,7 @@ package com.indra.rover.mwsi.data.pojo.meter_reading;
 
 import android.database.Cursor;
 
-/**
- * Created by Indra on 9/19/2016.
- */
+
 public class MeterConsumption {
 
     String  id;
@@ -16,7 +14,7 @@ public class MeterConsumption {
     String block_tag;
     String disc_tag;
     String prev_rdg_date;
-    String actual_prev_rdg;
+    String prev_rdg;
     String bill_prev_rdg;
     //bill prev reading 2 months ago
     String bill_prev_rdg2;
@@ -42,7 +40,13 @@ public class MeterConsumption {
     //present billed consumption
     int billed_cons;
     String constype_code;
+    //Has new meter info, replacement date or initial reading?
+    String dreplmtr_code;
 
+    /**
+     * Previous Consumption AVERAGE
+     */
+    String prev_con_avg;
 
     public MeterConsumption(Cursor cursor){
         this.id =cursor.getString(cursor.getColumnIndexOrThrow("DLDOCNO"));
@@ -54,7 +58,7 @@ public class MeterConsumption {
         this.block_tag = cursor.getString(cursor.getColumnIndexOrThrow("BLOCK_TAG"));
         this.disc_tag = cursor.getString(cursor.getColumnIndexOrThrow("DISC_TAG"));
         this.prev_rdg_date = cursor.getString(cursor.getColumnIndexOrThrow("PREVRDGDATE"));
-        this.actual_prev_rdg = cursor.getString(cursor.getColumnIndexOrThrow("ACTPREVRDG"));
+        this.prev_rdg = cursor.getString(cursor.getColumnIndexOrThrow("ACTPREVRDG"));
         this.pract_flag = cursor.getString(cursor.getColumnIndexOrThrow("PRACTFLAG"));
         this.ave_consumption = cursor.getString(cursor.getColumnIndexOrThrow("AVECONS"));
         this.nminitrdg = cursor.getString(cursor.getColumnIndexOrThrow("NMINITRDG"));
@@ -69,6 +73,8 @@ public class MeterConsumption {
         this.bill_prev_rdg = cursor.getString(cursor.getColumnIndexOrThrow("BILLPREVRDG"));
         this.bill_prev_rdg2 = cursor.getString(cursor.getColumnIndexOrThrow("BILLPREVRDG2"));
         this.bill_prev_act_tag = cursor.getString(cursor.getColumnIndexOrThrow("BILLPREVACTTAG"));
+        this.dreplmtr_code = cursor.getString(cursor.getColumnIndexOrThrow("DREPLMTR_CODE"));
+        this.prev_con_avg = cursor.getString(cursor.getColumnIndexOrThrow("PCONSAVGFLAG"));
     }
 
     /**
@@ -95,8 +101,8 @@ public class MeterConsumption {
         return max_cap;
     }
 
-    public String getActual_prev_rdg() {
-        return actual_prev_rdg;
+    public String getPrev_rdg() {
+        return prev_rdg;
     }
 
 
@@ -114,5 +120,49 @@ public class MeterConsumption {
 
     public String getBlock_tag() {
         return block_tag;
+    }
+
+    public String getFfcode1() {
+        return ffcode1;
+    }
+
+    public String getFfcode2() {
+        return ffcode2;
+    }
+
+    public void setConstype_code(String constype_code) {
+        this.constype_code = constype_code;
+    }
+
+    public void setBilled_cons(int billed_cons) {
+        this.billed_cons = billed_cons;
+    }
+
+    public String getAve_consumption() {
+        return ave_consumption;
+    }
+
+    public String getPrevff2() {
+        return prevff2;
+    }
+
+    public String getDreplmtr_code() {
+        return dreplmtr_code;
+    }
+
+    public String getPrev_con_avg() {
+        return prev_con_avg;
+    }
+
+    public String getPrevff1() {
+        return prevff1;
+    }
+
+    public String getNum_dials() {
+        return num_dials;
+    }
+
+    public String getBill_prev_act_tag() {
+        return bill_prev_act_tag;
     }
 }
