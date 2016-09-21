@@ -137,4 +137,7 @@
     <string name="changepass_oldpass">Old Password</string>
     <string name="changepass_newpass">New Password</string>
     <string name="changepass_retypepass">Re-type Password</string>
+
+    <string name="btn_save_str">Save</string>
+    <string name="btn_cancel_str">Cancel</string>
 </resources>

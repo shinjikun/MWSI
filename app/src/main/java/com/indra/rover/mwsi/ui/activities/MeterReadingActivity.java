@@ -51,6 +51,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     final int DLG_RESET=75;
     DialogUtils dlgUtils;
     TextView txtFilter;
+    Button btnPrint;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +129,25 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             mTabLayout.setupWithViewPager(mViewPager);
 
         }
+        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
+            @Override
+            public void onTabSelected(TabLayout.Tab tab){
+                mViewPager.setCurrentItem(tab.getPosition());
+                scrollUp();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+        btnPrint = (Button)findViewById(R.id.btnPrint);
+        btnPrint.setEnabled(false);
 
 
 
