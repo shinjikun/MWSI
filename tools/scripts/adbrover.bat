@@ -82,7 +82,7 @@ if /I "%cmd_arg%"=="pulldb" (
 if /I "%cmd_arg%"=="checkdevice" (
 	call :check_devices
 	if  "!is_device!"=="1" (
-			echo success
+			echo Connected
 		) else (
 		echo No connected device
 		)
@@ -112,7 +112,7 @@ if /I "%cmd_arg%"=="install" (
 	if  "!is_device!"=="1" (
 			call :check_app
             if  "!is_installed!"=="1" (
-                   adb uninstall %rover_package%
+                   call :end_app
                    call :install_app
             )else (
                 call :install_app
@@ -127,7 +127,14 @@ if /I "%cmd_arg%"=="install" (
 if /I "%cmd_arg%"=="checkversion" (
 	call :check_devices
 	if  "!is_device!"=="1" (
-			call :checkversion
+	       call :check_app
+	        if  "!is_installed!"=="1" (
+	            call :checkversion
+	        )else (
+	            echo Rover App not Installed
+	        )
+
+
 		) else (
 		echo No connected device
 		)
@@ -136,9 +143,16 @@ if /I "%cmd_arg%"=="checkversion" (
 )
 
 if /I "%cmd_arg%"=="checkname" (
-	call :check_devices
+call :check_devices
 	if  "!is_device!"=="1" (
-			call :checkname
+	       call :check_app
+	        if  "!is_installed!"=="1" (
+	            call :checkname
+	        )else (
+	            echo Rover App not Installed
+	        )
+
+
 		) else (
 		echo No connected device
 		)
@@ -213,6 +227,7 @@ exit /B 0
 			set actiontype=pulldb
 			set statustype=started
 			call :send_broadmsg
+		IF not exist %ds_dbdump% (mkdir %ds_dbdump%)
 		For /f "tokens=2-4 delims=/ " %%a in ('date /t') do (set mydate=%%c-%%a-%%b)
         For /f "tokens=1-2 delims=/:" %%a in ("%TIME%") do (set mytime=%%a%%b)
 
@@ -233,6 +248,7 @@ exit /B 0
 			set actiontype=download
 			set statustype=started
 			call :send_broadmsg
+			IF not exist %ds_download_dir% (mkdir %ds_download_dir%)
 		    For /f "tokens=2-4 delims=/ " %%a in ('date /t') do (set mydate=%%c-%%a-%%b)
             For /f "tokens=1-2 delims=/:" %%a in ("%TIME%") do (set mytime=%%a%%b)
 
@@ -297,19 +313,20 @@ exit /B 0
  for /f "delims=" %%i in (%cmd_r%) do (
 		set output=%%i
 	)
-        if  "%output%"=="" (
-                    set is_installed=0
+
+        if  "%output%"=="package:com.indra.rover.mwsi" (
+                    set is_installed=1
           	)else (
-          	     set is_installed=1
+          	     set is_installed=0
           	)
 
 exit /B 0
 
 :install_app
     if  "%param2%"=="" (
-   			adb install %rover_android_apk_location%%rover_android_apk%
+   			adb install -r %rover_android_apk_location%%rover_android_apk%
    	)else (
-   	    	adb install %param2%
+   	    	adb install  -r %param2%
    	)
 
 exit /B 0
@@ -339,6 +356,7 @@ exit /B 0
 exit /B 0
 
 :check_devices
+
 	for /f "tokens=*" %%f in ('adb devices') do (
 		set devicestr=%%f
 		for /f "tokens=1,2" %%d in ("!devicestr!") do (
@@ -347,12 +365,22 @@ exit /B 0
 			set is_device=0
 				if /I "!keyword!"=="device" (
 					set is_device=1
+					 call :dir_loc
 				)
 
 			)
 		)
 exit /B 0
 
+:dir_loc
+ set cmd_r='adb shell  "echo $EXTERNAL_STORAGE"'
+
+ for /f "delims=" %%i in (%cmd_r%) do (
+		set output=%%i
+	)
+    set rover_app_dir=%output%/%rover_package%
+
+exit /B 0
 
 @rem send broadcast  message to a device
 :send_broadmsg
@@ -361,6 +389,7 @@ exit /B 0
 		set output=%%i
 	)
 exit /B 0
+
 
 
 :skip
