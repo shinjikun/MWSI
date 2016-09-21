@@ -120,7 +120,7 @@ public class MeterReadingDao extends ModelDao {
         try{
             open();
             ContentValues contentValues = new ContentValues();
-            contentValues.put("REMARKS",message);
+            contentValues.put("REMARKS",message.trim());
             String where= "CRDOCNO=?";
             database.update("T_CURRENT_RDG",contentValues,where,new String[]{crdocid});
         }catch(Exception e){

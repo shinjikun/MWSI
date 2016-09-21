@@ -21,8 +21,10 @@ set ds_download_dir=%ds_content_dir%downloads
 @rem rover database dump  file name
 set rover_db_dump=DBDUMP
 
+@rem rover android installer file directory location
+set rover_android_apk_location=%ds_content_dir%
 @rem rover android installer file name
-set rover_android_apk=android.apk
+set rover_android_apk=app.apk
 
 
 @rem rover android app package name
@@ -39,7 +41,7 @@ set is_device=0
 set is_installed=1
 
 @rem rover directory
-set rover_app_dir=/storage/emulated/legacy/%rover_package%
+set rover_app_dir=/sdcard/%rover_package%
 
 
 @rem rover download directory. where DS will pull files inside the android directory
@@ -54,7 +56,10 @@ set file=.
 @rem download - to pull data files from the connected device
 @rem upload - to push files from pc to device
 @rem updatedb - to update the db of the rover app
-@rem checkversion check version installed inside the app versus the version app in DS
+@rem checkversion check version number of the app installed inside the device
+@rem checkname  check version name installed inside the device
+@rem checkdevice  check for connected device on DS thru USB
+@rem checkapp check app if already installed inside the device
 @rem pull app's db
 SET cmd_arg=%1
 SET param2=%2
@@ -83,11 +88,33 @@ if /I "%cmd_arg%"=="checkdevice" (
 
 )
 
+if /I "%cmd_arg%"=="checkapp" (
+	call :check_devices
+	if  "!is_device!"=="1" (
+			call :check_app
+			if  "!is_installed!"=="1" (
+            			echo Installed
+            			)else (
+            			echo Rover App not installed
+            	)
+		) else (
+		echo No connected device
+		)
+	goto :skip
+
+)
+
 
 if /I "%cmd_arg%"=="install" (
 	call :check_devices
 	if  "!is_device!"=="1" (
-			call :install_app
+			call :check_app
+            if  "!is_installed!"=="1" (
+                   adb uninstall %rover_package%
+                   call :install_app
+            )else (
+                call :install_app
+            )
 		) else (
 		echo No connected device
 		)
@@ -99,6 +126,17 @@ if /I "%cmd_arg%"=="checkversion" (
 	call :check_devices
 	if  "!is_device!"=="1" (
 			call :checkversion
+		) else (
+		echo No connected device
+		)
+	goto :skip
+
+)
+
+if /I "%cmd_arg%"=="checkname" (
+	call :check_devices
+	if  "!is_device!"=="1" (
+			call :checkname
 		) else (
 		echo No connected device
 		)
@@ -137,6 +175,7 @@ if /I "%cmd_arg%"=="updatedb" (
 	goto :skip
 		)
 
+echo No command found
 goto :skip
 
 :checkversion
@@ -153,6 +192,23 @@ goto :skip
 		echo !app_status!
 
 exit /B 0
+
+:checkname
+
+ set cmd_r='adb shell  "dumpsys package %rover_package% |grep versionName"'
+ for /f "delims=" %%i in (%cmd_r%) do (
+		set output=%%i
+	)
+
+
+		for /f "tokens=1" %%d in ("!output!") do (
+				set app_status=%%d
+			)
+		echo !app_status!
+
+exit /B 0
+
+
 
 :pulldb
 
@@ -224,7 +280,8 @@ exit /B 0
 		adb push %ds_upload_dir% %rover_app_dir%
 	)else (
 			@rem param2 is a directory
-		if exist %param2%\* ( adb push %param2% %rover_app_dir%/
+		if exist %param2%\* (
+		adb push %param2% %rover_app_dir%/
 
 		 ) else (
 		 	@rem param2 is a file
@@ -234,10 +291,28 @@ exit /B 0
 	)
 exit /B 0
 
+:check_app
+ set cmd_r='adb shell  "pm list package |grep %rover_package%"'
+
+ for /f "delims=" %%i in (%cmd_r%) do (
+		set output=%%i
+	)
+        if  "%output%"=="" (
+                    set is_installed=0
+          	)else (
+          	     set is_installed=1
+          	)
+
+exit /B 0
 
 
 :install_app
-	adb install %rover_android_apk%
+    if  "%param2%"=="" (
+   			adb install %rover_android_apk_location%%rover_android_apk%
+   	)else (
+   	    	adb install %param2%
+   	)
+
 exit /B 0
 
 @rem force the device to start the application

@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+/**
+ * This class will handle/receive all broadcast message done by DS thru using batch file script commands
+ */
 public class RoverDSReceiver extends BroadcastReceiver {
     public RoverDSReceiver() {
     }
