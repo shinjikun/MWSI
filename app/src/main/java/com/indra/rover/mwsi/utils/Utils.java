@@ -36,6 +36,11 @@ public class Utils {
         }
     }
 
+    public static String getCurrentDate1(){
+        String date = (DateFormat.format("yyyy-MM-dd_hhmm", new java.util.Date()).toString());
+        return date;
+    }
+
 
     public static String getCurrentDate(String format){
         String date = (DateFormat.format(format, new java.util.Date()).toString());

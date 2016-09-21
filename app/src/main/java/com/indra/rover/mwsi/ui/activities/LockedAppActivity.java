@@ -15,6 +15,7 @@ import com.indra.rover.mwsi.data.db.ConnectDao;
 import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.FileUploader;
 import com.indra.rover.mwsi.utils.PreferenceKeys;
+import com.indra.rover.mwsi.utils.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -65,7 +66,7 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
 
             if (contentDir.canWrite()) {
                 String currentDBPath = "/data/data/" + getPackageName() + "/databases/MCFSRNB";
-                String backupDBPath = "backupname.db";
+                String backupDBPath = "db-"+ Utils.getCurrentDate1()+".db";
                 File currentDB = new File(currentDBPath);
                 File backupDB = new File(contentDir, backupDBPath);
 

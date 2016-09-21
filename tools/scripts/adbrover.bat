@@ -18,6 +18,8 @@ set ds_upload_dir=%ds_content_dir%uploads
 @rem ds content download directory location
 set ds_download_dir=%ds_content_dir%downloads
 
+@rem ds content db dump directory location
+set ds_dbdump=%ds_content_dir%dbdump
 @rem rover database dump  file name
 set rover_db_dump=DBDUMP
 
@@ -184,8 +186,6 @@ goto :skip
  for /f "delims=" %%i in (%cmd_r%) do (
 		set output=%%i
 	)
-
-
 		for /f "tokens=1" %%d in ("!output!") do (
 				set app_status=%%d
 			)
@@ -199,16 +199,12 @@ exit /B 0
  for /f "delims=" %%i in (%cmd_r%) do (
 		set output=%%i
 	)
-
-
 		for /f "tokens=1" %%d in ("!output!") do (
 				set app_status=%%d
 			)
 		echo !app_status!
 
 exit /B 0
-
-
 
 :pulldb
 
@@ -217,7 +213,10 @@ exit /B 0
 			set actiontype=pulldb
 			set statustype=started
 			call :send_broadmsg
-            adb pull %rover_app_dir%/dbdump/	%ds_download_dir%
+		For /f "tokens=2-4 delims=/ " %%a in ('date /t') do (set mydate=%%c-%%a-%%b)
+        For /f "tokens=1-2 delims=/:" %%a in ("%TIME%") do (set mytime=%%a%%b)
+
+           adb pull %rover_app_dir%/dbdump/	%ds_dbdump%\!mydate!_!mytime!
 			set statustype=ended
 			call :send_broadmsg
 			echo Completed
@@ -227,8 +226,6 @@ exit /B 0
 
 exit /B 0
 
-
-
 :pull_files_block
 
 	call :start_app
@@ -236,7 +233,10 @@ exit /B 0
 			set actiontype=download
 			set statustype=started
 			call :send_broadmsg
-            adb pull %rover_app_dir%/downloads/	%ds_download_dir%
+		    For /f "tokens=2-4 delims=/ " %%a in ('date /t') do (set mydate=%%c-%%a-%%b)
+            For /f "tokens=1-2 delims=/:" %%a in ("%TIME%") do (set mytime=%%a%%b)
+
+            adb pull %rover_app_dir%/downloads/	%ds_download_dir%\!mydate!_!mytime!
 			set statustype=ended
 			call :send_broadmsg
 			echo Completed
@@ -304,7 +304,6 @@ exit /B 0
           	)
 
 exit /B 0
-
 
 :install_app
     if  "%param2%"=="" (
