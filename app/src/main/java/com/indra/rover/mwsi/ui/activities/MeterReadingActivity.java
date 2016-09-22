@@ -277,7 +277,6 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     public void updateReading(String value){
         int tries =0;
-        Log.i("Test","before"+currentDisplay.getRdg_tries());
           if(!Utils.isNotEmpty(currentDisplay.getRdg_tries())){
               tries = 0;
           }
@@ -287,12 +286,11 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         if(value.isEmpty()){
             tries =0;
         }
-        Log.i("Test","tries"+tries);
         if(tries>3){
             dlgUtils.showOKDialog("You have exceeded the number of tries changing the reading.");
             return;
         }
-
+        tries = tries+1;
         String latitude = null;
         String longtitude = null;
       GPSTracker gpsTracker =  new GPSTracker(this);

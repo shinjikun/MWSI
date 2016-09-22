@@ -2,6 +2,7 @@ package com.indra.rover.mwsi.ui.activities;
 
 
 import android.app.Dialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +25,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     PreferenceKeys prefs;
     DialogUtils dialogUtils;
+    Button btnPair;
     final int STAT_CHANGE_PASS =888;
+    final int REQUEST_BLUETOOTH = 700;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +43,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         }
         prefs = PreferenceKeys.getInstance(this);
         dialogUtils = new DialogUtils(this);
+        btnPair =  (Button)findViewById(R.id.btnPair);
+        btnPair.setOnClickListener(this);
         init();
     }
 
@@ -61,6 +66,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         switch (id){
             case R.id.btnLogin:
                 showLogin();
+                break;
+            case R.id.btnPair:
+                btPair();
                 break;
         }
     }
@@ -164,5 +172,32 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
+    /**
+     * check if bluetooth is turn on if not request to turn on... the result will be catch by onactivityResult method
+     */
+    private void btPair(){
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+            // Device does not support Bluetooth
+        } else {
+            if (!mBluetoothAdapter.isEnabled()) {
+                // Bluetooth is not enable :)
+                //request to turn on
+                Intent enableBT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBT, REQUEST_BLUETOOTH);
+            }
+        }
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_BLUETOOTH){
+            if(resultCode == RESULT_OK){
+                
+            }
+        }
+
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:text="@string/settings_pair_bluetooth"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/button2" />
+        android:id="@+id/btnPair" />
 
     <LinearLayout
         android:id="@+id/pnl_admin_settings"
