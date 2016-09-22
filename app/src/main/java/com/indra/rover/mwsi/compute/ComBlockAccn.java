@@ -1,6 +1,7 @@
 package com.indra.rover.mwsi.compute;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
+import com.indra.rover.mwsi.utils.Utils;
 
 /**
  * Class to compute consumption of a Block Account
@@ -80,7 +81,7 @@ public class ComBlockAccn  extends  Compute{
         if(present_reading>bill_prev_reading){
             String previous_reading = meterConsObj.getPrev_rdg();
             // is previous reading is actual or not empty
-            if(!previous_reading.isEmpty()){
+            if(Utils.isNotEmpty(previous_reading)){
                 int bill_consumption = scenario4();
                 meterConsObj.setBilled_cons(bill_consumption);
                 //tag as adjusted
@@ -107,16 +108,16 @@ public class ComBlockAccn  extends  Compute{
     }
 
     private void clusterA(){
-        String present_reading= meterConsObj.getPresent_rdg();
-        String previous_reading = meterConsObj.getPrev_rdg();
+        String presRdg= meterConsObj.getPresent_rdg();
+        String prevRdg = meterConsObj.getPrev_rdg();
         //present reading actual?
         //yes
-        if(!present_reading.isEmpty()){
+        if(Utils.isNotEmpty(presRdg)){
             //previous reading actual
             //yes
-            if(!previous_reading.isEmpty()){
-              int pres_rdg =  Integer.parseInt(present_reading);
-              int prev_rdg = Integer.parseInt(previous_reading);
+            if(Utils.isNotEmpty(prevRdg)){
+              int pres_rdg =  Integer.parseInt(presRdg);
+              int prev_rdg = Integer.parseInt(prevRdg);
                 //if present reading is greater than previous reading
                 if(pres_rdg>prev_rdg){
                     int bill_consumption = scenario4();

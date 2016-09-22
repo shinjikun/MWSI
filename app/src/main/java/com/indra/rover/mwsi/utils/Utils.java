@@ -36,6 +36,25 @@ public class Utils {
         }
     }
 
+    /**
+     * format a current date with this format MM/dd/yyyy
+     * @return formatted date
+     */
+    public static String getFormattedDate(){
+        String date = (DateFormat.format("MM/dd/yyyy", new java.util.Date()).toString());
+        return date;
+    }
+
+
+    /**
+     * returns a formatted time with this format hh:mm:ss
+     * @return
+     */
+    public static String getFormattedTime(){
+        String time = (DateFormat.format("hh:mm:ss", new java.util.Date()).toString());
+        return time;
+    }
+
     public static String getCurrentDate1(){
         String date = (DateFormat.format("yyyy-MM-dd_hhmm", new java.util.Date()).toString());
         return date;
@@ -100,14 +119,17 @@ public class Utils {
      */
    public static void vibrate(Context context){
        Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-       // Vibrate for 500 milliseconds
-       v.vibrate(500);
+       // Vibrate for 700 milliseconds
+       v.vibrate(700);
    }
 
-    public static boolean isValidEmail(String email) {
-        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
 
+    public static boolean isNotEmpty(String str){
+        if(str!=null && !str.isEmpty()){
+            return true;
+        }
+        return false;
+    }
 
 
 

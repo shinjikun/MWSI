@@ -1,6 +1,7 @@
 package com.indra.rover.mwsi.compute;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
+import com.indra.rover.mwsi.utils.Utils;
 
 
 public class Compute {
@@ -120,7 +121,7 @@ public class Compute {
      */
       public void decisionD(){
           String prev_reading = meterConsObj.getPrev_rdg();
-          if(prev_reading.isEmpty()){
+          if(Utils.isNotEmpty(prev_reading)){
             int billed_consumption =  defaultCondition();
               meterConsObj.setBilled_cons(billed_consumption);
               //tag as actual
@@ -149,8 +150,9 @@ public class Compute {
      */
     public boolean checkValues(){
 
-        return  meterConsObj.getPresent_rdg().isEmpty()&&meterConsObj.getNminitrdg().isEmpty()
-                && meterConsObj.getNminconsfactor().isEmpty();
+        return Utils.isNotEmpty(meterConsObj.getPresent_rdg())&&
+                Utils.isNotEmpty(meterConsObj.getNminitrdg())&&
+                Utils.isNotEmpty(meterConsObj.getNminconsfactor());
     }
 
     /**
@@ -158,7 +160,8 @@ public class Compute {
      * @return  ture if values is not empty otherwise return false
      */
     public boolean checkValues2(){
-        return  meterConsObj.getNminconsfactor().isEmpty() && meterConsObj.getPresent_rdg().isEmpty();
+        return  Utils.isNotEmpty(meterConsObj.getNminconsfactor()) &&
+                Utils.isNotEmpty(meterConsObj.getPresent_rdg());
     }
 
 

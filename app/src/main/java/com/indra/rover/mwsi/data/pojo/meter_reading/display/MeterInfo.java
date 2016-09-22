@@ -34,6 +34,9 @@ public class MeterInfo implements Serializable {
 
     BillClass billClass;
     PreviousData previousData;
+
+    String rdg_tries;
+    String present_reading;
     public MeterInfo(Cursor cursor){
         this.mru_id =cursor.getString(cursor.getColumnIndexOrThrow("MRU"));
         this.seq_number = cursor.getString(cursor.getColumnIndexOrThrow("SEQNO"));
@@ -41,9 +44,12 @@ public class MeterInfo implements Serializable {
         this.dldocno = cursor.getString(cursor.getColumnIndexOrThrow("DLDOCNO"));
         this.grp_flag = cursor.getString(cursor.getColumnIndexOrThrow("GRP_FLAG"));
         this.block_tag = cursor.getString(cursor.getColumnIndexOrThrow("BLOCK_TAG"));
+        this.rdg_tries = cursor.getString(cursor.getColumnIndexOrThrow("RDG_TRIES"));
+        this.present_reading = cursor.getString(cursor.getColumnIndexOrThrow("PRESRDG"));
         this.customerInfo = new CustomerInfo(cursor);
         this.billClass = new BillClass(cursor);
         this.previousData = new PreviousData(cursor);
+
     }
 
 
@@ -94,5 +100,21 @@ public class MeterInfo implements Serializable {
 
     public String getReadStat() {
         return readStat;
+    }
+
+    public String getRdg_tries() {
+        return rdg_tries;
+    }
+
+    /**
+     *  get the present meter reading
+     * @return
+     */
+    public String getPresRdg() {
+        return present_reading;
+    }
+
+    public void setPresent_reading(String present_reading) {
+        this.present_reading = present_reading;
     }
 }

@@ -3,12 +3,14 @@ package com.indra.rover.mwsi.data.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.util.Log;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterRHistory;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterRemarks;
+import com.indra.rover.mwsi.data.pojo.meter_reading.references.RangeTolerance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,11 +133,61 @@ public class MeterReadingDao extends ModelDao {
 
     }
 
+    /**
+     *
+     * @param rdgdate current reading date
+     * @param rdgtime current reading time
+     * @param prsent_rdg present reading
+     * @param latitude latitude of meter reading activities
+     * @param longitude longitude of meter reading activity
+     * @param rdg_tries reading tries
+     * @param crdocid id
+     * @param readstat read status
+     */
+    public void updateReading(String rdgdate,String rdgtime,String prsent_rdg,String latitude,
+                              String longitude,int rdg_tries,String crdocid,String readstat){
+        try{
+            open();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("RDG_DATE",rdgdate);
+            contentValues.put("RDG_TIME",rdgtime);
+            contentValues.put("PRESRDG",prsent_rdg);
+            contentValues.put("GPS_LATITUDE",latitude);
+            contentValues.put("GPS_LONGITUDE",longitude);
+            contentValues.put("RDG_TRIES",rdg_tries);
+            contentValues.put("READSTAT",readstat);
+            String where= "CRDOCNO=?";
+            database.update("T_CURRENT_RDG",contentValues,where,new String[]{crdocid});
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+    }
+
+    /**
+     * updates the bill consumption
+     *
+
+    public void updateConsumption(String bill_consumption){
+        try{
+            open();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("REMARKS",message.trim());
+            String where= "CRDOCNO=?";
+            database.update("T_CURRENT_RDG",contentValues,where,new String[]{crdocid});
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+    }
+*/
     public MeterRemarks getRemarks(String crdocno){
         MeterRemarks meterRemarks = null;
         try {
             open();
-            String sql_stmt = "SELECT CRDOCNO, ACCTNUM,METERNO,REMARKS  from  T_CURRENT_RDG where CRDOCNO="+crdocno;
+            String sql_stmt = "SELECT CRDOCNO, ACCTNUM,METERNO,REMARKS,READSTAT  from  T_CURRENT_RDG where CRDOCNO="+crdocno;
             Log.i("Test",sql_stmt);
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
@@ -181,6 +233,29 @@ public class MeterReadingDao extends ModelDao {
         return meterConsumption;
     }
 
+
+    public RangeTolerance getRangeTolerance(int range , int type){
+        RangeTolerance rangeTolerance=null;
+        try {
+            open();
+            String sql_stmt = "select * from R_RANGE_TOLERANCE " +
+                    "where minrange<"+range +" and "+range+"<maxrange and type ="+
+                    type+" limit 1";
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    rangeTolerance = new RangeTolerance(cursor);
+
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch(SQLException sql){
+            sql.printStackTrace();
+        }finally {
+            close();
+        }
+        return rangeTolerance;
+    }
 
 
 

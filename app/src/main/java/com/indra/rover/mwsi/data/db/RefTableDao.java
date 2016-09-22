@@ -6,6 +6,7 @@ import android.database.SQLException;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.DeliveryCode;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.ObservationCode;
+import com.indra.rover.mwsi.data.pojo.meter_reading.references.RangeTolerance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,9 +81,31 @@ public class RefTableDao extends ModelDao  {
         }catch(SQLException sql){
             sql.printStackTrace();
         }finally {
-            database.close();
+          close();
         }
         return arryList;
     }
 
+    public RangeTolerance getRangeTolerance(int range ,int type){
+        RangeTolerance rangeTolerance=null;
+        try {
+            open();
+            String sql_stmt = "select * from R_RANGE_TOLERANCE " +
+                    "where minrange<"+range +" and "+range+"<maxrange and type ="+
+                    type+" limit 1";
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    rangeTolerance = new RangeTolerance(cursor);
+
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch(SQLException sql){
+            sql.printStackTrace();
+        }finally {
+          close();
+        }
+        return rangeTolerance;
+    }
 }

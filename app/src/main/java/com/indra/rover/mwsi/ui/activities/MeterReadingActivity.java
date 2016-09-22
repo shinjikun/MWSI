@@ -3,11 +3,16 @@ package com.indra.rover.mwsi.ui.activities;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,7 +34,9 @@ import com.indra.rover.mwsi.ui.fragments.MRDeliveryRFragment;
 import com.indra.rover.mwsi.ui.fragments.MROCFragment;
 import com.indra.rover.mwsi.ui.fragments.MRRemarksFragment;
 import com.indra.rover.mwsi.utils.DialogUtils;
+import com.indra.rover.mwsi.utils.GPSTracker;
 import com.indra.rover.mwsi.utils.MessageTransport;
+import com.indra.rover.mwsi.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,10 +59,13 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     DialogUtils dlgUtils;
     TextView txtFilter;
     Button btnPrint;
+    CoordinatorLayout coordinatorLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meter_reading);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id
+                .coordinatorLayout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -146,8 +156,6 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
             }
         });
-        btnPrint = (Button)findViewById(R.id.btnPrint);
-        btnPrint.setEnabled(false);
 
 
 
@@ -184,6 +192,12 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
            txt.setText(currentDisplay.getBillClass().getDesc());
            meterStatus();
            navigate(currentDisplay.getDldocno());
+           if(Utils.isNotEmpty(currentDisplay.getPresRdg())){
+               setReadingValue(currentDisplay.getPresRdg());
+           }
+           else {
+               setReadingValue("");
+           }
        }
     }
 
@@ -192,11 +206,11 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(currentDisplay.getReadStat());
 
-        if(!currentDisplay.getBlock_tag().isEmpty()){
+        if(Utils.isNotEmpty(currentDisplay.getBlock_tag())){
             stringBuilder.append(' ');
-            stringBuilder.append('B');
+            stringBuilder.append(currentDisplay.getBlock_tag());
         }
-        if(!currentDisplay.getGrp_flag().isEmpty()){
+        if(Utils.isNotEmpty(currentDisplay.getGrp_flag())){
             stringBuilder.append(' ');
             stringBuilder.append('G');
         }
@@ -234,6 +248,9 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         dialog.setContentView(R.layout.dialog_change_reading);
         dialog.setCancelable(false);
         final EditText txtDlg = (EditText)dialog.findViewById(R.id.dlg_body);
+        if(Utils.isNotEmpty(currentDisplay.getPresRdg())){
+            txtDlg.setText(currentDisplay.getPresRdg());
+        }
         ImageButton dlgBtnClose = (ImageButton)dialog.findViewById(R.id.dlg_btn_close);
         dlgBtnClose.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -247,7 +264,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onClick(View view) {
                 String value =   txtDlg.getText().toString();
-                setReadingValue(value);
+                updateReading(value);
+              //  checkConsumptionLevel(value);
                 dialog.dismiss();
             }
         });
@@ -257,11 +275,77 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         dialog.show();
     }
 
+    public void updateReading(String value){
+        int tries =0;
+        Log.i("Test","before"+currentDisplay.getRdg_tries());
+          if(!Utils.isNotEmpty(currentDisplay.getRdg_tries())){
+              tries = 0;
+          }
+        else {
+              tries = Integer.parseInt(currentDisplay.getRdg_tries());
+          }
+        if(value.isEmpty()){
+            tries =0;
+        }
+        Log.i("Test","tries"+tries);
+        if(tries>3){
+            dlgUtils.showOKDialog("You have exceeded the number of tries changing the reading.");
+            return;
+        }
 
+        String latitude = null;
+        String longtitude = null;
+      GPSTracker gpsTracker =  new GPSTracker(this);
+        if(gpsTracker.canGetLocation()){
+            latitude = String.valueOf(gpsTracker.getLatitude());
+            longtitude = String.valueOf(gpsTracker.getLongitude());
+
+        }
+        meterDao.updateReading(Utils.getFormattedDate(),
+                Utils.getFormattedTime(),
+                value,latitude,longtitude,tries,currentDisplay.getDldocno(),"R"
+                );
+
+        setReadingValue(value);
+    }
+
+    public void checkConsumptionLevel(String value){
+        setReadingValue(value);
+        snackbar("Consumption Very Low");
+    }
+
+    public void snackbar(String message){
+        Snackbar snackbar = Snackbar
+                .make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE)
+                .setAction("Re Enter", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showMeterRdgDialog();
+                    }
+                });
+
+
+        // Changing message text color
+        snackbar.setActionTextColor(Color.WHITE);
+
+
+        // Changing action button text color
+        View sbView = snackbar.getView();
+        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        textView.setTypeface(null, Typeface.BOLD);
+
+        sbView.setBackgroundColor(getResources().getColor(R.color.red_colr));
+        snackbar.show();
+
+        //vibrate
+        Utils.vibrate(this);
+    }
 
     public void setReadingValue(String value){
         TextView txt = (TextView)findViewById(R.id.txtReading);
         txt.setText(value);
+        currentDisplay.setPresent_reading(value);
     }
 
     @Override

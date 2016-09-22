@@ -14,6 +14,7 @@ import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterRemarks;
+import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.MessageTransport;
 import com.squareup.otto.Subscribe;
 
@@ -27,6 +28,7 @@ public class MRRemarksFragment extends Fragment  implements View.OnClickListener
     View mView;
     MeterReadingDao meterReadingDao;
     MeterRemarks meterRemarks;
+    DialogUtils  dialogUtils;
     public MRRemarksFragment() {
     }
 
@@ -43,6 +45,7 @@ public class MRRemarksFragment extends Fragment  implements View.OnClickListener
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         meterReadingDao = new MeterReadingDao(getActivity());
+        dialogUtils = new DialogUtils(getActivity());
         if (getArguments() != null) {
             String   mParamID = getArguments().getString(IDPARAM);
              meterRemarks = meterReadingDao.getRemarks(mParamID);
@@ -89,7 +92,15 @@ public class MRRemarksFragment extends Fragment  implements View.OnClickListener
                cancelRemarks();
                break;
            case R.id.btnEditMRRemarks:
-               setEditMode(true);
+               String readstat = meterRemarks.getReadstat();
+               if(readstat.equals("P")||readstat.equals("Q")){
+                   setEditMode(true);
+               }
+               else {
+
+                   dialogUtils.showOKDialog(2,"No Remarks Entry","Cannot Enter a Remark for an Unprinted Bill!",new Bundle());
+               }
+
                break;
        }
 

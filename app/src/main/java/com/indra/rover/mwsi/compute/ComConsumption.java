@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
+import com.indra.rover.mwsi.utils.Utils;
 
 /**
  * Class to compute  the consumption
@@ -12,15 +13,6 @@ public class ComConsumption extends Compute{
 
     MeterReadingDao meterReadingDao;
 
-    /**
-     * instantiate some needed varialbe
-     * @param context used by DAO object to access database
-     * @param dldocno id of the account to be computed
-     */
-    public ComConsumption(Context context, String dldocno){
-        this.meterReadingDao = new MeterReadingDao(context);
-        this.meterConsObj =  meterReadingDao.getConsumption(dldocno);
-    }
 
     public ComConsumption(MeterConsumption meterConsumption){
         this.meterConsObj = meterConsumption;
@@ -33,7 +25,7 @@ public class ComConsumption extends Compute{
         //check first if account is block or not
         if(meterConsObj!=null){
             String block_tag = meterConsObj.getBlock_tag();
-               if(!block_tag.isEmpty()){
+               if(Utils.isNotEmpty(block_tag)){
                    //account is block then proceed to compute BlockAccount
                    if(block_tag.equals("B")||block_tag.equals("P")){
                         ComBlockAccn blockAccount = new ComBlockAccn(meterConsObj);
@@ -59,9 +51,9 @@ public class ComConsumption extends Compute{
         //non bill related observation code
         String oc2 = meterConsObj.getFfcode2();
 
-        if(!reading.isEmpty()){
+        if(Utils.isNotEmpty(reading)){
             //reading plus non-bill related oc
-            if(!oc2.isEmpty()){
+            if(Utils.isNotEmpty(oc2)){
                 //reading plus non-bill related oc excluding oc11, 12 and 14
                 if(!oc2.equals("11")||!oc2.equals("12")||!oc2.equals("14")){
                     //tag as averages
@@ -73,7 +65,7 @@ public class ComConsumption extends Compute{
                 }
             }
             //reading only plus billed related OC
-            else if(!oc1.isEmpty()){
+            else if(Utils.isNotEmpty(oc1)){
                 //tag as average
                 decisionB();
             }
@@ -83,7 +75,7 @@ public class ComConsumption extends Compute{
             }
         } else {
             //no reading but entered only OC11, OC12 or OC14
-            if(!oc2.isEmpty()){
+            if(Utils.isNotEmpty(oc2)){
                 //entered only oc11 , oc12 or oc14
                 if(oc2.equals("11")||oc2.equals("12")||oc2.equals("14")){
                     String prev_oc2 = meterConsObj.getPrevff2();
@@ -104,7 +96,7 @@ public class ComConsumption extends Compute{
 
     private void checkNewMeterInfo(){
         String has_newmeterInfo =  meterConsObj.getDreplmtr_code();
-        if(!has_newmeterInfo.isEmpty()){
+        if(Utils.isNotEmpty(has_newmeterInfo)){
             //if hasnewmeterInfo is not to zero
             if(!has_newmeterInfo.equals("0")){
                 computeWithNewMeter();
@@ -128,7 +120,7 @@ public class ComConsumption extends Compute{
             //is present reading greater than actual billed previous reading
             if(present_reading>bill_prev_reading){
                 //if previous reading is actual
-                if(!previous_reading.isEmpty()){
+                if(Utils.isNotEmpty(previous_reading)){
                     int bill_consumption = scenario4();
                     meterConsObj.setBilled_cons(bill_consumption);
                     //tag as adjusted
@@ -221,7 +213,7 @@ public class ComConsumption extends Compute{
             }
         }else {
             //if previous reading is actual and previous is less than the present reading
-            if(!previous_reading.isEmpty()){
+            if(Utils.isNotEmpty(previous_reading)){
                 int prev_reading = Integer.parseInt(previous_reading);
                 //if previous reading is less than to present reading
                 if(prev_reading<present_reading){
@@ -245,7 +237,7 @@ public class ComConsumption extends Compute{
         //Actual rdg two months prior to current month is available and actual ?
         //Previous rdg is less than actual rdg two months prior to current month?
         String bill_previous_2 = meterConsObj.getBill_prev_act_tag();
-        if(!bill_previous_2.isEmpty()){
+        if(Utils.isNotEmpty(bill_previous_2)){
                 //previous oc2 enter is 29
                 if(prevOC2.equals("29")){
                     //use scenario 4 to compute the consumption
@@ -282,7 +274,7 @@ public class ComConsumption extends Compute{
         //use formula scenario 1 to compute the scenario
        int bill_consumption =   scenario1();
         String oc2 = meterConsObj.getFfcode2();
-        if(!meterConsObj.getNum_dials().isEmpty()){
+        if(Utils.isNotEmpty(meterConsObj.getNum_dials())){
 
             boolean isLess = isLessMaxCapacity(bill_consumption);
             if(isLess){
