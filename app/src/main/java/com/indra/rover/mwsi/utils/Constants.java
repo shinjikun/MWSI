@@ -20,5 +20,7 @@ public interface  Constants {
 
    String ADMIN_PASSWORD= "adminpass";
 
-    String ADMIN_DEFAULT_PASS= "1234";
+   String ADMIN_DEFAULT_PASS= "1234";
+
+   String BLT_PAIRED = "";
 }

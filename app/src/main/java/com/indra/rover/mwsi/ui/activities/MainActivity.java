@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.btnSettings:
-                intent =  new Intent(this,SettingsActivity.class);
+                intent =  new Intent(this,ConnectivityDemo.class);
                 startActivity(intent);
                 break;
         }

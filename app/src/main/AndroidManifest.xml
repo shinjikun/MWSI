@@ -90,6 +90,7 @@
             android:value="6489e5f9100fd533270730567554519d6c139ec6" />
 
         <activity android:name=".ui.activities.ChangePasswordActivity" />
+        <activity android:name=".ui.activities.ConnectivityDemo"></activity>
     </application>
 
 </manifest>
