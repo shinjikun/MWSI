@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.util.Log;
+
 import com.indra.rover.mwsi.data.pojo.MRU;
 
 import java.util.ArrayList;
@@ -156,6 +158,263 @@ public class MRUDao  extends  ModelDao{
         Cursor cursor = database.rawQuery(selectSql, null);
         boolean result = cursor.moveToFirst();
         return result;
+    }
+
+
+
+    public int countUnRead(String mruid,String type){
+        int count =0;
+        try {
+            open();
+            StringBuilder str_b_stmt = new StringBuilder();
+            str_b_stmt.append("Select count(READSTAT)  as COUNTNUM from T_CURRENT_RDG  t, T_DOWNLOAD d  " +
+                    "where  t.READSTAT='");
+            str_b_stmt.append(type);
+            str_b_stmt.append("' and t.CRDOCNO = d.DLDOCNO ");
+            if(!mruid.equals("All")){
+                str_b_stmt.append(" and d.MRU = ");
+                str_b_stmt.append(mruid);
+            }
+            Cursor cursor = database.rawQuery(str_b_stmt.toString(),null);
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNTNUM"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+
+        }catch (Exception sql){
+            sql.printStackTrace();
+        }finally {
+            close();
+        }
+        return count;
+    }
+
+
+    public int countPrinted(String mruid){
+        int count =0;
+        try {
+            open();
+            StringBuilder str_b_stmt = new StringBuilder();
+            str_b_stmt.append("Select count(READSTAT)  as COUNTNUM from T_CURRENT_RDG  t, T_DOWNLOAD d  " +
+                    "where  (t.READSTAT='P' or t.READSTAT='Q')");
+
+            str_b_stmt.append(" and t.CRDOCNO = d.DLDOCNO ");
+            if(!mruid.equals("All")){
+                str_b_stmt.append(" and d.MRU = ");
+                str_b_stmt.append(mruid);
+            }
+            Cursor cursor = database.rawQuery(str_b_stmt.toString(),null);
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNTNUM"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+
+        }catch (Exception sql){
+            sql.printStackTrace();
+        }finally {
+            close();
+        }
+        return count;
+    }
+
+
+    public int countPrintable(String mruid){
+        int count =0;
+        try {
+            open();
+            StringBuilder str_b_stmt = new StringBuilder();
+            str_b_stmt.append("Select count(READSTAT)  as COUNTNUM from T_CURRENT_RDG  t, T_DOWNLOAD " +
+                    "d , T_UPLOAD u where   t.CRDOCNO = d.DLDOCNO  and d.DLDOCNO = u.ULDOCNO and " +
+                    "u.PRINT_TAG =3 and (t.READSTAT='R' or t.READSTAT='E')");
+            if(!mruid.equals("All")){
+                str_b_stmt.append(" and d.MRU = ");
+                str_b_stmt.append(mruid);
+            }
+            Log.i("Test",str_b_stmt.toString());
+            Cursor cursor = database.rawQuery(str_b_stmt.toString(),null);
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNTNUM"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+
+        }catch (Exception sql){
+            sql.printStackTrace();
+        }finally {
+            close();
+        }
+        return count;
+    }
+
+    /**
+     *  query for count of number out of range
+     * @param mruid id
+     * @return number of out of range
+     */
+    public int countOutofRange(String mruid){
+        int count =0;
+        try {
+            open();
+            StringBuilder str_b_stmt = new StringBuilder();
+            str_b_stmt.append("Select count(READSTAT)  as COUNTNUM from T_CURRENT_RDG  t, T_DOWNLOAD d  " +
+                    "where  t.RANGE_CODE='3' or t.RANGE_CODE='4'");
+            str_b_stmt.append(" and t.CRDOCNO = d.DLDOCNO ");
+            if(!mruid.equals("All")){
+                str_b_stmt.append(" and d.MRU = ");
+                str_b_stmt.append(mruid);
+            }
+            Cursor cursor = database.rawQuery(str_b_stmt.toString(),null);
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNTNUM"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+
+        }catch (Exception sql){
+            sql.printStackTrace();
+        }finally {
+            close();
+        }
+        return count;
+    }
+
+    /**
+     *  query for count of number zero consumption
+     * @param mruid id
+     * @return number of zero consumption
+     */
+    public int countZeroCons(String mruid) {
+        int count = 0;
+        try {
+            open();
+            StringBuilder str_b_stmt = new StringBuilder();
+            str_b_stmt.append("Select count(READSTAT)  as COUNTNUM from T_CURRENT_RDG  t, T_DOWNLOAD d  " +
+                    "where  t.RANGE_CODE='Z'");
+            str_b_stmt.append(" and t.CRDOCNO = d.DLDOCNO ");
+            if (!mruid.equals("All")) {
+                str_b_stmt.append(" and d.MRU = ");
+                str_b_stmt.append(mruid);
+            }
+            Cursor cursor = database.rawQuery(str_b_stmt.toString(), null);
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNTNUM"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+
+        } catch (Exception sql) {
+            sql.printStackTrace();
+        } finally {
+            close();
+        }
+        return count;
+    }
+
+    /**
+     *  query for count of delivered number
+     * @param mruid id
+     * @return number of zero consumption
+     */
+    public int countDelivered(String mruid) {
+        int count = 0;
+        try {
+            open();
+            StringBuilder str_b_stmt = new StringBuilder();
+            str_b_stmt.append("Select count(READSTAT)  as COUNTNUM from T_CURRENT_RDG  t, T_DOWNLOAD d  " +
+                    "where  t.DEL_CODE IS NOT NULL and t.DEL_CODE !='07'");
+            str_b_stmt.append(" and t.CRDOCNO = d.DLDOCNO ");
+            if (!mruid.equals("All")) {
+                str_b_stmt.append(" and d.MRU = ");
+                str_b_stmt.append(mruid);
+            }
+            Cursor cursor = database.rawQuery(str_b_stmt.toString(), null);
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNTNUM"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+
+        } catch (Exception sql) {
+            sql.printStackTrace();
+        } finally {
+            close();
+        }
+        return count;
+    }
+
+
+    /**
+     *  query for count of undelivered number
+     * @param mruid id
+     * @return number of zero consumption
+     */
+    public int countUnDelivered(String mruid) {
+        int count = 0;
+        try {
+            open();
+            StringBuilder str_b_stmt = new StringBuilder();
+            str_b_stmt.append("Select count(READSTAT)  as COUNTNUM from T_CURRENT_RDG  t, T_DOWNLOAD d  " +
+                    "where  t.DEL_CODE IS NOT NULL and t.DEL_CODE ='07'");
+            str_b_stmt.append(" and t.CRDOCNO = d.DLDOCNO ");
+            if (!mruid.equals("All")) {
+                str_b_stmt.append(" and d.MRU = ");
+                str_b_stmt.append(mruid);
+            }
+            Cursor cursor = database.rawQuery(str_b_stmt.toString(), null);
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNTNUM"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+
+        } catch (Exception sql) {
+            sql.printStackTrace();
+        } finally {
+            close();
+        }
+        return count;
+    }
+
+
+    /**
+     *  query for count of OC
+     * @param mruid id
+     * @return number of oc
+     */
+    public int countOC(String mruid) {
+        int count = 0;
+        try {
+            open();
+            StringBuilder str_b_stmt = new StringBuilder();
+            str_b_stmt.append("select count(*) as COUNTNUM  from T_CURRENT_RDG t, T_DOWNLOAD d  where " +
+                    "t.CRDOCNO = d.DLDOCNO and  t.FFCODE1 IS NOT NULL or t.FFCODE2 IS NOT NULL");
+            if (!mruid.equals("All")) {
+                str_b_stmt.append(" and d.MRU = ");
+                str_b_stmt.append(mruid);
+            }
+            Cursor cursor = database.rawQuery(str_b_stmt.toString(), null);
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNTNUM"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+
+        } catch (Exception sql) {
+            sql.printStackTrace();
+        } finally {
+            close();
+        }
+        return count;
     }
 
 

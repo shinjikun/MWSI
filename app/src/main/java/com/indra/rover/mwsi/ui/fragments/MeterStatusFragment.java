@@ -25,24 +25,24 @@ import com.squareup.otto.Subscribe;
 public class MeterStatusFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param";
-    private static final String ARG_IDPARAM = "id";
+    private static final String ARG_TABINDEX = "tabindex";
+    private static final String ARG_IDPARAM = "mru_id";
     /**
      * status screen type
      */
-    private int mParam;
+    private int mTabIndex;
 
 
     private LinearLayout mLayout;
     MRUDao mruDao;
     MRU selectedMRU;
-
+    String mSelectedMRU;
 
 
     public static MeterStatusFragment newInstance(int param, String mruID) {
         MeterStatusFragment fragment = new MeterStatusFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_PARAM1, param);
+        args.putInt(ARG_TABINDEX, param);
         args.putString(ARG_IDPARAM,mruID);
         fragment.setArguments(args);
 
@@ -57,9 +57,10 @@ public class MeterStatusFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mruDao = new MRUDao(getActivity());
         if (getArguments() != null) {
-            mParam = getArguments().getInt(ARG_PARAM1);
+            mTabIndex = getArguments().getInt(ARG_TABINDEX);
          String   mruID = getArguments().getString(ARG_IDPARAM);
             selectedMRU = mruDao.getMRU(mruID);
+            this.mSelectedMRU = mruID;
         }
         MainApp.bus.register(this);
     }
@@ -78,7 +79,7 @@ public class MeterStatusFragment extends Fragment {
 
 
     private void setup(){
-        switch(mParam){
+        switch(mTabIndex){
            case 1 :
                meterScreen();
                 break;
@@ -113,33 +114,32 @@ public class MeterStatusFragment extends Fragment {
 
         item = new CustomItemView(getActivity());
         item.setLabel("Unread Meter :");
-        String str = String.valueOf(selectedMRU.getUnread());
+        String str = String.valueOf(mruDao.countUnRead(mSelectedMRU,"U"));
         item.setValue(str);
         item.setLayoutParams(layoutParams);
         mLayout.addView(item);
 
         item = new CustomItemView(getActivity());
         item.setLabel("Read Meter :");
-         str = String.valueOf(selectedMRU.getRead());
-        item.setValue(str);
+        item.setValue(String.valueOf(mruDao.countUnRead(mSelectedMRU,"R")));
         item.setLayoutParams(layoutParams);
         mLayout.addView(item);
 
         item = new CustomItemView(getActivity());
         item.setLabel("Zero Consumption :");
-        item.setValue("0");
+        item.setValue(String.valueOf(mruDao.countZeroCons(mSelectedMRU)));
         item.setLayoutParams(layoutParams);
         mLayout.addView(item);
 
         item = new CustomItemView(getActivity());
         item.setLabel("Out of Range :");
-        item.setValue("0");
+        item.setValue(String.valueOf(mruDao.countOutofRange(mSelectedMRU)));
         item.setLayoutParams(layoutParams);
         mLayout.addView(item);
 
         item = new CustomItemView(getActivity());
         item.setLabel("With OC :");
-        item.setValue("0");
+        item.setValue(String.valueOf(mruDao.countOC(mSelectedMRU)));
         item.setLayoutParams(layoutParams);
         mLayout.addView(item);
     }
@@ -160,10 +160,16 @@ public class MeterStatusFragment extends Fragment {
 
         item = new CustomItemView(getActivity());
         item.setLabel("Printable :");
-        String totalPrintable = String.valueOf(selectedMRU.getCustomer_count());
-        item.setValue(totalPrintable);
+        item.setValue(String.valueOf(mruDao.countPrintable(mSelectedMRU)));
         item.setLayoutParams(layoutParams);
         mLayout.addView(item);
+
+        item = new CustomItemView(getActivity());
+        item.setLabel("Printed :");
+        item.setValue(String.valueOf(mruDao.countPrinted(mSelectedMRU)));
+        item.setLayoutParams(layoutParams);
+        mLayout.addView(item);
+
 
 
         item = new CustomItemView(getActivity());
@@ -180,13 +186,13 @@ public class MeterStatusFragment extends Fragment {
 
         item = new CustomItemView(getActivity());
         item.setLabel("Delivered :");
-        item.setValue("0");
+        item.setValue(String.valueOf(mruDao.countDelivered(mSelectedMRU)));
         item.setLayoutParams(layoutParams);
         mLayout.addView(item);
 
         item = new CustomItemView(getActivity());
         item.setLabel("UnDelivered :");
-        item.setValue("0");
+        item.setValue(String.valueOf(mruDao.countUnDelivered(mSelectedMRU)));
         item.setLayoutParams(layoutParams);
         mLayout.addView(item);
     }
@@ -196,7 +202,7 @@ public class MeterStatusFragment extends Fragment {
     @Subscribe
     public void getMessage(String mruID) {
             selectedMRU = mruDao.getMRUStats(mruID);
-
+            this.mSelectedMRU = mruID;
             setup();
 
     }
