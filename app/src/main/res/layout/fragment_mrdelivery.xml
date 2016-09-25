@@ -10,13 +10,14 @@
         android:layout_width="70dp"
         android:layout_height="35dp"
         android:text="@string/btn_cancel_str"
-        android:id="@+id/btnEditMRDelivery"
+        android:id="@+id/btnCancelMRDelivery"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:background="@drawable/btn_grey_rounded"
         android:textColor="@android:color/white"
         android:nextFocusLeft="@+id/btnSaveDeliv"
+        android:visibility="invisible"
         />
 
     <TextView
@@ -25,7 +26,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/mr_c_dev_code"
         android:id="@+id/textView21"
-        android:layout_below="@+id/btnEditMRDelivery"
+        android:layout_below="@+id/btnCancelMRDelivery"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="18dp"
@@ -44,7 +45,8 @@
         android:id="@+id/btnClrDeliv"
         android:contentDescription="@string/str_default_val"
         android:nextFocusLeft="@+id/spnDevCode"
-        tools:nextFocusRight="@id/txtMRDDesc" />
+        tools:nextFocusRight="@id/txtMRDRemarks"
+        android:visibility="gone"/>
 
     <Spinner
         android:layout_width="match_parent"
@@ -60,13 +62,14 @@
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         style="@style/SpinnerTheme"
-        android:nextFocusRight="@+id/btnClrDeliv"/>
+        android:nextFocusRight="@+id/btnClrDeliv"
+        android:visibility="gone"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/mr_c_description"
+        android:text="@string/mr_c_remarks"
         android:id="@+id/textView22"
         android:layout_below="@+id/textView21"
         android:layout_alignParentLeft="true"
@@ -78,39 +81,8 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:id="@+id/txtMRDDesc"
-        android:layout_below="@+id/textView22"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="5dp"
-        android:padding="4dp"
-        android:hint="@string/mr_c_description"
-        android:background="@drawable/txt_rounded_border"
-        android:layout_marginEnd="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:nextFocusRight="@+id/txtMRDRemarks"
-        android:nextFocusLeft="@+id/btnClrDeliv"/>
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/mr_c_info_remarks"
-        android:id="@+id/textView23"
-        android:layout_below="@+id/txtMRDDesc"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp"
-        android:textStyle="bold" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
         android:id="@+id/txtMRDRemarks"
-        android:layout_below="@+id/textView23"
+        android:layout_below="@+id/textView22"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="5dp"
@@ -121,17 +93,18 @@
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:nextFocusRight="@+id/btnSaveDeliv"
-        android:nextFocusLeft="@+id/txtMRDDesc"
-        />
+        android:nextFocusLeft="@+id/btnClrDeliv"
+        android:visibility="invisible"
+        android:maxLines="1"/>
+
 
     <Button
         android:text="@string/btn_save_str"
         android:layout_width="70dp"
         android:layout_height="40dp"
         android:layout_above="@+id/textView21"
-        android:layout_toLeftOf="@+id/btnEditMRDelivery"
-        android:layout_toStartOf="@+id/btnEditMRDelivery"
+        android:layout_toLeftOf="@+id/btnCancelMRDelivery"
+        android:layout_toStartOf="@+id/btnCancelMRDelivery"
         android:id="@+id/btnSaveDeliv"
         android:background="@drawable/btn_active_rounded"
         android:padding="5dp"
@@ -139,5 +112,49 @@
         android:layout_marginRight="10dp"
         android:layout_marginEnd="10dp"
         android:nextFocusRight="@+id/btnEditMRDelivery"
-        android:nextFocusLeft="@+id/txtMRDRemarks"/>
+        android:visibility="gone"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/lblMRDRemarks"
+        android:layout_below="@+id/textView22"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="5dp"
+        android:padding="4dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/txt_rounded_border"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/lblDevCode"
+        android:layout_alignTop="@+id/textView21"
+        android:layout_toRightOf="@+id/textView21"
+        android:layout_toEndOf="@+id/textView21"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/txt_rounded_border"
+        />
+
+    <Button
+        android:layout_width="70dp"
+        android:layout_height="35dp"
+        android:text="@string/mr_edit"
+        android:id="@+id/btnEditMRDelivery"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/btn_active_rounded"
+        android:textColor="@android:color/white"
+        android:drawableStart="@drawable/ic_edit"
+        android:drawableLeft="@drawable/ic_edit"
+        />
+
+
 </RelativeLayout>

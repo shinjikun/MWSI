@@ -117,4 +117,8 @@ public class MeterInfo implements Serializable {
     public void setPresent_reading(String present_reading) {
         this.present_reading = present_reading;
     }
+
+    public void setRdg_tries(String rdg_tries) {
+        this.rdg_tries = rdg_tries;
+    }
 }

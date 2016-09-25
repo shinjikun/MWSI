@@ -85,10 +85,10 @@ public class MRCustomerInfoFragment extends Fragment {
         txt = (TextView)mLayout.findViewById(R.id.txtMRCOC1);
         String ocCode = String.valueOf(previousData.getPrevFF1());
 
-        txt.setText(previousData.getPrevFF1()+" - "+findOCdesc("03"));
+        txt.setText(previousData.getPrevFF1()+" - "+findOCdesc(ocCode));
         txt = (TextView)mLayout.findViewById(R.id.txtMRCOC2);
         ocCode = String.valueOf(previousData.getPrevFF2());
-        txt.setText(previousData.getPrevFF2()+" - "+findOCdesc("04"));
+        txt.setText(previousData.getPrevFF2()+" - "+findOCdesc(ocCode));
 
     }
 

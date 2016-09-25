@@ -4,16 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.util.Log;
-
 import com.indra.rover.mwsi.data.pojo.MRU;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by leonardoilagan on 04/09/2016.
- */
+
 
 public class MRUDao  extends  ModelDao{
 
@@ -234,7 +230,6 @@ public class MRUDao  extends  ModelDao{
                 str_b_stmt.append(" and d.MRU = ");
                 str_b_stmt.append(mruid);
             }
-            Log.i("Test",str_b_stmt.toString());
             Cursor cursor = database.rawQuery(str_b_stmt.toString(),null);
             if (cursor.moveToFirst()) {
                 do {

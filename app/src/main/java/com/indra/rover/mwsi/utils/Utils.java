@@ -51,7 +51,7 @@ public class Utils {
      * @return
      */
     public static String getFormattedTime(){
-        String time = (DateFormat.format("hh:mm:ss", new java.util.Date()).toString());
+        String time = (DateFormat.format("HH:mm:ss", new java.util.Date()).toString());
         return time;
     }
 
@@ -69,7 +69,7 @@ public class Utils {
     public static String getCurrentDate(){
         //"yyyy-MM-dd'T'HH:mm:ssZ"
         //"dd-MM-yyyy hh:mm:ss"
-        String date = (DateFormat.format("yyyy-MM-dd hh:mm:ss", new java.util.Date()).toString());
+        String date = (DateFormat.format("yyyy-MM-dd HH:mm:ss", new java.util.Date()).toString());
         return date;
     }
 
@@ -78,7 +78,7 @@ public class Utils {
         if(strDate ==null ||strDate.isEmpty()){
             return "";
         }
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         try {
             Date date1 = formatter.parse(strDate);
 
@@ -96,7 +96,7 @@ public class Utils {
     public static boolean compareDate(String strDate1, String strDate2) {
 
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         try {
             Date date1 = formatter.parse(strDate1);
             Date date2 = formatter.parse(strDate2);
@@ -131,6 +131,15 @@ public class Utils {
         return false;
     }
 
+
+    /**
+     * format a given string by removing the newline and replacing it to space
+     * @param str  string to be formatted
+     * @return formmatted string
+     */
+     public static String formatString(String str){
+        return  str.replaceAll("\n"," ");
+     }
 
 
 

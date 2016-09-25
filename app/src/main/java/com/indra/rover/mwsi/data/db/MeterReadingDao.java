@@ -4,20 +4,19 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.util.Log;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
+import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterDelivery;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterRHistory;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterRemarks;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.RangeTolerance;
+import com.indra.rover.mwsi.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by leonardoilagan on 12/09/2016.
- */
+
 
 public class MeterReadingDao extends ModelDao {
 
@@ -114,7 +113,7 @@ public class MeterReadingDao extends ModelDao {
 
     /**
      * insert the specified messsage/remarks to Current Reading table
-     * @param message
+     * @param message remark message
      * @param crdocid id of current reading on which remarks/message should be added
      */
     public void addRemarks(String message , String crdocid){
@@ -132,6 +131,59 @@ public class MeterReadingDao extends ModelDao {
         }
 
     }
+
+
+    /**
+     *  add delivery remarks and code to current reading table
+     * @param deliv_code delivery code
+     * @param deliv_remarks delivery remarks
+     * @param crdocid id
+     * @param isNewDeliv is new inserted record?
+     */
+    public void addDelivRemarks(String deliv_code, String deliv_remarks, String crdocid, boolean isNewDeliv){
+        try {
+            open();
+            ContentValues contentValues = new ContentValues();
+            if(isNewDeliv){
+                contentValues.put("DELIV_DATE", Utils.getFormattedDate());
+                contentValues.put("DELIV_TIME",Utils.getFormattedTime());
+
+            }
+            contentValues.put("DEL_CODE",deliv_code);
+            contentValues.put("DELIV_REMARKS", Utils.formatString(deliv_remarks));
+            String where= "CRDOCNO=?";
+            database.update("T_CURRENT_RDG",contentValues,where,new String[]{crdocid});
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+    }
+
+
+    public MeterDelivery getDeliveryStat(String crdocno){
+        MeterDelivery meterRemarks =null;
+        try {
+            open();
+            String sql_stmt = "SELECT t.CRDOCNO, t.DEL_CODE, t.DELIV_DATE, t.DELIV_TIME," +
+                    "t.DELIV_REMARKS, t.READSTAT" +
+                    " from  T_CURRENT_RDG t where " +
+                    "t.CRDOCNO="+crdocno;
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    meterRemarks = new MeterDelivery(cursor);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+        return meterRemarks;
+    }
+
 
     /**
      *
@@ -165,6 +217,35 @@ public class MeterReadingDao extends ModelDao {
         }
     }
 
+    public void updateReadStatus(String status,String crdocid ){
+        try{
+            open();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("READSTAT",status);
+            String where= "CRDOCNO=?";
+            database.update("T_CURRENT_RDG",contentValues,where,new String[]{crdocid});
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+    }
+
+    public void updateSequenceNumber(String seqNumber,String crdocid){
+        try{
+            open();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("RECMD_SEQNO",seqNumber);
+            String where= "CRDOCNO=?";
+            database.update("T_CURRENT_RDG",contentValues,where,new String[]{crdocid});
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+    }
+
+
     /**
      * updates the bill consumption
      *
@@ -188,7 +269,6 @@ public class MeterReadingDao extends ModelDao {
         try {
             open();
             String sql_stmt = "SELECT CRDOCNO, ACCTNUM,METERNO,REMARKS,READSTAT  from  T_CURRENT_RDG where CRDOCNO="+crdocno;
-            Log.i("Test",sql_stmt);
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
                 do {
@@ -216,7 +296,6 @@ public class MeterReadingDao extends ModelDao {
                     "c.BILLED_CONS,c.CONSTYPE_CODE,d.PCONSAVGFLAG,d. " +
                     "from T_DOWNLOAD d,R_NUM_DIALS nd ,T_CURRENT_RDG c " +
                     "where d.nodials = nd.nodials and d.DLDOCNO=c.CRDOCNO and d.DLDOCNO="+dldocno+";";
-            Log.i("Test",sql_stmt);
             Cursor cursor =database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
                 do {

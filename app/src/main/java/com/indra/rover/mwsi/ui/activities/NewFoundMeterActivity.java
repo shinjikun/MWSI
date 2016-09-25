@@ -71,7 +71,7 @@ public class NewFoundMeterActivity extends AppCompatActivity  implements View.On
             }
         });
 
-        TextView txt = (TextView)dialog.findViewById(R.id.dlg_title);
+        //TextView txt = (TextView)dialog.findViewById(R.id.dlg_title);
 
         dialog.show();
     }

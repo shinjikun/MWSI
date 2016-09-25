@@ -33,6 +33,12 @@ public class FileUtils {
             imagesDir.mkdirs();
         }
 
+        //this will contain the signature of customer who received the receipt of meter reading
+        File signatures = new File(downloadDir,"signatures");
+        if(!signatures.exists()){
+            signatures.mkdirs();
+        }
+
         //create directory for database files
       File  db = new File(contentDir,"db");
         if(!db.exists()){

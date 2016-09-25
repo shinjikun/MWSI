@@ -5,9 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.io.IOException;
 
-/**
- * Created by Indra on 8/26/2016.
- */
   abstract  class ModelDao {
 
      DatabaseHelper dbHelper;

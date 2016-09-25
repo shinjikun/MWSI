@@ -69,7 +69,7 @@
     <!--  meter reading delivery remarks section -->
     <string name="mr_c_dev_rem_desc">Description : </string>
     <string name="mr_c_dev_rem_">Remarks : </string>
-    <string name="mr_c_dev_code">Delivery Code : </string>
+    <string name="mr_c_dev_code">Del Code : </string>
 
     <string name="mr_c_remarks">Remarks</string>
     <string name="mr_c_description">Description</string>
@@ -140,5 +140,6 @@
 
     <string name="btn_save_str">Save</string>
     <string name="btn_cancel_str">Cancel</string>
-    <string name="title_activity_main2">Main2Activity</string>
+    <string name="btn_change_str">Change</string>
+    <string name="login">Login</string>
 </resources>

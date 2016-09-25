@@ -37,4 +37,8 @@ public class MeterRemarks {
     public String getReadstat() {
         return readstat;
     }
+
+    public void setReadstat(String readstat) {
+        this.readstat = readstat;
+    }
 }

@@ -79,7 +79,7 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
                 }
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
 
@@ -113,6 +113,7 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
                 setDrawable(R.drawable.ic_completed);
                 prefs.setData(Constants.APP_STATUS,"DOWNLOADED");
                 prefs.setData(HAS_ROVER_UPDATE,true);
+                resetAppStatus();
             }
             else if(appStatus.equals("MODIFIED")){
                 txtTitle.setText("Halted");
@@ -132,6 +133,12 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
 
 
         }
+    }
+
+    private void resetAppStatus(){
+        prefs.setData(READ_START_TIME,"00:00:00");
+        prefs.setData(READ_END_TIME,"00:00:00");
+        prefs.setData(IS_FIRST_RDG,false);
     }
 
     private void updatedbAction(String status, Bundle b){

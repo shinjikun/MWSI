@@ -1,8 +1,5 @@
 package com.indra.rover.mwsi.utils;
 
-/**
- * Created by Indra on 9/2/2016.
- */
 public interface  Constants {
 
    String HAS_ROVER_UPDATE = "has_rover_update";
@@ -12,7 +9,10 @@ public interface  Constants {
    String PRINT_STUB_ENABLED="printstub";
 
    String PRINT_EOD_ENABLED="eod";
-   public static final String APP_STATUS = "app_status";
+
+   String APP_STATUS = "app_status";
+
+   String IS_FIRST_RDG = "is_first_rdg";
 
    String READ_START_TIME ="start_time";
 

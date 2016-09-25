@@ -14,7 +14,8 @@
         android:src="@drawable/ic_close_black"
         android:background="@android:color/transparent"
         android:layout_marginRight="@dimen/layout_margins"
-        android:layout_marginEnd="@dimen/layout_margins"/>
+        android:layout_marginEnd="@dimen/layout_margins"
+        android:contentDescription="@string/content_desc" />
 
     <TextView
         android:id="@+id/dlg_title"
@@ -46,7 +47,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:text="OK"
+        android:text="@string/ok"
         android:id="@+id/dlg_btn_yes"
         android:textAllCaps="false"
         android:background="@drawable/btn_active_rounded"

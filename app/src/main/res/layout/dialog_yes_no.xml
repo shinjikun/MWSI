@@ -63,7 +63,8 @@
         android:layout_below="@+id/dlg_body"
         android:layout_alignEnd="@+id/dlg_body"
         android:layout_alignRight="@+id/dlg_body"
-        android:background="@drawable/btn_grey_rounded"/>
+        android:background="@drawable/btn_grey_rounded"
+        android:textColor="@android:color/white"/>
 
     <Space
         android:layout_width="match_parent"

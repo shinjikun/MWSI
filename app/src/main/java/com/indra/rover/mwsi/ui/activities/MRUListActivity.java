@@ -151,7 +151,7 @@ public class MRUListActivity extends AppCompatActivity  implements OnItemClickLi
             }
         });
 
-        TextView txt = (TextView)dialog.findViewById(R.id.dlg_title);
+       // TextView txt = (TextView)dialog.findViewById(R.id.dlg_title);
 
         dialog.show();
     }

@@ -17,7 +17,7 @@
         android:layout_alignParentEnd="true"
         android:drawableStart="@drawable/ic_edit"
         android:drawableLeft="@drawable/ic_edit"
-        android:background="@drawable/btn_active_pink"
+        android:background="@drawable/btn_active_rounded"
         android:textColor="@android:color/white"
         android:visibility="gone"/>
 

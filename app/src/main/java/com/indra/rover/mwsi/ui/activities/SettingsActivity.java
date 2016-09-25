@@ -177,9 +177,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
      */
     private void btPair(){
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mBluetoothAdapter == null) {
-            // Device does not support Bluetooth
-        } else {
+        if (mBluetoothAdapter != null) {
             if (!mBluetoothAdapter.isEnabled()) {
                 // Bluetooth is not enable :)
                 //request to turn on
@@ -192,9 +190,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_BLUETOOTH){
-            if(resultCode == RESULT_OK){
-                
-            }
+            //if(resultCode == RESULT_OK){
+            //
+            //}
         }
 
 

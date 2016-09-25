@@ -141,6 +141,7 @@ public class MRRemarksFragment extends Fragment  implements View.OnClickListener
 
 
     private void setEditMode(boolean isEditable){
+        MainApp.isEditMode = isEditable;
        if(isEditable){
            mView.findViewById(R.id.btnDelMRDesc).setVisibility(View.VISIBLE);
            mView.findViewById(R.id.btnOKMRDesc).setVisibility(View.VISIBLE);
@@ -169,6 +170,10 @@ public class MRRemarksFragment extends Fragment  implements View.OnClickListener
             String id = msgTransport.getMessage();
             meterRemarks = meterReadingDao.getRemarks(id);
             setUp();
+        }
+        else if(action.equals("readstat")){
+            String readstat = msgTransport.getMessage();
+            meterRemarks.setReadstat(readstat);
         }
     }
 

@@ -12,7 +12,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,15 +33,18 @@ import com.indra.rover.mwsi.ui.fragments.MRCustomerInfoFragment;
 import com.indra.rover.mwsi.ui.fragments.MRDeliveryRFragment;
 import com.indra.rover.mwsi.ui.fragments.MROCFragment;
 import com.indra.rover.mwsi.ui.fragments.MRRemarksFragment;
+import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.GPSTracker;
 import com.indra.rover.mwsi.utils.MessageTransport;
+import com.indra.rover.mwsi.utils.PreferenceKeys;
 import com.indra.rover.mwsi.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MeterReadingActivity extends AppCompatActivity implements View.OnClickListener ,DialogUtils.DialogListener
+public class MeterReadingActivity extends AppCompatActivity implements View.OnClickListener ,
+        DialogUtils.DialogListener, Constants
 {
 
     ViewPager mViewPager;
@@ -51,14 +54,19 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     String mru_id;
     MeterReadingDao meterDao;
     int current =0;
-    MeterInfo currentDisplay;
+    MeterInfo meterInfo;
     List<MeterInfo> arry;
-    ImageButton fabLeft, fabRight;
+    PreferenceKeys prefs;
+    /**
+     * Button for navigating previous or next records
+     */
+    ImageButton btnPrev, btnNext;
     final int SEARCH_REQ =99;
     final int DLG_RESET=75;
+    final int DLG_EDITMODE=67;
     DialogUtils dlgUtils;
     TextView txtFilter;
-    Button btnPrint;
+    //Button btnPrint;
     CoordinatorLayout coordinatorLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,45 +86,22 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         }
+        prefs = PreferenceKeys.getInstance(this);
         dlgUtils = new DialogUtils(this);
         dlgUtils.setListener(this);
 
-
-       fabRight = (ImageButton)findViewById(R.id.fabRight);
-        fabRight.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view) {
-                if(current< arry.size()-1){
-                    current++;
-                    prepareData(current);
-                    fabLeft.setEnabled(true);
-                }
-                else {
-                    fabRight.setEnabled(false);
-                }
-            }
-        });
-
-
         txtFilter  = (TextView)findViewById(R.id.txtFiltered);
         txtFilter.setOnClickListener(this);
-        fabLeft = (ImageButton) findViewById(R.id.fabLeft);
-        fabLeft.setEnabled(false);
-        fabLeft.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(current!=0){
-                    current--;
-                    prepareData(current);
+        btnNext = (ImageButton)findViewById(R.id.fabRight);
+        btnNext.setOnClickListener(this);
 
-                }
-                else{
-                    fabLeft.setEnabled(false);
-                }
-                fabRight.setEnabled(true);
-            }
-        });
+
+
+        btnPrev = (ImageButton) findViewById(R.id.fabLeft);
+        btnPrev.setEnabled(false);
+        btnPrev.setOnClickListener(this);
+
+        findViewById(R.id.btnPrint).setOnClickListener(this);
 
         Button btn =  (Button)findViewById(R.id.btnMREdit);
         btn.setOnClickListener(this);
@@ -126,7 +111,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         if (extras != null) {
             this.mru_id = extras.getString("mru_id");
             this.arry = meterDao.fetchInfos(this.mru_id);
-            fabLeft.setEnabled(false);
+            btnPrev.setEnabled(false);
             prepareData(current);
         }
 
@@ -168,8 +153,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     private void prepareData(int index){
        if(!arry.isEmpty()){
-           currentDisplay = this.arry.get(index);
-           CustomerInfo  customerInfo = currentDisplay.getCustomer();
+           meterInfo = this.arry.get(index);
+           CustomerInfo  customerInfo = meterInfo.getCustomer();
            TextView txt = (TextView)findViewById(R.id.txtCAN);
            txt.setText(customerInfo.getAccn());
            txt = (TextView)findViewById(R.id.txtName);
@@ -177,23 +162,23 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
            txt = (TextView)findViewById(R.id.txtAddress);
            txt.setText(customerInfo.getAddress());
            txt = (TextView)findViewById(R.id.txtMeterNumber);
-           txt.setText(currentDisplay.getMeter_number());
+           txt.setText(meterInfo.getMeter_number());
            txt = (TextView)findViewById(R.id.txtMeterNumber);
-           txt.setText(currentDisplay.getMeter_number());
+           txt.setText(meterInfo.getMeter_number());
            txt = (TextView)findViewById(R.id.txtMRUID);
-           txt.setText(currentDisplay.getMru_id());
+           txt.setText(meterInfo.getMru_id());
            txt = (TextView)findViewById(R.id.txtSeqNum);
-           txt.setText(currentDisplay.getSeq_number());
+           txt.setText(meterInfo.getSeq_number());
            String page = (current+1)+"/"+arry.size();
 
            txt = (TextView)findViewById(R.id.txtPagination);
            txt.setText(page);
            txt = (TextView)findViewById(R.id.txtRateCode);
-           txt.setText(currentDisplay.getBillClass().getDesc());
+           txt.setText(meterInfo.getBillClass().getDesc());
            meterStatus();
-           navigate(currentDisplay.getDldocno());
-           if(Utils.isNotEmpty(currentDisplay.getPresRdg())){
-               setReadingValue(currentDisplay.getPresRdg());
+           navigate(meterInfo.getDldocno());
+           if(Utils.isNotEmpty(meterInfo.getPresRdg())){
+               setReadingValue(meterInfo.getPresRdg());
            }
            else {
                setReadingValue("");
@@ -204,13 +189,13 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     private void meterStatus(){
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(currentDisplay.getReadStat());
+        stringBuilder.append(meterInfo.getReadStat());
 
-        if(Utils.isNotEmpty(currentDisplay.getBlock_tag())){
+        if(Utils.isNotEmpty(meterInfo.getBlock_tag())){
             stringBuilder.append(' ');
-            stringBuilder.append(currentDisplay.getBlock_tag());
+            stringBuilder.append(meterInfo.getBlock_tag());
         }
-        if(Utils.isNotEmpty(currentDisplay.getGrp_flag())){
+        if(Utils.isNotEmpty(meterInfo.getGrp_flag())){
             stringBuilder.append(' ');
             stringBuilder.append('G');
         }
@@ -233,11 +218,11 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     public void setupViewPager(ViewPager mViewPager){
         StatusViewPagerAdapter adapter = new StatusViewPagerAdapter(getSupportFragmentManager());
-         String dldcono = currentDisplay.getDldocno();
+         String dldcono = meterInfo.getDldocno();
         adapter.addFragment(MRCustomerInfoFragment.newInstance(dldcono), "Customer Info");
         adapter.addFragment(MROCFragment.newInstance(dldcono), "OC");
+        adapter.addFragment(MRDeliveryRFragment.newInstance(dldcono), "Delivery Remarks");
         adapter.addFragment(MRRemarksFragment.newInstance(dldcono), "Remarks");
-        adapter.addFragment(MRDeliveryRFragment.newInstance("2"), "Delivery Remarks");
         mViewPager.setAdapter(adapter);
     }
 
@@ -248,8 +233,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         dialog.setContentView(R.layout.dialog_change_reading);
         dialog.setCancelable(false);
         final EditText txtDlg = (EditText)dialog.findViewById(R.id.dlg_body);
-        if(Utils.isNotEmpty(currentDisplay.getPresRdg())){
-            txtDlg.setText(currentDisplay.getPresRdg());
+        if(Utils.isNotEmpty(meterInfo.getPresRdg())){
+            txtDlg.setText(meterInfo.getPresRdg());
         }
         ImageButton dlgBtnClose = (ImageButton)dialog.findViewById(R.id.dlg_btn_close);
         dlgBtnClose.setOnClickListener(new View.OnClickListener(){
@@ -275,17 +260,32 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         dialog.show();
     }
 
+    public void updateReadStatus(String readStatus){
+        meterInfo.setReadStat(readStatus);
+        meterStatus();
+    }
+
     public void updateReading(String value){
-        int tries =0;
-          if(!Utils.isNotEmpty(currentDisplay.getRdg_tries())){
-              tries = 0;
-          }
-        else {
-              tries = Integer.parseInt(currentDisplay.getRdg_tries());
-          }
+        int tries =0 ;
+        if(Utils.isNotEmpty(meterInfo.getRdg_tries())){
+              tries = Integer.parseInt(meterInfo.getRdg_tries());
+        }
+        //update read status
+        //if the reading is empty reset the read status as READ
+        //otherwise R
         if(value.isEmpty()){
             tries =0;
+            updateReadStatus("R");
+        }else {
+            String readStat = meterInfo.getReadStat();
+            if(readStat.equals("R")){
+                updateReadStatus("E");
+            }
+            else {
+                updateReadStatus("R");
+            }
         }
+
         if(tries>3){
             dlgUtils.showOKDialog("You have exceeded the number of tries changing the reading.");
             return;
@@ -293,7 +293,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         tries = tries+1;
         String latitude = null;
         String longtitude = null;
-      GPSTracker gpsTracker =  new GPSTracker(this);
+        GPSTracker gpsTracker =  new GPSTracker(this);
         if(gpsTracker.canGetLocation()){
             latitude = String.valueOf(gpsTracker.getLatitude());
             longtitude = String.valueOf(gpsTracker.getLongitude());
@@ -301,9 +301,9 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         }
         meterDao.updateReading(Utils.getFormattedDate(),
                 Utils.getFormattedTime(),
-                value,latitude,longtitude,tries,currentDisplay.getDldocno(),"R"
+                value,latitude,longtitude,tries, meterInfo.getDldocno(),meterInfo.getReadStat()
                 );
-
+        meterInfo.setRdg_tries(String.valueOf(tries));
         setReadingValue(value);
     }
 
@@ -343,7 +343,11 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     public void setReadingValue(String value){
         TextView txt = (TextView)findViewById(R.id.txtReading);
         txt.setText(value);
-        currentDisplay.setPresent_reading(value);
+        meterInfo.setPresent_reading(value);
+        if(!prefs.getData(IS_FIRST_RDG,false)){
+            prefs.setData(READ_START_TIME,Utils.getFormattedTime());
+            prefs.setData(IS_FIRST_RDG,true);
+        }
     }
 
     @Override
@@ -398,6 +402,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View view) {
         int id = view.getId();
+        Bundle  bundle;
         switch(id){
             case R.id.btnMREdit:
                 showMeterRdgDialog();
@@ -408,6 +413,60 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                     dlgUtils.showOKDialog(DLG_RESET,"","Resetting Search...", new Bundle());
                 }
                 break;
+            case R.id.fabLeft:
+                bundle = new Bundle();
+                bundle.putString("action","next");
+                if(MainApp.isEditMode){
+                    dlgUtils.showYesNoDialog(DLG_EDITMODE,"There are still unsave record.\n" +
+                            "Proceed to the Previous Record?",bundle);
+                }
+                else {
+                    movePrevious();
+                }
+                break;
+            case R.id.fabRight:
+                bundle = new Bundle();
+                bundle.putString("action","previous");
+                if(MainApp.isEditMode){
+                    dlgUtils.showYesNoDialog(DLG_EDITMODE,"There are still unsave record.\n" +
+                            "Proceed to the Next Record?",bundle);
+                }else {
+                    moveNext();
+                }
+                break;
+            case R.id.btnPrint:
+                String readstat = meterInfo.getReadStat();
+                if(readstat.equals("U")){
+                    dlgUtils.showOKDialog(2,"Print ","Cannot Print Reading " +
+                            "for an Unread Bill!",new Bundle());
+                }
+                else {
+                    meterDao.updateReadStatus("P",meterInfo.getDldocno());
+                    updateReadStatus("P");
+                    MainApp.bus.post(new MessageTransport("readstat","P"));
+                    }
+                break;
+        }
+    }
+
+    private void movePrevious(){
+        if(current!=0){
+            current--;
+            prepareData(current);
+        }
+        else{
+            btnPrev.setEnabled(false);
+        }
+        btnNext.setEnabled(true);
+    }
+    private void moveNext(){
+        if(current< arry.size()-1){
+            current++;
+            prepareData(current);
+            btnPrev.setEnabled(true);
+        }
+        else {
+            btnNext.setEnabled(false);
         }
     }
 
@@ -420,6 +479,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         dlgSeqNumber.setContentView(R.layout.dialog_new_sequence);
         dlgSeqNumber.setCancelable(false);
         final EditText txtDlg = (EditText)dlgSeqNumber.findViewById(R.id.dlg_body);
+
         ImageButton dlgBtnClose = (ImageButton)dlgSeqNumber.findViewById(R.id.dlg_btn_close);
         dlgBtnClose.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -433,8 +493,9 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onClick(View view) {
                 String value =   txtDlg.getText().toString();
-
+                meterDao.updateSequenceNumber(value,meterInfo.getDldocno());
                 dlgSeqNumber.dismiss();
+                dlgUtils.showOKDialog("Sequence Number Updated");
             }
         });
 
@@ -466,7 +527,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                     dlgUtils.showOKDialog(temp.size()+ " record(s) Found!!");
                     this.arry = temp;
                     current = 0;
-                    fabLeft.setEnabled(false);
+                    btnPrev.setEnabled(false);
                     prepareData(current);
                     showFilterSign(true);
                 }
@@ -496,8 +557,17 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                  this.arry =   meterDao.fetchInfos(this.mru_id);
                 showFilterSign(false);
                 current =0;
-                fabLeft.setEnabled(false);
+                btnPrev.setEnabled(false);
                 prepareData(current);
+                break;
+            case DLG_EDITMODE:
+                String action = params.getString("action");
+                if(action.equals("next")){
+                    moveNext();
+                }
+                else{
+                    movePrevious();
+                }
                 break;
         }
     }
