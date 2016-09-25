@@ -8,6 +8,7 @@ import android.database.SQLException;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterDelivery;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
+import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterOC;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterRHistory;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterRemarks;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.RangeTolerance;
@@ -283,6 +284,27 @@ public class MeterReadingDao extends ModelDao {
         }
         return meterRemarks;
     }
+
+    public MeterOC getMeterOCs(String crdocno){
+        MeterOC meterOC = null;
+        try {
+            open();
+            String sql_stmt = "SELECT CRDOCNO, FFCODE1,FFCODE2,REMARKS,READSTAT  from  T_CURRENT_RDG where CRDOCNO="+crdocno;
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    meterOC = new MeterOC(cursor);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+        return meterOC;
+    }
+
 
 
     public MeterConsumption getConsumption(String dldocno){
