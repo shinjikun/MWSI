@@ -314,10 +314,6 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         comConsumption.compute(mterCons);
     }
 
-    public void checkConsumptionLevel(String value){
-        setReadingValue(value);
-        snackbar("Consumption Very Low");
-    }
 
     public void snackbar(String message){
         Snackbar snackbar = Snackbar
@@ -604,6 +600,11 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onPostConsResult(MeterConsumption meterConsumption) {
         meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
-
+        checkConsumptionLevel(meterConsumption);
     }
+
+    public void checkConsumptionLevel(MeterConsumption meterConsumption){
+        snackbar("Consumption Very Low");
+    }
+
 }

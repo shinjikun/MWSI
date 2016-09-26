@@ -119,7 +119,6 @@ public class MeterReadingDao extends ModelDao {
      * @param crdocid id of current reading on which remarks/message should be added
      */
     public void addRemarks(String message , String crdocid){
-        //String sql_stmt = "UPDATE T_CURRENT_RDG set REMARKS='"+message+"' where CRDOCNO="+crdocid;
         try{
             open();
             ContentValues contentValues = new ContentValues();
@@ -262,6 +261,25 @@ public class MeterReadingDao extends ModelDao {
         }
     }
 
+    /**
+     * Update reading's range code
+     * @param rangeCode rangeCode could be very high = 4 or very low =3
+     * @param crdocid record to be updated
+     */
+    public void updateRangeCode(String rangeCode,String crdocid){
+        try{
+            open();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("RANGE_CODE",rangeCode);
+            String where= "CRDOCNO=?";
+            database.update("T_CURRENT_RDG",contentValues,where,new String[]{crdocid});
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+    }
+
 
     /**
      * updates the bill consumption
@@ -285,7 +303,8 @@ public class MeterReadingDao extends ModelDao {
         MeterRemarks meterRemarks = null;
         try {
             open();
-            String sql_stmt = "SELECT CRDOCNO, ACCTNUM,METERNO,REMARKS,READSTAT  from  T_CURRENT_RDG where CRDOCNO="+crdocno;
+            String sql_stmt = "SELECT CRDOCNO, ACCTNUM,METERNO,REMARKS,READSTAT  " +
+                    "from  T_CURRENT_RDG where CRDOCNO="+crdocno;
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
                 do {
@@ -305,7 +324,8 @@ public class MeterReadingDao extends ModelDao {
         MeterOC meterOC = null;
         try {
             open();
-            String sql_stmt = "SELECT CRDOCNO, FFCODE1,FFCODE2,REMARKS,READSTAT  from  T_CURRENT_RDG where CRDOCNO="+crdocno;
+            String sql_stmt = "SELECT CRDOCNO, FFCODE1,FFCODE2,REMARKS,READSTAT  from " +
+                    " T_CURRENT_RDG where CRDOCNO="+crdocno;
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
                 do {
