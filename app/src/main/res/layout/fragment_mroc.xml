@@ -10,15 +10,45 @@
         android:layout_width="70dp"
         android:layout_height="35dp"
         android:text="@string/mr_edit"
-        android:id="@+id/btnEditMROC"
+        android:id="@+id/btnEditOC"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:drawableStart="@drawable/ic_edit"
         android:drawableLeft="@drawable/ic_edit"
-        android:background="@drawable/btn_active_pink"
+        android:background="@drawable/btn_active_rounded"
         android:textColor="@android:color/white"
         />
+
+    <Button
+        android:layout_width="70dp"
+        android:layout_height="35dp"
+        android:text="@string/btn_cancel_str"
+        android:id="@+id/btnCancelOC"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/btn_grey_rounded"
+        android:textColor="@android:color/white"
+
+        android:visibility="invisible"
+        />
+
+    <Button
+        android:text="@string/btn_save_str"
+        android:layout_width="70dp"
+        android:layout_height="35dp"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/btnCancelOC"
+        android:layout_toStartOf="@+id/btnCancelOC"
+        android:id="@+id/btnSaveOC"
+        android:background="@drawable/btn_active_rounded"
+        android:padding="5dp"
+        android:textColor="@android:color/white"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:visibility="invisible"/>
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -26,22 +56,13 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/mr_oc_oc1"
         android:id="@+id/textView24"
-        android:layout_below="@+id/btnEditMROC"
+        android:layout_below="@+id/btnCancelOC"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textStyle="bold"
         android:layout_marginTop="10dp"/>
 
-    <Spinner
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:id="@+id/spnOC1"
-        android:layout_alignTop="@+id/textView24"
-        android:layout_toRightOf="@+id/textView24"
-        android:layout_toEndOf="@+id/textView24"
-        style="@style/SpinnerTheme"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"/>
+
 
     <TextView
         android:layout_width="match_parent"
@@ -53,38 +74,48 @@
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:background="@drawable/txt_rounded_border"
-        android:visibility="gone"
+        android:visibility="invisible"
         />
 
-    <ImageButton
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:id="@+id/btnImageCapture"
-        android:layout_below="@+id/btnEditMROC"
-        android:layout_toRightOf="@+id/spnOC1"
-        android:layout_toEndOf="@+id/spnOC1"
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:id="@+id/spnOC1"
+        android:layout_alignTop="@+id/textView24"
+        android:layout_toRightOf="@+id/textView24"
+        android:layout_toEndOf="@+id/textView24"
+        style="@style/SpinnerTheme"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
-        android:src="@drawable/ic_camera"
-        android:contentDescription="@string/str_address" />
+        android:layout_toLeftOf="@+id/btnClrOc1"
+        android:layout_toStartOf="@+id/btnClrOc1"/>
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btnEditMROC"
-        android:layout_toRightOf="@+id/btnImageCapture"
-        android:layout_toEndOf="@+id/btnImageCapture"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
         android:src="@drawable/ic_remove_outline"
         android:background="@drawable/btn_active_pink"
         android:padding="4dp"
-
+        android:layout_alignTop="@+id/spnOC1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:id="@+id/btnClrOc1"
-        android:contentDescription="@string/str_default_val"
-        android:nextFocusLeft="@+id/spnDevCode"
-        tools:nextFocusRight="@id/txtMRDRemarks"
-        android:visibility="visible"/>
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"/>
+
+    <Button
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnImageCapture"
+        android:drawableLeft="@drawable/ic_camera"
+        android:drawableStart="@drawable/ic_camera"
+        android:contentDescription="@string/str_address"
+        android:layout_below="@+id/spnOC1"
+        android:layout_centerHorizontal="true"
+
+        android:text="@string/btn_capture_image" />
 
 
     <TextView
@@ -101,7 +132,7 @@
         />
 
     <Spinner
-        android:layout_width="100dp"
+        android:layout_width="match_parent"
         android:layout_height="35dp"
         android:id="@+id/spnOC2"
         style="@style/SpinnerTheme"
@@ -109,29 +140,47 @@
         android:layout_toRightOf="@+id/textView26"
         android:layout_toEndOf="@+id/textView26"
         android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"/>
+        android:layout_marginStart="10dp"
+        android:layout_toLeftOf="@+id/btnClrOc1"
+        android:layout_toStartOf="@+id/btnClrOc1"/>
+
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_remove_outline"
+        android:background="@drawable/btn_active_pink"
+        android:padding="4dp"
+        android:layout_alignTop="@+id/spnOC2"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/btnClrOc2"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"/>
+
+    <Button
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnImageCapture1"
+        android:drawableLeft="@drawable/ic_camera"
+        android:drawableStart="@drawable/ic_camera"
+        android:contentDescription="@string/str_address"
+        android:text="@string/btn_capture_image"
+        android:layout_below="@+id/btnClrOc2"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:id="@+id/lblOC2"
+        android:background="@drawable/txt_rounded_border"
+        android:visibility="invisible"
         android:layout_alignTop="@+id/textView26"
         android:layout_toRightOf="@+id/textView26"
         android:layout_toEndOf="@+id/textView26"
         android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:background="@drawable/txt_rounded_border"
-        android:visibility="gone"
-        />
+        android:layout_marginStart="10dp"/>
 
-
-    <ImageButton
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:id="@+id/btnImageCapture1"
-        android:src="@drawable/ic_camera"
-        android:layout_alignLeft="@+id/btnImageCapture"
-        android:layout_alignStart="@+id/btnImageCapture"
-        android:contentDescription="@string/str_address"
-        android:layout_below="@+id/btnImageCapture" />
 </RelativeLayout>

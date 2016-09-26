@@ -37,5 +37,7 @@ public class MeterOC {
     }
 
 
-
+    public void setReadstat(String readstat) {
+        this.readstat = readstat;
+    }
 }

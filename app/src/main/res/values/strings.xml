@@ -141,5 +141,6 @@
     <string name="btn_save_str">Save</string>
     <string name="btn_cancel_str">Cancel</string>
     <string name="btn_change_str">Change</string>
+    <string name="btn_capture_image">Capture Image</string>
     <string name="login">Login</string>
 </resources>

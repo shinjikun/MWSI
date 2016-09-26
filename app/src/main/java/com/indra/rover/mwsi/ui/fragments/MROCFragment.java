@@ -8,23 +8,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.Spinner;
 
+import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.db.RefTableDao;
+import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterOC;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.ObservationCode;
+import com.indra.rover.mwsi.utils.MessageTransport;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MROCFragment extends Fragment {
+public class MROCFragment extends Fragment implements View.OnClickListener {
     private static final String ARG_ID = "id";
 
     View mView;
-    private String mParamID;
+    private String crdocno;
     private RefTableDao refTableDao;
     Spinner spnOC1,spnOC2;
+    MeterReadingDao mtrDao;
+    MeterOC meterOC;
     public MROCFragment() {
     }
 
@@ -39,10 +46,14 @@ public class MROCFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParamID = getArguments().getString(ARG_ID);
-        }
         refTableDao = new RefTableDao(getActivity());
+        mtrDao = new MeterReadingDao(getActivity());
+        if (getArguments() != null) {
+            crdocno = getArguments().getString(ARG_ID);
+            meterOC = mtrDao.getMeterOCs(crdocno);
+        }
+
+        MainApp.bus.register(this);
     }
 
 
@@ -57,14 +68,14 @@ public class MROCFragment extends Fragment {
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_mroc, container, false);
 
-        ImageButton imgCapture = (ImageButton)mView.findViewById(R.id.btnImageCapture);
+        Button imgCapture = (Button)mView.findViewById(R.id.btnImageCapture);
         imgCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 launchCamera();
             }
         });
-        imgCapture = (ImageButton)mView.findViewById(R.id.btnImageCapture1);
+        imgCapture = (Button) mView.findViewById(R.id.btnImageCapture1);
         imgCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +85,13 @@ public class MROCFragment extends Fragment {
 
         spnOC1 = (Spinner)mView.findViewById(R.id.spnOC1);
         spnOC2 = (Spinner)mView.findViewById(R.id.spnOC2);
+        mView.findViewById(R.id.btnClrOc1).setOnClickListener(this);
+        mView.findViewById(R.id.btnClrOc2).setOnClickListener(this);
+        mView.findViewById(R.id.btnCancelOC).setOnClickListener(this);
+        mView.findViewById(R.id.btnSaveOC).setOnClickListener(this);
+        mView.findViewById(R.id.btnEditOC).setOnClickListener(this);
         initContent();
+        setUp();
         return mView;
     }
 
@@ -110,4 +127,76 @@ public class MROCFragment extends Fragment {
 
 
 
+    private void editMode(boolean isEditMode){
+        int vis = View.VISIBLE;
+        int vis2 = View.INVISIBLE;
+        MainApp.isEditMode = isEditMode;
+        if(!isEditMode){
+            vis = View.INVISIBLE;
+            vis2 = View.VISIBLE;
+        }
+        mView.findViewById(R.id.btnClrOc1).setVisibility(vis);
+        mView.findViewById(R.id.btnClrOc2).setVisibility(vis);
+        mView.findViewById(R.id.spnOC1).setVisibility(vis);
+        mView.findViewById(R.id.spnOC2).setVisibility(vis);
+        mView.findViewById(R.id.btnCancelOC).setVisibility(vis);
+        mView.findViewById(R.id.btnSaveOC).setVisibility(vis);
+
+        mView.findViewById(R.id.lblOC1).setVisibility(vis2);
+        mView.findViewById(R.id.lblOC2).setVisibility(vis2);
+        mView.findViewById(R.id.btnEditOC).setVisibility(vis2);
+        String lbl = "Capture Image";
+        if(!isEditMode){
+            lbl= "View Image";
+        }
+        Button btn =  (Button)mView.findViewById(R.id.btnImageCapture);
+        btn.setText(lbl);
+        btn =  (Button)mView.findViewById(R.id.btnImageCapture1);
+        btn.setText(lbl);
+    }
+
+    @Subscribe
+    public void getMessage(MessageTransport msgTransport) {
+        String action = msgTransport.getAction();
+        if(action.equals("navigate")){
+            String id = msgTransport.getMessage();
+            meterOC = mtrDao.getMeterOCs(id);
+            setUp();
+        }
+        else if(action.equals("readstat")){
+            String readstat = msgTransport.getMessage();
+            meterOC.setReadstat(readstat);
+        }
+    }
+
+    private void setUp(){
+        if(meterOC!=null){
+
+        }
+
+        editMode(false);
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        switch (id){
+
+            case R.id.btnCancelOC:
+                editMode(false);
+                break;
+            case R.id.btnSaveOC:
+                editMode(false);
+                break;
+            case R.id.btnEditOC:
+                editMode(true);
+                break;
+            case R.id.btnClrOc1:
+                break;
+            case R.id.btnClrOc2:
+                break;
+
+        }
+    }
 }
