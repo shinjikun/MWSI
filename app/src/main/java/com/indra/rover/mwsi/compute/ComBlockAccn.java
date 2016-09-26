@@ -9,11 +9,12 @@ import com.indra.rover.mwsi.utils.Utils;
 public class ComBlockAccn  extends  Compute{
 
 
-    public ComBlockAccn(MeterConsumption meterConsumption){
-        this.meterConsObj = meterConsumption;
+    public ComBlockAccn(ConsumptionListener listener){
+        super(listener);
     }
 
-    public void compute(){
+    public void compute(MeterConsumption meterConsumption){
+        this.meterConsObj = meterConsumption;
         if(meterConsObj!=null){
 
             String has_newmeterInfo =  meterConsObj.getDreplmtr_code();
@@ -56,7 +57,7 @@ public class ComBlockAccn  extends  Compute{
             //tag as adjusted
             int average_consumption=  Integer.parseInt(meterConsObj.getAve_consumption());
             meterConsObj.setBilled_cons(average_consumption);
-            meterConsObj.setConstype_code(String.valueOf(CONST_TAG.AVERAGE));
+            meterConsObj.setConstype_code("1");
 
         }else if(dreplmtr_code.equals("3")){
             //check values/component for compution is present

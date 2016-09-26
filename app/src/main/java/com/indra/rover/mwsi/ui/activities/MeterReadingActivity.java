@@ -26,7 +26,10 @@ import android.widget.TextView;
 import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.adapters.StatusViewPagerAdapter;
+import com.indra.rover.mwsi.compute.ComConsumption;
+import com.indra.rover.mwsi.compute.Compute;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.CustomerInfo;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 import com.indra.rover.mwsi.ui.fragments.MRCustomerInfoFragment;
@@ -44,7 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MeterReadingActivity extends AppCompatActivity implements View.OnClickListener ,
-        DialogUtils.DialogListener, Constants
+        DialogUtils.DialogListener, Constants, Compute.ConsumptionListener
 {
 
     ViewPager mViewPager;
@@ -302,9 +305,13 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         meterDao.updateReading(Utils.getFormattedDate(),
                 Utils.getFormattedTime(),
                 value,latitude,longtitude,tries, meterInfo.getDldocno(),meterInfo.getReadStat()
-                );
+        );
         meterInfo.setRdg_tries(String.valueOf(tries));
         setReadingValue(value);
+        //start computing the bill consumption
+        MeterConsumption mterCons = meterDao.getConsumption(meterInfo.getDldocno());
+        ComConsumption comConsumption = new ComConsumption(this);
+        comConsumption.compute(mterCons);
     }
 
     public void checkConsumptionLevel(String value){
@@ -344,10 +351,23 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         TextView txt = (TextView)findViewById(R.id.txtReading);
         txt.setText(value);
         meterInfo.setPresent_reading(value);
+        String formattedTime = Utils.getFormattedTime();
         if(!prefs.getData(IS_FIRST_RDG,false)){
-            prefs.setData(READ_START_TIME,Utils.getFormattedTime());
+            prefs.setData(READ_START_TIME,formattedTime);
             prefs.setData(IS_FIRST_RDG,true);
+            prefs.setData(APP_STATUS,"MODIFIED");
         }
+        if(!prefs.getData(IS_END_RDG,false)){
+            int countUnRead = meterDao.countUnRead();
+            if(MainApp.total_records == countUnRead){
+                prefs.setData(READ_END_TIME,formattedTime);
+                prefs.setData(IS_END_RDG,true);
+                prefs.setData(APP_STATUS,"ALL READ");
+            }
+        }
+
+
+
     }
 
     @Override
@@ -441,9 +461,13 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                             "for an Unread Bill!",new Bundle());
                 }
                 else {
-                    meterDao.updateReadStatus("P",meterInfo.getDldocno());
-                    updateReadStatus("P");
-                    MainApp.bus.post(new MessageTransport("readstat","P"));
+                    String newReadStat="P";
+                    if(readstat.equals("E")){
+                        newReadStat="Q";
+                    }
+                    meterDao.updateReadStatus(newReadStat,meterInfo.getDldocno());
+                    updateReadStatus(newReadStat);
+                    MainApp.bus.post(new MessageTransport("readstat",newReadStat));
                     }
                 break;
         }
@@ -574,6 +598,12 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void dialog_cancel(int dialog_id, Bundle params) {
+
+    }
+
+    @Override
+    public void onPostConsResult(MeterConsumption meterConsumption) {
+        meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
 
     }
 }

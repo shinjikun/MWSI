@@ -412,6 +412,27 @@ public class MRUDao  extends  ModelDao{
         return count;
     }
 
+    public int countRecords(){
+        int count =0;
+        try {
+            open();
+
+            String sql_stmt = "Select count(*)  as COUNTNUM from T_CURRENT_RDG ";
+            Cursor cursor = database.rawQuery(sql_stmt, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNTNUM"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+
+        } catch (Exception sql) {
+            sql.printStackTrace();
+        } finally {
+            close();
+        }
+        return count;
+    }
 
 
 }

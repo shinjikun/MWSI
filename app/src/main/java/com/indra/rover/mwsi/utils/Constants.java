@@ -14,6 +14,8 @@ public interface  Constants {
 
    String IS_FIRST_RDG = "is_first_rdg";
 
+   String IS_END_RDG ="is_end_rdg";
+
    String READ_START_TIME ="start_time";
 
    String READ_END_TIME = "end_time";

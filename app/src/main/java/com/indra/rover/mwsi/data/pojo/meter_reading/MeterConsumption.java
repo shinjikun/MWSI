@@ -165,4 +165,16 @@ public class MeterConsumption {
     public String getBill_prev_act_tag() {
         return bill_prev_act_tag;
     }
+
+    public void setPresent_rdg(String present_rdg) {
+        this.present_rdg = present_rdg;
+    }
+
+    public int getBilled_cons() {
+        return billed_cons;
+    }
+
+    public String getConstype_code() {
+        return constype_code;
+    }
 }

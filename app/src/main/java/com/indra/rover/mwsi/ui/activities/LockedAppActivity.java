@@ -139,6 +139,8 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
         prefs.setData(READ_START_TIME,"00:00:00");
         prefs.setData(READ_END_TIME,"00:00:00");
         prefs.setData(IS_FIRST_RDG,false);
+        prefs.setData(IS_END_RDG,false);
+        prefs.setData(APP_STATUS,"DOWNLOADED");
     }
 
     private void updatedbAction(String status, Bundle b){

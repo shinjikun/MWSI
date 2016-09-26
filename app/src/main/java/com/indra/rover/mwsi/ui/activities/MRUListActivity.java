@@ -8,14 +8,12 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
@@ -26,7 +24,6 @@ import com.indra.rover.mwsi.data.pojo.MRU;
 import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.OnItemClickListener;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +35,6 @@ public class MRUListActivity extends AppCompatActivity  implements OnItemClickLi
     private List<MRU> mruList = new ArrayList<>();
     private MRUListAdapter mAdapter;
     DialogUtils dialogUtils;
-    final int DLG_SUCCESS=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +69,7 @@ public class MRUListActivity extends AppCompatActivity  implements OnItemClickLi
         for (MRU mru : mMRU) {
             mruList.add(mru);
         }
+        MainApp.total_records = mruDao.countRecords();
         mAdapter.notifyDataSetChanged();
 
     }

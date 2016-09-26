@@ -74,6 +74,7 @@ public class StatusActivity extends AppCompatActivity implements
         mruList = mruDao.getMRUs();
         spn  = (Spinner) findViewById(R.id.spnMRUs);
 
+        MainApp.total_records = mruDao.countRecords();
         // Spinner Drop down elements
         List<String> arryIDs = new ArrayList<>();
         for(int i = 0;i<mruList.size();i++){

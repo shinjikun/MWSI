@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.util.Log;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterDelivery;
@@ -232,6 +233,21 @@ public class MeterReadingDao extends ModelDao {
         }
     }
 
+    public void updateConsumption(MeterConsumption meterCons,String crdocid ){
+        try{
+            open();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("BILLED_CONS",meterCons.getBilled_cons());
+            contentValues.put("CONSTYPE_CODE",meterCons.getConstype_code());
+            String where= "CRDOCNO=?";
+            database.update("T_CURRENT_RDG",contentValues,where,new String[]{crdocid});
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+    }
+
     public void updateSequenceNumber(String seqNumber,String crdocid){
         try{
             open();
@@ -315,10 +331,12 @@ public class MeterReadingDao extends ModelDao {
                     "d.BLOCK_TAG,d.DISC_TAG,d.PREVRDGDATE,d.ACTPREVRDG,d.BILLPREVRDG," +
                     "d.BILLPREVRDG2,d.BILLPREVACTTAG,d.PRACTFLAG,d.AVECONS,d.NMINITRDG," +
                     "d.NMCONSFACTOR,d.PREVFF1,d.PREVFF2,d.NODIALS,nd.maxcap,c.FFCODE1,c.FFCODE2,c.PRESRDG," +
-                    "c.BILLED_CONS,c.CONSTYPE_CODE,d.PCONSAVGFLAG,d. " +
+                    "c.BILLED_CONS,c.CONSTYPE_CODE,d.PCONSAVGFLAG,d.DREPLMTR_CODE " +
                     "from T_DOWNLOAD d,R_NUM_DIALS nd ,T_CURRENT_RDG c " +
                     "where d.nodials = nd.nodials and d.DLDOCNO=c.CRDOCNO and d.DLDOCNO="+dldocno+";";
+            Log.i("Test",sql_stmt);
             Cursor cursor =database.rawQuery(sql_stmt,null);
+
             if (cursor.moveToFirst()) {
                 do {
                     meterConsumption = new MeterConsumption(cursor);
@@ -358,6 +376,25 @@ public class MeterReadingDao extends ModelDao {
         return rangeTolerance;
     }
 
+    public int countUnRead(){
+        int count =0;
+        try {
+            open();
+            String str ="Select count(READSTAT)  as COUNTNUM from T_CURRENT_RDG  t where  t.READSTAT !='U'";
+            Cursor cursor = database.rawQuery(str,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNTNUM"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception sql){
+            sql.printStackTrace();
+        }finally {
+            close();
+        }
+        return count;
+    }
 
 
 

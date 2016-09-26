@@ -1,8 +1,8 @@
 package com.indra.rover.mwsi.compute;
 
-import android.content.Context;
 
-import com.indra.rover.mwsi.data.db.MeterReadingDao;
+import android.util.Log;
+
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
 import com.indra.rover.mwsi.utils.Utils;
 
@@ -11,25 +11,26 @@ import com.indra.rover.mwsi.utils.Utils;
  */
 public class ComConsumption extends Compute{
 
-    MeterReadingDao meterReadingDao;
 
 
-    public ComConsumption(MeterConsumption meterConsumption){
-        this.meterConsObj = meterConsumption;
+    public ComConsumption(ConsumptionListener listener){
+        super(listener);
+
     }
 
     /**
      * action to start the computation of the account
      */
-    public void compute(){
+    public void compute(MeterConsumption meterConsumption){
+        this.meterConsObj = meterConsumption;
         //check first if account is block or not
         if(meterConsObj!=null){
             String block_tag = meterConsObj.getBlock_tag();
                if(Utils.isNotEmpty(block_tag)){
                    //account is block then proceed to compute BlockAccount
                    if(block_tag.equals("B")||block_tag.equals("P")){
-                        ComBlockAccn blockAccount = new ComBlockAccn(meterConsObj);
-                        blockAccount.compute();
+                        ComBlockAccn blockAccount = new ComBlockAccn(this.listener);
+                        blockAccount.compute(meterConsObj);
                    }
                    else {
                        computeReadBill();
@@ -52,6 +53,7 @@ public class ComConsumption extends Compute{
         String oc2 = meterConsObj.getFfcode2();
 
         if(Utils.isNotEmpty(reading)){
+            Log.i("Test","present reading not empty="+reading);
             //reading plus non-bill related oc
             if(Utils.isNotEmpty(oc2)){
                 //reading plus non-bill related oc excluding oc11, 12 and 14
@@ -74,6 +76,7 @@ public class ComConsumption extends Compute{
                 checkNewMeterInfo();
             }
         } else {
+            Log.i("Test","present reading is empty="+reading);
             //no reading but entered only OC11, OC12 or OC14
             if(Utils.isNotEmpty(oc2)){
                 //entered only oc11 , oc12 or oc14
@@ -278,9 +281,16 @@ public class ComConsumption extends Compute{
 
             boolean isLess = isLessMaxCapacity(bill_consumption);
             if(isLess){
-                if(oc2.equals("29")){
-                    //TAG AS average
-                    decisionB();
+                if(Utils.isNotEmpty(oc2)){
+                    if(oc2.equals("29")){
+                        //TAG AS average
+                        decisionB();
+                    }
+                    else {
+                        meterConsObj.setBilled_cons(bill_consumption);
+                        //tag as actual
+                        decisionA();
+                    }
                 }
                 else {
                     meterConsObj.setBilled_cons(bill_consumption);

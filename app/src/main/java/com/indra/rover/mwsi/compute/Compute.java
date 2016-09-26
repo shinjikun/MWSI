@@ -7,11 +7,12 @@ import com.indra.rover.mwsi.utils.Utils;
 public class Compute {
 
     MeterConsumption meterConsObj;
-    enum CONST_TAG{
-        ACTUAL,
-        AVERAGE,
-        ADJUSTED
+
+    ConsumptionListener listener;
+    public Compute(ConsumptionListener listener){
+        this.listener = listener;
     }
+
 
     /**
      * minimum billed for billed consumption 10 cubic meter
@@ -96,7 +97,11 @@ public class Compute {
      * decision A Tag Consumption as ACTUAL
      */
     public void decisionA(){
-        meterConsObj.setConstype_code(String.valueOf(CONST_TAG.ACTUAL));
+
+        meterConsObj.setConstype_code("0");
+        if(listener!=null){
+            listener.onPostConsResult(meterConsObj);
+        }
     }
 
     /**
@@ -106,14 +111,20 @@ public class Compute {
          //use average consumption as bill consumption
          int average_consumption=  Integer.parseInt(meterConsObj.getAve_consumption());
          meterConsObj.setBilled_cons(average_consumption);
-         meterConsObj.setConstype_code(String.valueOf(CONST_TAG.AVERAGE));
+         meterConsObj.setConstype_code("1");
+         if(listener!=null){
+             listener.onPostConsResult(meterConsObj);
+         }
      }
 
     /**
      * decision C Tag as ADJUSTED Consumption
      */
      public void decisionC(){
-         meterConsObj.setConstype_code(String.valueOf(CONST_TAG.ADJUSTED));
+         meterConsObj.setConstype_code("2");
+         if(listener!=null){
+             listener.onPostConsResult(meterConsObj);
+         }
      }
 
     /**
@@ -141,7 +152,10 @@ public class Compute {
      */
     public void decisionE(){
         meterConsObj.setBilled_cons(minimum_bill);
-        meterConsObj.setConstype_code(String.valueOf(CONST_TAG.AVERAGE));
+        meterConsObj.setConstype_code("1");
+        if(listener!=null){
+            listener.onPostConsResult(meterConsObj);
+        }
     }
 
     /**
@@ -164,6 +178,11 @@ public class Compute {
                 Utils.isNotEmpty(meterConsObj.getPresent_rdg());
     }
 
+
+    public interface ConsumptionListener {
+        void onPostConsResult(MeterConsumption meterConsumption);
+
+    }
 
 
 }
