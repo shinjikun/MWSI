@@ -35,6 +35,7 @@ public class MRUListActivity extends AppCompatActivity  implements OnItemClickLi
     private List<MRU> mruList = new ArrayList<>();
     private MRUListAdapter mAdapter;
     DialogUtils dialogUtils;
+    MRUDao mruDao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,8 +50,8 @@ public class MRUListActivity extends AppCompatActivity  implements OnItemClickLi
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
         mRecycleview = (RecyclerView) findViewById(R.id.listView);
-
-        mAdapter = new MRUListAdapter(mruList,this);
+        mruDao = new MRUDao(this);
+        mAdapter = new MRUListAdapter(mruList,this,mruDao);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecycleview.setLayoutManager(mLayoutManager);
         mRecycleview.setItemAnimator(new DefaultItemAnimator());
@@ -64,7 +65,7 @@ public class MRUListActivity extends AppCompatActivity  implements OnItemClickLi
 
 
     private void prepareData(){
-        MRUDao mruDao = new MRUDao(this);
+
        List<MRU> mMRU = mruDao.getMRUs();
         for (MRU mru : mMRU) {
             mruList.add(mru);

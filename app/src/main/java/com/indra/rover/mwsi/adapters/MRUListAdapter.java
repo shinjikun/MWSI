@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.data.db.MRUDao;
 import com.indra.rover.mwsi.data.pojo.MRU;
 import com.indra.rover.mwsi.utils.OnItemClickListener;
 
@@ -21,9 +22,12 @@ public class MRUListAdapter  extends RecyclerView.Adapter<MRUListAdapter.MyViewH
 
     private List<MRU> arryList;
     OnItemClickListener listener;
-    public MRUListAdapter(List<MRU> mru, OnItemClickListener listener){
+    MRUDao mruDao;
+
+    public MRUListAdapter(List<MRU> mru, OnItemClickListener listener, MRUDao mruDao){
         this.arryList = mru;
         this.listener = listener;
+        this.mruDao = mruDao;
     }
 
     @Override
@@ -38,11 +42,17 @@ public class MRUListAdapter  extends RecyclerView.Adapter<MRUListAdapter.MyViewH
     public void onBindViewHolder(MyViewHolder holder, int position) {
         MRU mru = arryList.get(position);
         holder.txtMruTotal.setText(String.valueOf(mru.getCustomer_count()));
-        holder.txtUnDelivered.setText(String.valueOf(mru.getUndelivered()));
         holder.txtMruTotal.setText(String.valueOf(mru.getTotal()));
-        holder.txtUnPrinted.setText(String.valueOf(mru.getUnprinted()));
         holder.txtMRUID.setText(mru.getId());
-        holder.txtUnRead.setText(String.valueOf(mru.getUnread()));
+
+        int undelivered = mruDao.countUnDelivered(mru.getId());
+        int unread = mruDao.countUnRead(mru.getId(),"U");
+        int printed = mruDao.countPrinted(mru.getId());
+        holder.txtUnRead.setText(String.valueOf(unread));
+        holder.txtUnDelivered.setText(String.valueOf(undelivered));
+        holder.txtUnPrinted.setText(String.valueOf(printed));
+
+
         holder.bind(arryList.get(position),position, listener);
 
     }
