@@ -42,7 +42,10 @@ public class MeterConsumption {
     String constype_code;
     //Has new meter info, replacement date or initial reading?
     String dreplmtr_code;
-
+    /**
+     * Special  Computation
+     */
+    String spComp;
     /**
      * Previous Consumption AVERAGE
      */
@@ -75,6 +78,7 @@ public class MeterConsumption {
         this.bill_prev_act_tag = cursor.getString(cursor.getColumnIndexOrThrow("BILLPREVACTTAG"));
         this.dreplmtr_code = cursor.getString(cursor.getColumnIndexOrThrow("DREPLMTR_CODE"));
         this.prev_con_avg = cursor.getString(cursor.getColumnIndexOrThrow("PCONSAVGFLAG"));
+        this.spComp = cursor.getString(cursor.getColumnIndexOrThrow("SP_COMP"));
     }
 
     /**
@@ -176,5 +180,14 @@ public class MeterConsumption {
 
     public String getConstype_code() {
         return constype_code;
+    }
+
+
+    public void setSpComp(String spComp) {
+        this.spComp = spComp;
+    }
+
+    public String getSpComp() {
+        return spComp;
     }
 }

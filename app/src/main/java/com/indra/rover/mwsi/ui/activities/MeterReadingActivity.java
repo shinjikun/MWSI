@@ -254,7 +254,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onClick(View view) {
                 String value =   txtDlg.getText().toString();
-                updateReading(value);
+                if(!meterInfo.getPresRdg().equals(value)){
+                    updateReading(value);
+                }
+
               //  checkConsumptionLevel(value);
                 dialog.dismiss();
             }
@@ -616,7 +619,6 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     public void getMessage(MessageTransport msgTransport) {
         String action = msgTransport.getAction();
         if(action.equals("reading")){
-            Log.i("Test","reading again");
           updateReading(meterInfo.getPresRdg());
         }
 

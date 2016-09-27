@@ -143,4 +143,5 @@
     <string name="btn_change_str">Change</string>
     <string name="btn_capture_image">Capture Image</string>
     <string name="login">Login</string>
+    <string name="title_activity_signature">SignatureActivity</string>
 </resources>

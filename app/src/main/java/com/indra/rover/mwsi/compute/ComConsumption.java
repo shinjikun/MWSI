@@ -56,15 +56,7 @@ public class ComConsumption extends Compute{
             Log.i("Test","present reading not empty="+reading);
             //reading plus non-bill related oc
             if(Utils.isNotEmpty(oc2)){
-                //reading plus non-bill related oc excluding oc11, 12 and 14
-                if(!oc2.equals("11")||!oc2.equals("12")||!oc2.equals("14")){
-                    //tag as averages
-                    decisionB();
-                }
-                //reading plus non billed related OC
-                else {
-                    checkNewMeterInfo();
-                }
+                checkNewMeterInfo();
             }
             //reading only plus billed related OC
             else if(Utils.isNotEmpty(oc1)){

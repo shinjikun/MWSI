@@ -223,11 +223,19 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
         txt.setText(spnOC2.getSelectedItem().toString());
 
         mtrDao.addOC(oc1,oc2,crdocno);
-        MainApp.bus.post(new MessageTransport("reading"));
+        startReading(oc1,oc2);
         editMode(false);
 
     }
 
+
+    private void startReading(String newOC1,String newOC2){
+        if(!newOC2.equals(meterOC.getOc2())&& !newOC1.equals(meterOC.getOc1())){
+            MainApp.bus.post(new MessageTransport("reading"));
+        }
+
+
+    }
 
     @Override
     public void onClick(View view) {

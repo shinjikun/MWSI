@@ -19,7 +19,7 @@ public class Compute {
      */
     private final static int minimum_bill =10;
 
-    /**
+    /** Normal Condition - Current Lesst Billed Previous Consumption
      * Default computation of consumption
      *  consumption =  present reading - bill previous reading
      * @return consumption
@@ -27,11 +27,13 @@ public class Compute {
     public int defaultCondition(){
         int present_reading=  Integer.parseInt(meterConsObj.getPresent_rdg());
         int bill_prev_reading = Integer.parseInt(meterConsObj.getBill_prev_rdg());
+        meterConsObj.setSpComp("0");
         return  present_reading -  bill_prev_reading;
     }
 
 
     /**
+     * Negative Consumption-  Tumbled Meter
      * special condition 1
      * consumption =  number of dials - billed previous reading  + previous reading
      */
@@ -39,11 +41,13 @@ public class Compute {
         int num_dials =  meterConsObj.getMax_cap();
         int present_reading=  Integer.parseInt(meterConsObj.getPresent_rdg());
         int bill_prev_reading = Integer.parseInt(meterConsObj.getBill_prev_rdg());
+        meterConsObj.setSpComp("1");
         return num_dials-(present_reading+bill_prev_reading);
     }
 
 
     /**
+     * New Meter All Information Available
      * special condition 2
      * T_CURRENT_RDG.PRESRDG + T_DOWNLOAD.NMCONSFACTOR
      * @return consumption
@@ -51,10 +55,12 @@ public class Compute {
     public int scenario2(){
         int  nmconsfactor =  Integer.parseInt(meterConsObj.getNminconsfactor());
         int present_reading=  Integer.parseInt(meterConsObj.getPresent_rdg());
+        meterConsObj.setSpComp("2");
         return present_reading+ nmconsfactor;
     }
 
     /**
+     *  New Meter  Incomplete Information available
      *  (T_CURRENT_RDG.PRESRDG  - T_ DOWNLOAD.NMINITRDG) * T_DOWNLOAD.NMCONSFACTOR
      * scenario 3
      * @return computed consumption
@@ -63,21 +69,26 @@ public class Compute {
         int present_reading=  Integer.parseInt(meterConsObj.getPresent_rdg());
         int  nminitrdg = Integer.parseInt(meterConsObj.getNminitrdg());
         int  nmconsfactor =  Integer.parseInt(meterConsObj.getNminconsfactor());
-
+        meterConsObj.setSpComp("3");
         return (present_reading-nminitrdg)*nmconsfactor;
     }
 
-    /** scenario 4 to compute consumption
+    /**
+     * Negative Consumption - Previous Reading Actual and Less Than Or Equal To Current Reading
+     * scenario 4 to compute consumption
      *  T_CURRENT_RDG.PRESRDG  - T_ DOWNLOAD.ACTPREVRDG
      * @return computed consumption
      */
     public int scenario4(){
         int present_reading=  Integer.parseInt(meterConsObj.getPresent_rdg());
         int actual_prev_reading =  Integer.parseInt(meterConsObj.getPrev_rdg());
+        meterConsObj.setSpComp("4");
         return present_reading - actual_prev_reading;
+
     }
 
     /**
+     * Use BillPrevRdg2 with BillPrevActTag
      * scenario 5 to compute consumption
      * T_CURRENT_RDG.PRESRDG  - T_ DOWNLOAD.BILLPREVRDG2
      * @return computed consumption
@@ -85,11 +96,17 @@ public class Compute {
     public int scenario5(){
         int present_reading=  Integer.parseInt(meterConsObj.getPresent_rdg());
         int bill_prev_rdg2 =  Integer.parseInt(meterConsObj.getBill_prev_rdg2());
+        meterConsObj.setSpComp("5");
         return present_reading-bill_prev_rdg2;
     }
 
+    /**
+     * Block Tag P use Current Reading
+     * @return computed consumption
+     */
     public int scenario6(){
         int present_reading=  Integer.parseInt(meterConsObj.getPresent_rdg());
+        meterConsObj.setSpComp("6");
         return present_reading;
     }
 
