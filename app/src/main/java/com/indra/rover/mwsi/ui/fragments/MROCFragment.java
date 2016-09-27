@@ -1,21 +1,25 @@
 package com.indra.rover.mwsi.ui.fragments;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.db.RefTableDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterOC;
+
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.ObservationCode;
 import com.indra.rover.mwsi.utils.MessageTransport;
 import com.squareup.otto.Subscribe;
@@ -32,6 +36,9 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
     Spinner spnOC1,spnOC2;
     MeterReadingDao mtrDao;
     MeterOC meterOC;
+    List<ObservationCode> arryOC1;
+    List<ObservationCode> arryOC2;
+    private final int CAM_OC1=31,CAM_OC2=32;
     public MROCFragment() {
     }
 
@@ -57,9 +64,9 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    private void launchCamera(){
+    private void launchCamera(int id){
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, 0);
+       startActivityForResult(intent, id);
 
     }
 
@@ -72,14 +79,21 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
         imgCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchCamera();
+                Button btn = (Button)v;
+                if(btn.getText().equals("Capture Image")){
+                    launchCamera(CAM_OC1);
+                }
+
             }
         });
         imgCapture = (Button) mView.findViewById(R.id.btnImageCapture1);
         imgCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchCamera();
+                Button btn = (Button)v;
+                if(btn.getText().equals("Capture Image")){
+                    launchCamera(CAM_OC2);
+                }
             }
         });
 
@@ -98,27 +112,33 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
     private void initContent(){
         List<ObservationCode> arrayList = refTableDao.getOCodes();
         // Spinner Drop down elements
-        List<String> arryOC1 = new ArrayList<>();
-        List<String> arryOC2 = new ArrayList<>();
+       arryOC1 = new ArrayList<>();
+       arryOC2 = new ArrayList<>();
+        List<String> arryOC1codes = new ArrayList<>();
+        List<String> arryOC2codes = new ArrayList<>();
+        arryOC1codes.add(" ");
+        arryOC2codes.add(" ");
         for(int i = 0;i<arrayList.size();i++){
             ObservationCode ocCode = arrayList.get(i);
             String value = ocCode.getFf_code() + " - "+ocCode.getFf_desc();
             if(ocCode.getBill_related() == 1){
-                arryOC1.add(value);
+                arryOC1.add(ocCode);
+                arryOC1codes.add(value);
             }
             else {
-                arryOC2.add(value);
+                arryOC2.add(ocCode);
+                arryOC2codes.add(value);
             }
 
         }
         // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, arryOC1);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, arryOC1codes);
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // attaching data adapter to spinner
         spnOC1.setAdapter(dataAdapter);
 
-        dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, arryOC2);
+        dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, arryOC2codes);
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // attaching data adapter to spinner
@@ -159,8 +179,8 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
     public void getMessage(MessageTransport msgTransport) {
         String action = msgTransport.getAction();
         if(action.equals("navigate")){
-            String id = msgTransport.getMessage();
-            meterOC = mtrDao.getMeterOCs(id);
+            crdocno = msgTransport.getMessage();
+            meterOC = mtrDao.getMeterOCs(crdocno);
             setUp();
         }
         else if(action.equals("readstat")){
@@ -171,10 +191,41 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
 
     private void setUp(){
         if(meterOC!=null){
-
+            String oc1 = meterOC.getOc1();
+            String oc2 = meterOC.getOc2();
+            int index = getPosition(oc1,arryOC1);
+            spnOC1.setSelection(index);
+            index = getPosition(oc2,arryOC2);
+            spnOC2.setSelection(index);
+            TextView txt = (TextView) mView.findViewById(R.id.lblOC1);
+            txt.setText(spnOC1.getSelectedItem().toString());
+            txt = (TextView) mView.findViewById(R.id.lblOC2);
+            txt.setText(spnOC2.getSelectedItem().toString());
         }
 
         editMode(false);
+    }
+
+    private void saveDB(){
+        int index = spnOC1.getSelectedItemPosition();
+        String oc1 ="";
+        String oc2 ="";
+        if(index !=0){
+            oc1 =   arryOC1.get(index-1).getFf_code();
+        }
+       int  index2 = spnOC2.getSelectedItemPosition();
+        if(index2!=0){
+            oc2 = arryOC2.get(index2-1).getFf_code();
+        }
+        TextView txt = (TextView) mView.findViewById(R.id.lblOC1);
+        txt.setText(spnOC1.getSelectedItem().toString());
+        txt = (TextView) mView.findViewById(R.id.lblOC2);
+        txt.setText(spnOC2.getSelectedItem().toString());
+
+        mtrDao.addOC(oc1,oc2,crdocno);
+        MainApp.bus.post(new MessageTransport("reading"));
+        editMode(false);
+
     }
 
 
@@ -187,16 +238,66 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
                 editMode(false);
                 break;
             case R.id.btnSaveOC:
-                editMode(false);
+                saveDB();
                 break;
             case R.id.btnEditOC:
                 editMode(true);
                 break;
             case R.id.btnClrOc1:
+                spnOC1.setSelection(0);
+                deleteCapturedImage(CAM_OC1);
                 break;
             case R.id.btnClrOc2:
+                spnOC2.setSelection(0);
+                deleteCapturedImage(CAM_OC2);
                 break;
 
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode== CAM_OC1 || requestCode== CAM_OC2){
+            if(resultCode == Activity.RESULT_OK){
+
+            }
+        }
+
+    }
+
+    private void deleteCapturedImage(int ocType){
+        Button btn;
+        TextView lbl;
+        if(ocType == CAM_OC1){
+            btn =  (Button)mView.findViewById(R.id.btnImageCapture);
+            lbl =  (TextView)mView.findViewById(R.id.lblOC1);
+        }
+        else {
+            btn =  (Button)mView.findViewById(R.id.btnImageCapture1);
+            lbl =  (TextView)mView.findViewById(R.id.lblOC2);
+        }
+        btn.setText("Capture Image");
+        lbl.setText("");
+    }
+
+    private void saveCaptureImage(int ocType){
+
+    }
+
+    private void viewCaptureImage(int ocType){
+
+    }
+
+    private int getPosition(String oc_code, List<ObservationCode> arrayList) {
+        int size = arrayList.size();
+        int pos =0;
+        for(int i=0;i<size;i++){
+            ObservationCode oc = arrayList.get(i);
+            if(oc.getFf_code().equals(oc_code)){
+                pos = i+1;
+            }
+        }
+        return pos;
     }
 }

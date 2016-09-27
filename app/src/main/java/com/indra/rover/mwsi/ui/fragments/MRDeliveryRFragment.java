@@ -185,7 +185,7 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
         String deliv_code ="";
 
         if(index !=0){
-         deliv_code =   arrayList.get(index).getDel_code();
+         deliv_code =   arrayList.get(index-1).getDel_code();
         }
         TextView lbl = (TextView)mView.findViewById(R.id.lblMRDRemarks);
         lbl.setText(remarks);
@@ -220,7 +220,7 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
         for(int i=0;i<size;i++){
             DeliveryCode dl = arrayList.get(i);
             if(dl.getDel_code().equals(deliv_code)){
-                pos = i;
+                pos = i+1;
             }
         }
         return pos;

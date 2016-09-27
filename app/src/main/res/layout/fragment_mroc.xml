@@ -115,7 +115,7 @@
         android:layout_below="@+id/spnOC1"
         android:layout_centerHorizontal="true"
 
-        android:text="@string/btn_capture_image" />
+        android:text="Capture Image" />
 
 
     <TextView
@@ -167,7 +167,7 @@
         android:drawableLeft="@drawable/ic_camera"
         android:drawableStart="@drawable/ic_camera"
         android:contentDescription="@string/str_address"
-        android:text="@string/btn_capture_image"
+        android:text="Capture Image"
         android:layout_below="@+id/btnClrOc2"
         android:layout_centerHorizontal="true" />
 

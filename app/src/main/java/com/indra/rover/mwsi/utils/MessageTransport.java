@@ -2,6 +2,8 @@ package com.indra.rover.mwsi.utils;
 
 import android.os.Bundle;
 
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
+
 /**
  * Created by Indra on 9/7/2016.
  */
@@ -14,6 +16,11 @@ public class MessageTransport {
     public MessageTransport(String action,Bundle bundle){
         this.action = action;
         this.bundle = bundle;
+    }
+
+    public MessageTransport(String action){
+        this.action = action;
+        this.message = "";
     }
 
     public MessageTransport(String action, String message){

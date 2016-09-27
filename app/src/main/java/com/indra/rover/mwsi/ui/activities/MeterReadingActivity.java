@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +43,7 @@ import com.indra.rover.mwsi.utils.GPSTracker;
 import com.indra.rover.mwsi.utils.MessageTransport;
 import com.indra.rover.mwsi.utils.PreferenceKeys;
 import com.indra.rover.mwsi.utils.Utils;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +82,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        MainApp.bus.register(this);
 
         // add back arrow to toolbar
         if (getSupportActionBar() != null){
@@ -533,6 +535,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if(requestCode == SEARCH_REQ){
             if(resultCode ==  Activity.RESULT_OK){
                Bundle  bundle = data.getExtras();
@@ -599,12 +602,24 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onPostConsResult(MeterConsumption meterConsumption) {
+        Log.i("Test","meter consumption"+meterConsumption.getBilled_cons());
         meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
         checkConsumptionLevel(meterConsumption);
+        meterInfo.setPresent_reading(meterConsumption.getPresent_rdg());
     }
 
     public void checkConsumptionLevel(MeterConsumption meterConsumption){
-        snackbar("Consumption Very Low");
+      //  snackbar("Consumption Very Low");
+    }
+
+    @Subscribe
+    public void getMessage(MessageTransport msgTransport) {
+        String action = msgTransport.getAction();
+        if(action.equals("reading")){
+            Log.i("Test","reading again");
+          updateReading(meterInfo.getPresRdg());
+        }
+
     }
 
 }

@@ -230,8 +230,11 @@ exit /B 0
 		IF not exist %ds_dbdump% (mkdir %ds_dbdump%)
 		For /f "tokens=2-4 delims=/ " %%a in ('date /t') do (set mydate=%%c-%%a-%%b)
         For /f "tokens=1-2 delims=/:" %%a in ("%TIME%") do (set mytime=%%a%%b)
+        @rem remove trailing spaces
+        for /f "tokens=* delims= " %%a in ("!mytime!") do (set mytime=%%a)
 
-           adb pull %rover_app_dir%/dbdump/	%ds_dbdump%\!mydate!_!mytime!
+
+            adb pull %rover_app_dir%/dbdump/	%ds_dbdump%\!mydate!_!mytime!
 			set statustype=ended
 			call :send_broadmsg
 			echo Completed
@@ -251,6 +254,8 @@ exit /B 0
 			IF not exist %ds_download_dir% (mkdir %ds_download_dir%)
 		    For /f "tokens=2-4 delims=/ " %%a in ('date /t') do (set mydate=%%c-%%a-%%b)
             For /f "tokens=1-2 delims=/:" %%a in ("%TIME%") do (set mytime=%%a%%b)
+            @rem remove trailing spaces
+            For /f "tokens=* delims= " %%a in ("!mytime!") do (set mytime=%%a)
 
             adb pull %rover_app_dir%/downloads/	%ds_download_dir%\!mydate!_!mytime!
 			set statustype=ended

@@ -91,7 +91,13 @@ public class ComConsumption extends Compute{
                         //use decision B  average consumption set to billed consumption - tag as average
                         decisionB();
                     }
+                }else{
+                    decisionB();
                 }
+            }
+            else {
+                //or OC only excluding 11,12,14
+                decisionB();
             }
         }
     }

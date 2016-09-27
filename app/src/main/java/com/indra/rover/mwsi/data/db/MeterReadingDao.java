@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.util.Log;
+
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterDelivery;
@@ -152,6 +152,22 @@ public class MeterReadingDao extends ModelDao {
             }
             contentValues.put("DEL_CODE",deliv_code);
             contentValues.put("DELIV_REMARKS", Utils.formatString(deliv_remarks));
+            String where= "CRDOCNO=?";
+            database.update("T_CURRENT_RDG",contentValues,where,new String[]{crdocid});
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+    }
+
+    public void addOC(String oc1,String oc2, String crdocid){
+        try {
+            open();
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("FFCODE1",oc1);
+            contentValues.put("FFCODE2",oc2);
             String where= "CRDOCNO=?";
             database.update("T_CURRENT_RDG",contentValues,where,new String[]{crdocid});
         }catch (Exception e){
@@ -324,7 +340,7 @@ public class MeterReadingDao extends ModelDao {
         MeterOC meterOC = null;
         try {
             open();
-            String sql_stmt = "SELECT CRDOCNO, FFCODE1,FFCODE2,REMARKS,READSTAT  from " +
+            String sql_stmt = "SELECT CRDOCNO, FFCODE1,FFCODE2,READSTAT  from " +
                     " T_CURRENT_RDG where CRDOCNO="+crdocno;
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
@@ -354,7 +370,6 @@ public class MeterReadingDao extends ModelDao {
                     "c.BILLED_CONS,c.CONSTYPE_CODE,d.PCONSAVGFLAG,d.DREPLMTR_CODE " +
                     "from T_DOWNLOAD d,R_NUM_DIALS nd ,T_CURRENT_RDG c " +
                     "where d.nodials = nd.nodials and d.DLDOCNO=c.CRDOCNO and d.DLDOCNO="+dldocno+";";
-            Log.i("Test",sql_stmt);
             Cursor cursor =database.rawQuery(sql_stmt,null);
 
             if (cursor.moveToFirst()) {
