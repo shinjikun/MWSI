@@ -459,8 +459,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             case R.id.btnPrint:
                 String readstat = meterInfo.getReadStat();
                 if(readstat.equals("U")){
-                    dlgUtils.showOKDialog(2,"Print ","Cannot Print Reading " +
-                            "for an Unread Bill!",new Bundle());
+                  noPrint_Bill(0);
                 }
                 else {
                     String newReadStat="P";
@@ -652,7 +651,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
      */
     private void noPrint_Bill(int type){
           StringBuilder  strBuilder = new StringBuilder();
-          strBuilder.append("Cannot print bill ");
+          strBuilder.append("Cannot print bill for");
            switch(type){
                case 0: strBuilder.append("Unread Meters!"); break;
                case 1: strBuilder.append("More than 9x!"); break;
