@@ -9,11 +9,11 @@ import com.indra.rover.mwsi.utils.Utils;
 /**
  * Class to compute  the consumption
  */
-public class ComConsumption extends Compute{
+public class CompConsumption extends Compute{
 
 
 
-    public ComConsumption(ConsumptionListener listener){
+    public CompConsumption(ConsumptionListener listener){
         super(listener);
 
     }
@@ -29,7 +29,7 @@ public class ComConsumption extends Compute{
                if(Utils.isNotEmpty(block_tag)){
                    //account is block then proceed to compute BlockAccount
                    if(block_tag.equals("B")||block_tag.equals("P")){
-                        ComBlockAccn blockAccount = new ComBlockAccn(this.listener);
+                        CompBlockAccn blockAccount = new CompBlockAccn(this.listener);
                         blockAccount.compute(meterConsObj);
                    }
                    else {

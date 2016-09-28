@@ -19,10 +19,15 @@ import com.zebra.sdk.comm.BluetoothConnection;
 import com.zebra.sdk.comm.Connection;
 import com.zebra.sdk.comm.ConnectionException;
 import com.zebra.sdk.comm.TcpConnection;
+import com.zebra.sdk.device.ZebraIllegalArgumentException;
+import com.zebra.sdk.graphics.ZebraImageFactory;
+import com.zebra.sdk.graphics.ZebraImageI;
 import com.zebra.sdk.printer.PrinterLanguage;
 import com.zebra.sdk.printer.ZebraPrinter;
 import com.zebra.sdk.printer.ZebraPrinterFactory;
 import com.zebra.sdk.printer.ZebraPrinterLanguageUnknownException;
+
+import java.io.IOException;
 
 public class ConnectivityDemo extends Activity {
 
@@ -204,15 +209,32 @@ public class ConnectivityDemo extends Activity {
     private void doConnectionTest() {
         printer = connect();
         if (printer != null) {
+            //storeImage();
             sendTestLabel();
         } else {
             disconnect();
         }
     }
 
+    private void storeImage(){
+
+        try {
+            ZebraImageI zebraImageI = ZebraImageFactory.getImage(getAssets().open("maynilad.png"));
+
+             printer.printImage(zebraImageI,0,0,-1,-1 ,false);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ConnectionException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void sendTestLabel() {
         try {
+
             byte[] configLabel = getConfigLabel();
+
             printerConnection.write(configLabel);
             setStatus("Sending Data", Color.BLUE);
             sleep(1500);
@@ -246,34 +268,16 @@ public class ConnectivityDemo extends Activity {
         PrinterLanguage printerLanguage = printer.getPrinterControlLanguage();
 
         byte[] configLabel = null;
-        if (printerLanguage == PrinterLanguage.ZPL) {
-            configLabel = "^XA^FO17,16^GB379,371,8^FS^FT65,255^A0N,135,134^FDTEST^FS^XZ".getBytes();
-        } else if (printerLanguage == PrinterLanguage.CPCL) {
-            String cpclConfigLabel = "! 0 200 200 2436 1\n" +
-                    "PW 830\n" +
-                    "TONE 0\n" +
-                    "SPEED 0\n" +
-                    "ON-FEED IGNORE\n" +
-                    "NO-PACE\n" +
-                    "BAR-SENSE\n" +
-                    "T 5 1 487 24 Maynilad Water Services Inc\n" +
-                    "T 5 1 487 72 MWSS Compound\n" +
-                    "T 5 1 487 120 Katipunan Road, Balara Q C\n" +
-                    "T 4 0 68 112 Zebra Hlv(4-0) 10.0 Pt\n" +
-                    "T 4 1 61 192 Zebra Hlv (4-1) 16.7 Pt\n" +
-                    "T 7 0 140 450 Zebra Monaco (7-0) 8.5 Pt\n" +
-                    "T 0 2 192 336 Zebra Standard 0-2 pt\n" +
-                    "T 5 2 91 533 Zebra Time 5-2 16.3 Pt\n" +
-                    "T 0 5 163 725 Zebra Standard 0-5 18.5 Pt\n" +
-                    "T 7 1 182 626 Zebra Monaco 7-1 17.0 Pt\n" +
-                    "T 0 6 44 1298 Zebra Standard 0-6 18.5\n" +
-                    "T 0 5 38 1201 Zebra Standard 0-5 18.5\n" +
-                    "T 0 4 53 910 Zebra Standard 0-4 18.5\n" +
-                    "T 0 3 24 1118 Zebra Standard 0-3 18.5\n" +
-                    "T 0 2 38 998 Zebra Standard 0-2 18.5\n" +
-                    "PRINT\n";
+            String cpclConfigLabel = "! U1 setvar \"device.languages\", \"line_print\"\r\n"
+                    + "! U1 SETLP 5 2 46\r\n"
+                    + "AURORA'S FABRIC SHOP\r\n"
+                    + "! U1 SETLP 5 2 24\r\n" +
+                    "123 CASTLE DRIVE\n"
+                    + "! U1 PCX 0 30 !<maynilad.pcx\n"
+                    + "\n"
+                    + "\n";
             configLabel = cpclConfigLabel.getBytes();
-        }
+
         return configLabel;
     }
 

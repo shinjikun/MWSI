@@ -6,10 +6,10 @@ import com.indra.rover.mwsi.utils.Utils;
 /**
  * Class to compute consumption of a Block Account
  */
-public class ComBlockAccn  extends  Compute{
+public class CompBlockAccn extends  Compute{
 
 
-    public ComBlockAccn(ConsumptionListener listener){
+    public CompBlockAccn(ConsumptionListener listener){
         super(listener);
     }
 
@@ -138,16 +138,19 @@ public class ComBlockAccn  extends  Compute{
                     }
                     else  {
                         System.out.println("NO BILL");
+                        noBill();
                     }
                 }
             }
             //otherwise no bill
             else {
                 //NO BILL
+                noBill();
             }
         }
         else {
             //NO BILL
+            noBill();
         }
     }
 

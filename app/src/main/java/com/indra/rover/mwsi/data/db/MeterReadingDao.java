@@ -265,6 +265,25 @@ public class MeterReadingDao extends ModelDao {
         }
     }
 
+    /**
+     * update's the bill print date of the printed meter bill in DB
+     * @param printDate print date
+     * @param crdocid id
+     */
+    public void updatePrintDate(String printDate,String crdocid ){
+        try{
+            open();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("BILLPRINT_DATE",printDate);
+            String where= "CRDOCNO=?";
+            database.update("T_CURRENT_RDG",contentValues,where,new String[]{crdocid});
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+    }
+
     public void updateSequenceNumber(String seqNumber,String crdocid){
         try{
             open();
@@ -366,13 +385,12 @@ public class MeterReadingDao extends ModelDao {
         try{
             open();
             String sql_stmt ="select d.DLDOCNO,d.ACCT_STATUS,d.METERNO,d.GRP_FLAG,d.BLOCK_TAG," +
-                    "d.BLOCK_TAG,d.DISC_TAG,d.PREVRDGDATE,d.ACTPREVRDG,d.BILLPREVRDG," +
+                    "d.DISC_TAG,d.PREVRDGDATE,d.ACTPREVRDG,d.BILLPREVRDG," +
                     "d.BILLPREVRDG2,d.BILLPREVACTTAG,d.PRACTFLAG,d.AVECONS,d.NMINITRDG," +
                     "d.NMCONSFACTOR,d.PREVFF1,d.PREVFF2,d.NODIALS,nd.maxcap,c.FFCODE1,c.FFCODE2,c.PRESRDG," +
-                    "c.BILLED_CONS,c.CONSTYPE_CODE,d.PCONSAVGFLAG,d.DREPLMTR_CODE, c.SP_COMP " +
+                    "c.BILLED_CONS,c.CONSTYPE_CODE,d.PCONSAVGFLAG,d.DREPLMTR_CODE, c.SP_COMP,c.CSMB_TYPE_CODE,c.CSMB_PARENT " +
                     "from T_DOWNLOAD d,R_NUM_DIALS nd ,T_CURRENT_RDG c " +
                     "where d.nodials = nd.nodials and d.DLDOCNO=c.CRDOCNO and d.DLDOCNO="+dldocno+";";
-            Log.i("Test",sql_stmt);
             Cursor cursor =database.rawQuery(sql_stmt,null);
 
             if (cursor.moveToFirst()) {

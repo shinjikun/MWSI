@@ -27,7 +27,9 @@ import android.widget.TextView;
 import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.adapters.StatusViewPagerAdapter;
-import com.indra.rover.mwsi.compute.ComConsumption;
+import com.indra.rover.mwsi.compute.CompCSScheme;
+import com.indra.rover.mwsi.compute.CompConsumption;
+import com.indra.rover.mwsi.compute.CompMBScheme;
 import com.indra.rover.mwsi.compute.Compute;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
@@ -73,6 +75,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     TextView txtFilter;
     //Button btnPrint;
     CoordinatorLayout coordinatorLayout;
+    GPSTracker gpsTracker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +86,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         setSupportActionBar(toolbar);
 
         MainApp.bus.register(this);
+        gpsTracker =  new GPSTracker(this);
 
         // add back arrow to toolbar
         if (getSupportActionBar() != null){
@@ -255,10 +259,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             public void onClick(View view) {
                 String value =   txtDlg.getText().toString();
                 if(!meterInfo.getPresRdg().equals(value)){
-                    updateReading(value);
+                    updateReading(value, true);
                 }
 
-              //  checkConsumptionLevel(value);
+              //  comp_cons_range(value);
                 dialog.dismiss();
             }
         });
@@ -273,7 +277,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         meterStatus();
     }
 
-    public void updateReading(String value){
+    public void updateReading(String value, boolean isRdgTries){
         int tries =0 ;
         if(Utils.isNotEmpty(meterInfo.getRdg_tries())){
               tries = Integer.parseInt(meterInfo.getRdg_tries());
@@ -294,14 +298,13 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             }
         }
 
-        if(tries>3){
-            dlgUtils.showOKDialog("You have exceeded the number of tries changing the reading.");
-            return;
+        if(isRdgTries){
+            tries = tries+1;
         }
-        tries = tries+1;
+
         String latitude = null;
         String longtitude = null;
-        GPSTracker gpsTracker =  new GPSTracker(this);
+
         if(gpsTracker.canGetLocation()){
             latitude = String.valueOf(gpsTracker.getLatitude());
             longtitude = String.valueOf(gpsTracker.getLongitude());
@@ -314,9 +317,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         meterInfo.setRdg_tries(String.valueOf(tries));
         setReadingValue(value);
         //start computing the bill consumption
-        MeterConsumption mterCons = meterDao.getConsumption(meterInfo.getDldocno());
-        ComConsumption comConsumption = new ComConsumption(this);
-        comConsumption.compute(mterCons);
+        computeConsumption(meterInfo.getDldocno());
     }
 
 
@@ -607,11 +608,11 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     public void onPostConsResult(MeterConsumption meterConsumption) {
         Log.i("Test","meter consumption"+meterConsumption.getBilled_cons());
         meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
-        checkConsumptionLevel(meterConsumption);
+        comp_cons_range(meterConsumption);
         meterInfo.setPresent_reading(meterConsumption.getPresent_rdg());
     }
 
-    public void checkConsumptionLevel(MeterConsumption meterConsumption){
+    public void comp_cons_range(MeterConsumption meterConsumption){
       //  snackbar("Consumption Very Low");
     }
 
@@ -619,9 +620,50 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     public void getMessage(MessageTransport msgTransport) {
         String action = msgTransport.getAction();
         if(action.equals("reading")){
-          updateReading(meterInfo.getPresRdg());
+          updateReading(meterInfo.getPresRdg(), false);
         }
 
+    }
+
+    private void computeConsumption(String dldocno){
+        MeterConsumption mterCons = meterDao.getConsumption(dldocno);
+
+        String bill_scheme = mterCons.getCsmb_type_code();
+        //check for the type of billing scene
+        //if set to zero  then use thr regular Read and Bill Computer
+        if(bill_scheme.equals("0")){
+            CompConsumption comConsumption = new CompConsumption(this);
+            comConsumption.compute(mterCons);
+        }
+        //CS
+        else if(bill_scheme.equals("1") ||bill_scheme.equals("4")){
+            CompCSScheme compCSScheme = new CompCSScheme(this);
+            compCSScheme.compute(mterCons,meterDao);
+        }
+        //MB
+        else if(bill_scheme.equals("2")||bill_scheme.equals("5")){
+            CompMBScheme compMBScheme = new CompMBScheme(this);
+            compMBScheme.compute(mterCons,meterDao);
+        }
+    }
+
+    /**
+     *  Message based on parameter: 0=unread,  2=blocked, 3=unread MB mother meter
+     */
+    private void noPrint_Bill(int type){
+          StringBuilder  strBuilder = new StringBuilder();
+          strBuilder.append("Cannot print bill ");
+           switch(type){
+               case 0: strBuilder.append("Unread Meters!"); break;
+               case 1: strBuilder.append("More than 9x!"); break;
+               case 2: strBuilder.append("Blocked Acct!"); break;
+               case 3:
+                   strBuilder.append("Child Mtr w/");
+                   strBuilder.append("Unread MB Mother Mtr");
+                   break;
+               case 4: strBuilder.append("KAM Acct!"); break;
+           }
+        dlgUtils.showOKDialog("BILL GENERATION",strBuilder.toString());
     }
 
 }

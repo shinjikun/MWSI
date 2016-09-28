@@ -68,6 +68,10 @@ public class DialogUtils  implements View.OnClickListener{
         showOKDialog(0,null,message, new Bundle());
     }
 
+    public void showOKDialog(String title,String message){
+        showOKDialog(0,title,message, new Bundle());
+    }
+
 
     public void showOKDialog(int dialog_id,String title,String message,Bundle params){
         this.dialog_id = dialog_id;

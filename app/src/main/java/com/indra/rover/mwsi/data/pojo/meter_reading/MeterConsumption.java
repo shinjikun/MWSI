@@ -51,6 +51,9 @@ public class MeterConsumption {
      */
     String prev_con_avg;
 
+    String  csmb_type_code;
+    String  csmb_parent;
+    String acct_num;
     public MeterConsumption(Cursor cursor){
         this.id =cursor.getString(cursor.getColumnIndexOrThrow("DLDOCNO"));
         this.acct_status = cursor.getString(cursor.getColumnIndexOrThrow("ACCT_STATUS"));
@@ -79,6 +82,9 @@ public class MeterConsumption {
         this.dreplmtr_code = cursor.getString(cursor.getColumnIndexOrThrow("DREPLMTR_CODE"));
         this.prev_con_avg = cursor.getString(cursor.getColumnIndexOrThrow("PCONSAVGFLAG"));
         this.spComp = cursor.getString(cursor.getColumnIndexOrThrow("SP_COMP"));
+        this.csmb_parent = cursor.getString(cursor.getColumnIndexOrThrow("CSMB_PARENT"));
+        this.csmb_type_code = cursor.getString(cursor.getColumnIndexOrThrow("CSMB_TYPE_CODE"));
+        this.acct_num =  cursor.getString(cursor.getColumnIndexOrThrow("ACCTNUM"));
     }
 
     /**
@@ -189,5 +195,17 @@ public class MeterConsumption {
 
     public String getSpComp() {
         return spComp;
+    }
+
+    public String getCsmb_parent() {
+        return csmb_parent;
+    }
+
+    public String getCsmb_type_code() {
+        return csmb_type_code;
+    }
+
+    public void setAcct_num(String acct_num) {
+        this.acct_num = acct_num;
     }
 }

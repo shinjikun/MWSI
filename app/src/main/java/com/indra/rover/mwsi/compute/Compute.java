@@ -175,6 +175,13 @@ public class Compute {
         }
     }
 
+    public void noBill(){
+        if(listener!=null){
+            listener.onPostConsResult(meterConsObj);
+        }
+    }
+
+
     /**
      * check values if not empty before using scenario 3 formula
      * @return true if values is not empty otherwise return false
