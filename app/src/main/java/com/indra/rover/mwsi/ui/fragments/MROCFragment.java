@@ -2,15 +2,20 @@ package com.indra.rover.mwsi.ui.fragments;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -24,6 +29,9 @@ import com.indra.rover.mwsi.data.pojo.meter_reading.references.ObservationCode;
 import com.indra.rover.mwsi.utils.MessageTransport;
 import com.squareup.otto.Subscribe;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +91,9 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
                 if(btn.getText().equals("Capture Image")){
                     launchCamera(CAM_OC1);
                 }
+                else {
+                    showImageDlg();
+                }
 
             }
         });
@@ -93,6 +104,9 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
                 Button btn = (Button)v;
                 if(btn.getText().equals("Capture Image")){
                     launchCamera(CAM_OC2);
+                }
+                else {
+                    showImageDlg();
                 }
             }
         });
@@ -268,7 +282,8 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode== CAM_OC1 || requestCode== CAM_OC2){
             if(resultCode == Activity.RESULT_OK){
-
+                Bitmap bmp = (Bitmap) data.getExtras().get("data");
+                saveCaptureImage(requestCode,bmp);
             }
         }
 
@@ -289,7 +304,36 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
         lbl.setText("");
     }
 
-    private void saveCaptureImage(int ocType){
+    private void saveCaptureImage(int ocType,Bitmap bitMap){
+        File    contentDir=new File(android.os.Environment.getExternalStorageDirectory()
+                ,getActivity().getPackageName()+"/downloads/images");
+        if(!contentDir.exists())
+            contentDir.mkdir();
+        StringBuilder strBuilder = new StringBuilder();
+        strBuilder.append(crdocno);
+        strBuilder.append('-');
+        if(ocType == CAM_OC1){
+            strBuilder.append("OC1");
+        }
+        else {
+            strBuilder.append("OC2");
+        }
+        strBuilder.append(".png");
+        String fileName = strBuilder.toString();
+        File myPath = new File(contentDir, fileName);
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(myPath);
+            bitMap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.flush();
+            fos.close();
+            MediaStore.Images.Media.insertImage(getActivity().getContentResolver(),
+                    bitMap, myPath.getPath(), fileName);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -307,5 +351,42 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
             }
         }
         return pos;
+    }
+
+    Dialog dlgImage;
+    public void showImageDlg(){
+        dlgImage = new Dialog(getActivity());
+        dlgImage.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dlgImage.setContentView(R.layout.dialog_image_view);
+        dlgImage.setCancelable(false);
+        final EditText txtDlg = (EditText) dlgImage.findViewById(R.id.dlg_body);
+
+        ImageButton dlgBtnClose = (ImageButton) dlgImage.findViewById(R.id.dlg_btn_close);
+        dlgBtnClose.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                dlgImage.dismiss();
+            }
+        });
+        Button btn =  (Button) dlgImage.findViewById(R.id.dlg_ok);
+        btn.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        btn =  (Button) dlgImage.findViewById(R.id.btnRemove);
+        btn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                dlgImage.dismiss();
+            }
+        });
+
+
+
+        dlgImage.show();
     }
 }
