@@ -52,7 +52,7 @@ public class MRU  extends Item{
         this.blocked_count =cursor.getInt(cursor.getColumnIndexOrThrow("BLOCKED_COUNT"));
         this.read = cursor.getInt(cursor.getColumnIndexOrThrow("READ_METERS"));
         this.unread = cursor.getInt(cursor.getColumnIndexOrThrow("UNREAD_METERS"));
-        this.undelivered =cursor.getInt(cursor.getColumnIndexOrThrow("UNDELIV_BILLS"));
+
     }
 
 
@@ -172,7 +172,7 @@ public class MRU  extends Item{
     }
 
     public int getUndelivered() {
-        return undelivered;
+        return 0;
     }
 
 

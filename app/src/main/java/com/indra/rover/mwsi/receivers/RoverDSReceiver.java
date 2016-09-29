@@ -47,13 +47,6 @@ public class RoverDSReceiver extends BroadcastReceiver {
 
     }
 
-    private void upload_content(Context context,String status){
-        Toast.makeText(context, "Intent  "+status, Toast.LENGTH_LONG).show();
-    }
-
-    private void update_db(Context context,String status){
-        Toast.makeText(context, "DB Detected. "+status, Toast.LENGTH_LONG).show();
-    }
 
 
 }

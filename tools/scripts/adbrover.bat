@@ -288,11 +288,19 @@ exit /B 0
 :update_db
 	call :start_app
 	if  "!is_installed!"=="1" (
-			call :send_broadmsg
-			call :end_app
-			)else (
-			echo Rover App not installed
-	)
+    			set actiontype=updatedb
+    			set statustype=started
+    			call :send_broadmsg
+
+
+    			call :push_db
+
+    			set statustype=ended
+    			call :send_broadmsg
+    			echo Completed
+    			)else (
+    			echo Rover App not installed
+    	)
 exit /B 0
 
 :push_file
@@ -307,6 +315,23 @@ exit /B 0
 		 ) else (
 		 	@rem param2 is a file
 		 	adb push %param2% %rover_app_dir%/uploads/
+			)
+
+	)
+exit /B 0
+
+:push_db
+	@rem is param2 is empty then pull all files inside the upload folder
+	if  "%param2%"=="" (
+		adb push %ds_content_dir%db %rover_app_dir%
+	)else (
+			@rem param2 is a directory
+		if exist %param2%\* (
+		adb push %param2% %rover_app_dir%/
+
+		 ) else (
+		 	@rem param2 is a file
+		 	adb push %param2% %rover_app_dir%/db/
 			)
 
 	)

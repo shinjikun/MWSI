@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.indra.rover.mwsi.utils.Utils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,12 +38,13 @@ public class ConnectDao extends ModelDao {
             if(isExistData("T_CURRENT_RDG","CRDOCNO",records[10])){
                 return -1 ;
             }
+            values.put("MRU",records[0]);
             values.put("ACCTNUM",records[2]);
             values.put("METERNO",records[9]);
             values.put("CRDOCNO",records[10]);
-            values.put("CSMB_TYPE_CODE",records[67]);
-            values.put("CSMB_PARENT",records[68]);
-            values.put("MB_PREF_FLAG",records[69]);
+            values.put("CSMB_TYPE_CODE",records[80]);
+            values.put("CSMB_PARENT",records[81]);
+            values.put("MB_PREF_FLAG",records[82]);
             //default of REASTAT is U = UnRead
             values.put("READSTAT","U");
             rowInsert = database.insert("T_CURRENT_RDG", null, values);
@@ -107,19 +110,26 @@ public class ConnectDao extends ModelDao {
             values.put("WBPAYDTLS2",records[40]);
             values.put("MISCPAYDTLS",records[41]);
             values.put("GDPAYDTLS",records[42]);
-            values.put("INSTALL_WTR_IND",records[50]);
-            values.put("INSTALL_SEW_IND",records[52]);
-            values.put("INSTALL_AR_IND",records[54]);
-            values.put("INSTALL_ADV_IND",records[56]);
-            values.put("TIN",records[63]);
-            values.put("VAT_EXEMPT",records[64]);
-            values.put("DISCHECK_FLAG",records[65]);
-            values.put("NUMUSERS",records[66]);
-            values.put("PREVCONSLINE1",records[70]);
-            values.put("PREVCONSLINE2",records[71]);
-            values.put("SOA_NUMBER",records[72]);
-            values.put("SPBILL_RULE",records[73]);
-            values.put("SP_BILL_EFF_DATE",records[74]);
+            values.put("SC_ID",records[44]);
+            values.put("TENANT_NAME",records[45]);
+            values.put("INSTALL_WTR_IND",records[53]);
+            values.put("INSTALL_SEW_IND",records[55]);
+            values.put("INSTALL_GD_IND",records[57]);
+            values.put("INSTALL_AMORT_IND",records[59]);
+            values.put("RESTORATION_IND",records[61]);
+            values.put("ILLEGALITIES_IND",records[63]);
+            values.put("UNMIGRATED_WATER_IND",records[65]);
+            values.put("UNMIGRATED_SEWER_IND",records[67]);
+            values.put("TIN",records[76]);
+            values.put("VAT_EXEMPT",records[77]);
+            values.put("DISCHECK_FLAG",records[78]);
+            values.put("NUMUSERS",records[79]);
+            values.put("PREVCONSLINE1",records[83]);
+            values.put("PREVCONSLINE2",records[84]);
+            values.put("SOA_NUMBER",records[85]);
+            values.put("SPBILL_RULE",records[86]);
+            values.put("SP_BILL_EFF_DATE",records[87]);
+
             rowInsert = database.insert("T_DOWNLOAD", null, values);
         }catch (Exception e){
             e.printStackTrace();
@@ -130,6 +140,27 @@ public class ConnectDao extends ModelDao {
     }
 
 
+
+    public long insertResourceData(String tableName, String[] headers, String[] records){
+        long rowInsert =0;
+        try {
+            truncateTable(tableName);
+            open();
+            ContentValues values = new ContentValues();
+            int size = headers.length;
+            for(int i=0;i<size;i++){
+                //check for empty string//don't allow to be inserted
+                if(Utils.isNotEmpty(records[i]))
+                    values.put(headers[i],records[i]);
+            }
+            rowInsert = database.insert(tableName, null, values);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+        return rowInsert;
+    }
 
 
     public long insertTUploadData(String[] records){
@@ -144,21 +175,31 @@ public class ConnectDao extends ModelDao {
             values.put("MRU",records[0]);
             values.put("ACCTNUM",records[2]);
             values.put("PREVUNPAID",records[43]);
-            values.put("SEPTIC_CHARGE",records[44]);
-            values.put("CHANGESIZE_CHARGE",records[45]);
-            values.put("RESTORATION_CHARGE",records[46]);
-            values.put("MISC_CHARGE",records[47]);
-            values.put("INSTALL_SEWER_CHARGE",records[48]);
-            values.put("ADVANCES",records[49]);
-            values.put("INSTALL_SEWER_DUE",records[51]);
-            values.put("INSTALL_AR_DUE",records[53]);
-            values.put("INSTALL_ADV_DUE",records[55]);
-            values.put("INSTALL_WATER_DUE",records[57]);
-            values.put("INSTALL_WATER_CHARGE",records[58]);
-            values.put("REOPENING_FEE",records[59]);
-            values.put("METER_CHARGES",records[60]);
-            values.put("GD_CHARGE",records[61]);
-            values.put("OTHER_CHARGES",records[62]);
+            values.put("INSTALL_WATER_DUE",records[46]);
+            values.put("INSTALL_WATER_CHARGE",records[47]);
+            values.put("SEPTIC_CHARGE",records[48]);
+            values.put("CHANGESIZE_CHARGE",records[49]);
+            values.put("MISC_CHARGE",records[50]);
+            values.put("INSTALL_SEWER_CHARGE",records[51]);
+            values.put("AMORTIZATION",records[52]);
+            values.put("INSTALL_SEWER_DUE",records[54]);
+
+            values.put("GD_AMOUNT_DUE",records[56]);
+            values.put("AMORT_DUE",records[58]);
+
+
+            values.put("RESTORATION_DUE",records[60]);
+            values.put("ILLEGALITIES_DUE",records[62]);
+            values.put("UNMIGRATED_WATER_DUE",records[64]);
+            values.put("UNMIGRATED_SEWER_DUE",records[66]);
+            values.put("PENALTIES_DUE",records[68]);
+            values.put("UNMIGRATED_AR_WATER",records[69]);
+            values.put("UNMIGRATED_AR_IC",records[70]);
+            values.put("RECOVERY",records[71]);
+            values.put("REOPENING_FEE",records[72]);
+            values.put("METER_CHARGES",records[73]);
+            values.put("GD_CHARGE",records[74]);
+            values.put("OTHER_CHARGES",records[75]);
             values.put("ULDOCNO",records[10]);
             rowInsert = database.insert("T_UPLOAD", null, values);
 
@@ -193,6 +234,17 @@ public class ConnectDao extends ModelDao {
 
 
 
+    void truncateTable(String tablename){
+         try{
+             open();
+             String sql_stmt ="Delete from "+tablename;
+            database.rawQuery(sql_stmt, null);
+         }catch (Exception e){
+             e.printStackTrace();
+         }finally {
+             close();
+         }
+    }
 
      boolean isExistData(String tablename,String columnname,String param){
         String selectSql = String.format(

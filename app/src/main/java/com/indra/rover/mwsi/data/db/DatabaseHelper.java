@@ -16,7 +16,7 @@ import java.io.OutputStream;
     //The Android's default system path of your application database.
     private final static String DB_PATH = "/data/data/com.indra.rover.mwsi/databases/";
 
-    private final static String DB_NAME = "MCFSRNB";
+    private final static String DB_NAME = "MCFSRNB.db";
 
 
     private final Context myContext;

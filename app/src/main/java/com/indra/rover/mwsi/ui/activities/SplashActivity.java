@@ -28,10 +28,13 @@ public class SplashActivity extends AppCompatActivity  implements Constants,
 
         //check first if there is downloaded files from DS that needs to insert on db
         boolean mhas_update = prefs.getData(HAS_ROVER_UPDATE,true);
+        boolean mhas_db_update = prefs.getData(HAS_ROVER_DBUPDATE,false);
 
+        if(mhas_db_update){
 
-        if(mhas_update){
-
+            parseRFiles();
+        }
+        else if(mhas_update){
             parseFiles();
         }
         else {
@@ -65,10 +68,19 @@ public class SplashActivity extends AppCompatActivity  implements Constants,
     private void parseFiles(){
          String dir = android.os.Environment.getExternalStorageDirectory()+"/"+getPackageName()+"/uploads";
          File parentDir = new File(dir);
-        File[] files = parentDir.listFiles();
+         File[] files = parentDir.listFiles();
          FileParser fileParser = new FileParser(this);
-        fileParser.setListener(this);
+         fileParser.setListener(this);
          fileParser.execute(files);
+    }
+
+    private void parseRFiles(){
+        String dir = android.os.Environment.getExternalStorageDirectory()+"/"+getPackageName()+"/db";
+        File parentDir = new File(dir);
+        File[] files = parentDir.listFiles();
+        FileParser fileParser = new FileParser(this,true);
+        fileParser.setListener(this);
+        fileParser.execute(files);
     }
 
     /**
@@ -86,16 +98,36 @@ public class SplashActivity extends AppCompatActivity  implements Constants,
 
 
     @Override
-    public void onPostDownloadResult(boolean status) {
-        prefs.setData(HAS_ROVER_UPDATE,false);
-        txtUpdates.setText("");
-        loadMainScreen();
+    public void onPostDownloadResult(boolean status,boolean isResourceFile) {
+
+        if(isResourceFile){
+            prefs.setData(HAS_ROVER_DBUPDATE,false);
+            boolean mhas_update = prefs.getData(HAS_ROVER_UPDATE,false);
+            if(mhas_update){
+                parseFiles();
+            }else {
+                txtUpdates.setText("");
+                loadMainScreen();
+            }
+        }
+        else {
+            prefs.setData(HAS_ROVER_UPDATE,false);
+            txtUpdates.setText("");
+            loadMainScreen();
+        }
+
 
 
     }
 
     @Override
-    public void onPreDownloadResult() {
-        txtUpdates.setText("Updating Please Wait...");
+    public void onPreDownloadResult(boolean isResourceFile) {
+        if(isResourceFile){
+            txtUpdates.setText("Updating Resource Tables\nPlease Wait...");
+        }
+        else {
+            txtUpdates.setText("Updating  Please Wait...");
+        }
+
     }
 }

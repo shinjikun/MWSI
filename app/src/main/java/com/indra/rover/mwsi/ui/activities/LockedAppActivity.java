@@ -65,7 +65,7 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
             File    contentDir=new File(android.os.Environment.getExternalStorageDirectory(),getPackageName()+"/dbdump");
 
             if (contentDir.canWrite()) {
-                String currentDBPath = "/data/data/" + getPackageName() + "/databases/MCFSRNB";
+                String currentDBPath = "/data/data/" + getPackageName() + "/databases/MCFSRNB.db";
                 String backupDBPath = "db-"+ Utils.getCurrentDate1()+".db";
                 File currentDB = new File(currentDBPath);
                 File backupDB = new File(contentDir, backupDBPath);
@@ -144,7 +144,16 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
     }
 
     private void updatedbAction(String status, Bundle b){
-
+        if(status.equals("started")){
+            txtTitle.setText(getResources().getText(R.string.lock_title_inprogress));
+        }
+        if(status.equals("ended")){
+            txtTitle.setText(getResources().getText(R.string.lock_title_completed));
+            txtSubTitle.setText("");
+            txtFiles.setText("");
+            prefs.setData(HAS_ROVER_DBUPDATE,true);
+            setDrawable(R.drawable.ic_completed);
+        }
     }
 
     private void pulldbAction(String status , Bundle b){

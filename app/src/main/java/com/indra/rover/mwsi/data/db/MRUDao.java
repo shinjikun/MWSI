@@ -48,7 +48,7 @@ public class MRUDao  extends  ModelDao{
         values.put("BLOCKED_COUNT",mru.getBlocked_count());
         values.put("READ_METERS",mru.getRead());
         values.put("UNREAD_METERS",mru.getUnread());
-        values.put("UNDELIV_BILLS",mru.getUndelivered());
+
         rowInsert = database.insert("T_MRU_INFO", null, values);
         close();
         return rowInsert;

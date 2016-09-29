@@ -56,14 +56,17 @@ public class StatusActivity extends AppCompatActivity implements
 
         }
         preferenceKeys = PreferenceKeys.getInstance(this);
-        prepareData();
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(mViewPager);
 
-        mTabLayout = (TabLayout) findViewById(R.id.tabs);
-        mTabLayout.setupWithViewPager(mViewPager);
-        TextView txt =  (TextView)findViewById(R.id.txtStatusTitle);
-        txt.setText(preferenceKeys.getData(APP_STATUS,"DOWNLOADED"));
+            prepareData();
+        if(mruList.size()!=0){
+            mViewPager = (ViewPager) findViewById(R.id.viewpager);
+            setupViewPager(mViewPager);
+            mTabLayout = (TabLayout) findViewById(R.id.tabs);
+            mTabLayout.setupWithViewPager(mViewPager);
+            TextView txt =  (TextView)findViewById(R.id.txtStatusTitle);
+            txt.setText(preferenceKeys.getData(APP_STATUS,"DOWNLOADED"));
+
+        }
 
 
     }
@@ -112,12 +115,12 @@ public class StatusActivity extends AppCompatActivity implements
     }
 
     public void setupViewPager(ViewPager mViewPager){
-        MRU selectedMRU = mruList.get(spn.getSelectedItemPosition());
-
-
         StatusViewPagerAdapter adapter = new StatusViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(MeterStatusFragment.newInstance(1,selectedMRU.getId() ), "Meter");
-        adapter.addFragment(MeterStatusFragment.newInstance(2,selectedMRU.getId() ), "Delivery");
+        if(!mruList.isEmpty()){
+            MRU selectedMRU = mruList.get(spn.getSelectedItemPosition());
+            adapter.addFragment(MeterStatusFragment.newInstance(1,selectedMRU.getId() ), "Meter");
+            adapter.addFragment(MeterStatusFragment.newInstance(2,selectedMRU.getId() ), "Delivery");
+        }
         mViewPager.setAdapter(adapter);
     }
 
