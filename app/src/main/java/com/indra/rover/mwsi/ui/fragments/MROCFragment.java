@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -92,7 +94,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
                     launchCamera(CAM_OC1);
                 }
                 else {
-                    showImageDlg();
+                    showImageDlg(CAM_OC1);
                 }
 
             }
@@ -106,7 +108,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
                     launchCamera(CAM_OC2);
                 }
                 else {
-                    showImageDlg();
+                    showImageDlg(CAM_OC2);
                 }
             }
         });
@@ -354,13 +356,20 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
     }
 
     Dialog dlgImage;
-    public void showImageDlg(){
+    public void showImageDlg(final int ocType){
         dlgImage = new Dialog(getActivity());
         dlgImage.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dlgImage.setContentView(R.layout.dialog_image_view);
         dlgImage.setCancelable(false);
-        final EditText txtDlg = (EditText) dlgImage.findViewById(R.id.dlg_body);
 
+        File file = getImageFile(ocType);
+        if(file.exists()){
+
+            Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            ImageView imgFile = (ImageView)dlgImage.findViewById(R.id.imgOC);
+            imgFile.setImageBitmap(myBitmap);
+
+        }
         ImageButton dlgBtnClose = (ImageButton) dlgImage.findViewById(R.id.dlg_btn_close);
         dlgBtnClose.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -388,5 +397,24 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
 
 
         dlgImage.show();
+    }
+
+
+    private File getImageFile(int ocType){
+        File    contentDir=new File(android.os.Environment.getExternalStorageDirectory()
+                ,getActivity().getPackageName()+"/downloads/images");
+        StringBuilder strBuilder = new StringBuilder();
+        strBuilder.append(crdocno);
+        strBuilder.append('-');
+        if(ocType == CAM_OC1){
+            strBuilder.append("OC1");
+        }
+        else {
+            strBuilder.append("OC2");
+        }
+        strBuilder.append(".png");
+        String fileName = strBuilder.toString();
+
+       return new File(contentDir, fileName);
     }
 }

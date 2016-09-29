@@ -33,7 +33,8 @@
         android:layout_below="@+id/dlg_title"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/content_desc"
-        android:src="@drawable/ic_camera"/>
+        android:src="@drawable/ic_camera"
+        android:scaleType="centerCrop"/>
 
 
     <LinearLayout
