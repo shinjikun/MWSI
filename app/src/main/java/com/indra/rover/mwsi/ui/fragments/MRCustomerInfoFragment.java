@@ -13,7 +13,6 @@ import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.db.RefTableDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterRHistory;
-import com.indra.rover.mwsi.data.pojo.meter_reading.misc.PreviousData;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.ObservationCode;
 import com.indra.rover.mwsi.utils.MessageTransport;
 import com.squareup.otto.Subscribe;
@@ -75,20 +74,19 @@ public class MRCustomerInfoFragment extends Fragment {
 
     private void setUp(){
 
-        PreviousData previousData = meterRHistory.getPreviousData();
         TextView txt = (TextView)mLayout.findViewById(R.id.txtPReadingDate);
-        txt.setText(previousData.getPrevRDGDate());
+        txt.setText(meterRHistory.getPrevRDGDate());
         txt = (TextView)mLayout.findViewById(R.id.txtPrevRemarks);
-        txt.setText(previousData.getPrevRemarks());
+        txt.setText(meterRHistory.getPrevRemarks());
         txt = (TextView)mLayout.findViewById(R.id.txtPReading);
-        txt.setText(String.valueOf(previousData.getActPrevReading()));
+        txt.setText(String.valueOf(meterRHistory.getActPrevReading()));
         txt = (TextView)mLayout.findViewById(R.id.txtMRCOC1);
-        String ocCode = previousData.getPrevFF1();
+        String ocCode = meterRHistory.getPrevFF1();
 
-        txt.setText(previousData.getPrevFF1()+" - "+findOCdesc(ocCode));
+        txt.setText(meterRHistory.getPrevFF1()+" - "+findOCdesc(ocCode));
         txt = (TextView)mLayout.findViewById(R.id.txtMRCOC2);
-        ocCode = previousData.getPrevFF2();
-        txt.setText(previousData.getPrevFF2()+" - "+findOCdesc(ocCode));
+        ocCode = meterRHistory.getPrevFF2();
+        txt.setText(meterRHistory.getPrevFF2()+" - "+findOCdesc(ocCode));
 
     }
 

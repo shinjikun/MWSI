@@ -3,9 +3,7 @@ package com.indra.rover.mwsi.utils;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.indra.rover.mwsi.data.db.MRUDao;
 import com.indra.rover.mwsi.data.db.ConnectDao;
-import com.indra.rover.mwsi.data.pojo.MRU;
 import com.opencsv.CSVReader;
 
 import java.io.File;
@@ -14,21 +12,15 @@ import java.io.IOException;
 
 public class FileParser extends AsyncTask<File,Integer,String> {
 
-    Context context;
-    DownloadListener listener;
-    MRUDao mruDao;
-    ConnectDao mRDao;
-    boolean isResourceFile;
+    private DownloadListener listener;
+    private ConnectDao mRDao;
+    private boolean isResourceFile;
     public FileParser(Context context){
-        this.context = context;
-        mruDao = new MRUDao(context);
         mRDao = new ConnectDao(context);
         this.isResourceFile = false;
     }
 
     public FileParser(Context context,boolean isResourceFile){
-        this.context = context;
-        mruDao = new MRUDao(context);
         mRDao = new ConnectDao(context);
         this.isResourceFile = isResourceFile;
     }
@@ -54,7 +46,7 @@ public class FileParser extends AsyncTask<File,Integer,String> {
                     } else
                         parseFile(file);
                     //remove the parsed file in directory
-                    file.delete();
+                    //file.delete();
                 }
             }
         }
@@ -140,29 +132,7 @@ public class FileParser extends AsyncTask<File,Integer,String> {
             String [] record;
             while ((record = reader.readNext()) != null) {
                 // nextLine[] is an array of values from the line
-
-                MRU mru = new MRU();
-                mru.setId(record[0]);
-                mru.setBc_code(record[5]);
-                mru.setReader_code(record[1]);
-                mru.setReader_name(record[2]);
-                mru.setReading_date(record[3]);
-                mru.setDue_date(record[4]);
-                mru.setKam_mru(Short.parseShort(record[5]));
-                mru.setMax_seq_no(record[6]);
-                if(!record[8].isEmpty())
-                    mru.setCustomer_count(Integer.parseInt(record[8]));
-                if(!record[9].isEmpty())
-                     mru.setActive_count(Integer.parseInt(record[9]));
-                if(!record[10].isEmpty())
-                    mru.setBlocked_count(Integer.parseInt(record[10]));
-                if(!record[11].isEmpty())
-                    mru.setRead(Integer.parseInt(record[11]));
-                if(!record[12].isEmpty())
-                    mru.setUnread(Integer.parseInt(record[12]));
-                mruDao.insertMRU(mru);
-
-
+                mRDao.insertTMRU(record);
             }
 
 

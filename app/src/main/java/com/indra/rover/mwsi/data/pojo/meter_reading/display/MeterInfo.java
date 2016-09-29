@@ -4,9 +4,6 @@ import android.database.Cursor;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.CustomerInfo;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.BillClass;
-import com.indra.rover.mwsi.data.pojo.meter_reading.misc.InstallMisc;
-import com.indra.rover.mwsi.data.pojo.meter_reading.misc.PreviousData;
-import com.indra.rover.mwsi.data.pojo.meter_reading.misc.ProRate;
 
 import java.io.Serializable;
 
@@ -33,10 +30,11 @@ public class MeterInfo implements Serializable {
     CustomerInfo customerInfo;
 
     BillClass billClass;
-    PreviousData previousData;
 
     String rdg_tries;
     String present_reading;
+    //read stat
+    String readStat;
     public MeterInfo(Cursor cursor){
         this.mru_id =cursor.getString(cursor.getColumnIndexOrThrow("MRU"));
         this.seq_number = cursor.getString(cursor.getColumnIndexOrThrow("SEQNO"));
@@ -48,7 +46,7 @@ public class MeterInfo implements Serializable {
         this.present_reading = cursor.getString(cursor.getColumnIndexOrThrow("PRESRDG"));
         this.customerInfo = new CustomerInfo(cursor);
         this.billClass = new BillClass(cursor);
-        this.previousData = new PreviousData(cursor);
+
 
     }
 
@@ -78,9 +76,6 @@ public class MeterInfo implements Serializable {
         return dldocno;
     }
 
-    public PreviousData getPreviousData() {
-        return previousData;
-    }
 
 
     public String getBlock_tag() {
@@ -91,8 +86,7 @@ public class MeterInfo implements Serializable {
         return grp_flag;
     }
 
-    //read stat
-    String readStat;
+
 
     public void setReadStat(String readStat) {
         this.readStat = readStat;

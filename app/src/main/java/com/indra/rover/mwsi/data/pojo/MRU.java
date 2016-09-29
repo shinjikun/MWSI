@@ -19,11 +19,10 @@ public class MRU  extends Item{
 
 
 
-    public MRU(String id,int unread,int unprinted,int undelivered,int total){
+    public MRU(String id, int unread, int unprinted, int total){
         this.id = id;
         this.unread = unread;
         this.unprinted =unprinted;
-        this.undelivered = undelivered;
         this.total = total;
     }
 
@@ -130,10 +129,6 @@ public class MRU  extends Item{
      * total number of unprinted meter reader
      */
    private int unprinted;
-    /**
-     * total number of undelivered meter reader
-     */
-   private int undelivered;
 
     public void setId(String id) {
         this.id = id;
@@ -151,28 +146,8 @@ public class MRU  extends Item{
         return unread;
     }
 
-    public void setTotal(int total) {
-        this.total = total;
-    }
-
     public int getTotal() {
         return total;
-    }
-
-    public void setUnprinted(int unprinted) {
-        this.unprinted = unprinted;
-    }
-
-    public int getUnprinted() {
-        return unprinted;
-    }
-
-    public void setUndelivered(int undelivered) {
-        this.undelivered = undelivered;
-    }
-
-    public int getUndelivered() {
-        return 0;
     }
 
 

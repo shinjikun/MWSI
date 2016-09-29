@@ -20,9 +20,7 @@ public class CustomerInfo {
      */
     String address;
 
-    public CustomerInfo(){
 
-    }
 
     public CustomerInfo(Cursor cursor){
         this.accn =cursor.getString(cursor.getColumnIndexOrThrow("ACCTNUM"));
@@ -30,9 +28,6 @@ public class CustomerInfo {
         this.address = cursor.getString(cursor.getColumnIndexOrThrow("CUSTADDRESS"));
     }
 
-    public void setCname(String name) {
-        this.cname = name;
-    }
 
     public String getCname() {
         return cname;
@@ -46,11 +41,4 @@ public class CustomerInfo {
         return address;
     }
 
-    public void setAccn(String accn) {
-        this.accn = accn;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-}
+  }

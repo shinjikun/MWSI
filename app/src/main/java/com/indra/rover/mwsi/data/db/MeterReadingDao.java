@@ -39,8 +39,10 @@ public class MeterReadingDao extends ModelDao {
 
     public List<MeterInfo> fetchInfos(String mruID){
         List<MeterInfo> arry = new ArrayList<>();
-        String sql_stmt = "select r.BILL_CLASS_DESC,  t.*,c.* from T_DOWNLOAD t, R_BILL_CLASS r,T_CURRENT_RDG c " +
-                "where t.BILL_CLASS = r.BILL_CLASS and t.DLDOCNO = c.CRDOCNO and MRU="+mruID;
+        String sql_stmt = "select  t.MRU,t.SEQNO,t.METERNO,t.DLDOCNO,t.GRP_FLAG,t.BLOCK_TAG, " +
+                "c.RDG_TRIES,c.PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS, " +
+                "r.BILL_CLASS_DESC, c.READSTAT from T_DOWNLOAD t, R_BILL_CLASS r,T_CURRENT_RDG c " +
+                "where t.BILL_CLASS = r.BILL_CLASS and t.DLDOCNO = c.CRDOCNO  and c.MRU="+mruID;
         try{
             open();
             Cursor cursor = database.rawQuery(sql_stmt,null);
@@ -66,8 +68,11 @@ public class MeterReadingDao extends ModelDao {
 
     public List<MeterInfo> fetchInfos(String mruID, String column, String searchValue){
         List<MeterInfo> arry = new ArrayList<>();
-        String sql_stmt = "select r.BILL_CLASS_DESC,  t.*,c.* from T_DOWNLOAD t, R_BILL_CLASS r,T_CURRENT_RDG c " +
-                "where t.BILL_CLASS = r.BILL_CLASS and t.DLDOCNO = c.CRDOCNO and MRU="+mruID+ " and "+column+" like '%"+searchValue+"%'";
+        String sql_stmt = "select  t.MRU,t.SEQNO,t.METERNO,t.DLDOCNO,t.GRP_FLAG,t.BLOCK_TAG, c.RDG_TRIES," +
+                ".PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS, r.BILL_CLASS_DESC, c.READSTAT " +
+                "from T_DOWNLOAD t, R_BILL_CLASS r,T_CURRENT_RDG c where " +
+                "t.BILL_CLASS = r.BILL_CLASS and t.DLDOCNO = c.CRDOCNO  and " +
+                "MRU="+mruID+ " and "+column+" like '%"+searchValue+"%'";
         try{
             open();
             Cursor cursor = database.rawQuery(sql_stmt,null);

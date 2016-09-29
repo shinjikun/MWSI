@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.indra.rover.mwsi.data.pojo.MRU;
 import com.indra.rover.mwsi.utils.Utils;
 
 import java.util.ArrayList;
@@ -208,6 +209,35 @@ public class ConnectDao extends ModelDao {
         } finally {
             close();
         }
+        return rowInsert;
+    }
+
+
+
+    public long insertTMRU(String[] record){
+        open();
+        long rowInsert = 0;
+        if(isExistData("T_MRU_INFO","MRU",record[0])){
+            return -1 ;
+        }
+
+        ContentValues values = new ContentValues();
+        values.put("MRU", record[0]);
+        values.put("READER_CODE",record[1]);
+        values.put("READER_NAME",record[2]);
+        values.put("SCHED_RDG_DATE",record[3]);
+        values.put("DUE_DATE",record[4]);
+        values.put("BC_CODE",record[5]);
+        values.put("KAM_MRU_FLAG",record[6]);
+        values.put("MAX_SEQNO",record[7]);
+        values.put("CUST_COUNT",record[8]);
+        values.put("ACTIVE_COUNT",record[9]);
+        values.put("BLOCKED_COUNT",record[10]);
+        values.put("READ_METERS",record[11]);
+        values.put("UNREAD_METERS",record[12]);
+
+        rowInsert = database.insert("T_MRU_INFO", null, values);
+        close();
         return rowInsert;
     }
 

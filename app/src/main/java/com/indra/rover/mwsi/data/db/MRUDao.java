@@ -27,32 +27,6 @@ public class MRUDao  extends  ModelDao{
         database.close();
     }
 
-    public long insertMRU(MRU mru){
-        open();
-        long rowInsert = 0;
-        if(isExistData("T_MRU_INFO","MRU",mru.getId())){
-            return -1 ;
-        }
-
-        ContentValues values = new ContentValues();
-        values.put("MRU", mru.getId());
-        values.put("BC_CODE",mru.getBc_code());
-        values.put("READER_CODE",mru.getReader_code());
-        values.put("READER_NAME",mru.getReader_name());
-        values.put("SCHED_RDG_DATE",mru.getReading_date());
-        values.put("DUE_DATE",mru.getDue_date());
-        values.put("KAM_MRU_FLAG",mru.getKam_mru());
-        values.put("MAX_SEQNO",mru.getMax_seq_no());
-        values.put("CUST_COUNT",mru.getCustomer_count());
-        values.put("ACTIVE_COUNT",mru.getActive_count());
-        values.put("BLOCKED_COUNT",mru.getBlocked_count());
-        values.put("READ_METERS",mru.getRead());
-        values.put("UNREAD_METERS",mru.getUnread());
-
-        rowInsert = database.insert("T_MRU_INFO", null, values);
-        close();
-        return rowInsert;
-    }
 
     public MRU getMRUStats(String mruID){
         MRU mru=null;
@@ -63,8 +37,7 @@ public class MRUDao  extends  ModelDao{
             if(mruID.equals("All")){
                 sql_stmt = "select  sum(CUST_COUNT) as CUST_COUNT, sum(ACTIVE_COUNT) as ACTIVE_COUNT, " +
                         "sum(BLOCKED_COUNT) as BLOCKED_COUNT, sum(READ_METERS) as READ_METERS, " +
-                        "sum(UNREAD_METERS) as UNREAD_METERS ,sum(UNDELIV_BILLS) as" +
-                        " UNDELIV_BILLS from T_MRU_INFO";
+                        "sum(UNREAD_METERS) as UNREAD_METERS from T_MRU_INFO";
                 isStatus = true;
             }
 
