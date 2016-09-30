@@ -63,7 +63,9 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
         try {
 
             File    contentDir=new File(android.os.Environment.getExternalStorageDirectory(),getPackageName()+"/dbdump");
-
+            if(!contentDir.exists()){
+                contentDir.mkdir();
+            }
             if (contentDir.canWrite()) {
                 String currentDBPath = "/data/data/" + getPackageName() + "/databases/MCFSRNB.db";
                 String backupDBPath = "db-"+ Utils.getCurrentDate1()+".db";
@@ -97,6 +99,7 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
             txtFiles.setText("");
             setDrawable(R.drawable.ic_completed);
             prefs.setData(HAS_ROVER_UPDATE,false);
+            deleteFiles("downloads");
         }
     }
 
@@ -166,6 +169,7 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
             txtSubTitle.setText("");
             txtFiles.setText("");
             setDrawable(R.drawable.ic_completed);
+            deleteFiles("dbdump");
 
         }
     }
@@ -223,5 +227,22 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
             lst = arry.toArray(lst);
             fileUploader.execute(lst);
 
+    }
+
+
+    private void deleteFiles(String directoryName){
+        //create root content folder
+        File parent=new File(android.os.Environment.getExternalStorageDirectory(),getPackageName());
+
+        File  contentDir = new File(parent,directoryName);
+        deleteRecursive(contentDir);
+
+    }
+    private void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                deleteRecursive(child);
+
+        fileOrDirectory.delete();
     }
 }

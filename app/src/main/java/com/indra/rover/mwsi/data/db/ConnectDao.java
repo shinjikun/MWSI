@@ -3,6 +3,7 @@ package com.indra.rover.mwsi.data.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.indra.rover.mwsi.data.pojo.MRU;
 import com.indra.rover.mwsi.utils.Utils;
@@ -43,7 +44,7 @@ public class ConnectDao extends ModelDao {
             values.put("ACCTNUM",records[2]);
             values.put("METERNO",records[9]);
             values.put("CRDOCNO",records[10]);
-            values.put("CSMB_TYPE_CODE",records[80]);
+           values.put("CSMB_TYPE_CODE",records[80]);
             values.put("CSMB_PARENT",records[81]);
             values.put("MB_PREF_FLAG",records[82]);
             //default of REASTAT is U = UnRead

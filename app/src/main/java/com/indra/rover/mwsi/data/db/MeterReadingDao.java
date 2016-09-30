@@ -41,16 +41,16 @@ public class MeterReadingDao extends ModelDao {
         List<MeterInfo> arry = new ArrayList<>();
         String sql_stmt = "select  t.MRU,t.SEQNO,t.METERNO,t.DLDOCNO,t.GRP_FLAG,t.BLOCK_TAG, " +
                 "c.RDG_TRIES,c.PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS, " +
-                "r.BILL_CLASS_DESC, c.READSTAT from T_DOWNLOAD t, R_BILL_CLASS r,T_CURRENT_RDG c " +
-                "where t.BILL_CLASS = r.BILL_CLASS and t.DLDOCNO = c.CRDOCNO  and c.MRU="+mruID;
+                "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT from T_DOWNLOAD t," +
+                " R_BILL_CLASS r,T_CURRENT_RDG c where t.BILL_CLASS = r.BILL_CLASS " +
+                "and t.DLDOCNO = c.CRDOCNO  and c.MRU="+mruID;
+        Log.i("Test",sql_stmt);
         try{
             open();
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
                 do {
                     MeterInfo download_info = new MeterInfo(cursor);
-                    String readStat = cursor.getString(cursor.getColumnIndexOrThrow("READSTAT"));
-                    download_info.setReadStat(readStat);
                     arry.add(download_info);
                 } while (cursor.moveToNext());
             }
@@ -68,10 +68,11 @@ public class MeterReadingDao extends ModelDao {
 
     public List<MeterInfo> fetchInfos(String mruID, String column, String searchValue){
         List<MeterInfo> arry = new ArrayList<>();
-        String sql_stmt = "select  t.MRU,t.SEQNO,t.METERNO,t.DLDOCNO,t.GRP_FLAG,t.BLOCK_TAG, c.RDG_TRIES," +
-                ".PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS, r.BILL_CLASS_DESC, c.READSTAT " +
-                "from T_DOWNLOAD t, R_BILL_CLASS r,T_CURRENT_RDG c where " +
-                "t.BILL_CLASS = r.BILL_CLASS and t.DLDOCNO = c.CRDOCNO  and " +
+        String sql_stmt = "select  t.MRU,t.SEQNO,t.METERNO,t.DLDOCNO,t.GRP_FLAG,t.BLOCK_TAG, " +
+                "c.RDG_TRIES,c.PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS, " +
+                "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT from T_DOWNLOAD t, " +
+                "R_BILL_CLASS r,T_CURRENT_RDG c where t.BILL_CLASS = r.BILL_CLASS and " +
+                "t.DLDOCNO = c.CRDOCNO   and " +
                 "MRU="+mruID+ " and "+column+" like '%"+searchValue+"%'";
         try{
             open();
@@ -79,8 +80,6 @@ public class MeterReadingDao extends ModelDao {
             if (cursor.moveToFirst()) {
                 do {
                     MeterInfo download_info = new MeterInfo(cursor);
-                    String readStat = cursor.getString(cursor.getColumnIndexOrThrow("READSTAT"));
-                    download_info.setReadStat(readStat);
                     arry.add(download_info);
                 } while (cursor.moveToNext());
             }

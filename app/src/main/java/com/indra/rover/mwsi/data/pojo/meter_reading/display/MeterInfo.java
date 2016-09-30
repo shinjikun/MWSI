@@ -35,6 +35,11 @@ public class MeterInfo implements Serializable {
     String present_reading;
     //read stat
     String readStat;
+    //bill scheme
+    String bill_scheme;
+
+    //childs parent
+    String childs_parent;
     public MeterInfo(Cursor cursor){
         this.mru_id =cursor.getString(cursor.getColumnIndexOrThrow("MRU"));
         this.seq_number = cursor.getString(cursor.getColumnIndexOrThrow("SEQNO"));
@@ -44,6 +49,9 @@ public class MeterInfo implements Serializable {
         this.block_tag = cursor.getString(cursor.getColumnIndexOrThrow("BLOCK_TAG"));
         this.rdg_tries = cursor.getString(cursor.getColumnIndexOrThrow("RDG_TRIES"));
         this.present_reading = cursor.getString(cursor.getColumnIndexOrThrow("PRESRDG"));
+        this.readStat = cursor.getString(cursor.getColumnIndexOrThrow("READSTAT"));
+        this.bill_scheme = cursor.getString(cursor.getColumnIndexOrThrow("CSMB_TYPE_CODE"));
+        this.childs_parent = cursor.getString(cursor.getColumnIndexOrThrow("CSMB_PARENT"));
         this.customerInfo = new CustomerInfo(cursor);
         this.billClass = new BillClass(cursor);
 
@@ -114,5 +122,9 @@ public class MeterInfo implements Serializable {
 
     public void setRdg_tries(String rdg_tries) {
         this.rdg_tries = rdg_tries;
+    }
+
+    public String getBill_scheme() {
+        return bill_scheme;
     }
 }

@@ -277,16 +277,11 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         meterStatus();
     }
 
-    public void updateReading(String value, boolean isRdgTries){
-        int tries =0 ;
-        if(Utils.isNotEmpty(meterInfo.getRdg_tries())){
-              tries = Integer.parseInt(meterInfo.getRdg_tries());
-        }
+    private void regularScheme(String value,int tries){
         //update read status
         //if the reading is empty reset the read status as READ
         //otherwise R
         if(value.isEmpty()){
-            tries =0;
             updateReadStatus("R");
         }else {
             String readStat = meterInfo.getReadStat();
@@ -297,11 +292,6 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 updateReadStatus("R");
             }
         }
-
-        if(isRdgTries){
-            tries = tries+1;
-        }
-
         String latitude = null;
         String longtitude = null;
 
@@ -317,7 +307,26 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         meterInfo.setRdg_tries(String.valueOf(tries));
         setReadingValue(value);
         //start computing the bill consumption
-        computeConsumption(meterInfo.getDldocno());
+        MeterConsumption mterCons = meterDao.getConsumption(meterInfo.getDldocno());
+        CompConsumption comConsumption = new CompConsumption(this);
+        comConsumption.compute(mterCons);
+    }
+
+    public void updateReading(String value, boolean isRdgTries){
+        int tries =0 ;
+        if(Utils.isNotEmpty(meterInfo.getRdg_tries())){
+              tries = Integer.parseInt(meterInfo.getRdg_tries());
+        }
+        if(isRdgTries){
+            tries = tries+1;
+        }
+
+        String bill_scheme = meterInfo.getBill_scheme();
+        if(bill_scheme.equals("0")){
+            regularScheme(value,tries);
+        }
+
+
     }
 
 
@@ -651,7 +660,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
      */
     private void noPrint_Bill(int type){
           StringBuilder  strBuilder = new StringBuilder();
-          strBuilder.append("Cannot print bill for");
+          strBuilder.append("Cannot print bill for ");
+          strBuilder.append('\n');
            switch(type){
                case 0: strBuilder.append("Unread Meters!"); break;
                case 1: strBuilder.append("More than 9x!"); break;
@@ -663,6 +673,48 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                case 4: strBuilder.append("KAM Acct!"); break;
            }
         dlgUtils.showOKDialog("BILL GENERATION",strBuilder.toString());
+    }
+
+    /**
+     *  message dialog shown when entering meter  based on parameter
+     *  0  - for already billed
+     *  1 -  edited account
+     *  2 -  for check meter
+     *  3 -  for mb parent meter
+     *  4 -  for mb child meter
+     * @param type type
+     */
+    private void rdg_disabled(int type){
+        StringBuilder  strBuilder = new StringBuilder();
+        strBuilder.append("Cannot enter reading ");
+        strBuilder.append('\n');
+        switch(type){
+            case 0: strBuilder.append("for already billed accounts!");
+                break;
+            case 1: strBuilder.append("for Edited Account");
+                break;
+            case 2:
+                strBuilder.append("for Checked Meter\n with unbilled");
+                strBuilder.append('\n');
+                strBuilder.append("Subsidiary Meters!");
+                break;
+            case 3:
+                strBuilder.append("for MB Parent Meter");
+                strBuilder.append('\n');
+                strBuilder.append("with unread or");
+                strBuilder.append('\n');
+                strBuilder.append("billed Child Meters!");
+                break;
+            case 4:
+                strBuilder.append("for MB Child Meter");
+                strBuilder.append('\n');
+                strBuilder.append("with already billed");
+                strBuilder.append('\n');
+                strBuilder.append("sibling meters!");
+
+                break;
+        }
+        dlgUtils.showOKDialog("READING ENTRY",strBuilder.toString());
     }
 
 }
