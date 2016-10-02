@@ -57,7 +57,6 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     ViewPager mViewPager;
     TabLayout mTabLayout;
     ScrollView mScrollView;
-    Dialog dialog;
     String mru_id;
     MeterReadingDao meterDao;
     int current =0;
@@ -69,6 +68,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
      */
     ImageButton btnPrev, btnNext;
     final int SEARCH_REQ =99;
+    final int INPUT_REQ =68;
     final int DLG_RESET=75;
     final int DLG_EDITMODE=67;
     DialogUtils dlgUtils;
@@ -236,75 +236,15 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-    public void showMeterRdgDialog(){
-        dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_change_reading);
-        dialog.setCancelable(false);
-        final EditText txtDlg = (EditText)dialog.findViewById(R.id.dlg_body);
-        if(Utils.isNotEmpty(meterInfo.getPresRdg())){
-            txtDlg.setText(meterInfo.getPresRdg());
-        }
-        ImageButton dlgBtnClose = (ImageButton)dialog.findViewById(R.id.dlg_btn_close);
-        dlgBtnClose.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        Button btn =  (Button)dialog.findViewById(R.id.dlg_btn_yes);
-        btn.setOnClickListener(new View.OnClickListener(){
 
-            @Override
-            public void onClick(View view) {
-                String value =   txtDlg.getText().toString();
-                if(!meterInfo.getPresRdg().equals(value)){
-                    updateReading(value, true);
-                }
-
-              //  comp_cons_range(value);
-                dialog.dismiss();
-            }
-        });
-
-
-
-        dialog.show();
-    }
 
     public void updateReadStatus(String readStatus){
         meterInfo.setReadStat(readStatus);
         meterStatus();
     }
 
-    private void regularScheme(String value,int tries){
-        //update read status
-        //if the reading is empty reset the read status as READ
-        //otherwise R
-        if(value.isEmpty()){
-            updateReadStatus("R");
-        }else {
-            String readStat = meterInfo.getReadStat();
-            if(readStat.equals("R")){
-                updateReadStatus("E");
-            }
-            else {
-                updateReadStatus("R");
-            }
-        }
-        String latitude = null;
-        String longtitude = null;
+    private void regularScheme(String value){
 
-        if(gpsTracker.canGetLocation()){
-            latitude = String.valueOf(gpsTracker.getLatitude());
-            longtitude = String.valueOf(gpsTracker.getLongitude());
-
-        }
-        meterDao.updateReading(Utils.getFormattedDate(),
-                Utils.getFormattedTime(),
-                value,latitude,longtitude,tries, meterInfo.getDldocno(),meterInfo.getReadStat()
-        );
-        meterInfo.setRdg_tries(String.valueOf(tries));
         setReadingValue(value);
         //start computing the bill consumption
         MeterConsumption mterCons = meterDao.getConsumption(meterInfo.getDldocno());
@@ -312,18 +252,28 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         comConsumption.compute(mterCons);
     }
 
-    public void updateReading(String value, boolean isRdgTries){
-        int tries =0 ;
-        if(Utils.isNotEmpty(meterInfo.getRdg_tries())){
-              tries = Integer.parseInt(meterInfo.getRdg_tries());
-        }
-        if(isRdgTries){
-            tries = tries+1;
-        }
 
+    public void updateMeterReading(){
+        String bill_scheme = meterInfo.getBill_scheme();
+        String readStat = meterInfo.getReadStat();
+        if(bill_scheme.equals("0")){
+            if(readStat.equals("P")||readStat.equals("Q")){
+                rdg_disabled(0);
+            }
+            else {
+                Intent    intent = new Intent(this, InputValueActivity.class);
+                intent.putExtra("id",meterInfo.getDldocno());
+                intent.putExtra("type",1);
+                startActivityForResult(intent, INPUT_REQ);
+            }
+        }
+    }
+
+
+    public void updateReading(String value){
         String bill_scheme = meterInfo.getBill_scheme();
         if(bill_scheme.equals("0")){
-            regularScheme(value,tries);
+            regularScheme(value);
         }
 
 
@@ -336,7 +286,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 .setAction("Re Enter", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        showMeterRdgDialog();
+                      //  showMeterRdgDialog();
                     }
                 });
 
@@ -436,7 +386,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         Bundle  bundle;
         switch(id){
             case R.id.btnMREdit:
-                showMeterRdgDialog();
+                updateMeterReading();
                 break;
             case R.id.txtFiltered:
                 String str = txtFilter.getText().toString();
@@ -487,20 +437,26 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         if(current!=0){
             current--;
             prepareData(current);
+            mViewPager.setCurrentItem(0);
+            mScrollView.smoothScrollBy(0,0);
         }
         else{
             btnPrev.setEnabled(false);
         }
         btnNext.setEnabled(true);
+
     }
     private void moveNext(){
         if(current< arry.size()-1){
             current++;
             prepareData(current);
             btnPrev.setEnabled(true);
+            mViewPager.setCurrentItem(0);
+            mScrollView.smoothScrollBy(0,0);
         }
         else {
             btnNext.setEnabled(false);
+
         }
     }
 
@@ -569,6 +525,14 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
 
             }
+        } else  if(requestCode == INPUT_REQ){
+            if(resultCode ==  Activity.RESULT_OK){
+                Bundle  bundle = data.getExtras();
+                String value = bundle.getString("value");
+                String id =  meterInfo.getDldocno();
+                meterInfo = meterDao.fetchInfo(id);
+                setReadingValue(value);
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -628,7 +592,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     public void getMessage(MessageTransport msgTransport) {
         String action = msgTransport.getAction();
         if(action.equals("reading")){
-          updateReading(meterInfo.getPresRdg(), false);
+          updateReading(meterInfo.getPresRdg());
         }
 
     }

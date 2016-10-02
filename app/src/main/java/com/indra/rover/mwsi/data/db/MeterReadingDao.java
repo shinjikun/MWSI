@@ -66,6 +66,33 @@ public class MeterReadingDao extends ModelDao {
     }
 
 
+    public MeterInfo fetchInfo(String id){
+        MeterInfo meterInfo= null;
+        String sql_stmt = "select  t.MRU,t.SEQNO,t.METERNO,t.DLDOCNO,t.GRP_FLAG,t.BLOCK_TAG, " +
+                "c.RDG_TRIES,c.PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS, " +
+                "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT from T_DOWNLOAD t," +
+                " R_BILL_CLASS r,T_CURRENT_RDG c where t.BILL_CLASS = r.BILL_CLASS " +
+                "and t.DLDOCNO = c.CRDOCNO  and c.CRDOCNO="+id;
+        try{
+            open();
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                     meterInfo = new MeterInfo(cursor);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            close();
+        }
+
+
+        return meterInfo;
+    }
+
+
     public List<MeterInfo> fetchInfos(String mruID, String column, String searchValue){
         List<MeterInfo> arry = new ArrayList<>();
         String sql_stmt = "select  t.MRU,t.SEQNO,t.METERNO,t.DLDOCNO,t.GRP_FLAG,t.BLOCK_TAG, " +

@@ -146,4 +146,23 @@
     <string name="title_activity_signature">SignatureActivity</string>
     <string name="str_remove">Remove</string>
     <string name="str_retake">Retake</string>
+    <string name="title_activity_input_value">InputValue</string>
+
+
+    <string name="str_enter_value">Enter Meter Reading</string>
+    <string name="num1">1</string>
+    <string name="num2">2</string>
+    <string name="num3">3</string>
+    <string name="num4">4</string>
+    <string name="num5">5</string>
+    <string name="num6">6</string>
+    <string name="num7">7</string>
+    <string name="num8">8</string>
+    <string name="num9">9</string>
+    <string name="num0">0</string>
+    <string name="str_clear">Clear</string>
+    <string name="str_enter">Enter</string>
+    <string name="str_dot">.</string>
+    <string name="str_enter1">←</string>
+
 </resources>

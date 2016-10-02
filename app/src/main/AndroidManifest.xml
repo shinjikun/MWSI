@@ -94,6 +94,10 @@
         <activity
             android:name=".ui.activities.SignatureActivity"
             android:label="@string/title_activity_signature"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activities.InputValueActivity"
+            android:label="@string/title_activity_input_value"
             android:theme="@style/AppTheme"></activity>
     </application>
 

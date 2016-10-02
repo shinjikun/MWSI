@@ -65,4 +65,13 @@
         <item name="android:paddingLeft">1dp</item>
         <item name="android:state_multiline">false</item>
     </style>
+
+    <style name="CalculatorButton">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CalculatorButtonAction">
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>
