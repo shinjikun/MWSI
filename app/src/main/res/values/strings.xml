@@ -11,11 +11,6 @@
     <string name="menu_item_data_com">Data Sync</string>
     <string name="menu_item_settings">Settings</string>
     <string name="menu_item_exit">Exit</string>
-    <!--Dialog title,string and labels -->
-    <string name="dlg_str_datacomm_title">Data Syncing</string>
-    <string name="dlg_str_datacomm_btn">Start</string>
-    <string name="title_activity_meter_reading">MeterReading</string>
-    <string name="section_format">Hello World from section: %1$d</string>
 
 
     <!--Status Screen Strings -->
@@ -34,16 +29,9 @@
     <string name="str_mru_id">MRU ID :</string>
 
     <!-- String fillers, to be deleted eventually!-->
-    <string name="str_deviceID">WSSSS-SSSS</string>
-    <string name="str_version">ver 1.00</string>
-    <string name="str_pagination">1/100</string>
     <string name="str_filterd">Filtered</string>
     <string name="str_sequence_num">SEQ Number</string>
-    <string name="str_name">José Protasio Rizal Mercado y Alonso Realonda</string>
-    <string name="str_address">MWSS Compound, Katipunan Avenue, Balara, Quezon City</string>
-    <string name="str_reading_value">500</string>
     <string name="str_sample_text">XXXXXXXXXXXX</string>
-    <string name="str_ebs">E B S</string>
     <!-- meter reading info  -->
     <string name="mr_meter_no">Meter no : </string>
     <string name="mr_rate_code">Bill Class : </string>
@@ -70,7 +58,8 @@
     <string name="mr_c_dev_rem_desc">Description : </string>
     <string name="mr_c_dev_rem_">Remarks : </string>
     <string name="mr_c_dev_code">Del Code : </string>
-
+    <string name="mr_c_dev_sign">Ask For Signature</string>
+    <string name="mr_c_dev_view_sign">View Signature</string>
     <string name="mr_c_remarks">Remarks</string>
     <string name="mr_c_description">Description</string>
 
@@ -78,8 +67,6 @@
     <string name="mr_oc_oc1">OC1 : </string>
     <string name="mr_oc_oc2">OC2 : </string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- action menus labels-->
     <string name="action_search">Search</string>
@@ -162,7 +149,9 @@
     <string name="num0">0</string>
     <string name="str_clear">Clear</string>
     <string name="str_enter">Enter</string>
-    <string name="str_dot">.</string>
     <string name="str_enter1">←</string>
-
+    <string name="sign_done">Done Signing</string>
+    <string name="sign_clear">Clear Signature</string>
+    <string name="sign_cancel">Cancel</string>
+    <string name="sign_recipient_name">Recipient Name: </string>
 </resources>

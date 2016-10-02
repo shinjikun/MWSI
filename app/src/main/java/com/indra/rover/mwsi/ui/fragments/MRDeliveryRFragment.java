@@ -1,14 +1,14 @@
 package com.indra.rover.mwsi.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
@@ -16,6 +16,8 @@ import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.db.RefTableDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterDelivery;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.DeliveryCode;
+import com.indra.rover.mwsi.ui.activities.SignatureActivity;
+import com.indra.rover.mwsi.ui.widgets.CustomSpinView;
 import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.MessageTransport;
 import com.indra.rover.mwsi.utils.Utils;
@@ -24,7 +26,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MRDeliveryRFragment extends Fragment  implements View.OnClickListener,DialogUtils.DialogListener{
+public class MRDeliveryRFragment extends Fragment  implements View.OnClickListener,DialogUtils.DialogListener, AdapterView.OnItemSelectedListener{
     /**
      * id paramater
      */
@@ -38,7 +40,7 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
     View mView;
     MeterDelivery meterDelivery;
     List<DeliveryCode> arrayList;
-    Spinner spinDelivery;
+    CustomSpinView deliv_opt;
     /**
      * id of selected record
      */
@@ -75,10 +77,13 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
          mView = inflater.inflate(R.layout.fragment_mrdelivery, container, false);
+         deliv_opt =  (CustomSpinView)mView.findViewById(R.id.deliv_opt);
          mView.findViewById(R.id.btnEditMRDelivery).setOnClickListener(this);
          mView.findViewById(R.id.btnSaveDeliv).setOnClickListener(this);
          mView.findViewById(R.id.btnCancelMRDelivery).setOnClickListener(this);
-        mView.findViewById(R.id.btnClrDeliv).setOnClickListener(this);
+         mView.findViewById(R.id.btnSignature).setOnClickListener(this);
+         deliv_opt.getBtnClr().setOnClickListener(this);
+         deliv_opt.getSpn().setOnItemSelectedListener(this);
         initContent();
         setUp();
         return mView;
@@ -88,7 +93,6 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
 
 
     private void initContent(){
-        spinDelivery =  (Spinner)mView.findViewById(R.id.spnDevCode);
         arrayList = refTableDao.getDeliveryCodes();
         // Spinner Drop down elements
         List<String> arryDevCodes = new ArrayList<>();
@@ -98,12 +102,7 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
             arryDevCodes.add(deliveryCode.getDel_code()+" - "+deliveryCode.getDel_desc());
 
         }
-        // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, arryDevCodes);
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // attaching data adapter to spinner
-        spinDelivery.setAdapter(dataAdapter);
+       deliv_opt.setOptValues(getActivity(),arryDevCodes);
     }
 
 
@@ -111,20 +110,23 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
         int vis = View.VISIBLE;
         int vis2 = View.INVISIBLE;
         MainApp.isEditMode = isEditMode;
+        Button btn =  (Button)mView.findViewById(R.id.btnSignature);
+
         if(!isEditMode){
             vis = View.INVISIBLE;
             vis2 = View.VISIBLE;
+            btn.setText("View Signature");
+        }
+        else {
+            btn.setText("Ask For Signature");
         }
 
             mView.findViewById(R.id.btnSaveDeliv).setVisibility(vis);
             mView.findViewById(R.id.btnCancelMRDelivery).setVisibility(vis);
-            mView.findViewById(R.id.spnDevCode).setVisibility(vis);
-            mView.findViewById(R.id.btnClrDeliv).setVisibility(vis);
-            mView.findViewById(R.id.txtMRDRemarks).setVisibility(vis);
-
+            mView.findViewById(R.id.txtMRDRemarks).setEnabled(isEditMode);
             mView.findViewById(R.id.btnEditMRDelivery).setVisibility(vis2);
-            mView.findViewById(R.id.lblDevCode).setVisibility(vis2);
-            mView.findViewById(R.id.lblMRDRemarks).setVisibility(vis2);
+            deliv_opt.editMode(isEditMode);
+
 
     }
 
@@ -135,12 +137,10 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
             txt.setText(remarks);
             String deliv_code = meterDelivery.getDev_code();
             int index = getPosition(deliv_code);
-            spinDelivery.setSelection(index);
-            String str =   spinDelivery.getSelectedItem().toString();
-            TextView txtView =  (TextView)mView.findViewById(R.id.lblDevCode);
-            txtView.setText(str);
-            txtView =  (TextView)mView.findViewById(R.id.lblMRDRemarks);
-            txtView.setText(remarks);
+            deliv_opt.setSelection(index);
+            String str =   deliv_opt.getSelectedItem();
+            deliv_opt.setValues(str);
+
         }
         editMode(false);
     }
@@ -166,8 +166,11 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
             case R.id.btnSaveDeliv:
                 savetoDB();
                 break;
-            case R.id.btnClrDeliv:
-                spinDelivery.setSelection(0);
+            case R.id.btnClrOpt:
+                deliv_opt.setSelection(0);
+                break;
+            case R.id.btnSignature:
+                loadSignature();
                 break;
         }
 
@@ -181,17 +184,14 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
             remarks="";
         }
 
-        int index = spinDelivery.getSelectedItemPosition();
+        int index = deliv_opt.getSelectedItemPosition();
         String deliv_code ="";
 
         if(index !=0){
          deliv_code =   arrayList.get(index-1).getDel_code();
         }
-        TextView lbl = (TextView)mView.findViewById(R.id.lblMRDRemarks);
-        lbl.setText(remarks);
-        String spncode = spinDelivery.getSelectedItem().toString();
-        lbl = (TextView)mView.findViewById(R.id.lblDevCode);
-        lbl.setText(spncode);
+        String spncode = deliv_opt.getSelectedItem();
+        deliv_opt.setValues(spncode);
         boolean isNewDelivery = true;
         if(Utils.isNotEmpty(meterDelivery.getDeliv_date())&&Utils.isNotEmpty(meterDelivery.getDeliv_time())){
             isNewDelivery = false;
@@ -233,6 +233,33 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
 
     @Override
     public void dialog_cancel(int dialog_id, Bundle params) {
+
+    }
+
+
+    private void loadSignature(){
+        Intent intent = new Intent(getActivity(), SignatureActivity.class);
+        intent.putExtra("id",crdocno);
+        intent.putExtra("editMode",true);
+        getActivity().startActivity(intent);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+
+        if(position !=0){
+         int isSignRequired    =   arrayList.get(position-1).getDel_signreq_flag();
+            if(isSignRequired ==1 ){
+                mView.findViewById(R.id.btnSignature).setVisibility(View.VISIBLE);
+            }
+            else  {
+                mView.findViewById(R.id.btnSignature).setVisibility(View.GONE);
+            }
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
 }

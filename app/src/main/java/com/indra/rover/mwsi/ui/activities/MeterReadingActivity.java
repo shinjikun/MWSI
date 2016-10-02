@@ -531,7 +531,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 String value = bundle.getString("value");
                 String id =  meterInfo.getDldocno();
                 meterInfo = meterDao.fetchInfo(id);
+                updateReadStatus(meterInfo.getReadStat());
                 setReadingValue(value);
+                //compute consumption after getting the present reading
+                computeConsumption(meterInfo.getDldocno());
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -632,6 +635,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                case 2: strBuilder.append("Blocked Acct!"); break;
                case 3:
                    strBuilder.append("Child Mtr w/");
+                   strBuilder.append('\n');
                    strBuilder.append("Unread MB Mother Mtr");
                    break;
                case 4: strBuilder.append("KAM Acct!"); break;

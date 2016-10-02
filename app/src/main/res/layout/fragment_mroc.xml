@@ -111,7 +111,7 @@
         android:id="@+id/btnImageCapture"
         android:drawableLeft="@drawable/ic_camera"
         android:drawableStart="@drawable/ic_camera"
-        android:contentDescription="@string/str_address"
+        android:contentDescription="@string/str_default_val"
         android:layout_below="@+id/spnOC1"
         android:layout_centerHorizontal="true"
 
@@ -166,7 +166,7 @@
         android:id="@+id/btnImageCapture1"
         android:drawableLeft="@drawable/ic_camera"
         android:drawableStart="@drawable/ic_camera"
-        android:contentDescription="@string/str_address"
+        android:contentDescription="@string/str_default_val"
         android:text="Capture Image"
         android:layout_below="@+id/btnClrOc2"
         android:layout_centerHorizontal="true" />
