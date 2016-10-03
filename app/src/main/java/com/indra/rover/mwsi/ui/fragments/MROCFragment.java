@@ -339,9 +339,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    private void viewCaptureImage(int ocType){
 
-    }
 
     private int getPosition(String oc_code, List<ObservationCode> arrayList) {
         int size = arrayList.size();

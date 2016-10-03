@@ -1,14 +1,20 @@
 package com.indra.rover.mwsi.ui.fragments;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
@@ -23,6 +29,7 @@ import com.indra.rover.mwsi.utils.MessageTransport;
 import com.indra.rover.mwsi.utils.Utils;
 import com.squareup.otto.Subscribe;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +48,7 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
     MeterDelivery meterDelivery;
     List<DeliveryCode> arrayList;
     CustomSpinView deliv_opt;
+    Button btnSign;
     /**
      * id of selected record
      */
@@ -84,6 +92,7 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
          mView.findViewById(R.id.btnSignature).setOnClickListener(this);
          deliv_opt.getBtnClr().setOnClickListener(this);
          deliv_opt.getSpn().setOnItemSelectedListener(this);
+        btnSign =  (Button)mView.findViewById(R.id.btnSignature);
         initContent();
         setUp();
         return mView;
@@ -110,22 +119,28 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
         int vis = View.VISIBLE;
         int vis2 = View.INVISIBLE;
         MainApp.isEditMode = isEditMode;
-        Button btn =  (Button)mView.findViewById(R.id.btnSignature);
+
 
         if(!isEditMode){
             vis = View.INVISIBLE;
             vis2 = View.VISIBLE;
-            btn.setText("View Signature");
+
         }
-        else {
-            btn.setText("Ask For Signature");
-        }
+
 
             mView.findViewById(R.id.btnSaveDeliv).setVisibility(vis);
             mView.findViewById(R.id.btnCancelMRDelivery).setVisibility(vis);
             mView.findViewById(R.id.txtMRDRemarks).setEnabled(isEditMode);
             mView.findViewById(R.id.btnEditMRDelivery).setVisibility(vis2);
             deliv_opt.editMode(isEditMode);
+
+        File file = getImageFile();
+        if(file.exists()){
+            btnSign.setText("View Signature");
+        }
+        else {
+            btnSign.setText("Ask For Signature");
+        }
 
 
     }
@@ -140,6 +155,22 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
             deliv_opt.setSelection(index);
             String str =   deliv_opt.getSelectedItem();
             deliv_opt.setValues(str);
+            if(index !=0){
+                int isSignRequired    =   arrayList.get(index-1).getDel_signreq_flag();
+                if(isSignRequired ==1 ){
+                    btnSign.setVisibility(View.VISIBLE);
+                }
+                else  {
+                    btnSign.setVisibility(View.GONE);
+                }
+            }
+            File file = getImageFile();
+            if(file.exists()){
+                btnSign.setText("View Signature");
+            }
+            else {
+                btnSign.setText("Ask For Signature");
+            }
 
         }
         editMode(false);
@@ -170,7 +201,14 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
                 deliv_opt.setSelection(0);
                 break;
             case R.id.btnSignature:
-                loadSignature();
+                File  file = getImageFile();
+                if(file.exists()){
+                    showImageDlg(MainApp.isEditMode);
+                }
+                else {
+                    loadSignature();
+                }
+
                 break;
         }
 
@@ -238,22 +276,30 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
 
 
     private void loadSignature(){
+        String deliv_code="";
+        int index = deliv_opt.getSelectedItemPosition();
+        if(index !=0){
+            deliv_code =   arrayList.get(index-1).getDel_code();
+        }
         Intent intent = new Intent(getActivity(), SignatureActivity.class);
         intent.putExtra("id",crdocno);
         intent.putExtra("editMode",true);
+        intent.putExtra("deliv_code",deliv_code);
         getActivity().startActivity(intent);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-
         if(position !=0){
          int isSignRequired    =   arrayList.get(position-1).getDel_signreq_flag();
             if(isSignRequired ==1 ){
-                mView.findViewById(R.id.btnSignature).setVisibility(View.VISIBLE);
+                btnSign.setVisibility(View.VISIBLE);
             }
             else  {
-                mView.findViewById(R.id.btnSignature).setVisibility(View.GONE);
+               btnSign.setVisibility(View.GONE);
+                File  file = getImageFile();
+                if(file.exists())
+                    file.delete();
             }
         }
     }
@@ -261,5 +307,84 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    private File getImageFile(){
+        File    contentDir=new File(android.os.Environment.getExternalStorageDirectory()
+                ,"com.indra.rover.mwsi/downloads/signatures");
+        if(!contentDir.exists())
+            contentDir.mkdir();
+        StringBuilder strBuilder = new StringBuilder();
+        strBuilder.append(crdocno);
+        strBuilder.append('-');
+        strBuilder.append("sign");
+
+        strBuilder.append(".png");
+        String fileName = strBuilder.toString();
+
+        return new File(contentDir, fileName);
+    }
+
+
+    Dialog dlgImage;
+    public void showImageDlg(boolean isEditMode){
+        dlgImage = new Dialog(getActivity());
+        dlgImage.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dlgImage.setContentView(R.layout.dialog_image_view2);
+        dlgImage.setCancelable(false);
+
+        File file = getImageFile();
+        if(file.exists()){
+
+            Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            ImageView imgFile = (ImageView)dlgImage.findViewById(R.id.imgOC);
+            imgFile.setImageBitmap(myBitmap);
+
+        }
+        if(isEditMode){
+            dlgImage.findViewById(R.id.ctrs).setVisibility(View.VISIBLE);
+        }
+        else {
+            dlgImage.findViewById(R.id.ctrs).setVisibility(View.GONE);
+        }
+
+        ImageButton dlgBtnClose = (ImageButton) dlgImage.findViewById(R.id.dlg_btn_close);
+        dlgBtnClose.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                dlgImage.dismiss();
+            }
+        });
+        Button btn =  (Button) dlgImage.findViewById(R.id.dlg_ok);
+        btn.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                dlgImage.dismiss();
+            }
+        });
+
+        btn =  (Button) dlgImage.findViewById(R.id.btnRemove);
+        btn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                File file = getImageFile();
+                if(file.exists())
+                    file.delete();
+                btnSign.setText("Ask For Signature");
+                dlgImage.dismiss();
+            }
+        });
+
+        btn =  (Button) dlgImage.findViewById(R.id.btnRetake);
+        btn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                dlgImage.dismiss();
+                loadSignature();
+            }
+        });
+
+        dlgImage.show();
     }
 }

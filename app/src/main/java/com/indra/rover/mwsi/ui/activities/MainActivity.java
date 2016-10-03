@@ -1,9 +1,11 @@
 package com.indra.rover.mwsi.ui.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.indra.rover.mwsi.R;
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.btnSettings:
+            //    Log.i("Test","android.os.Build.SERIAL: " + Build.SERIAL);
                 intent =  new Intent(this,SettingsActivity.class);
                 startActivity(intent);
                 break;
