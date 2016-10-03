@@ -2,7 +2,6 @@ package com.indra.rover.mwsi.compute;
 
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
-import com.indra.rover.mwsi.utils.Utils;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class CompCSScheme extends Compute implements Compute.ConsumptionListener
     public void onPostConsResult(MeterConsumption meterConsumption) {
 
             String parent_code =  meterConsumption.getAcct_num();
-            List<MeterConsumption> csChilds = mtrDao.getCSChilds(parent_code);
+            List<MeterConsumption> csChilds = mtrDao.getMeterChilds(parent_code);
             if(!csChilds.isEmpty()){
                 int size = csChilds.size();
                 int totalCons= 0;

@@ -13,7 +13,6 @@ import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterOC;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterRHistory;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterRemarks;
-import com.indra.rover.mwsi.data.pojo.meter_reading.references.RangeTolerance;
 import com.indra.rover.mwsi.utils.Utils;
 
 import java.util.ArrayList;
@@ -287,6 +286,7 @@ public class MeterReadingDao extends ModelDao {
             contentValues.put("BILLED_CONS",meterCons.getBilled_cons());
             contentValues.put("CONSTYPE_CODE",meterCons.getConstype_code());
             contentValues.put("SP_COMP",meterCons.getSpComp());
+
             String where= "CRDOCNO=?";
             database.update("T_CURRENT_RDG",contentValues,where,new String[]{crdocid});
         }catch(Exception e){
@@ -422,7 +422,6 @@ public class MeterReadingDao extends ModelDao {
                     "c.BILLED_CONS,c.CONSTYPE_CODE,d.PCONSAVGFLAG,d.DREPLMTR_CODE, c.SP_COMP,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.ACCTNUM " +
                     "from T_DOWNLOAD d,R_NUM_DIALS nd ,T_CURRENT_RDG c " +
                     "where d.nodials = nd.nodials and d.DLDOCNO=c.CRDOCNO and d.DLDOCNO="+dldocno+";";
-            Log.i("Test",sql_stmt);
             Cursor cursor =database.rawQuery(sql_stmt,null);
 
             if (cursor.moveToFirst()) {
@@ -441,17 +440,17 @@ public class MeterReadingDao extends ModelDao {
     }
 
 
-    public RangeTolerance getRangeTolerance(int range , int type){
-        RangeTolerance rangeTolerance=null;
+    public int getRTolerance(int range , int type){
+       int ceilComp=0;
         try {
             open();
             String sql_stmt = "select * from R_RANGE_TOLERANCE " +
-                    "where minrange<"+range +" and "+range+"<maxrange and type ="+
+                    "where MINRANGE<"+range +" and "+range+"<MAXRANGE and DEVI_TYPE ="+
                     type+" limit 1";
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
                 do {
-                    rangeTolerance = new RangeTolerance(cursor);
+                    ceilComp = cursor.getInt(cursor.getColumnIndexOrThrow("CEILCONSUMP"));
 
                 } while (cursor.moveToNext());
             }
@@ -461,7 +460,7 @@ public class MeterReadingDao extends ModelDao {
         }finally {
             close();
         }
-        return rangeTolerance;
+        return ceilComp;
     }
 
     public int countUnRead(){
@@ -549,9 +548,30 @@ public class MeterReadingDao extends ModelDao {
         return count;
     }
 
-    public List<MeterConsumption> getCSChilds(String parent_code){
+    public List<MeterConsumption> getMeterChilds(String parent_code){
         List<MeterConsumption> arry = new ArrayList<>();
-
+        try {
+            open();
+            String sql_stmt ="select d.DLDOCNO,d.ACCT_STATUS,d.METERNO,d.GRP_FLAG,d.BLOCK_TAG," +
+                    "d.DISC_TAG,d.PREVRDGDATE,d.ACTPREVRDG,d.BILLPREVRDG," +
+                    "d.BILLPREVRDG2,d.BILLPREVACTTAG,d.PRACTFLAG,d.AVECONS,d.NMINITRDG," +
+                    "d.NMCONSFACTOR,d.PREVFF1,d.PREVFF2,d.NODIALS,nd.maxcap,c.FFCODE1,c.FFCODE2,c.PRESRDG," +
+                    "c.BILLED_CONS,c.CONSTYPE_CODE,d.PCONSAVGFLAG,d.DREPLMTR_CODE, c.SP_COMP,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.ACCTNUM " +
+                    "from T_DOWNLOAD d,R_NUM_DIALS nd ,T_CURRENT_RDG c " +
+                    "where d.nodials = nd.nodials and d.DLDOCNO=c.CRDOCNO and c.CSMB_PARENT="+parent_code+";";
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                   MeterConsumption meter = new MeterConsumption(cursor);
+                    arry.add(meter);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
         return arry;
     }
 

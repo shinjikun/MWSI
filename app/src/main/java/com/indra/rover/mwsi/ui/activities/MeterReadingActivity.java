@@ -13,7 +13,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -156,11 +155,11 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     }
 
-    private void navigate(String dldocno){
+     void navigate(String dldocno){
         MainApp.bus.post(new MessageTransport("navigate",dldocno));
     }
 
-    private void prepareData(int index){
+     void prepareData(int index){
        if(!arry.isEmpty()){
            meterInfo = this.arry.get(index);
            CustomerInfo  customerInfo = meterInfo.getCustomer();
@@ -196,7 +195,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-    private void meterStatus(){
+     void meterStatus(){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(meterInfo.getReadStat());
 
@@ -212,7 +211,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         txt.setText(stringBuilder.toString());
     }
 
-    private int[] getViewLocations(View view) {
+     int[] getViewLocations(View view) {
         int[] locations = new int[2];
         view.getLocationOnScreen(locations);
         return locations;
@@ -225,7 +224,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         mScrollView.smoothScrollBy(x,y);
     }
 
-    public void setupViewPager(ViewPager mViewPager){
+     void setupViewPager(ViewPager mViewPager){
         StatusViewPagerAdapter adapter = new StatusViewPagerAdapter(getSupportFragmentManager());
          String dldcono = meterInfo.getDldocno();
         adapter.addFragment(MRCustomerInfoFragment.newInstance(dldcono), "Customer Info");
@@ -238,12 +237,12 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
 
 
-    public void updateReadStatus(String readStatus){
+     void updateReadStatus(String readStatus){
         meterInfo.setReadStat(readStatus);
         meterStatus();
     }
 
-    private void regularScheme(String value){
+     void regularScheme(String value){
 
         setReadingValue(value);
         //start computing the bill consumption
@@ -253,7 +252,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-    public void updateMeterReading(){
+     void updateMeterReading(){
         String bill_str = meterInfo.getBill_scheme();
         String readStat = meterInfo.getReadStat();
         if(readStat.equals("P")||readStat.equals("Q")){
@@ -308,14 +307,14 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-    public void loadMeterInput(){
+     void loadMeterInput(){
          Intent    intent = new Intent(this, InputValueActivity.class);
         intent.putExtra("id",meterInfo.getDldocno());
         intent.putExtra("type",1);
         startActivityForResult(intent, INPUT_REQ);
     }
 
-    public void updateReading(String value){
+     void updateReading(String value){
         String bill_scheme = meterInfo.getBill_scheme();
         if(bill_scheme.equals("0")){
             regularScheme(value);
@@ -353,7 +352,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         Utils.vibrate(this);
     }
 
-    public void setReadingValue(String value){
+     void setReadingValue(String value){
         TextView txt = (TextView)findViewById(R.id.txtReading);
         txt.setText(value);
         meterInfo.setPresent_reading(value);
@@ -478,7 +477,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private void movePrevious(){
+     void movePrevious(){
         if(current!=0){
             current--;
             prepareData(current);
@@ -491,7 +490,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         btnNext.setEnabled(true);
 
     }
-    private void moveNext(){
+     void moveNext(){
         if(current< arry.size()-1){
             current++;
             prepareData(current);
@@ -508,7 +507,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
 
     Dialog dlgSeqNumber;
-    public void showNewSeqDialog(){
+     void showNewSeqDialog(){
         dlgSeqNumber = new Dialog(this);
         dlgSeqNumber.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dlgSeqNumber.setContentView(R.layout.dialog_new_sequence);
@@ -634,14 +633,48 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onPrintChildMeters(MeterConsumption meterConsumption,
-                                   List<MeterConsumption> csChildMeter) {
+                                   List<MeterConsumption> childMeters) {
         //print child meters
         meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
         comp_cons_range(meterConsumption);
         meterInfo.setPresent_reading(meterConsumption.getPresent_rdg());
+        int size = childMeters.size();
+        for(int i= 0; i<size;i++){
+            MeterConsumption childMeter = childMeters.get(i);
+            meterDao.updateConsumption(childMeter,childMeter.getId());
+
+            //print child
+        }
+        //print child meter
     }
 
-    public void comp_cons_range(MeterConsumption meterConsumption){
+     void comp_cons_range(MeterConsumption meterConsumption){
+         int consumption = meterConsumption.getBilled_cons();
+         String str = meterConsumption.getAve_consumption();
+         int ave_cons = consumption;
+         if(Utils.isNotEmpty(str)){
+             ave_cons = Integer.parseInt(str);
+             if(ave_cons != 0){
+                 ave_cons = consumption;
+                 // Compute percentage difference and return range code
+
+             }
+             // Compute percentage difference and return range code
+           int   pcntDiff = ((consumption - ave_cons)/ave_cons) * 100;
+             int type = -1;
+             if (pcntDiff >= 0){
+                    type= 1;
+             }
+
+             int devi = meterDao.getRTolerance(ave_cons,type);
+             // pcntDiff is positive
+             if(type == 1){
+                 if (pcntDiff > devi){
+                     snackbar("Consumption Very High");
+                 }
+
+             }
+         }
       //  snackbar("Consumption Very Low");
     }
 
@@ -654,7 +687,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     }
 
-    private void computeConsumption(String dldocno){
+     void computeConsumption(String dldocno){
         MeterConsumption mterCons = meterDao.getConsumption(dldocno);
         String bill_str = mterCons.getCsmb_type_code();
         if(Utils.isNotEmpty(bill_str)){
@@ -684,7 +717,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     /**
      *  Message based on parameter: 0=unread,  2=blocked, 3=unread MB mother meter
      */
-    private void noPrint_Bill(int type){
+     void noPrint_Bill(int type){
           StringBuilder  strBuilder = new StringBuilder();
           strBuilder.append("Cannot print bill for ");
           strBuilder.append('\n');
@@ -703,7 +736,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     }
 
     /**
-     *  message dialog shown when entering meter  based on parameter
+     *  message dialog shown when entering meter reading based on parameter
      *  0  - for already billed
      *  1 -  edited account
      *  2 -  for check meteradb
@@ -711,7 +744,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
      *  4 -  for mb child meter
      * @param type type
      */
-    private void rdg_disabled(int type){
+     void rdg_disabled(int type){
         StringBuilder  strBuilder = new StringBuilder();
         strBuilder.append("Cannot enter reading ");
         strBuilder.append('\n');

@@ -26,7 +26,7 @@ public class CompMBScheme extends Compute implements Compute.ConsumptionListener
     @Override
     public void onPostConsResult(MeterConsumption meterConsumption) {
         String parent_code =  meterConsumption.getAcct_num();
-        List<MeterConsumption> mbChilds = mtrDao.getCSChilds(parent_code);
+        List<MeterConsumption> mbChilds = mtrDao.getMeterChilds(parent_code);
         if(!mbChilds.isEmpty()){
             int size = mbChilds.size();
             int totalCons= 0;
@@ -39,7 +39,7 @@ public class CompMBScheme extends Compute implements Compute.ConsumptionListener
             int sum = parent_consumption - totalCons;
             if(sum>0){
                 //share consumption between its child
-              //  decisionA();
+               computeShareCons(mbChilds,totalCons,sum, meterConsumption);
             }
             else {
                 //print child meters
@@ -51,7 +51,33 @@ public class CompMBScheme extends Compute implements Compute.ConsumptionListener
     }
 
     @Override
-    public void onPrintChildMeters(MeterConsumption meterConsumption, List<MeterConsumption> csChildMeter) {
+    public void onPrintChildMeters(MeterConsumption meterConsumption, List<MeterConsumption> childMeters) {
 
+    }
+
+    /**
+     *  @param childMeters list of child meters
+     * @param totalCons total consumption of all child meters
+     * @param x difference of mother meter consumption and total consumption of child
+     * @param parentMeter parent meter
+     */
+    private void computeShareCons(List<MeterConsumption> childMeters, int totalCons, int x, MeterConsumption parentMeter){
+        int size = childMeters.size();
+        for(int i=0; i<size;i++){
+            MeterConsumption childMeter = childMeters.get(i);
+            int a = childMeter.getBilled_cons();
+            int sharedcons = x * a /totalCons;
+            childMeter.setBilled_cons(a+sharedcons);
+            //if child meter is tagged as actual
+            if(childMeter.getConstype_code().equals("0")){
+                //tag parent as adjusted
+                parentMeter.setConstype_code("2");
+            }
+
+        }
+
+        if(listener!=null){
+            listener.onPrintChildMeters(parentMeter,childMeters);
+        }
     }
 }

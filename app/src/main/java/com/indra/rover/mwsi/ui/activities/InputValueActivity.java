@@ -86,7 +86,7 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
     }
 
 
-    public void numKeys(View view){
+     void numKeys(View view){
         String tag = view.getTag().toString();
         txtValues.append(tag);
     }
@@ -101,7 +101,7 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
     }
 
 
-    private void setValue(){
+     void setValue(){
 
 
         int tries =0 ;
@@ -138,7 +138,7 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
 
 
 
-    private void sendResult(){
+     void sendResult(){
         String value = txtValues.getText().toString();
         Intent intent = new Intent();
 

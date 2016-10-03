@@ -212,4 +212,8 @@ public class MeterConsumption {
     public String getAcct_num() {
         return acct_num;
     }
+
+    public String getId() {
+        return id;
+    }
 }
