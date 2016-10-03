@@ -37,7 +37,7 @@ public class MeterInfo implements Serializable {
     String readStat;
     //bill scheme
     String bill_scheme;
-
+    String account_num;
     //childs parent
     String childs_parent;
     public MeterInfo(Cursor cursor){
@@ -52,6 +52,7 @@ public class MeterInfo implements Serializable {
         this.readStat = cursor.getString(cursor.getColumnIndexOrThrow("READSTAT"));
         this.bill_scheme = cursor.getString(cursor.getColumnIndexOrThrow("CSMB_TYPE_CODE"));
         this.childs_parent = cursor.getString(cursor.getColumnIndexOrThrow("CSMB_PARENT"));
+        this.account_num = cursor.getString(cursor.getColumnIndexOrThrow("ACCTNUM"));
         this.customerInfo = new CustomerInfo(cursor);
         this.billClass = new BillClass(cursor);
 

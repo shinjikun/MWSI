@@ -484,7 +484,76 @@ public class MeterReadingDao extends ModelDao {
         return count;
     }
 
+    public int countChildUnRead(String parent_id){
+        int count=0;
+        try {
+            open();
+            String str ="Select count(*) as COUNTNUM from T_CURRENT_RDG where  CSMB_PARENT="+parent_id
+                    +" and  BILLED_CONS IS   NULL";
+            Cursor cursor = database.rawQuery(str,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNTNUM"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception sql){
+            sql.printStackTrace();
+        }finally {
+            close();
+        }
+        return count;
+    }
 
+
+    public int countChildBilled(String parent_id){
+        int count=0;
+        try {
+            open();
+            String str ="select count(*) as countnum from T_CURRENT_RDG where  csmb_parent="+
+                    parent_id+" and  ( READSTAT = 'P' OR READSTAT='Q' )";
+            Cursor cursor = database.rawQuery(str,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNTNUM"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception sql){
+            sql.printStackTrace();
+        }finally {
+            close();
+        }
+        return count;
+    }
+
+
+    public int countCSChildBilled(String parent_id){
+        int count =0;
+        try {
+            open();
+            String str ="select count(*) as countnum from T_CURRENT_RDG where  csmb_parent="+
+                    parent_id+" and  ( READSTAT != 'P' OR READSTAT !='Q' )";
+            Cursor cursor = database.rawQuery(str,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNTNUM"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception sql){
+            sql.printStackTrace();
+        }finally {
+            close();
+        }
+        return count;
+    }
+
+    public List<MeterConsumption> getCSChilds(String parent_code){
+        List<MeterConsumption> arry = new ArrayList<>();
+
+        return arry;
+    }
 
 
 }

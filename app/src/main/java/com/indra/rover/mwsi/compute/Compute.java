@@ -3,6 +3,8 @@ package com.indra.rover.mwsi.compute;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
 import com.indra.rover.mwsi.utils.Utils;
 
+import java.util.List;
+
 
 public class Compute {
 
@@ -205,6 +207,7 @@ public class Compute {
 
     public interface ConsumptionListener {
         void onPostConsResult(MeterConsumption meterConsumption);
+        void onPrintChildMeters(MeterConsumption meterConsumption,List<MeterConsumption> csChildMeter);
 
     }
 

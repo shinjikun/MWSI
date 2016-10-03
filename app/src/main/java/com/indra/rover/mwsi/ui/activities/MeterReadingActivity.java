@@ -254,21 +254,66 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
 
     public void updateMeterReading(){
-        String bill_scheme = meterInfo.getBill_scheme();
+        String bill_str = meterInfo.getBill_scheme();
         String readStat = meterInfo.getReadStat();
-        if(bill_scheme.equals("0")){
-            if(readStat.equals("P")||readStat.equals("Q")){
-                rdg_disabled(0);
-            }
-            else {
-                Intent    intent = new Intent(this, InputValueActivity.class);
-                intent.putExtra("id",meterInfo.getDldocno());
-                intent.putExtra("type",1);
-                startActivityForResult(intent, INPUT_REQ);
-            }
+        if(readStat.equals("P")||readStat.equals("Q")){
+            rdg_disabled(0);
+            return;
         }
+        if(Utils.isNotEmpty(bill_str)){
+            int bill_scheme =  Integer.parseInt(bill_str);
+            String accoutNumb = meterInfo.getCustomer().getAccn();
+            switch(bill_scheme){
+                case CS_CHILD:
+                case REG_SCHEME:
+                        loadMeterInput();
+                    break;
+                case MB_MOTHER:
+                    int countUnRead = meterDao.countChildUnRead(accoutNumb);
+                    if(countUnRead!=0){
+                        rdg_disabled(3);
+                        return ;
+                    }
+                    else {
+                        int countChildPrinted = meterDao.countChildBilled(accoutNumb);
+                        if(countChildPrinted!=0){
+                            rdg_disabled(3);
+                            return;
+                        }
+                        loadMeterInput();
+                    }
+                    break;
+                case CS_MOTHER:
+                    int countP = meterDao.countChildBilled(accoutNumb);
+                    if(countP!=0){
+                        rdg_disabled(2);
+                        return;
+                    }
+                    loadMeterInput();
+                    break;
+                case MB_CHILD:
+                    int countChildPrinted = meterDao.countChildBilled(accoutNumb);
+                    if(countChildPrinted!=0){
+                        rdg_disabled(4);
+                        return;
+                    }
+                   loadMeterInput();
+                    break;
+            }
+
+
+
+        }
+
     }
 
+
+    public void loadMeterInput(){
+         Intent    intent = new Intent(this, InputValueActivity.class);
+        intent.putExtra("id",meterInfo.getDldocno());
+        intent.putExtra("type",1);
+        startActivityForResult(intent, INPUT_REQ);
+    }
 
     public void updateReading(String value){
         String bill_scheme = meterInfo.getBill_scheme();
@@ -581,7 +626,16 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onPostConsResult(MeterConsumption meterConsumption) {
-        Log.i("Test","meter consumption"+meterConsumption.getBilled_cons());
+
+        meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
+        comp_cons_range(meterConsumption);
+        meterInfo.setPresent_reading(meterConsumption.getPresent_rdg());
+    }
+
+    @Override
+    public void onPrintChildMeters(MeterConsumption meterConsumption,
+                                   List<MeterConsumption> csChildMeter) {
+        //print child meters
         meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
         comp_cons_range(meterConsumption);
         meterInfo.setPresent_reading(meterConsumption.getPresent_rdg());
@@ -602,24 +656,29 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     private void computeConsumption(String dldocno){
         MeterConsumption mterCons = meterDao.getConsumption(dldocno);
+        String bill_str = mterCons.getCsmb_type_code();
+        if(Utils.isNotEmpty(bill_str)){
+            int bill_scheme = Integer.parseInt(bill_str);
+            switch(bill_scheme){
+                case REG_SCHEME:
+                case CS_CHILD:
+                case MB_CHILD:
+                    CompConsumption comConsumption = new CompConsumption(this);
+                    comConsumption.compute(mterCons);
+                    break;
+                case CS_MOTHER:
+                    CompCSScheme compCSScheme = new CompCSScheme(this);
+                    compCSScheme.compute(mterCons,meterDao);
+                    break;
+                case MB_MOTHER:
+                    CompMBScheme compMBScheme = new CompMBScheme(this);
+                    compMBScheme.compute(mterCons,meterDao);
+                    break;
 
-        String bill_scheme = mterCons.getCsmb_type_code();
-        //check for the type of billing scene
-        //if set to zero  then use thr regular Read and Bill Computer
-        if(bill_scheme.equals("0")){
-            CompConsumption comConsumption = new CompConsumption(this);
-            comConsumption.compute(mterCons);
+
+            }
         }
-        //CS
-        else if(bill_scheme.equals("1") ||bill_scheme.equals("4")){
-            CompCSScheme compCSScheme = new CompCSScheme(this);
-            compCSScheme.compute(mterCons,meterDao);
-        }
-        //MB
-        else if(bill_scheme.equals("2")||bill_scheme.equals("5")){
-            CompMBScheme compMBScheme = new CompMBScheme(this);
-            compMBScheme.compute(mterCons,meterDao);
-        }
+
     }
 
     /**
@@ -647,7 +706,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
      *  message dialog shown when entering meter  based on parameter
      *  0  - for already billed
      *  1 -  edited account
-     *  2 -  for check meter
+     *  2 -  for check meteradb
      *  3 -  for mb parent meter
      *  4 -  for mb child meter
      * @param type type

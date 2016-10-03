@@ -208,4 +208,8 @@ public class MeterConsumption {
     public void setAcct_num(String acct_num) {
         this.acct_num = acct_num;
     }
+
+    public String getAcct_num() {
+        return acct_num;
+    }
 }

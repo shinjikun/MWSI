@@ -28,5 +28,10 @@ public interface  Constants {
 
    String BLT_PAIRED = "";
 
+   int REG_SCHEME =0;
+   int CS_MOTHER =1;
+   int CS_CHILD = 4;
+   int MB_MOTHER =2;
+   int MB_CHILD =3;
 
 }
