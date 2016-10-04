@@ -661,48 +661,55 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
      void comp_cons_range(MeterConsumption mtrCons){
          int consumption = mtrCons.getBilled_cons();
-         String str = mtrCons.getAve_consumption();
-         int ave_cons ;
-         if(Utils.isNotEmpty(str)){
-             ave_cons = Integer.parseInt(str);
-             if(ave_cons != 0){
-                 ave_cons = consumption;
+         String strrange_code="-";
+         int range_code =0 ;
+         if(consumption!=0) {
+             String str = mtrCons.getAve_consumption();
+             int ave_cons ;
+             if(Utils.isNotEmpty(str)){
+                 ave_cons = Integer.parseInt(str);
+                 if(ave_cons != 0){
+                     ave_cons = consumption;
+                     // Compute percentage difference and return range code
+
+                 }
                  // Compute percentage difference and return range code
+                 int   pcntDiff = ((consumption - ave_cons)/ave_cons) * 100;
+                 int type = -1;
+                 if (pcntDiff >= 0){
+                     type= 1;
+                 }
 
-             }
-             // Compute percentage difference and return range code
-           int   pcntDiff = ((consumption - ave_cons)/ave_cons) * 100;
-             int type = -1;
-             if (pcntDiff >= 0){
-                    type= 1;
-             }
+                 int devi = meterDao.getRTolerance(ave_cons,type);
 
-             int devi = meterDao.getRTolerance(ave_cons,type);
-             int range_code ;
-             // pcntDiff is positive
-             if(type == 1){
-                 if (pcntDiff > devi){
-                     snackbar("Consumption Very High");
-                    range_code = VERY_HIGH;
+                 // pcntDiff is positive
+                 if(type == 1){
+                     if (pcntDiff > devi){
+                         snackbar("Consumption Very High");
+                         range_code = VERY_HIGH;
+                     }
+                     else {
+                         range_code = NORMAL;
+                     }
                  }
-                 else {
-                    range_code = NORMAL;
+                 else  {
+                     if (-pcntDiff > devi){
+                         snackbar("Consumption Very Low");
+                         range_code = VERY_LOW;
+                     }
+                     else {
+                         range_code = NORMAL;
+                     }
                  }
-             }
-             else  {
-                 if (-pcntDiff > devi){
-                     snackbar("Consumption Very Low");
-                     range_code = VERY_LOW;
-                 }
-                 else {
-                    range_code = NORMAL;
-                 }
-             }
-             mtrCons.setRange_code(String.valueOf(range_code));
-             meterInfo.setRange_code(String.valueOf(range_code));
-             meterDao.updateRangeCode(range_code,meterInfo.getDldocno());
-
          }
+
+
+
+            strrange_code = String.valueOf(range_code);
+         }
+         mtrCons.setRange_code(strrange_code);
+         meterInfo.setRange_code(strrange_code);
+         meterDao.updateRangeCode(strrange_code,meterInfo.getDldocno());
 
     }
 

@@ -334,7 +334,7 @@ public class MeterReadingDao extends ModelDao {
      * @param rangeCode rangeCode could be very high = 4 or very low =3 or normal =0
      * @param crdocid record to be updated
      */
-    public void updateRangeCode(int rangeCode,String crdocid){
+    public void updateRangeCode(String rangeCode,String crdocid){
         try{
             open();
             ContentValues contentValues = new ContentValues();
