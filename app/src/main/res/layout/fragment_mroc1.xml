@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="@drawable/bg_dot_pattern"
+    android:orientation="vertical"
+    tools:context="com.indra.rover.mwsi.ui.fragments.MROCFragment">
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/view_btn_ctr" />
+    <com.indra.rover.mwsi.ui.widgets.CustomSpinView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/oc1_opt"
+        custom:label="@string/mr_oc_oc1"
+        custom:editable="false"
+        />
+    <Button
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnImageCapture"
+        android:drawableLeft="@drawable/ic_camera"
+        android:drawableStart="@drawable/ic_camera"
+        android:contentDescription="@string/str_default_val"
+        android:layout_gravity="center"
+        android:text="Capture Image" />
+
+    <com.indra.rover.mwsi.ui.widgets.CustomSpinView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/oc2_opt"
+        custom:label="@string/mr_oc_oc2"
+        custom:editable="false"
+        />
+
+    <Button
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnImageCapture1"
+        android:drawableLeft="@drawable/ic_camera"
+        android:drawableStart="@drawable/ic_camera"
+        android:contentDescription="@string/str_default_val"
+        android:text="Capture Image"
+       android:layout_gravity="center" />
+
+</LinearLayout>
