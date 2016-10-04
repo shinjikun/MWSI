@@ -34,4 +34,8 @@ public interface  Constants {
    int MB_MOTHER =2;
    int MB_CHILD =3;
 
+   int NORMAL=0;
+   int VERY_LOW =3;
+   int VERY_HIGH=4;
+
 }

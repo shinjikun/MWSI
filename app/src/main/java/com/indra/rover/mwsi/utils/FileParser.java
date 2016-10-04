@@ -75,10 +75,10 @@ public class FileParser extends AsyncTask<File,Integer,String> {
 
     private void parseBKFile(File file){
         try {
-            CSVReader reader = new CSVReader(new FileReader(file), '|', '\"', 1);
-
-
+            CSVReader reader = new CSVReader(new FileReader(file), '|', '\"');
             String [] record;
+            //truncate table
+            mRDao.truncateTables();
             while ((record = reader.readNext()) != null) {
                 // nextLine[] is an array of values from the line
 
@@ -127,8 +127,9 @@ public class FileParser extends AsyncTask<File,Integer,String> {
     private void parseMRUFile(File file){
         try {
 
-            CSVReader reader = new CSVReader(new FileReader(file), '|', '\"', 1);
+            CSVReader reader = new CSVReader(new FileReader(file), '|', '\"');
 
+            mRDao.truncateMRUTable();
             String [] record;
             while ((record = reader.readNext()) != null) {
                 // nextLine[] is an array of values from the line

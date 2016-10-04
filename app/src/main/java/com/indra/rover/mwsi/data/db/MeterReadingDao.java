@@ -40,7 +40,7 @@ public class MeterReadingDao extends ModelDao {
         List<MeterInfo> arry = new ArrayList<>();
         String sql_stmt = "select  t.MRU,t.SEQNO,t.METERNO,t.DLDOCNO,t.GRP_FLAG,t.BLOCK_TAG, " +
                 "c.RDG_TRIES,c.PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS, " +
-                "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT from T_DOWNLOAD t," +
+                "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE from T_DOWNLOAD t," +
                 " R_BILL_CLASS r,T_CURRENT_RDG c where t.BILL_CLASS = r.BILL_CLASS " +
                 "and t.DLDOCNO = c.CRDOCNO  and c.MRU="+mruID;
         Log.i("Test",sql_stmt);
@@ -69,7 +69,7 @@ public class MeterReadingDao extends ModelDao {
         MeterInfo meterInfo= null;
         String sql_stmt = "select  t.MRU,t.SEQNO,t.METERNO,t.DLDOCNO,t.GRP_FLAG,t.BLOCK_TAG, " +
                 "c.RDG_TRIES,c.PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS, " +
-                "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT from T_DOWNLOAD t," +
+                "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE from T_DOWNLOAD t," +
                 " R_BILL_CLASS r,T_CURRENT_RDG c where t.BILL_CLASS = r.BILL_CLASS " +
                 "and t.DLDOCNO = c.CRDOCNO  and c.CRDOCNO="+id;
         try{
@@ -96,7 +96,7 @@ public class MeterReadingDao extends ModelDao {
         List<MeterInfo> arry = new ArrayList<>();
         String sql_stmt = "select  t.MRU,t.SEQNO,t.METERNO,t.DLDOCNO,t.GRP_FLAG,t.BLOCK_TAG, " +
                 "c.RDG_TRIES,c.PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS, " +
-                "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT from T_DOWNLOAD t, " +
+                "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE from T_DOWNLOAD t, " +
                 "R_BILL_CLASS r,T_CURRENT_RDG c where t.BILL_CLASS = r.BILL_CLASS and " +
                 "t.DLDOCNO = c.CRDOCNO   and " +
                 "MRU="+mruID+ " and "+column+" like '%"+searchValue+"%'";
@@ -331,10 +331,10 @@ public class MeterReadingDao extends ModelDao {
 
     /**
      * Update reading's range code
-     * @param rangeCode rangeCode could be very high = 4 or very low =3
+     * @param rangeCode rangeCode could be very high = 4 or very low =3 or normal =0
      * @param crdocid record to be updated
      */
-    public void updateRangeCode(String rangeCode,String crdocid){
+    public void updateRangeCode(int rangeCode,String crdocid){
         try{
             open();
             ContentValues contentValues = new ContentValues();
@@ -348,6 +348,37 @@ public class MeterReadingDao extends ModelDao {
         }
     }
 
+    /**
+     * Reset Reading
+     * @param crdocid
+     */
+    public void revert_reading(String crdocid){
+        try {
+            open();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("READSTAT","U");
+            contentValues.put("RDG_DATE","");
+            contentValues.put("RDG_TIME","");
+            contentValues.put("FFCODE1","");
+            contentValues.put("FFCODE2","");
+            contentValues.put("PRESRDG","");
+            contentValues.put("RANGE_CODE","");
+            contentValues.put("BILLED_CONS","");
+            contentValues.put("SP_COMP","");
+            contentValues.put("RDG_TRIES","0");
+            contentValues.put("MR_TYPE_CODE","");
+            contentValues.put("RANGE_CODE","");
+            contentValues.put("CONSTYPE_CODE","");
+            contentValues.put("GPS_LATITUDE","");
+            contentValues.put("GPS_LONGITUDE","");
+            String where= "CRDOCNO=?";
+            database.update("T_CURRENT_RDG",contentValues,where,new String[]{crdocid});
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+    }
 
     /**
      * updates the bill consumption
@@ -392,7 +423,8 @@ public class MeterReadingDao extends ModelDao {
         MeterOC meterOC = null;
         try {
             open();
-            String sql_stmt = "SELECT CRDOCNO, FFCODE1,FFCODE2,READSTAT  from " +
+            String sql_stmt = "SELECT CRDOCNO, FFCODE1,FFCODE2,READSTAT," +
+                    "CSMB_TYPE_CODE,CSMB_PARENT,ACCTNUM  from " +
                     " T_CURRENT_RDG where CRDOCNO="+crdocno;
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
@@ -410,6 +442,35 @@ public class MeterReadingDao extends ModelDao {
     }
 
 
+    public MeterConsumption getParentMeter(String id){
+        MeterConsumption meterConsumption =null;
+        try{
+            open();
+            String sql_stmt ="select d.DLDOCNO,d.ACCT_STATUS,d.METERNO,d.GRP_FLAG,d.BLOCK_TAG," +
+                    "d.DISC_TAG,d.PREVRDGDATE,d.ACTPREVRDG,d.BILLPREVRDG," +
+                    "d.BILLPREVRDG2,d.BILLPREVACTTAG,d.PRACTFLAG,d.AVECONS,d.NMINITRDG," +
+                    "d.NMCONSFACTOR,d.PREVFF1,d.PREVFF2,d.NODIALS,nd.maxcap,c.FFCODE1,c.FFCODE2,c.PRESRDG," +
+                    "c.BILLED_CONS,c.CONSTYPE_CODE,d.PCONSAVGFLAG,d.DREPLMTR_CODE, c.SP_COMP,c.CSMB_TYPE_CODE," +
+                    "c.CSMB_PARENT,c.ACCTNUM,c.READSTAT,c.RANGE_CODE " +
+                    "from T_DOWNLOAD d,R_NUM_DIALS nd ,T_CURRENT_RDG c " +
+                    "where d.nodials = nd.nodials and d.DLDOCNO=c.CRDOCNO and c.ACCTNUM="+id+";";
+            Cursor cursor =database.rawQuery(sql_stmt,null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    meterConsumption = new MeterConsumption(cursor);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+
+        return meterConsumption;
+    }
+
 
     public MeterConsumption getConsumption(String dldocno){
         MeterConsumption meterConsumption =null;
@@ -419,7 +480,8 @@ public class MeterReadingDao extends ModelDao {
                     "d.DISC_TAG,d.PREVRDGDATE,d.ACTPREVRDG,d.BILLPREVRDG," +
                     "d.BILLPREVRDG2,d.BILLPREVACTTAG,d.PRACTFLAG,d.AVECONS,d.NMINITRDG," +
                     "d.NMCONSFACTOR,d.PREVFF1,d.PREVFF2,d.NODIALS,nd.maxcap,c.FFCODE1,c.FFCODE2,c.PRESRDG," +
-                    "c.BILLED_CONS,c.CONSTYPE_CODE,d.PCONSAVGFLAG,d.DREPLMTR_CODE, c.SP_COMP,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.ACCTNUM " +
+                    "c.BILLED_CONS,c.CONSTYPE_CODE,d.PCONSAVGFLAG,d.DREPLMTR_CODE, c.SP_COMP,c.CSMB_TYPE_CODE," +
+                    "c.CSMB_PARENT,c.ACCTNUM,c.READSTAT,c.RANGE_CODE " +
                     "from T_DOWNLOAD d,R_NUM_DIALS nd ,T_CURRENT_RDG c " +
                     "where d.nodials = nd.nodials and d.DLDOCNO=c.CRDOCNO and d.DLDOCNO="+dldocno+";";
             Cursor cursor =database.rawQuery(sql_stmt,null);
@@ -488,7 +550,7 @@ public class MeterReadingDao extends ModelDao {
         try {
             open();
             String str ="Select count(*) as COUNTNUM from T_CURRENT_RDG where  CSMB_PARENT="+parent_id
-                    +" and  BILLED_CONS IS   NULL";
+                    +" and READSTAT = 'U'";
             Cursor cursor = database.rawQuery(str,null);
             if (cursor.moveToFirst()) {
                 do {
@@ -556,7 +618,8 @@ public class MeterReadingDao extends ModelDao {
                     "d.DISC_TAG,d.PREVRDGDATE,d.ACTPREVRDG,d.BILLPREVRDG," +
                     "d.BILLPREVRDG2,d.BILLPREVACTTAG,d.PRACTFLAG,d.AVECONS,d.NMINITRDG," +
                     "d.NMCONSFACTOR,d.PREVFF1,d.PREVFF2,d.NODIALS,nd.maxcap,c.FFCODE1,c.FFCODE2,c.PRESRDG," +
-                    "c.BILLED_CONS,c.CONSTYPE_CODE,d.PCONSAVGFLAG,d.DREPLMTR_CODE, c.SP_COMP,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.ACCTNUM " +
+                    "c.BILLED_CONS,c.CONSTYPE_CODE,d.PCONSAVGFLAG,d.DREPLMTR_CODE, c.SP_COMP,c.CSMB_TYPE_CODE," +
+                    "c.CSMB_PARENT,c.ACCTNUM,c.READSTAT,c.RANGE_CODE " +
                     "from T_DOWNLOAD d,R_NUM_DIALS nd ,T_CURRENT_RDG c " +
                     "where d.nodials = nd.nodials and d.DLDOCNO=c.CRDOCNO and c.CSMB_PARENT="+parent_code+";";
             Cursor cursor = database.rawQuery(sql_stmt,null);

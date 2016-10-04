@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -25,10 +24,14 @@ import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.db.RefTableDao;
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterOC;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.ObservationCode;
+import com.indra.rover.mwsi.utils.Constants;
+import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.MessageTransport;
+import com.indra.rover.mwsi.utils.Utils;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -37,7 +40,8 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MROCFragment extends Fragment implements View.OnClickListener {
+public class MROCFragment extends Fragment implements View.OnClickListener,
+        DialogUtils.DialogListener, Constants {
     private static final String ARG_ID = "id";
 
     View mView;
@@ -49,6 +53,8 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
     List<ObservationCode> arryOC1;
     List<ObservationCode> arryOC2;
     private final int CAM_OC1=31,CAM_OC2=32;
+    DialogUtils dlgUtils;
+    final int DLG_REVERT_RDG=101;
     public MROCFragment() {
     }
 
@@ -69,7 +75,8 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
             crdocno = getArguments().getString(ARG_ID);
             meterOC = mtrDao.getMeterOCs(crdocno);
         }
-
+        dlgUtils = new DialogUtils(getActivity());
+        dlgUtils.setListener(this);
         MainApp.bus.register(this);
     }
 
@@ -253,6 +260,58 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    private void updateOC(){
+        String bill_str = meterOC.getBill_scheme();
+        String readStat = meterOC.getReadstat();
+        if(readStat.equals("P")||readStat.equals("Q")){
+            noOCEntry(1);
+            return;
+        }
+
+        if(Utils.isNotEmpty(bill_str)) {
+            int bill_scheme = Integer.parseInt(bill_str);
+            String accoutNumb = meterOC.getAccount_num();
+            switch (bill_scheme){
+                case REG_SCHEME:
+                    editMode(true);
+                    break;
+                case CS_MOTHER:
+                case MB_MOTHER:
+                    int countUnRead = mtrDao.countChildUnRead(accoutNumb);
+                    if(countUnRead!=0){
+                        noOCEntry(2);
+                        return ;
+                    }
+                    else {
+                        int countChildPrinted = mtrDao.countChildBilled(accoutNumb);
+                        if(countChildPrinted!=0){
+                            noOCEntry(2);
+                            return;
+                        }
+                        editMode(true);
+                    }
+                    break;
+                case CS_CHILD:
+                case MB_CHILD:
+                    String parent_code = meterOC.getChilds_parent();
+                    int countChildPrinted = mtrDao.countChildBilled(parent_code);
+                    if(countChildPrinted!=0){
+                        noOCEntry(4);
+                        return;
+                    }
+                    MeterConsumption parentMeter =  mtrDao.getParentMeter(parent_code);
+                    String parentStat = parentMeter.getReadstat();
+                    if(parentStat.equals("P")||parentStat.equals("Q")){
+                        noOCEntry(5);
+                        return;
+                    }
+                    editMode(true);
+                    break;
+            }
+        }
+
+    }
+
     @Override
     public void onClick(View view) {
         int id = view.getId();
@@ -265,7 +324,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
                 saveDB();
                 break;
             case R.id.btnEditOC:
-                editMode(true);
+                updateOC();
                 break;
             case R.id.btnClrOc1:
                 spnOC1.setSelection(0);
@@ -415,4 +474,89 @@ public class MROCFragment extends Fragment implements View.OnClickListener {
 
        return new File(contentDir, fileName);
     }
+
+
+    /**
+     *  message dialog shown when entering OC
+     *  0  - for already billed
+     *  1 -  edited account
+     *  2 -  for check meteradb
+     *  3 -  for mb parent meter
+     *  4 -  for mb child meter
+     * @param type type
+     */
+    void noOCEntry(int type){
+        StringBuilder  strBuilder = new StringBuilder();
+
+        strBuilder.append('\n');
+        switch(type){
+
+            case 1:
+                strBuilder.append("Cannot Enter an");
+                strBuilder.append('\n');
+                strBuilder.append("OC for an already ");
+                strBuilder.append('\n');
+                strBuilder.append("Billed Account!");
+                break;
+            case 2:
+                strBuilder.append("Cannot Enter OC for");
+                strBuilder.append('\n');
+                strBuilder.append("a Parent Meter");
+                strBuilder.append('\n');
+                strBuilder.append("with unread or");
+                strBuilder.append('\n');
+                strBuilder.append("billed Child Meters!");
+                break;
+
+            case 4:
+                strBuilder.append("Cannot Enter OC for");
+                strBuilder.append('\n');
+                strBuilder.append("a Child Meter");
+                strBuilder.append('\n');
+                strBuilder.append("with already billed");
+                strBuilder.append('\n');
+                strBuilder.append("siblings Meters!");
+                break;
+            case 5:
+                strBuilder.append("Cannot Enter OC for");
+                strBuilder.append('\n');
+                strBuilder.append("a Child Meter");
+                strBuilder.append('\n');
+                strBuilder.append("with already billed");
+                strBuilder.append('\n');
+                strBuilder.append("Parent Meters!");
+                break;
+        }
+        dlgUtils.showOKDialog("NO OC ENTRY",strBuilder.toString());
+    }
+
+    @Override
+    public void dialog_confirm(int dialog_id, Bundle params) {
+            switch (dialog_id){
+                case DLG_REVERT_RDG:
+                    break;
+
+            }
+    }
+
+    @Override
+    public void dialog_cancel(int dialog_id, Bundle params) {
+
+    }
+
+    private void revert_reading(){
+        StringBuilder strBldr = new StringBuilder();
+        strBldr.append("Deleting a billable");
+        strBldr.append('\n');
+        strBldr.append("OC with an actual reading");
+        strBldr.append('\n');
+        strBldr.append("Will Erase all Related OC");
+        strBldr.append('\n');
+        strBldr.append("and Reading Entries.");
+        strBldr.append('\n');
+        strBldr.append("Re-entry is required Procced?");
+        String message = strBldr.toString();
+        dlgUtils.showYesNoDialog(DLG_REVERT_RDG,"DELETE OC1 WITH RDG",message,new Bundle());
+    }
+
 }

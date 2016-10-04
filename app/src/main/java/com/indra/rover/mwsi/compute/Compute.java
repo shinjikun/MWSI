@@ -10,6 +10,11 @@ public class Compute {
 
     MeterConsumption meterConsObj;
 
+   final String AVERAGE="1";
+   final String ACTUAL = "0";
+   final String ADJUSTED="2";
+   final String NEW_METER="29";
+   final String INTERCHANGEMR = "26";
     ConsumptionListener listener;
     public Compute(ConsumptionListener listener){
         this.listener = listener;
@@ -44,7 +49,7 @@ public class Compute {
         int present_reading=  Integer.parseInt(meterConsObj.getPresent_rdg());
         int bill_prev_reading = Integer.parseInt(meterConsObj.getBill_prev_rdg());
         meterConsObj.setSpComp("1");
-        return num_dials-(present_reading+bill_prev_reading);
+        return (num_dials - bill_prev_reading) +present_reading;
     }
 
 
@@ -84,7 +89,7 @@ public class Compute {
     public int scenario4(){
         int present_reading=  Integer.parseInt(meterConsObj.getPresent_rdg());
         int actual_prev_reading =  Integer.parseInt(meterConsObj.getPrev_rdg());
-        meterConsObj.setSpComp("4");
+        meterConsObj.setSpComp("0");
         return present_reading - actual_prev_reading;
 
     }
@@ -117,7 +122,7 @@ public class Compute {
      */
     public void decisionA(){
 
-        meterConsObj.setConstype_code("0");
+        meterConsObj.setConstype_code(ACTUAL);
         if(listener!=null){
             listener.onPostConsResult(meterConsObj);
         }
@@ -130,7 +135,7 @@ public class Compute {
          //use average consumption as bill consumption
          int average_consumption=  Integer.parseInt(meterConsObj.getAve_consumption());
          meterConsObj.setBilled_cons(average_consumption);
-         meterConsObj.setConstype_code("1");
+         meterConsObj.setConstype_code(AVERAGE);
          if(listener!=null){
              listener.onPostConsResult(meterConsObj);
          }
@@ -140,7 +145,7 @@ public class Compute {
      * decision C Tag as ADJUSTED Consumption
      */
      public void decisionC(){
-         meterConsObj.setConstype_code("2");
+         meterConsObj.setConstype_code(ADJUSTED);
          if(listener!=null){
              listener.onPostConsResult(meterConsObj);
          }
@@ -171,7 +176,7 @@ public class Compute {
      */
     public void decisionE(){
         meterConsObj.setBilled_cons(minimum_bill);
-        meterConsObj.setConstype_code("1");
+        meterConsObj.setConstype_code(AVERAGE);
         if(listener!=null){
             listener.onPostConsResult(meterConsObj);
         }

@@ -168,6 +168,7 @@ public class ConnectDao extends ModelDao {
     public long insertTUploadData(String[] records){
         long rowInsert =0;
         try {
+
             open();
             if(isExistData("T_UPLOAD","ULDOCNO",records[10])){
 
@@ -265,7 +266,7 @@ public class ConnectDao extends ModelDao {
 
 
 
-    void truncateTable(String tablename){
+   public void truncateTable(String tablename){
          try{
              open();
              String sql_stmt ="Delete from "+tablename;
@@ -323,7 +324,15 @@ public class ConnectDao extends ModelDao {
         return arry;
 
     }
+    public void truncateMRUTable(){
+        truncateTable("T_MRU_INFO");
+    }
 
-
+    public void truncateTables(){
+        truncateTable("T_CURRENT_RDG");
+        truncateTable("T_DOWNLOAD");
+        truncateTable("T_FCONN");
+        truncateTable("T_UPLOAD");
+    }
 
 }

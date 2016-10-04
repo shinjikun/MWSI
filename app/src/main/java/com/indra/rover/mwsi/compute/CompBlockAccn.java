@@ -20,20 +20,25 @@ public class CompBlockAccn extends  Compute{
             String has_newmeterInfo =  meterConsObj.getDreplmtr_code();
             //has new meter info,replacement date and initial reading
             //no new meter info,replacement date or initial reading
-            if(has_newmeterInfo.equals("0")){
-                clusterA();
+            if(Utils.isNotEmpty(has_newmeterInfo)){
+                if(has_newmeterInfo.equals("0")){
+                    clusterA();
+                } else {
+                    //is previous consumption is average
+                    String prev_consumption = meterConsObj.getPrev_con_avg();
+                    //if yes value is 1
+                    if(prev_consumption.equals("1")){
+                        clusterB();
+                    }
+                    //otherwise its actual
+                    else {
+                        clusterC();
+                    }
+                }
             } else {
-                //is previous consumption is average
-                String prev_consumption = meterConsObj.getPrev_con_avg();
-                //if yes value is 1
-                if(prev_consumption.equals("1")){
-                    clusterB();
-                }
-                //otherwise its actual
-                else {
-                    clusterC();
-                }
+               clusterA();
             }
+
         }
     }
 
@@ -57,7 +62,7 @@ public class CompBlockAccn extends  Compute{
             //tag as adjusted
             int average_consumption=  Integer.parseInt(meterConsObj.getAve_consumption());
             meterConsObj.setBilled_cons(average_consumption);
-            meterConsObj.setConstype_code("1");
+            meterConsObj.setConstype_code(AVERAGE);
 
         }else if(dreplmtr_code.equals("3")){
             //check values/component for compution is present
@@ -137,7 +142,9 @@ public class CompBlockAccn extends  Compute{
                         //tag as adjusted
                     }
                     else  {
-                        System.out.println("NO BILL");
+                        meterConsObj.setBilled_cons(0);
+                        meterConsObj.setSpComp("0");
+                        meterConsObj.setConstype_code(ACTUAL);
                         noBill();
                     }
                 }
@@ -145,10 +152,16 @@ public class CompBlockAccn extends  Compute{
             //otherwise no bill
             else {
                 //NO BILL
+                meterConsObj.setBilled_cons(0);
+                meterConsObj.setSpComp("0");
+                meterConsObj.setConstype_code(ACTUAL);
                 noBill();
             }
         }
         else {
+            meterConsObj.setBilled_cons(0);
+            meterConsObj.setSpComp("0");
+            meterConsObj.setConstype_code(ACTUAL);
             //NO BILL
             noBill();
         }

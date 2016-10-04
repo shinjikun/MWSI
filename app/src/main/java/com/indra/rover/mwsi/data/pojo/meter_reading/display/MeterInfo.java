@@ -40,6 +40,8 @@ public class MeterInfo implements Serializable {
     String account_num;
     //childs parent
     String childs_parent;
+
+    String range_code;
     public MeterInfo(Cursor cursor){
         this.mru_id =cursor.getString(cursor.getColumnIndexOrThrow("MRU"));
         this.seq_number = cursor.getString(cursor.getColumnIndexOrThrow("SEQNO"));
@@ -53,6 +55,7 @@ public class MeterInfo implements Serializable {
         this.bill_scheme = cursor.getString(cursor.getColumnIndexOrThrow("CSMB_TYPE_CODE"));
         this.childs_parent = cursor.getString(cursor.getColumnIndexOrThrow("CSMB_PARENT"));
         this.account_num = cursor.getString(cursor.getColumnIndexOrThrow("ACCTNUM"));
+        this.range_code = cursor.getString(cursor.getColumnIndexOrThrow("RANGE_CODE"));
         this.customerInfo = new CustomerInfo(cursor);
         this.billClass = new BillClass(cursor);
 
@@ -127,5 +130,17 @@ public class MeterInfo implements Serializable {
 
     public String getBill_scheme() {
         return bill_scheme;
+    }
+
+    public String getParentID() {
+        return childs_parent;
+    }
+
+    public String getRange_code() {
+        return range_code;
+    }
+
+    public void setRange_code(String range_code) {
+        this.range_code = range_code;
     }
 }

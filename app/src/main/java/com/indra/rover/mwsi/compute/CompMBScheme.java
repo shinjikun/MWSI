@@ -71,7 +71,7 @@ public class CompMBScheme extends Compute implements Compute.ConsumptionListener
             //if child meter is tagged as actual
             if(childMeter.getConstype_code().equals("0")){
                 //tag parent as adjusted
-                parentMeter.setConstype_code("2");
+                parentMeter.setConstype_code(ADJUSTED);
             }
 
         }

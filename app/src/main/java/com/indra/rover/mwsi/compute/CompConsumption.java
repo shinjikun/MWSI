@@ -6,10 +6,12 @@ import android.util.Log;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
 import com.indra.rover.mwsi.utils.Utils;
 
+import java.util.List;
+
 /**
  * Class to compute  the consumption
  */
-public class CompConsumption extends Compute{
+public class CompConsumption extends Compute implements Compute.ConsumptionListener{
 
 
 
@@ -29,7 +31,7 @@ public class CompConsumption extends Compute{
                if(Utils.isNotEmpty(block_tag)){
                    //account is block then proceed to compute BlockAccount
                    if(block_tag.equals("B")||block_tag.equals("P")){
-                        CompBlockAccn blockAccount = new CompBlockAccn(this.listener);
+                        CompBlockAccn blockAccount = new CompBlockAccn(this);
                         blockAccount.compute(meterConsObj);
                    }
                    else {
@@ -194,9 +196,9 @@ public class CompConsumption extends Compute{
         if(present_reading>=bill_prev_reading){
             //is previous consumption average?
             //if yes check previous OC
-            if(previous_cons_avg.equals("1")){
+            if(previous_cons_avg.equals(AVERAGE)){
                 //if previous OC 26 or 29
-                if(prev_oc1.equals("26")||prev_oc2.equals("29")){
+                if(prev_oc1.equals(INTERCHANGEMR)||prev_oc2.equals(NEW_METER)){
                     //if yes
                     decisionD();
                 }else{
@@ -235,32 +237,53 @@ public class CompConsumption extends Compute{
      */
     public void computeAgainstPrevRecord(){
         String prevOC2 = meterConsObj.getPrevff2();
-        //Actual rdg two months prior to current month is available and actual ?
-        //Previous rdg is less than actual rdg two months prior to current month?
-        String bill_previous_2 = meterConsObj.getBill_prev_act_tag();
-        if(Utils.isNotEmpty(bill_previous_2)){
-                //previous oc2 enter is 29
-                if(prevOC2.equals("29")){
+
+
+        String bill_prev_tag2 = meterConsObj.getBill_prev_act_tag();
+        int billPrevRdg2 =  Integer.parseInt(meterConsObj.getBill_prev_rdg2());
+        int billPrevRdg =  Integer.parseInt(meterConsObj.getBill_prev_rdg());
+        if(Utils.isNotEmpty(bill_prev_tag2)){
+            //Actual rdg two months prior to current month is available and actual ?
+            if(bill_prev_tag2.equals("1")){
+                //Previous rdg is less than actual rdg two months prior to current month?
+                if(billPrevRdg>billPrevRdg2){
+                    //OC 29 entered the previous month
+                    if(prevOC2.equals(NEW_METER)){
+                        //use scenario 4 to compute the consumption
+                        int bill_consumption = scenario4();
+                        meterConsObj.setBilled_cons(bill_consumption);
+                        //tag as adjusted
+                        decisionC();
+                    }
+                    else {
+                        //refer to formula for special condition5 to compute consumption
+                        int bill_cosumption = scenario5();
+                        //consumption computed less than zero
+                        if(bill_cosumption<0){
+                            decisionB();
+                        }else {
+                            //use consumption computed as consumption
+                            meterConsObj.setBilled_cons(bill_cosumption);
+                            //tag as adjusted
+                            decisionC();
+                        }
+                    }
+
+                }else {
                     //use scenario 4 to compute the consumption
                     int bill_consumption = scenario4();
                     meterConsObj.setBilled_cons(bill_consumption);
                     //tag as adjusted
                     decisionC();
                 }
-                else {
-                    //refer to formula for special condtion 5 to compute for consumption
-                    int bill_consumption = scenario5();
-                    //consumption computed less than 0
-                    if(bill_consumption<0){
-                        //tag as average
-                        decisionB();
-                    }
-                    else {
-                        meterConsObj.setBilled_cons(bill_consumption);
-                        //tag as adjusted
-                        decisionC();
-                    }
-                }
+            }
+            else {
+                //use scenario 4 to compute the consumption
+                int bill_consumption = scenario4();
+                meterConsObj.setBilled_cons(bill_consumption);
+                //tag as adjusted
+                decisionC();
+            }
 
         }else {
             //use scenario 4 to compute the consumption
@@ -280,7 +303,7 @@ public class CompConsumption extends Compute{
             boolean isLess = isLessMaxCapacity(bill_consumption);
             if(isLess){
                 if(Utils.isNotEmpty(oc2)){
-                    if(oc2.equals("29")){
+                    if(oc2.equals(NEW_METER)){
                         //TAG AS average
                         decisionB();
                     }
@@ -327,14 +350,13 @@ public class CompConsumption extends Compute{
     }
 
 
+    @Override
+    public void onPostConsResult(MeterConsumption meterConsumption) {
+         listener.onPostConsResult(meterConsumption);
+    }
 
+    @Override
+    public void onPrintChildMeters(MeterConsumption meterConsumption, List<MeterConsumption> csChildMeter) {
 
-
-
-
-
-
-
-
-
+    }
 }

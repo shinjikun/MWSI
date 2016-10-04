@@ -54,6 +54,8 @@ public class MeterConsumption {
     String  csmb_type_code;
     String  csmb_parent;
     String acct_num;
+    String range_code;
+    String readstat;
     public MeterConsumption(Cursor cursor){
         this.id =cursor.getString(cursor.getColumnIndexOrThrow("DLDOCNO"));
         this.acct_status = cursor.getString(cursor.getColumnIndexOrThrow("ACCT_STATUS"));
@@ -85,6 +87,8 @@ public class MeterConsumption {
         this.csmb_parent = cursor.getString(cursor.getColumnIndexOrThrow("CSMB_PARENT"));
         this.csmb_type_code = cursor.getString(cursor.getColumnIndexOrThrow("CSMB_TYPE_CODE"));
         this.acct_num =  cursor.getString(cursor.getColumnIndexOrThrow("ACCTNUM"));
+        this.readstat = cursor.getString(cursor.getColumnIndexOrThrow("READSTAT"));
+        this.range_code = cursor.getString(cursor.getColumnIndexOrThrow("RANGE_CODE"));
     }
 
     /**
@@ -215,5 +219,17 @@ public class MeterConsumption {
 
     public String getId() {
         return id;
+    }
+
+    public String getReadstat() {
+        return readstat;
+    }
+
+    public String getRange_code() {
+        return range_code;
+    }
+
+    public void setRange_code(String range_code) {
+        this.range_code = range_code;
     }
 }

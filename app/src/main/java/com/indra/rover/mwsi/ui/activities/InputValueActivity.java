@@ -53,9 +53,7 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
                     txtValues.setText(meterInfo.getPresRdg());
                 }
             }
-            else {
 
-            }
         }
 
 
@@ -111,7 +109,7 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
         tries = tries+1;
         String value = txtValues.getText().toString();
         if(value.isEmpty()){
-            meterInfo.setReadStat("R");
+            meterInfo.setReadStat("U");
         }else {
             String readStat = meterInfo.getReadStat();
             if(readStat.equals("R")){

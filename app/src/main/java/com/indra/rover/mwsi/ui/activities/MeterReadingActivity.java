@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -201,7 +202,9 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
         if(Utils.isNotEmpty(meterInfo.getBlock_tag())){
             stringBuilder.append(' ');
-            stringBuilder.append(meterInfo.getBlock_tag());
+            stringBuilder.append('B');
+
+
         }
         if(Utils.isNotEmpty(meterInfo.getGrp_flag())){
             stringBuilder.append(' ');
@@ -237,25 +240,18 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
 
 
-     void updateReadStatus(String readStatus){
+     void updateReadStatusDisplay(String readStatus){
         meterInfo.setReadStat(readStatus);
         meterStatus();
     }
 
-     void regularScheme(String value){
 
-        setReadingValue(value);
-        //start computing the bill consumption
-        MeterConsumption mterCons = meterDao.getConsumption(meterInfo.getDldocno());
-        CompConsumption comConsumption = new CompConsumption(this);
-        comConsumption.compute(mterCons);
-    }
 
 
      void updateMeterReading(){
         String bill_str = meterInfo.getBill_scheme();
         String readStat = meterInfo.getReadStat();
-        if(readStat.equals("P")||readStat.equals("Q")){
+     if(readStat.equals("P")||readStat.equals("Q")){
             rdg_disabled(0);
             return;
         }
@@ -291,7 +287,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                     loadMeterInput();
                     break;
                 case MB_CHILD:
-                    int countChildPrinted = meterDao.countChildBilled(accoutNumb);
+                    String parent_id = meterInfo.getParentID();
+                    int countChildPrinted = meterDao.countChildBilled(parent_id);
                     if(countChildPrinted!=0){
                         rdg_disabled(4);
                         return;
@@ -314,14 +311,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         startActivityForResult(intent, INPUT_REQ);
     }
 
-     void updateReading(String value){
-        String bill_scheme = meterInfo.getBill_scheme();
-        if(bill_scheme.equals("0")){
-            regularScheme(value);
-        }
 
-
-    }
 
 
     public void snackbar(String message){
@@ -373,6 +363,26 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
 
 
+    }
+
+    void updateReadingInDB(String value){
+        String latitude = null;
+        String longtitude = null;
+        if(gpsTracker.canGetLocation()){
+            latitude = String.valueOf(gpsTracker.getLatitude());
+            longtitude = String.valueOf(gpsTracker.getLongitude());
+
+        }
+        int tries =0;
+        String str_tries = meterInfo.getRdg_tries();
+        if(Utils.isNotEmpty(str_tries)){
+            tries = Integer.parseInt(str_tries);
+        }
+
+        meterDao.updateReading(Utils.getFormattedDate(),
+                Utils.getFormattedTime(),
+                value,latitude,longtitude,tries, meterInfo.getDldocno(),meterInfo.getReadStat()
+        );
     }
 
     @Override
@@ -470,7 +480,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                         newReadStat="Q";
                     }
                     meterDao.updateReadStatus(newReadStat,meterInfo.getDldocno());
-                    updateReadStatus(newReadStat);
+                    updateReadStatusDisplay(newReadStat);
                     MainApp.bus.post(new MessageTransport("readstat",newReadStat));
                     }
                 break;
@@ -575,9 +585,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 String value = bundle.getString("value");
                 String id =  meterInfo.getDldocno();
                 meterInfo = meterDao.fetchInfo(id);
-                updateReadStatus(meterInfo.getReadStat());
+                updateReadStatusDisplay(meterInfo.getReadStat());
                 setReadingValue(value);
-                //compute consumption after getting the present reading
                 computeConsumption(meterInfo.getDldocno());
             }
         }
@@ -627,8 +636,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     public void onPostConsResult(MeterConsumption meterConsumption) {
 
         meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
+        Log.i("Test","billed cons"+meterConsumption.getBilled_cons());
         comp_cons_range(meterConsumption);
-        meterInfo.setPresent_reading(meterConsumption.getPresent_rdg());
+
+
     }
 
     @Override
@@ -648,10 +659,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         //print child meter
     }
 
-     void comp_cons_range(MeterConsumption meterConsumption){
-         int consumption = meterConsumption.getBilled_cons();
-         String str = meterConsumption.getAve_consumption();
-         int ave_cons = consumption;
+     void comp_cons_range(MeterConsumption mtrCons){
+         int consumption = mtrCons.getBilled_cons();
+         String str = mtrCons.getAve_consumption();
+         int ave_cons ;
          if(Utils.isNotEmpty(str)){
              ave_cons = Integer.parseInt(str);
              if(ave_cons != 0){
@@ -667,22 +678,47 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
              }
 
              int devi = meterDao.getRTolerance(ave_cons,type);
+             int range_code ;
              // pcntDiff is positive
              if(type == 1){
                  if (pcntDiff > devi){
                      snackbar("Consumption Very High");
+                    range_code = VERY_HIGH;
                  }
-
+                 else {
+                    range_code = NORMAL;
+                 }
              }
+             else  {
+                 if (-pcntDiff > devi){
+                     snackbar("Consumption Very Low");
+                     range_code = VERY_LOW;
+                 }
+                 else {
+                    range_code = NORMAL;
+                 }
+             }
+             mtrCons.setRange_code(String.valueOf(range_code));
+             meterInfo.setRange_code(String.valueOf(range_code));
+             meterDao.updateRangeCode(range_code,meterInfo.getDldocno());
+
          }
-      //  snackbar("Consumption Very Low");
+
     }
 
     @Subscribe
     public void getMessage(MessageTransport msgTransport) {
         String action = msgTransport.getAction();
         if(action.equals("reading")){
-          updateReading(meterInfo.getPresRdg());
+
+                String readStat = meterInfo.getReadStat();
+                if(readStat.equals("U")) {
+                    meterInfo.setReadStat("R");
+                }
+            updateReadingInDB(meterInfo.getPresRdg());
+            //update read status
+            updateReadStatusDisplay(meterInfo.getReadStat());
+            computeConsumption(meterInfo.getDldocno());
         }
 
     }
