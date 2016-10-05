@@ -117,6 +117,9 @@ public class CustomSpinView extends RelativeLayout {
     public ImageButton getBtnClr() {
         return btnClr;
     }
+    public TextView getText(){
+        return this.lblOpt;
+    }
 
     public int getSelectedItemPosition(){
         return spn.getSelectedItemPosition();

@@ -13,11 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.indra.rover.mwsi.MainApp;
@@ -28,6 +28,7 @@ import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterOC;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.ObservationCode;
+import com.indra.rover.mwsi.ui.widgets.CustomSpinView;
 import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.MessageTransport;
@@ -45,16 +46,18 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
     private static final String ARG_ID = "id";
 
     View mView;
-    private String crdocno;
-    private RefTableDao refTableDao;
-    Spinner spnOC1,spnOC2;
+    String crdocno;
+    RefTableDao refTableDao;
     MeterReadingDao mtrDao;
     MeterOC meterOC;
     List<ObservationCode> arryOC1;
     List<ObservationCode> arryOC2;
-    private final int CAM_OC1=31,CAM_OC2=32;
+    final int CAM_OC1=31,CAM_OC2=32;
     DialogUtils dlgUtils;
     final int DLG_REVERT_RDG=101;
+    CustomSpinView oc1_opt;
+    CustomSpinView oc2_opt;
+    Button btnCapOC1,btnCapOC2;
     public MROCFragment() {
     }
 
@@ -91,42 +94,87 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_mroc, container, false);
-
-        Button imgCapture = (Button)mView.findViewById(R.id.btnImageCapture);
-        imgCapture.setOnClickListener(new View.OnClickListener() {
+        oc1_opt =  (CustomSpinView)mView.findViewById(R.id.oc1_opt);
+        oc2_opt =  (CustomSpinView)mView.findViewById(R.id.oc2_opt);
+        btnCapOC1 = (Button)mView.findViewById(R.id.btnCapOc1);
+        btnCapOC1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Button btn = (Button)v;
-                if(btn.getText().equals("Capture Image")){
-                    launchCamera(CAM_OC1);
-                }
-                else {
+                File  file = getImageFile(CAM_OC1);
+                if(file.exists()){
                     showImageDlg(CAM_OC1);
                 }
-
+                else {
+                  launchCamera(CAM_OC1);
+                }
             }
         });
-        imgCapture = (Button) mView.findViewById(R.id.btnImageCapture1);
-        imgCapture.setOnClickListener(new View.OnClickListener() {
+        btnCapOC2 = (Button) mView.findViewById(R.id.btnCapOc2);
+        btnCapOC2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Button btn = (Button)v;
-                if(btn.getText().equals("Capture Image")){
-                    launchCamera(CAM_OC2);
+             File  file = getImageFile(CAM_OC2);
+                if(file.exists()){
+                    showImageDlg(CAM_OC2);
                 }
                 else {
-                    showImageDlg(CAM_OC2);
+                    launchCamera(CAM_OC2);
                 }
             }
         });
 
-        spnOC1 = (Spinner)mView.findViewById(R.id.spnOC1);
-        spnOC2 = (Spinner)mView.findViewById(R.id.spnOC2);
-        mView.findViewById(R.id.btnClrOc1).setOnClickListener(this);
-        mView.findViewById(R.id.btnClrOc2).setOnClickListener(this);
-        mView.findViewById(R.id.btnCancelOC).setOnClickListener(this);
-        mView.findViewById(R.id.btnSaveOC).setOnClickListener(this);
-        mView.findViewById(R.id.btnEditOC).setOnClickListener(this);
+        oc1_opt.getBtnClr().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                oc1_opt.setSelection(0);
+                deleteCapturedImage(CAM_OC1);
+            }
+        });
+
+        oc2_opt.getBtnClr().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                oc2_opt.setSelection(0);
+                deleteCapturedImage(CAM_OC2);
+            }
+        });
+
+        oc1_opt.getSpn().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                if(position ==0){
+                    btnCapOC1.setVisibility(View.GONE);
+                }
+                else {
+                    btnCapOC1.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        oc2_opt.getSpn().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                if(position ==0){
+                    btnCapOC2.setVisibility(View.GONE);
+                }
+                else {
+                    btnCapOC2.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        mView.findViewById(R.id.btnCancel).setOnClickListener(this);
+        mView.findViewById(R.id.btnSave).setOnClickListener(this);
+        mView.findViewById(R.id.btnEdit).setOnClickListener(this);
+
         initContent();
         setUp();
         return mView;
@@ -159,13 +207,13 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // attaching data adapter to spinner
-        spnOC1.setAdapter(dataAdapter);
+        oc1_opt.getSpn().setAdapter(dataAdapter);
 
         dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, arryOC2codes);
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // attaching data adapter to spinner
-        spnOC2.setAdapter(dataAdapter);
+        oc2_opt.getSpn().setAdapter(dataAdapter);
     }
 
 
@@ -178,24 +226,34 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
             vis = View.INVISIBLE;
             vis2 = View.VISIBLE;
         }
-        mView.findViewById(R.id.btnClrOc1).setVisibility(vis);
-        mView.findViewById(R.id.btnClrOc2).setVisibility(vis);
-        mView.findViewById(R.id.spnOC1).setVisibility(vis);
-        mView.findViewById(R.id.spnOC2).setVisibility(vis);
-        mView.findViewById(R.id.btnCancelOC).setVisibility(vis);
-        mView.findViewById(R.id.btnSaveOC).setVisibility(vis);
+        mView.findViewById(R.id.btnCancel).setVisibility(vis);
+        mView.findViewById(R.id.btnSave).setVisibility(vis);
 
-        mView.findViewById(R.id.lblOC1).setVisibility(vis2);
-        mView.findViewById(R.id.lblOC2).setVisibility(vis2);
-        mView.findViewById(R.id.btnEditOC).setVisibility(vis2);
+        mView.findViewById(R.id.btnEdit).setVisibility(vis2);
         String lbl = "Capture Image";
         if(!isEditMode){
             lbl= "View Image";
         }
-        Button btn =  (Button)mView.findViewById(R.id.btnImageCapture);
+        Button btn =  (Button)mView.findViewById(R.id.btnCapOc1);
         btn.setText(lbl);
-        btn =  (Button)mView.findViewById(R.id.btnImageCapture1);
+        btn =  (Button)mView.findViewById(R.id.btnCapOc2);
         btn.setText(lbl);
+        oc1_opt.editMode(isEditMode);
+        oc2_opt.editMode(isEditMode);
+        File file =   getImageFile(CAM_OC1);
+        if(file.exists()){
+            mView.findViewById(R.id.btnCapOc1).setVisibility(View.VISIBLE);
+        }
+        else {
+            mView.findViewById(R.id.btnCapOc1).setVisibility(View.GONE);
+        }
+        file =   getImageFile(CAM_OC2);
+        if(file.exists()){
+            mView.findViewById(R.id.btnCapOc2).setVisibility(View.VISIBLE);
+        }
+        else {
+            mView.findViewById(R.id.btnCapOc2).setVisibility(View.GONE);
+        }
     }
 
     @Subscribe
@@ -217,33 +275,55 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
             String oc1 = meterOC.getOc1();
             String oc2 = meterOC.getOc2();
             int index = getPosition(oc1,arryOC1);
-            spnOC1.setSelection(index);
+            if(index== 0){
+                btnCapOC1.setVisibility(View.GONE);
+            }
+            else {
+                btnCapOC1.setVisibility(View.VISIBLE);
+            }
+            oc1_opt.setSelection(index);
             index = getPosition(oc2,arryOC2);
-            spnOC2.setSelection(index);
-            TextView txt = (TextView) mView.findViewById(R.id.lblOC1);
-            txt.setText(spnOC1.getSelectedItem().toString());
-            txt = (TextView) mView.findViewById(R.id.lblOC2);
-            txt.setText(spnOC2.getSelectedItem().toString());
+            if(index== 0){
+                btnCapOC2.setVisibility(View.GONE);
+            }
+            else {
+                btnCapOC2.setVisibility(View.VISIBLE);
+            }
+            oc2_opt.setSelection(index);
+            oc1_opt.setValues(oc1_opt.getSpn().getSelectedItem().toString());
+            oc2_opt.setValues(oc2_opt.getSpn().getSelectedItem().toString());
+            File file =   getImageFile(CAM_OC1);
+            if(file.exists()){
+                btnCapOC1.setText("View Image");
+            }
+            else {
+                btnCapOC1.setText("Capture Image");
+            }
+            file =   getImageFile(CAM_OC2);
+            if(file.exists()){
+                btnCapOC2.setText("View Image");
+            }
+            else {
+                btnCapOC2.setText("Capture Image");
+            }
         }
 
         editMode(false);
     }
 
     private void saveDB(){
-        int index = spnOC1.getSelectedItemPosition();
+        int index = oc1_opt.getSpn().getSelectedItemPosition();
         String oc1 ="";
         String oc2 ="";
         if(index !=0){
             oc1 =   arryOC1.get(index-1).getFf_code();
         }
-       int  index2 = spnOC2.getSelectedItemPosition();
+       int  index2 = oc2_opt.getSpn().getSelectedItemPosition();
         if(index2!=0){
             oc2 = arryOC2.get(index2-1).getFf_code();
         }
-        TextView txt = (TextView) mView.findViewById(R.id.lblOC1);
-        txt.setText(spnOC1.getSelectedItem().toString());
-        txt = (TextView) mView.findViewById(R.id.lblOC2);
-        txt.setText(spnOC2.getSelectedItem().toString());
+        oc1_opt.setValues(oc1_opt.getSpn().getSelectedItem().toString());
+        oc2_opt.setValues(oc2_opt.getSpn().getSelectedItem().toString());
 
         mtrDao.addOC(oc1,oc2,crdocno);
         startReading(oc1,oc2);
@@ -317,22 +397,14 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
         int id = view.getId();
         switch (id){
 
-            case R.id.btnCancelOC:
+            case R.id.btnCancel:
                 editMode(false);
                 break;
-            case R.id.btnSaveOC:
+            case R.id.btnSave:
                 saveDB();
                 break;
-            case R.id.btnEditOC:
+            case R.id.btnEdit:
                 updateOC();
-                break;
-            case R.id.btnClrOc1:
-                spnOC1.setSelection(0);
-                deleteCapturedImage(CAM_OC1);
-                break;
-            case R.id.btnClrOc2:
-                spnOC2.setSelection(0);
-                deleteCapturedImage(CAM_OC2);
                 break;
 
         }
@@ -354,12 +426,12 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
         Button btn;
         TextView lbl;
         if(ocType == CAM_OC1){
-            btn =  (Button)mView.findViewById(R.id.btnImageCapture);
-            lbl =  (TextView)mView.findViewById(R.id.lblOC1);
+            btn =  (Button)mView.findViewById(R.id.btnCapOc1);
+            lbl =  oc1_opt.getText();
         }
         else {
-            btn =  (Button)mView.findViewById(R.id.btnImageCapture1);
-            lbl =  (TextView)mView.findViewById(R.id.lblOC2);
+            btn =  (Button)mView.findViewById(R.id.btnCapOc2);
+            lbl =  oc2_opt.getText();
         }
         btn.setText("Capture Image");
         lbl.setText("");
@@ -413,19 +485,24 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
     }
 
     Dialog dlgImage;
-    public void showImageDlg(final int ocType){
+
+
+     void showImageDlg(final int ocType){
         dlgImage = new Dialog(getActivity());
         dlgImage.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dlgImage.setContentView(R.layout.dialog_image_view);
+        dlgImage.setContentView(R.layout.dialog_image_view2);
         dlgImage.setCancelable(false);
-
         File file = getImageFile(ocType);
         if(file.exists()){
-
             Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
             ImageView imgFile = (ImageView)dlgImage.findViewById(R.id.imgOC);
             imgFile.setImageBitmap(myBitmap);
-
+        }
+        if(MainApp.isEditMode){
+            dlgImage.findViewById(R.id.ctrs).setVisibility(View.VISIBLE);
+        }
+        else {
+            dlgImage.findViewById(R.id.ctrs).setVisibility(View.GONE);
         }
         ImageButton dlgBtnClose = (ImageButton) dlgImage.findViewById(R.id.dlg_btn_close);
         dlgBtnClose.setOnClickListener(new View.OnClickListener(){
@@ -439,7 +516,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
 
             @Override
             public void onClick(View view) {
-
+                dlgImage.dismiss();
             }
         });
 
@@ -447,19 +524,35 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                File file = getImageFile(ocType);
+                if(file.exists())
+                    file.delete();
+                if(ocType == CAM_OC1){
+                    btnCapOC1.setText("Capture Image");
+                }
+                else {
+                    btnCapOC2.setText("Capture Image");
+                }
+               // btnSign.setText("Ask For Signature");
                 dlgImage.dismiss();
             }
         });
 
-
-
+        btn =  (Button) dlgImage.findViewById(R.id.btnRetake);
+        btn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                dlgImage.dismiss();
+                launchCamera(ocType);
+            }
+        });
         dlgImage.show();
     }
 
 
-    private File getImageFile(int ocType){
+     File getImageFile(int ocType){
         File    contentDir=new File(android.os.Environment.getExternalStorageDirectory()
-                ,getActivity().getPackageName()+"/downloads/images");
+                ,"com.indra.rover.mwsi/downloads/images");
         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append(crdocno);
         strBuilder.append('-');
@@ -487,8 +580,6 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
      */
     void noOCEntry(int type){
         StringBuilder  strBuilder = new StringBuilder();
-
-        strBuilder.append('\n');
         switch(type){
 
             case 1:
@@ -544,7 +635,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
 
     }
 
-    private void revert_reading(){
+     void revert_reading(){
         StringBuilder strBldr = new StringBuilder();
         strBldr.append("Deleting a billable");
         strBldr.append('\n');
