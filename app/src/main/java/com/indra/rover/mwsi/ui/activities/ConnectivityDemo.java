@@ -8,9 +8,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 
@@ -18,7 +15,6 @@ import com.indra.rover.mwsi.R;
 import com.zebra.sdk.comm.BluetoothConnection;
 import com.zebra.sdk.comm.Connection;
 import com.zebra.sdk.comm.ConnectionException;
-import com.zebra.sdk.comm.TcpConnection;
 import com.zebra.sdk.device.ZebraIllegalArgumentException;
 import com.zebra.sdk.graphics.ZebraImageFactory;
 import com.zebra.sdk.graphics.ZebraImageI;
@@ -32,10 +28,9 @@ import java.io.IOException;
 public class ConnectivityDemo extends Activity {
 
     private Connection printerConnection;
-    private RadioButton btRadioButton;
     private ZebraPrinter printer;
     private TextView statusField;
-    private EditText macAddress, ipDNSAddress, portNumber;
+    private EditText macAddress;
     private Button testButton;
 
     @Override
@@ -43,18 +38,8 @@ public class ConnectivityDemo extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.connection_screen_with_status);
-
-        ipDNSAddress = (EditText) this.findViewById(R.id.ipAddressInput);
-
-
-        portNumber = (EditText) this.findViewById(R.id.portInput);
-
-
         macAddress = (EditText) this.findViewById(R.id.macInput);
-
-
         statusField = (TextView) this.findViewById(R.id.statusText);
-        btRadioButton = (RadioButton) this.findViewById(R.id.bluetoothRadio);
 
         testButton = (Button) this.findViewById(R.id.testButton);
         testButton.setOnClickListener(new OnClickListener() {
@@ -72,32 +57,9 @@ public class ConnectivityDemo extends Activity {
             }
         });
 
-        RadioGroup radioGroup = (RadioGroup) this.findViewById(R.id.radioGroup);
-        radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.bluetoothRadio) {
-                    toggleEditField(macAddress, true);
-                    toggleEditField(portNumber, false);
-                    toggleEditField(ipDNSAddress, false);
-                } else {
-                    toggleEditField(portNumber, true);
-                    toggleEditField(ipDNSAddress, true);
-                    toggleEditField(macAddress, false);
-                }
-            }
-        });
     }
 
-    private void toggleEditField(EditText editText, boolean set) {
-        /*
-         * Note: Disabled EditText fields may still get focus by some other means, and allow text input.
-         *       See http://code.google.com/p/android/issues/detail?id=2771
-         */
-        editText.setEnabled(set);
-        editText.setFocusable(set);
-        editText.setFocusableInTouchMode(set);
-    }
 
     @Override
     protected void onStop() {
@@ -115,28 +77,12 @@ public class ConnectivityDemo extends Activity {
         });
     }
 
-    private boolean isBluetoothSelected() {
-        return btRadioButton.isChecked();
-    }
+
 
     public ZebraPrinter connect() {
         setStatus("Connecting...", Color.YELLOW);
         printerConnection = null;
-        if (isBluetoothSelected()) {
             printerConnection = new BluetoothConnection(getMacAddressFieldText());
-          //  SettingsHelper.saveBluetoothAddress(this, getMacAddressFieldText());
-        } else {
-            try {
-                int port = Integer.parseInt(getTcpPortNumber());
-                printerConnection = new TcpConnection(getTcpAddress(), port);
-            //    SettingsHelper.saveIp(this, getTcpAddress());
-              //  SettingsHelper.savePort(this, getTcpPortNumber());
-            } catch (NumberFormatException e) {
-                setStatus("Port Number Is Invalid", Color.RED);
-                return null;
-            }
-        }
-
         try {
             printerConnection.open();
             setStatus("Connected", Color.GREEN);
@@ -198,18 +144,11 @@ public class ConnectivityDemo extends Activity {
         return macAddress.getText().toString();
     }
 
-    private String getTcpAddress() {
-        return ipDNSAddress.getText().toString();
-    }
-
-    private String getTcpPortNumber() {
-        return portNumber.getText().toString();
-    }
 
     private void doConnectionTest() {
         printer = connect();
         if (printer != null) {
-            //storeImage();
+            storeImage();
             sendTestLabel();
         } else {
             disconnect();
@@ -221,11 +160,14 @@ public class ConnectivityDemo extends Activity {
         try {
             ZebraImageI zebraImageI = ZebraImageFactory.getImage(getAssets().open("maynilad.png"));
 
-             printer.printImage(zebraImageI,0,0,-1,-1 ,false);
+            printer.storeImage("e:maynilad.png",zebraImageI,-1,-1);
+            // printer.printImage(zebraImageI,0,0,-1,-1 ,false);
 
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ConnectionException e) {
+            e.printStackTrace();
+        } catch (ZebraIllegalArgumentException e) {
             e.printStackTrace();
         }
     }
@@ -265,17 +207,9 @@ public class ConnectivityDemo extends Activity {
     *
     */
     private byte[] getConfigLabel() {
-        PrinterLanguage printerLanguage = printer.getPrinterControlLanguage();
-
         byte[] configLabel = null;
             String cpclConfigLabel = "! U1 setvar \"device.languages\", \"line_print\"\r\n"
-                    + "! U1 SETLP 5 2 46\r\n"
-                    + "AURORA'S FABRIC SHOP\r\n"
-                    + "! U1 SETLP 5 2 24\r\n" +
-                    "123 CASTLE DRIVE\n"
-                    + "! U1 PCX 0 30 !<maynilad.pcx\n"
-                    + "\n"
-                    + "\n";
+                    + "! U1 PCX 0 30 !<maynilad.pcx\n";
             configLabel = cpclConfigLabel.getBytes();
 
         return configLabel;
