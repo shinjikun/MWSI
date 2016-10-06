@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
+import com.indra.rover.mwsi.print.PrintLayout;
+import com.indra.rover.mwsi.print.ZebraLayout;
 import com.zebra.sdk.comm.BluetoothConnection;
 import com.zebra.sdk.comm.Connection;
 import com.zebra.sdk.comm.ConnectionException;
@@ -24,6 +27,7 @@ import com.zebra.sdk.printer.ZebraPrinterFactory;
 import com.zebra.sdk.printer.ZebraPrinterLanguageUnknownException;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 public class ConnectivityDemo extends Activity {
 
@@ -148,7 +152,7 @@ public class ConnectivityDemo extends Activity {
     private void doConnectionTest() {
         printer = connect();
         if (printer != null) {
-            storeImage();
+         //   storeImage();
             sendTestLabel();
         } else {
             disconnect();
@@ -208,9 +212,16 @@ public class ConnectivityDemo extends Activity {
     */
     private byte[] getConfigLabel() {
         byte[] configLabel = null;
-            String cpclConfigLabel = "! U1 setvar \"device.languages\", \"line_print\"\r\n"
-                    + "! U1 PCX 0 30 !<maynilad.pcx\n";
-            configLabel = cpclConfigLabel.getBytes();
+            //String cpclConfigLabel = "! U1 setvar \"device.languages\", \"line_print\"\r\n"
+             //       + "! U1 PCX 0 30 !<maynilad.pcx\n";
+            PrintLayout s = new ZebraLayout(this);
+
+            String toPrint = s.contentPrint(new MeterPrint());
+        try {
+            configLabel = toPrint.getBytes("US-ASCII");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         return configLabel;
     }

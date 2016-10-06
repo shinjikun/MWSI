@@ -11,15 +11,17 @@ public  abstract class PrintLayout {
 
 
     Context context;
-   abstract String headerConfig();
-   abstract String billHeader(MeterPrint mtrPrint);
-   abstract String billFooter(MeterPrint mtrPrint);
-   abstract String serviceInfo(MeterPrint mtrPrint);
-   abstract String meterInfo(MeterPrint mtrPrint);
-   abstract String paymentHistory(MeterPrint mtrPrint);
-   abstract String billSummary(MeterPrint mtrPrint);
-   abstract String billDiscon(MeterPrint mtrPrint);
+    abstract String headerConfig();
+    abstract String breadCrumbsHeader();
+    abstract String billHeader(MeterPrint mtrPrint);
+    abstract String serviceInfo(MeterPrint mtrPrint);
+    abstract String meterInfo(MeterPrint mtrPrint);
+    abstract String paymentHistory(MeterPrint mtrPrint);
+    abstract String billSummary(MeterPrint mtrPrint);
+    abstract String billFooter(MeterPrint mtrPrint);
+    abstract String breadCrumbsFooter();
 
+   abstract String billDiscon(MeterPrint mtrPrint);
     public PrintLayout(Context context){
         this.context = context;
     }
@@ -27,18 +29,20 @@ public  abstract class PrintLayout {
     public String contentPrint(MeterPrint mtrPrint) {
 
         StringBuilder strPrint = new StringBuilder();
+        //header configuration
+        strPrint.append(headerConfig());
+        //header breadcrumbs
+       strPrint.append(breadCrumbsHeader());
         //header layout
-        String headstr = billHeader(mtrPrint);
-        strPrint.append(headstr);
+        strPrint.append(billHeader(mtrPrint));
         //body layout
-        String bodystr = bodyLayout(mtrPrint);
-        strPrint.append(bodystr);
+        strPrint.append(bodyLayout(mtrPrint));
         //footer layout
-        String footer = billFooter(mtrPrint);
-        strPrint.append(footer);
-
-        String strDisCon =  billDiscon(mtrPrint);
-        strPrint.append(strDisCon);
+        strPrint.append(billFooter(mtrPrint));
+        //add if there is a disconnection notice in the bill
+        strPrint.append(billDiscon(mtrPrint));
+        //footer breadcrumbs
+        strPrint.append(breadCrumbsFooter());
         return strPrint.toString();
     }
 

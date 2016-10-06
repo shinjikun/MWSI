@@ -7,50 +7,59 @@ import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 /**
  * Created by Indra on 10/5/2016.
  */
-public class HTMLayout extends PrintLayout {
+public class HTMLayout  extends PrintLayout {
+
     public HTMLayout(Context context) {
         super(context);
     }
 
     @Override
     String headerConfig() {
-        return null;
+        return "\n";
+    }
+
+    @Override
+    String breadCrumbsHeader() {
+        return "\n";
     }
 
     @Override
     String billHeader(MeterPrint mtrPrint) {
-        return null;
+        return "\n";
     }
-
-    @Override
-    String billFooter(MeterPrint mtrPrint) {
-        return null;
-    }
-
-
 
     @Override
     String serviceInfo(MeterPrint mtrPrint) {
-        return null;
+        return "\n";
     }
 
     @Override
     String meterInfo(MeterPrint mtrPrint) {
-        return null;
+        return "\n";
     }
 
     @Override
     String paymentHistory(MeterPrint mtrPrint) {
-        return null;
+        return "\n";
     }
 
     @Override
     String billSummary(MeterPrint mtrPrint) {
-        return null;
+        return "\n";
+    }
+
+    @Override
+    String billFooter(MeterPrint mtrPrint) {
+        return "\n";
+    }
+
+    @Override
+    String breadCrumbsFooter() {
+        return "\n";
     }
 
     @Override
     String billDiscon(MeterPrint mtrPrint) {
-        return null;
+        return "\n";
     }
 }

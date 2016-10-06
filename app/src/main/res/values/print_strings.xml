@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="print_discon">Our records show that you have a total amount due of Php %1$s. We strongly advise you to pay your overdue and/or installment due amount on or before %2$s  to avoid the inconvenience of a disconnected water service.Please disregard this notice if payment has been made. Thank you.</string>
+    <string name="print_mtr_info">METERING INFORMATION</string>
+    <string name="print_statement">STATEMENT OF ACCOUNT</string>
+    <string name="print_service">SERVICE INFORMATION</string>
+    <string name="print_contract_num">Contract Account No.</string>
+    <string name="print_acct_name">Account Name</string>
+    <string name="print_address">Service Address</string>
+    <string name="print_rate">Rate Class</string>
+    <string name="print_business_area">Business Area</string>
+    <string name="print_TIN">TIN</string>
+    <string name="print_senior_citizen">Senior Citizen ID</string>
+    <string name="print_meter_info">METERING INFORMATION</string>
+    <string name="print_bill_payment">BILL and PAYMENT HISTORY</string>
+    <string name="print_notic_discon">NOTICE OF DISCONNECTION</string>
+    <string name="print_other_charges">Other Charges</string>
+    <string name="print_bill_summary">BILLING SUMMARY</string>
+    <string name="print_bill_period">BILLING PERIOD</string>
+    <string name="print_current_charges">Current Charges</string>
+    <array name="print_arry_curcharnges">
+        <item>Basic Charge</item>
+        <item>FCDA</item>
+        <item>Environmental Charges (20% of Basic Charge and FCDA)</item>
+        <item>Sewer Charges (20% of Basic Charge and FCDA)</item>
+        <item>Maintenance Service Charge (MSC)</item>
+        <item>Total Current Charges  before Taxes</item>
+        <item>Value Added Tax (VAT) </item>
+    </array>
+    <array name="print_arry_othercharge">
+        <item>Guarantee Deposit</item>
+        <item>Installation Cost - Water</item>
+        <item>Installation Cost - Sewer</item>
+        <item>Project Amortization Cost</item>
+        <item>Installment Due: Guarantee Deposit (4th of 6)</item>
+        <item>Installment Due: Installation Cost - Water (nth of n)</item>
+        <item>Installment Due: Installation Cost - Sewer (nth of n)</item>
+        <item>Installment Due: Project Amortization Cost (nth of n)</item>
+        <item>Installment Due: Restoration Charges (nth of n)</item>
+        <item>Installment Due: Penalties for Illegalities (nth of n)</item>
+        <item>Reopening Fee</item>
+        <item>Metering Charge</item>
+        <item>Septic Desludging Charge</item>
+        <item>Sprtn/Trnsfr/Chnge Size Charge</item>
+        <item>Penalties for Illegalities</item>
+        <item>Unmigrated AR - Water</item>
+        <item>Unmigrated AR - Installation Cost</item>
+        <item>Installment Due: Unmigrated AR - Water (nth of n)</item>
+        <item>Installment Due: Unmigrated AR - IC (nth of n)</item>
+        <item>Recovery of Accounts</item>
+        <item>Other Miscellaneous Charges</item>
+     </array>
+   <string name="print_refund">Refund/ Rebate/ Overpayment</string>
+   <string name="print_previous">Previous Unpaid Amount (Please pay immediately)</string>
+
+
+</resources>

@@ -15,42 +15,53 @@ public class APEXLayout  extends   PrintLayout {
 
     @Override
     String headerConfig() {
-        return null;
+        return "";
+    }
+
+    @Override
+    String breadCrumbsHeader() {
+        return "";
     }
 
     @Override
     String billHeader(MeterPrint mtrPrint) {
-        return null;
-    }
-
-    @Override
-    String billFooter(MeterPrint mtrPrint) {
-        return null;
+        return "";
     }
 
     @Override
     String serviceInfo(MeterPrint mtrPrint) {
-        return null;
+        return "";
     }
 
     @Override
     String meterInfo(MeterPrint mtrPrint) {
-        return null;
+        return "";
     }
 
     @Override
     String paymentHistory(MeterPrint mtrPrint) {
-        return null;
+        return "";
     }
 
     @Override
     String billSummary(MeterPrint mtrPrint) {
-        return null;
+        return "";
+    }
+
+    @Override
+    String billFooter(MeterPrint mtrPrint) {
+        return "";
+    }
+
+    @Override
+    String breadCrumbsFooter() {
+        return "";
     }
 
     @Override
     String billDiscon(MeterPrint mtrPrint) {
-
-        return null;
+        return "";
     }
+
+
 }
