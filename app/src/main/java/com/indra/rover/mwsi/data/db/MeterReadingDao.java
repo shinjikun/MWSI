@@ -42,7 +42,7 @@ public class MeterReadingDao extends ModelDao {
                 "c.RDG_TRIES,c.PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS, " +
                 "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE from T_DOWNLOAD t," +
                 " R_BILL_CLASS r,T_CURRENT_RDG c where t.BILL_CLASS = r.BILL_CLASS " +
-                "and t.DLDOCNO = c.CRDOCNO  and c.MRU="+mruID;
+                "and t.DLDOCNO = c.CRDOCNO  and c.MRU='"+mruID+"'";
         Log.i("Test",sql_stmt);
         try{
             open();
@@ -71,7 +71,8 @@ public class MeterReadingDao extends ModelDao {
                 "c.RDG_TRIES,c.PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS, " +
                 "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE from T_DOWNLOAD t," +
                 " R_BILL_CLASS r,T_CURRENT_RDG c where t.BILL_CLASS = r.BILL_CLASS " +
-                "and t.DLDOCNO = c.CRDOCNO  and c.CRDOCNO="+id;
+                "and t.DLDOCNO = c.CRDOCNO  and c.CRDOCNO='"+id+"'";
+        Log.i("Test",sql_stmt);
         try{
             open();
             Cursor cursor = database.rawQuery(sql_stmt,null);
@@ -99,7 +100,8 @@ public class MeterReadingDao extends ModelDao {
                 "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE from T_DOWNLOAD t, " +
                 "R_BILL_CLASS r,T_CURRENT_RDG c where t.BILL_CLASS = r.BILL_CLASS and " +
                 "t.DLDOCNO = c.CRDOCNO   and " +
-                "MRU="+mruID+ " and "+column+" like '%"+searchValue+"%'";
+                "MRU='"+mruID+ "' and "+column+" like '%"+searchValue+"%'";
+        Log.i("Test",sql_stmt);
         try{
             open();
             Cursor cursor = database.rawQuery(sql_stmt,null);
@@ -125,7 +127,8 @@ public class MeterReadingDao extends ModelDao {
         MeterRHistory meterRHistory = null;
         String sql_stmt = "Select MRU,DLDOCNO,METERNO,ACCTNUM,CUSTNAME,CUSTADDRESS," +
                 "PREV_REMARKS,PREVRDGDATE,PREVFF1,PREVFF2,ACTPREVRDG " +
-                "from T_DOWNLOAD where DLDOCNO="+dldocno;
+                "from T_DOWNLOAD where DLDOCNO='"+dldocno+"'";
+        Log.i("Test",sql_stmt);
         try{
             open();
             Cursor cursor = database.rawQuery(sql_stmt,null);
@@ -216,7 +219,7 @@ public class MeterReadingDao extends ModelDao {
             String sql_stmt = "SELECT t.CRDOCNO, t.DEL_CODE, t.DELIV_DATE, t.DELIV_TIME," +
                     "t.DELIV_REMARKS, t.READSTAT" +
                     " from  T_CURRENT_RDG t where " +
-                    "t.CRDOCNO="+crdocno;
+                    "t.CRDOCNO='"+crdocno+"'";
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
                 do {
@@ -403,7 +406,7 @@ public class MeterReadingDao extends ModelDao {
         try {
             open();
             String sql_stmt = "SELECT CRDOCNO, ACCTNUM,METERNO,REMARKS,READSTAT  " +
-                    "from  T_CURRENT_RDG where CRDOCNO="+crdocno;
+                    "from  T_CURRENT_RDG where CRDOCNO='"+crdocno+"'";
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
                 do {
@@ -425,7 +428,7 @@ public class MeterReadingDao extends ModelDao {
             open();
             String sql_stmt = "SELECT CRDOCNO, FFCODE1,FFCODE2,READSTAT," +
                     "CSMB_TYPE_CODE,CSMB_PARENT,ACCTNUM  from " +
-                    " T_CURRENT_RDG where CRDOCNO="+crdocno;
+                    " T_CURRENT_RDG where CRDOCNO='"+crdocno+"'";
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
                 do {
@@ -453,7 +456,7 @@ public class MeterReadingDao extends ModelDao {
                     "c.BILLED_CONS,c.CONSTYPE_CODE,d.PCONSAVGFLAG,d.DREPLMTR_CODE, c.SP_COMP,c.CSMB_TYPE_CODE," +
                     "c.CSMB_PARENT,c.ACCTNUM,c.READSTAT,c.RANGE_CODE " +
                     "from T_DOWNLOAD d,R_NUM_DIALS nd ,T_CURRENT_RDG c " +
-                    "where d.nodials = nd.nodials and d.DLDOCNO=c.CRDOCNO and c.ACCTNUM="+id+";";
+                    "where d.nodials = nd.nodials and d.DLDOCNO=c.CRDOCNO and c.ACCTNUM='"+id+"'";
             Cursor cursor =database.rawQuery(sql_stmt,null);
 
             if (cursor.moveToFirst()) {
@@ -483,7 +486,7 @@ public class MeterReadingDao extends ModelDao {
                     "c.BILLED_CONS,c.CONSTYPE_CODE,d.PCONSAVGFLAG,d.DREPLMTR_CODE, c.SP_COMP,c.CSMB_TYPE_CODE," +
                     "c.CSMB_PARENT,c.ACCTNUM,c.READSTAT,c.RANGE_CODE " +
                     "from T_DOWNLOAD d,R_NUM_DIALS nd ,T_CURRENT_RDG c " +
-                    "where d.nodials = nd.nodials and d.DLDOCNO=c.CRDOCNO and d.DLDOCNO="+dldocno+";";
+                    "where d.nodials = nd.nodials and d.DLDOCNO=c.CRDOCNO and d.DLDOCNO='"+dldocno+"'";
             Cursor cursor =database.rawQuery(sql_stmt,null);
 
             if (cursor.moveToFirst()) {
@@ -507,8 +510,8 @@ public class MeterReadingDao extends ModelDao {
         try {
             open();
             String sql_stmt = "select * from R_RANGE_TOLERANCE " +
-                    "where MINRANGE<"+range +" and "+range+"<MAXRANGE and DEVI_TYPE ="+
-                    type+" limit 1";
+                    "where MINRANGE<"+range +" and "+range+"<MAXRANGE and DEVI_TYPE ='"+
+                    type+"' limit 1";
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
                 do {
@@ -549,8 +552,8 @@ public class MeterReadingDao extends ModelDao {
         int count=0;
         try {
             open();
-            String str ="Select count(*) as COUNTNUM from T_CURRENT_RDG where  CSMB_PARENT="+parent_id
-                    +" and READSTAT = 'U'";
+            String str ="Select count(*) as COUNTNUM from T_CURRENT_RDG where  CSMB_PARENT='"+parent_id
+                    +"' and READSTAT = 'U'";
             Cursor cursor = database.rawQuery(str,null);
             if (cursor.moveToFirst()) {
                 do {
@@ -571,8 +574,8 @@ public class MeterReadingDao extends ModelDao {
         int count=0;
         try {
             open();
-            String str ="select count(*) as countnum from T_CURRENT_RDG where  csmb_parent="+
-                    parent_id+" and  ( READSTAT = 'P' OR READSTAT='Q' )";
+            String str ="select count(*) as countnum from T_CURRENT_RDG where  csmb_parent='"+
+                    parent_id+"' and  ( READSTAT = 'P' OR READSTAT='Q' )";
             Cursor cursor = database.rawQuery(str,null);
             if (cursor.moveToFirst()) {
                 do {
@@ -593,8 +596,8 @@ public class MeterReadingDao extends ModelDao {
         int count =0;
         try {
             open();
-            String str ="select count(*) as countnum from T_CURRENT_RDG where  csmb_parent="+
-                    parent_id+" and  ( READSTAT != 'P' OR READSTAT !='Q' )";
+            String str ="select count(*) as countnum from T_CURRENT_RDG where  csmb_parent='"+
+                    parent_id+"' and  ( READSTAT != 'P' OR READSTAT !='Q' )";
             Cursor cursor = database.rawQuery(str,null);
             if (cursor.moveToFirst()) {
                 do {
@@ -621,7 +624,7 @@ public class MeterReadingDao extends ModelDao {
                     "c.BILLED_CONS,c.CONSTYPE_CODE,d.PCONSAVGFLAG,d.DREPLMTR_CODE, c.SP_COMP,c.CSMB_TYPE_CODE," +
                     "c.CSMB_PARENT,c.ACCTNUM,c.READSTAT,c.RANGE_CODE " +
                     "from T_DOWNLOAD d,R_NUM_DIALS nd ,T_CURRENT_RDG c " +
-                    "where d.nodials = nd.nodials and d.DLDOCNO=c.CRDOCNO and c.CSMB_PARENT="+parent_code+";";
+                    "where d.nodials = nd.nodials and d.DLDOCNO=c.CRDOCNO and c.CSMB_PARENT='"+parent_code+"'";
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
                 do {

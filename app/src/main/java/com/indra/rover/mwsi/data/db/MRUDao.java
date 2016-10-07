@@ -33,7 +33,7 @@ public class MRUDao  extends  ModelDao{
         try{
             open();
             boolean isStatus = false;
-            String sql_stmt = "SELECT * from T_MRU_INFO where MRU ="+mruID ;
+            String sql_stmt = "SELECT * from T_MRU_INFO where MRU ='"+mruID+"'" ;
             if(mruID.equals("All")){
                 sql_stmt = "select  sum(CUST_COUNT) as CUST_COUNT, sum(ACTIVE_COUNT) as ACTIVE_COUNT, " +
                         "sum(BLOCKED_COUNT) as BLOCKED_COUNT, sum(READ_METERS) as READ_METERS, " +
@@ -62,7 +62,7 @@ public class MRUDao  extends  ModelDao{
         MRU mru=null;
         try{
             open();
-            String sql_stmt = "SELECT * from T_MRU_INFO where MRU ="+mruID ;
+            String sql_stmt = "SELECT * from T_MRU_INFO where MRU ='"+mruID+"'" ;
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
                 do {
@@ -366,8 +366,9 @@ public class MRUDao  extends  ModelDao{
             str_b_stmt.append("select count(*) as COUNTNUM  from T_CURRENT_RDG t, T_DOWNLOAD d  where " +
                     "t.CRDOCNO = d.DLDOCNO and  t.FFCODE1 IS NOT NULL or t.FFCODE2 IS NOT NULL");
             if (!mruid.equals("All")) {
-                str_b_stmt.append(" and d.MRU = ");
+                str_b_stmt.append(" and d.MRU = '");
                 str_b_stmt.append(mruid);
+                str_b_stmt.append("'");
             }
             Cursor cursor = database.rawQuery(str_b_stmt.toString(), null);
             if (cursor.moveToFirst()) {

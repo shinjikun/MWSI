@@ -23,10 +23,10 @@
    <!-- METERING INFO-->
     <string name="print_meter_no">Meter No.</string>
     <string name="print_meter_value">AJ15-13-156319M</string>
-    <string name="print_reading_date">Reading Date      :</string>
-    <string name="print_pres_rdg">Present Reading       :</string>
-    <string name="print_prev_rdg">Previous Reading      :</string>
-    <string name="print_cosumption">Consumption (cu.m)  :</string>
+    <string name="print_reading_date">Reading Date</string>
+    <string name="print_pres_rdg">Present Reading</string>
+    <string name="print_prev_rdg">Previous Reading</string>
+    <string name="print_cosumption">Consumption (cu.m)</string>
     <string name="print_prevcons">Previous 3 Months Consumption</string>
 
     <!--BILLING SUMMARY -->
@@ -96,4 +96,15 @@
     <string name="print_payment_date">PAYMENT DUE DATE</string>
     <string name="print_instruction">Please examine your bill carefully. If no complaint is made within 60 days of receipt,
         the bill is considered true and correct.</string>
+
+    <string name="print_payment_invoice">INOVOICE NO.</string>
+
+    <string name="print_validity">THIS INVOICE/RECEIPT SHALL BE VALID FOR FIVE (5) YEARS</string>
+    <string name="print_validity1">FROM THE DATE OF THE PERMIT TO USE.</string>
+    <string name="print_valid_vendor">Vendor:</string>
+    <string name="print_valid_acc">Acc:</string>
+    <string name="print_valid_date">Date Issued:</string>
+    <string name="print_valid_until">Valid Until:</string>
+    <string name="print_ptu_number">PTU Number:</string>
+    <string name="print_bill_pay_h">Desc  Net Amount  VAT  Total Amount OR# Date Tax Code</string>
 </resources>

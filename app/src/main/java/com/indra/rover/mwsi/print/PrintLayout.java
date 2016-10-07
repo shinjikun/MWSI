@@ -20,6 +20,7 @@ public  abstract class PrintLayout {
     abstract String billSummary(MeterPrint mtrPrint);
     abstract String billAdvisory(MeterPrint mtrPrint);
     abstract String billFooter(MeterPrint mtrPrint);
+    abstract String billValidity(MeterPrint mtrPrint);
     abstract String breadCrumbsFooter();
     abstract String testfont();
    abstract String billDiscon(MeterPrint mtrPrint);
@@ -36,15 +37,16 @@ public  abstract class PrintLayout {
        strPrint.append(breadCrumbsHeader());
         //header layout
 
-       // strPrint.append(billHeader(mtrPrint));
+        strPrint.append(billHeader(mtrPrint));
         //body layout
         strPrint.append(bodyLayout(mtrPrint));
         //bill advisory
-       // strPrint.append(billAdvisory(mtrPrint));
+        strPrint.append(billAdvisory(mtrPrint));
         //footer layout
-       // strPrint.append(billFooter(mtrPrint));
+        strPrint.append(billFooter(mtrPrint));
+        strPrint.append(billValidity(mtrPrint));
         //add if there is a disconnection notice in the bill
-       // strPrint.append(billDiscon(mtrPrint));
+        strPrint.append(billDiscon(mtrPrint));
         //footer breadcrumbs
         strPrint.append(breadCrumbsFooter());
         return strPrint.toString();
@@ -53,17 +55,17 @@ public  abstract class PrintLayout {
     public String bodyLayout(MeterPrint mtrPrint) {
         StringBuilder strBuild = new StringBuilder();
         //service Information
-        //String str = serviceInfo(mtrPrint);
-       // strBuild.append(str);
+
+        strBuild.append(serviceInfo(mtrPrint));
         //metering info
 
         strBuild.append(meterInfo(mtrPrint));
         //payment history
-        //str = paymentHistory(mtrPrint);
-        //strBuild.append(str);
+        //str =
+        strBuild.append(paymentHistory(mtrPrint));
         //bill summary
-       // str = billSummary(mtrPrint);
-       // strBuild.append(str);
+
+        strBuild.append(billSummary(mtrPrint));
         return strBuild.toString();
     }
 

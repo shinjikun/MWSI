@@ -298,7 +298,7 @@ exit /B 0
     			set statustype=ended
     			call :send_broadmsg
     			echo Completed
-    			)else (
+    			)else (zz
     			echo Rover App not installed
     	)
 exit /B 0
@@ -306,7 +306,7 @@ exit /B 0
 :push_file
 	@rem is param2 is empty then pull all files inside the upload folder
 	if  "%param2%"=="" (
-		adb push %ds_upload_dir% %rover_app_dir%
+	    	adb push %ds_upload_dir% %rover_app_dir%
 	)else (
 			@rem param2 is a directory
 		if exist %param2%\* (

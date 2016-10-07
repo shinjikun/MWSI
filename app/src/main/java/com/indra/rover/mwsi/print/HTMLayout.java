@@ -59,6 +59,11 @@ public class HTMLayout  extends PrintLayout {
     }
 
     @Override
+    String billValidity(MeterPrint mtrPrint) {
+        return "\n";
+    }
+
+    @Override
     String breadCrumbsFooter() {
         return "\n";
     }
