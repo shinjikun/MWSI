@@ -152,7 +152,7 @@ public class ConnectivityDemo extends Activity {
     private void doConnectionTest() {
         printer = connect();
         if (printer != null) {
-         //   storeImage();
+            storeImage();
             sendTestLabel();
         } else {
             disconnect();
@@ -163,9 +163,10 @@ public class ConnectivityDemo extends Activity {
 
         try {
             ZebraImageI zebraImageI = ZebraImageFactory.getImage(getAssets().open("maynilad.png"));
+            ZebraImageI zebraImageI2 = ZebraImageFactory.getImage(getAssets().open("maynilad_m.png"));
 
             printer.storeImage("e:maynilad.png",zebraImageI,-1,-1);
-            // printer.printImage(zebraImageI,0,0,-1,-1 ,false);
+            printer.storeImage("e:maynilad_m.png",zebraImageI,-1,-1);
 
         } catch (IOException e) {
             e.printStackTrace();

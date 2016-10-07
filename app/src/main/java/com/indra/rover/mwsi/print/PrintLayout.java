@@ -18,9 +18,10 @@ public  abstract class PrintLayout {
     abstract String meterInfo(MeterPrint mtrPrint);
     abstract String paymentHistory(MeterPrint mtrPrint);
     abstract String billSummary(MeterPrint mtrPrint);
+    abstract String billAdvisory(MeterPrint mtrPrint);
     abstract String billFooter(MeterPrint mtrPrint);
     abstract String breadCrumbsFooter();
-
+    abstract String testfont();
    abstract String billDiscon(MeterPrint mtrPrint);
     public PrintLayout(Context context){
         this.context = context;
@@ -34,13 +35,16 @@ public  abstract class PrintLayout {
         //header breadcrumbs
        strPrint.append(breadCrumbsHeader());
         //header layout
-        strPrint.append(billHeader(mtrPrint));
+
+       // strPrint.append(billHeader(mtrPrint));
         //body layout
         strPrint.append(bodyLayout(mtrPrint));
+        //bill advisory
+       // strPrint.append(billAdvisory(mtrPrint));
         //footer layout
-        strPrint.append(billFooter(mtrPrint));
+       // strPrint.append(billFooter(mtrPrint));
         //add if there is a disconnection notice in the bill
-        strPrint.append(billDiscon(mtrPrint));
+       // strPrint.append(billDiscon(mtrPrint));
         //footer breadcrumbs
         strPrint.append(breadCrumbsFooter());
         return strPrint.toString();
@@ -49,17 +53,17 @@ public  abstract class PrintLayout {
     public String bodyLayout(MeterPrint mtrPrint) {
         StringBuilder strBuild = new StringBuilder();
         //service Information
-        String str = serviceInfo(mtrPrint);
-        strBuild.append(str);
+        //String str = serviceInfo(mtrPrint);
+       // strBuild.append(str);
         //metering info
-        str = meterInfo(mtrPrint);
-        strBuild.append(str);
+
+        strBuild.append(meterInfo(mtrPrint));
         //payment history
-        str = paymentHistory(mtrPrint);
-        strBuild.append(str);
+        //str = paymentHistory(mtrPrint);
+        //strBuild.append(str);
         //bill summary
-        str = billSummary(mtrPrint);
-        strBuild.append(str);
+       // str = billSummary(mtrPrint);
+       // strBuild.append(str);
         return strBuild.toString();
     }
 

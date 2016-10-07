@@ -49,6 +49,11 @@ public class APEXLayout  extends   PrintLayout {
     }
 
     @Override
+    String billAdvisory(MeterPrint mtrPrint) {
+        return "";
+    }
+
+    @Override
     String billFooter(MeterPrint mtrPrint) {
         return "";
     }
@@ -56,6 +61,11 @@ public class APEXLayout  extends   PrintLayout {
     @Override
     String breadCrumbsFooter() {
         return "";
+    }
+
+    @Override
+    String testfont() {
+        return null;
     }
 
     @Override
