@@ -32,7 +32,7 @@ public interface  Constants {
    int CS_MOTHER =1;
    int CS_CHILD = 4;
    int MB_MOTHER =2;
-   int MB_CHILD =3;
+   int MB_CHILD =5;
 
    int NORMAL=0;
    int VERY_LOW =3;

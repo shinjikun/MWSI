@@ -457,6 +457,7 @@ public class MeterReadingDao extends ModelDao {
                     "c.CSMB_PARENT,c.ACCTNUM,c.READSTAT,c.RANGE_CODE " +
                     "from T_DOWNLOAD d,R_NUM_DIALS nd ,T_CURRENT_RDG c " +
                     "where d.nodials = nd.nodials and d.DLDOCNO=c.CRDOCNO and c.ACCTNUM='"+id+"'";
+
             Cursor cursor =database.rawQuery(sql_stmt,null);
 
             if (cursor.moveToFirst()) {
@@ -574,8 +575,9 @@ public class MeterReadingDao extends ModelDao {
         int count=0;
         try {
             open();
-            String str ="select count(*) as countnum from T_CURRENT_RDG where  csmb_parent='"+
+            String str ="select count(*) as COUNTNUM from T_CURRENT_RDG where  csmb_parent='"+
                     parent_id+"' and  ( READSTAT = 'P' OR READSTAT='Q' )";
+            Log.i("Test",str);
             Cursor cursor = database.rawQuery(str,null);
             if (cursor.moveToFirst()) {
                 do {
@@ -596,7 +598,7 @@ public class MeterReadingDao extends ModelDao {
         int count =0;
         try {
             open();
-            String str ="select count(*) as countnum from T_CURRENT_RDG where  csmb_parent='"+
+            String str ="select count(*) as COUNTNUM from T_CURRENT_RDG where  csmb_parent='"+
                     parent_id+"' and  ( READSTAT != 'P' OR READSTAT !='Q' )";
             Cursor cursor = database.rawQuery(str,null);
             if (cursor.moveToFirst()) {

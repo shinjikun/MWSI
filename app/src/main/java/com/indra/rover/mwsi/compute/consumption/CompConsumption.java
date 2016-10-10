@@ -1,4 +1,4 @@
-package com.indra.rover.mwsi.compute;
+package com.indra.rover.mwsi.compute.consumption;
 
 
 import android.util.Log;

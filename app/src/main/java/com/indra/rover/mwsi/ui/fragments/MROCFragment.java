@@ -380,12 +380,15 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
                         return;
                     }
                     MeterConsumption parentMeter =  mtrDao.getParentMeter(parent_code);
-                    String parentStat = parentMeter.getReadstat();
-                    if(parentStat.equals("P")||parentStat.equals("Q")){
-                        noOCEntry(5);
-                        return;
+                    if(parentMeter!=null){
+                        String parentStat = parentMeter.getReadstat();
+                        if(parentStat.equals("P")||parentStat.equals("Q")){
+                            noOCEntry(5);
+                            return;
+                        }
+                        editMode(true);
                     }
-                    editMode(true);
+
                     break;
             }
         }

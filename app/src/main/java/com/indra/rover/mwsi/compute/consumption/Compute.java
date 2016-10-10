@@ -1,4 +1,4 @@
-package com.indra.rover.mwsi.compute;
+package com.indra.rover.mwsi.compute.consumption;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
 import com.indra.rover.mwsi.utils.Utils;

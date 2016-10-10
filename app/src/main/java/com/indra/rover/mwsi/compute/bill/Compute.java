@@ -1,18 +1,21 @@
-package com.indra.rover.mwsi.compute;
+package com.indra.rover.mwsi.compute.bill;
+
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 
 /**
  * MWSI Bill Computation Module
  * Created by Indra on 9/22/2016.
  */
-public interface BillComputation {
+public abstract  class Compute {
+
+    abstract void compute(MeterPrint  meterPrint);
+
 
     /**
      * compute basic charge amount based on tariff schedule
-     * @param consumption
-     * @param rate_type
      * @return
      */
-     double getBasicCharge(long consumption,char rate_type);
+  abstract double getBasicCharge(long consumption,char rate_type);
 
     /**
      *  Special computation  for basic charge amount for BP> 34 days
@@ -21,7 +24,7 @@ public interface BillComputation {
      * @param rate_type rate type
      * @return computed basic charge
      */
-     double getBulkBasicCharge(long l1,long l2 ,char rate_type);
+    abstract double getBulkBasicCharge(long l1,long l2 ,char rate_type);
 
     /**
      *  Total Basic Charge for Bulk Account
@@ -30,14 +33,14 @@ public interface BillComputation {
      * @param c2
      * @return
      */
-     double getGT3BasicCharge(long l,char c1, char c2);
+  abstract     double getGT3BasicCharge(long l,char c1, char c2);
 
     /**
      *  Total Basic Charge for HR/LT Accounts
      * @param l
      * @return
      */
-     double getHRLBasicCharge(long l);
+  abstract    double getHRLBasicCharge(long l);
 
     /**
      *   Get Basic Charge based on OC only entry
@@ -45,7 +48,7 @@ public interface BillComputation {
      * @param oc oc code
      * @return
      */
-     double getOCBasicCharge(long l,char oc);
+   abstract   double getOCBasicCharge(long l,char oc);
 
 
 

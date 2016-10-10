@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.util.Log;
+
 import com.indra.rover.mwsi.data.pojo.MRU;
 
 import java.util.ArrayList;
@@ -370,6 +372,7 @@ public class MRUDao  extends  ModelDao{
                 str_b_stmt.append(mruid);
                 str_b_stmt.append("'");
             }
+            Log.i("Test",str_b_stmt.toString());
             Cursor cursor = database.rawQuery(str_b_stmt.toString(), null);
             if (cursor.moveToFirst()) {
                 do {
