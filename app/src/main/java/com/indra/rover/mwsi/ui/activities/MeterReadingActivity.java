@@ -186,11 +186,13 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
            txt.setText(meterInfo.getBillClass().getDesc());
            meterStatus();
            navigate(meterInfo.getDldocno());
+           txt = (TextView)findViewById(R.id.txtReading);
            if(Utils.isNotEmpty(meterInfo.getPresRdg())){
-               setReadingValue(meterInfo.getPresRdg());
+
+               txt.setText(meterInfo.getPresRdg());
            }
            else {
-               setReadingValue("");
+               txt.setText("");
            }
        }
     }
@@ -732,6 +734,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
      void computeConsumption(String dldocno){
         MeterConsumption mterCons = meterDao.getConsumption(dldocno);
+         if(mterCons==null)
+             return;
         String bill_str = mterCons.getCsmb_type_code();
         if(Utils.isNotEmpty(bill_str)){
             int bill_scheme = Integer.parseInt(bill_str);

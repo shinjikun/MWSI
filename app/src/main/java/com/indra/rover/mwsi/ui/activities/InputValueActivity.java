@@ -77,7 +77,9 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
             case R.id.btnEnter:
                 sendResult();
                 break;
-
+            case R.id.btnCancel:
+                finish();
+                break;
 
         }
 
