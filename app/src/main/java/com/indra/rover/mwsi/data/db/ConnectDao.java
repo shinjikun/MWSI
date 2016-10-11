@@ -3,9 +3,7 @@ package com.indra.rover.mwsi.data.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
-
-import com.indra.rover.mwsi.data.pojo.MRU;
+;
 import com.indra.rover.mwsi.utils.Utils;
 
 import java.util.ArrayList;
@@ -270,7 +268,9 @@ public class ConnectDao extends ModelDao {
          try{
              open();
              String sql_stmt ="Delete from "+tablename;
-            database.rawQuery(sql_stmt, null);
+             Cursor cursor =  database.rawQuery(sql_stmt, null);
+            boolean is =  cursor.moveToFirst();
+            cursor.close();
          }catch (Exception e){
              e.printStackTrace();
          }finally {
@@ -280,7 +280,7 @@ public class ConnectDao extends ModelDao {
 
      boolean isExistData(String tablename,String columnname,String param){
         String selectSql = String.format(
-                "SELECT "+columnname+" from "+tablename+" where "+columnname+" = \"%s\" limit 1", param);
+                "SELECT "+columnname+" from "+tablename+" where "+columnname+" = '\"%s\"' limit 1", param);
         Cursor cursor = database.rawQuery(selectSql, null);
 
         boolean result = cursor.moveToFirst();
