@@ -1,6 +1,10 @@
 package com.indra.rover.mwsi.compute.bill;
 
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterBill;
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
+
+import java.util.List;
 
 /**
  * MWSI Bill Computation Module
@@ -53,7 +57,10 @@ public abstract  class Compute {
 
 
 
+    public interface BillComputeListener {
+        void onPostConsResult(MeterBill mtrBill);
 
+    }
 
 
 

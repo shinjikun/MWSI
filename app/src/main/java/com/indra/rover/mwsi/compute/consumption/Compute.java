@@ -175,6 +175,7 @@ public class Compute {
      * use the minimum billed bill cosumption 10 cu. m as consumption
      */
     public void decisionE(){
+        meterConsObj.setSpComp("0");
         meterConsObj.setBilled_cons(minimum_bill);
         meterConsObj.setConstype_code(AVERAGE);
         if(listener!=null){

@@ -2,6 +2,7 @@ package com.indra.rover.mwsi.print;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
@@ -10,7 +11,7 @@ import com.indra.rover.mwsi.utils.Utils;
 
 public class ZebraLayout   extends   PrintLayout{
     Utils utils;
-    final String TAB_SPACE="   ";
+    final String TAB_SPACE=" ";
     public ZebraLayout(Context context) {
         super(context);
     }
@@ -229,6 +230,19 @@ public class ZebraLayout   extends   PrintLayout{
 
         return str.toString();
     }
+    private String addSpace(String str,int maxnum,String figure){
+        StringBuilder strOr = new StringBuilder();
+        int curLinex = str.length();
+
+       int space =  maxnum-curLinex-figure.length();
+        if(space>0){
+            for(int i=0;i<space;i++){
+                strOr.append(' ');
+            }
+        }
+        strOr.append(figure);
+        return strOr.toString();
+    }
 
     @Override
     public String billSummary(MeterPrint mtrPrint) {
@@ -249,7 +263,7 @@ public class ZebraLayout   extends   PrintLayout{
         str.append(setBold(0));
         str.append(context.getString(R.string.print_current_charges));
         str.append("\r\n");
-        str.append("! U1 SETLP 0 2 18\r\n");
+        str.append("! U1 SETLP 7 0 24\r\n");
         str.append("! U1 SETSP 0\r\n");
 
         String[] arry = context.getResources().getStringArray(R.array.print_arry_curcharnges);
@@ -264,13 +278,17 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! U1 SETSP 0\r\n");
         str.append(context.getString(R.string.print_other_charges));
         str.append("\r\n");
-        str.append("! U1 SETLP 0 2 18\r\n");
+        str.append(setBold(0));
+        str.append("! U1 SETLP 7 0 24\r\n");
         str.append("! U1 SETSP 0\r\n");
         arry = context.getResources().getStringArray(R.array.print_arry_othercharge);
         size=  arry.length;
         for(int i=0;i<size;i++){
             str.append(TAB_SPACE);
             str.append(arry[i]);
+            String temp =  arry[i];
+            str.append(addSpace(temp,69-TAB_SPACE.length(),"999,999,999.99"));
+
             str.append("\r\n");
         }
         str.append("\r\n");
