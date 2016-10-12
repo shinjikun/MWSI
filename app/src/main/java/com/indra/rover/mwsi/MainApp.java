@@ -3,8 +3,6 @@ package com.indra.rover.mwsi;
 import android.app.Application;
 
 import com.squareup.otto.Bus;
-import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
 
 
 public class MainApp extends Application {
