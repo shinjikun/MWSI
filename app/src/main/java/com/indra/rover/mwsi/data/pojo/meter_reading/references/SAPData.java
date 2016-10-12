@@ -68,4 +68,40 @@ public class SAPData {
         return total_amount;
     }
 
+
+    public void setAcctNum(String acctNum) {
+        this.acctNum = acctNum;
+    }
+
+    public void setDocNO(String docNO) {
+        this.docNO = docNO;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setLineCode(String lineCode) {
+        this.lineCode = lineCode;
+    }
+
+    public void setOld_amount(double old_amount) {
+        this.old_amount = old_amount;
+    }
+
+    public void setOld_price(double old_price) {
+        this.old_price = old_price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setTotal_amount(double total_amount) {
+        this.total_amount = total_amount;
+    }
 }

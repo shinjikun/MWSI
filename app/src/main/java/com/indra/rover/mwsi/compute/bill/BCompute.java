@@ -1,9 +1,14 @@
 package com.indra.rover.mwsi.compute.bill;
 
+import android.content.Context;
+
+import com.indra.rover.mwsi.data.db.MeterBillDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterBill;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
+import com.indra.rover.mwsi.data.pojo.meter_reading.references.GLCharge;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -12,32 +17,51 @@ import java.util.List;
  */
 public abstract  class BCompute {
 
-    abstract void compute(MeterPrint  meterPrint);
+    BillComputeListener listener;
+    Context context;
+    MeterBillDao billDao;
+    HashMap<String,GLCharge> hashGLRates;
+
+    final String RESB= "RESB";
+    final String RESIDENTIAL ="0001";
+    final String SEMIBIZ = "0002";
+    final String COMMER = "0003";
+    final String INDUSTRIAL ="0004";
+    final String HBCOM ="9992";
+    final String HBINDUS = "9993";
+
+    public BCompute(BillComputeListener listener, Context context){
+        this.listener = listener;
+        this.context = context;
+        billDao = new MeterBillDao(this.context);
+        hashGLRates = billDao.getGLRates();
+    }
+
+    public GLCharge getGLRate(String code){
+         return hashGLRates.get(code);
+    }
+
+
+   public abstract void compute(MeterBill  meterBill);
 
 
     /**
      * compute basic charge amount based on tariff schedule
      * @return
      */
-  abstract double getBasicCharge(long consumption,char rate_type);
+  abstract void getBasicCharge(MeterBill meterBill);
 
     /**
      *  Special computation  for basic charge amount for BP> 34 days
-     * @param l1
-     * @param l2
-     * @param rate_type rate type
      * @return computed basic charge
      */
-    abstract double getBulkBasicCharge(long l1,long l2 ,char rate_type);
+    abstract void getBulkBasicCharge(MeterBill meterBill);
 
     /**
      *  Total Basic Charge for Bulk Account
-     * @param l
-     * @param c1
-     * @param c2
      * @return
      */
-  abstract     double getGT3BasicCharge(long l,char c1, char c2);
+  abstract     void getGT3BasicCharge(MeterBill meterBill);
 
     /**
      *  Total Basic Charge for HR/LT Accounts

@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 
 
-
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterBill;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterDelivery;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
@@ -471,6 +471,30 @@ public class MeterReadingDao extends ModelDao {
         return meterConsumption;
     }
 
+
+    public MeterBill  getMeterBill(String dldocno){
+        MeterBill meterBill = null;
+        try {
+            open();
+            String sql_stmt="Select d.DLDOCNO, c.BILLED_CONS,d.BILL_CLASS,d.RATE_TYPE,u.BASIC_CHARGE," +
+                    "u.DISCOUNT,u.SUBTOTAL_AMT,u.TOTAL_AMT_DUE,d.BULK_FLAG,d.GT34FLAG, " +
+                    "c.PRESRDG, d.PREVRDGDATE from T_DOWNLOAD d, T_UPLOAD u,T_CURRENT_RDG c " +
+                    "where d.DLDOCNO = u.ULDOCNO and c.CRDOCNO= u.ULDOCNO";
+            Cursor cursor =database.rawQuery(sql_stmt,null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    meterBill = new MeterBill(cursor);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+        return meterBill;
+    }
 
     public MeterConsumption getConsumption(String dldocno){
         MeterConsumption meterConsumption =null;

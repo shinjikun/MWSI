@@ -9,6 +9,7 @@ import com.indra.rover.mwsi.data.pojo.meter_reading.references.SAPData;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.Tariff;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Indra on 10/10/2016.
@@ -48,6 +49,28 @@ public class MeterBillDao extends ModelDao {
             close();
         }
         return glCharge;
+    }
+
+
+    public HashMap<String ,GLCharge> getGLRates(){
+        HashMap<String,GLCharge> hashMap = new HashMap();
+        try{
+            open();
+            String sql_stmt = "select * from R_GLOBAL_CHARGES where GL_CHARGE_CODE";
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                   GLCharge glCharge = new GLCharge(cursor);
+                    hashMap.put(glCharge.getGl_code(),glCharge);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+        return hashMap;
     }
 
 
@@ -94,6 +117,22 @@ public class MeterBillDao extends ModelDao {
             values.put("TOTAL_AMOUNT",sapData.getTotal_amount());
             database.insert("T_SAP_DETAILS", null, values);
         }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+    }
+
+
+    public void updateBasicCharge(double basic_charge,double discount,String dldocno){
+        try{
+            open();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("BASIC_CHARGE",basic_charge);
+            contentValues.put("DISCOUNT",discount);
+            String where= "ULDOCNO=?";
+            database.update("T_UPLOAD",contentValues,where,new String[]{dldocno});
+        }catch(Exception e){
             e.printStackTrace();
         }finally {
             close();

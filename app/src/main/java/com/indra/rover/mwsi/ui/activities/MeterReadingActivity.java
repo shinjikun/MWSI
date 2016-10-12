@@ -28,6 +28,7 @@ import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.adapters.StatusViewPagerAdapter;
 import com.indra.rover.mwsi.compute.bill.BCompute;
+import com.indra.rover.mwsi.compute.bill.BillCompute;
 import com.indra.rover.mwsi.compute.consumption.CompCSScheme;
 import com.indra.rover.mwsi.compute.consumption.CompConsumption;
 import com.indra.rover.mwsi.compute.consumption.CompMBScheme;
@@ -476,23 +477,45 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             case R.id.btnPrint:
 
                 String readstat = meterInfo.getReadStat();
+                String bill_str = meterInfo.getBill_scheme();
                 if(readstat.equals("U")){
                   noPrint_Bill(0);
                 }
                 else {
-                    String newReadStat="P";
-                    if(readstat.equals("E")){
-                        newReadStat="Q";
-                    }
-                    meterDao.updateReadStatus(newReadStat,meterInfo.getDldocno());
-                    updateReadStatusDisplay(newReadStat);
-                    MainApp.bus.post(new MessageTransport("readstat",newReadStat));
+                    if(Utils.isNotEmpty(bill_str)) {
+                        int bill_scheme = Integer.parseInt(bill_str);
+                        //String accoutNumb = meterInfo
+                        switch (bill_scheme){
+                            case REG_SCHEME:
+                            case CS_MOTHER:
+                            case CS_CHILD:
+                            case MB_CHILD:
+                            case MB_MOTHER:
+
+                                BillCompute bill = new BillCompute(this,this);
+                                bill.compute(meterDao.getMeterBill(meterInfo.getDldocno()));
+                                break;
+                        }
+
                     }
 
-                //mViewPager.setCurrentItem(2);
-                //scrollUp();
+                }
+
+                //
                 break;
         }
+    }
+
+    void changeToPrinted(String readstat){
+        String newReadStat="P";
+        if(readstat.equals("E")){
+            newReadStat="Q";
+        }
+        meterDao.updateReadStatus(newReadStat,meterInfo.getDldocno());
+        updateReadStatusDisplay(newReadStat);
+        MainApp.bus.post(new MessageTransport("readstat",newReadStat));
+        mViewPager.setCurrentItem(2);
+        scrollUp();
     }
 
      void movePrevious(){
@@ -713,6 +736,11 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
 
             strrange_code = String.valueOf(range_code);
+         }else {
+             Snackbar snackbar = Snackbar
+                     .make(coordinatorLayout, "Zero Consumption", Snackbar.LENGTH_LONG);
+
+             snackbar.show();
          }
          mtrCons.setRange_code(strrange_code);
          meterInfo.setRange_code(strrange_code);
