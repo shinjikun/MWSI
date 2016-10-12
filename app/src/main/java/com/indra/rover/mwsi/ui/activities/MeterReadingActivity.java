@@ -645,12 +645,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onPostConsResult(MeterConsumption meterConsumption) {
-
         meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
-        Log.i("Test","billed cons"+meterConsumption.getBilled_cons());
         comp_cons_range(meterConsumption);
-
-
     }
 
     @Override
