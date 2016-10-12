@@ -27,11 +27,13 @@ import android.widget.TextView;
 import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.adapters.StatusViewPagerAdapter;
+import com.indra.rover.mwsi.compute.bill.BCompute;
 import com.indra.rover.mwsi.compute.consumption.CompCSScheme;
 import com.indra.rover.mwsi.compute.consumption.CompConsumption;
 import com.indra.rover.mwsi.compute.consumption.CompMBScheme;
 import com.indra.rover.mwsi.compute.consumption.Compute;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterBill;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.CustomerInfo;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
@@ -51,7 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MeterReadingActivity extends AppCompatActivity implements View.OnClickListener ,
-        DialogUtils.DialogListener, Constants, Compute.ConsumptionListener
+        DialogUtils.DialogListener, Constants, Compute.ConsumptionListener,BCompute.BillComputeListener
 {
 
     ViewPager mViewPager;
@@ -472,6 +474,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 }
                 break;
             case R.id.btnPrint:
+
                 String readstat = meterInfo.getReadStat();
                 if(readstat.equals("U")){
                   noPrint_Bill(0);
@@ -485,6 +488,9 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                     updateReadStatusDisplay(newReadStat);
                     MainApp.bus.post(new MessageTransport("readstat",newReadStat));
                     }
+
+                //mViewPager.setCurrentItem(2);
+                //scrollUp();
                 break;
         }
     }
@@ -494,7 +500,9 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             current--;
             prepareData(current);
             mViewPager.setCurrentItem(0);
+
             mScrollView.smoothScrollBy(0,0);
+            mScrollView.fullScroll(ScrollView.FOCUS_UP);
         }
         else{
             btnPrev.setEnabled(false);
@@ -509,6 +517,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             btnPrev.setEnabled(true);
             mViewPager.setCurrentItem(0);
             mScrollView.smoothScrollBy(0,0);
+            mScrollView.fullScroll(ScrollView.FOCUS_UP);
         }
         else {
             btnNext.setEnabled(false);
@@ -824,4 +833,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         dlgUtils.showOKDialog("READING ENTRY",strBuilder.toString());
     }
 
+    @Override
+    public void onPostBillResult(MeterBill mtrBill) {
+
+    }
 }

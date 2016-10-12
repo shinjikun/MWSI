@@ -5,7 +5,7 @@ import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 /**
  * Created by Indra on 10/10/2016.
  */
-public class BillCompute extends Compute {
+public class BillCompute extends BCompute {
 
 
 

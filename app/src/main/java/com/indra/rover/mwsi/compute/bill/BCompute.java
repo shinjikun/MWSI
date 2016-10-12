@@ -10,7 +10,7 @@ import java.util.List;
  * MWSI Bill Computation Module
  * Created by Indra on 9/22/2016.
  */
-public abstract  class Compute {
+public abstract  class BCompute {
 
     abstract void compute(MeterPrint  meterPrint);
 
@@ -58,7 +58,7 @@ public abstract  class Compute {
 
 
     public interface BillComputeListener {
-        void onPostConsResult(MeterBill mtrBill);
+        void onPostBillResult(MeterBill mtrBill);
 
     }
 

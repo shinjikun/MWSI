@@ -2,7 +2,7 @@ package com.indra.rover.mwsi.data.pojo.meter_reading.references;
 
 import android.database.Cursor;
 
-import com.indra.rover.mwsi.data.pojo.Item;
+
 
 import java.io.Serializable;
 
@@ -10,15 +10,13 @@ import java.io.Serializable;
  *
  * Created by Indra on 8/26/2016.
  */
-public class ObservationCode extends Item  implements Serializable{
+public class ObservationCode   implements Serializable{
     private String ff_code;
     private String ff_desc;
     private short bill_related;
 
 
-    public ObservationCode(){
 
-    }
 
     public ObservationCode(Cursor cursor){
         this.ff_code =cursor.getString(cursor.getColumnIndexOrThrow("FF_CODE"));

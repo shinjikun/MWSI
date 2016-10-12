@@ -19,7 +19,6 @@ import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.adapters.MRUListAdapter;
 import com.indra.rover.mwsi.data.db.MRUDao;
-import com.indra.rover.mwsi.data.pojo.Item;
 import com.indra.rover.mwsi.data.pojo.MRU;
 import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.OnItemClickListener;
@@ -96,10 +95,7 @@ public class MRUListActivity extends AppCompatActivity  implements OnItemClickLi
     }
 
 
-    @Override
-    public void onItemClick(Item item, int position) {
 
-    }
 
     @Override
     public void onItemClick(MRU item, int position) {

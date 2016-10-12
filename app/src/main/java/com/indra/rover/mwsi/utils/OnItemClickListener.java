@@ -1,6 +1,5 @@
 package com.indra.rover.mwsi.utils;
 
-import com.indra.rover.mwsi.data.pojo.Item;
 import com.indra.rover.mwsi.data.pojo.MRU;
 
 /**
@@ -8,6 +7,5 @@ import com.indra.rover.mwsi.data.pojo.MRU;
  */
 public interface OnItemClickListener {
 
-    void onItemClick(Item item, int position);
     void onItemClick(MRU item, int position);
 }

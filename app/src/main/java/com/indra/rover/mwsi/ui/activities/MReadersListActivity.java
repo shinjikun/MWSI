@@ -12,7 +12,6 @@ import android.view.View;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.adapters.MReaderListAdapter;
-import com.indra.rover.mwsi.data.pojo.Item;
 import com.indra.rover.mwsi.data.pojo.MRU;
 import com.indra.rover.mwsi.data.pojo.Meter_Reader;
 import com.indra.rover.mwsi.utils.OnItemClickListener;
@@ -80,10 +79,7 @@ public class MReadersListActivity extends AppCompatActivity  implements OnItemCl
 
 
 
-    @Override
-    public void onItemClick(Item item, int position) {
 
-    }
 
     @Override
     public void onItemClick(MRU item, int position) {

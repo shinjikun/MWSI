@@ -64,7 +64,7 @@ public class MReaderListAdapter extends RecyclerView.Adapter<MReaderListAdapter.
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
-                    listener.onItemClick(item ,position);
+                  //  listener.onItemClick(item ,position);
                 }
             });
         }

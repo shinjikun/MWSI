@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.util.Log;
+
 
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
@@ -43,7 +43,6 @@ public class MeterReadingDao extends ModelDao {
                 "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE from T_DOWNLOAD t," +
                 " R_BILL_CLASS r,T_CURRENT_RDG c where t.BILL_CLASS = r.BILL_CLASS " +
                 "and t.DLDOCNO = c.CRDOCNO  and c.MRU='"+mruID+"'";
-        Log.i("Test",sql_stmt);
         try{
             open();
             Cursor cursor = database.rawQuery(sql_stmt,null);
@@ -72,7 +71,6 @@ public class MeterReadingDao extends ModelDao {
                 "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE from T_DOWNLOAD t," +
                 " R_BILL_CLASS r,T_CURRENT_RDG c where t.BILL_CLASS = r.BILL_CLASS " +
                 "and t.DLDOCNO = c.CRDOCNO  and c.CRDOCNO='"+id+"'";
-        Log.i("Test",sql_stmt);
         try{
             open();
             Cursor cursor = database.rawQuery(sql_stmt,null);
@@ -101,7 +99,6 @@ public class MeterReadingDao extends ModelDao {
                 "R_BILL_CLASS r,T_CURRENT_RDG c where t.BILL_CLASS = r.BILL_CLASS and " +
                 "t.DLDOCNO = c.CRDOCNO   and " +
                 "MRU='"+mruID+ "' and "+column+" like '%"+searchValue+"%'";
-        Log.i("Test",sql_stmt);
         try{
             open();
             Cursor cursor = database.rawQuery(sql_stmt,null);
@@ -128,7 +125,6 @@ public class MeterReadingDao extends ModelDao {
         String sql_stmt = "Select MRU,DLDOCNO,METERNO,ACCTNUM,CUSTNAME,CUSTADDRESS," +
                 "PREV_REMARKS,PREVRDGDATE,PREVFF1,PREVFF2,ACTPREVRDG " +
                 "from T_DOWNLOAD where DLDOCNO='"+dldocno+"'";
-        Log.i("Test",sql_stmt);
         try{
             open();
             Cursor cursor = database.rawQuery(sql_stmt,null);
@@ -577,7 +573,6 @@ public class MeterReadingDao extends ModelDao {
             open();
             String str ="select count(*) as COUNTNUM from T_CURRENT_RDG where  csmb_parent='"+
                     parent_id+"' and  ( READSTAT = 'P' OR READSTAT='Q' )";
-            Log.i("Test",str);
             Cursor cursor = database.rawQuery(str,null);
             if (cursor.moveToFirst()) {
                 do {

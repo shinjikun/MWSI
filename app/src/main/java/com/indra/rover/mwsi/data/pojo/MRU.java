@@ -9,7 +9,7 @@ import java.util.Date;
  * Meter Reading Unit
  * Created by Indra on 8/22/2016.
  */
-public class MRU  extends Item{
+public class MRU  {
 
 
 
