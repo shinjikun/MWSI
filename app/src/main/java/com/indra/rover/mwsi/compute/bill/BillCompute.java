@@ -53,7 +53,6 @@ public class BillCompute extends BCompute {
     void minimumCharge(MeterBill  meterBill){
         double basic_Charge;
         double discount;
-            billDao.getGLRate(RESB);
         if(meterBill.getBillClass().equals(RESIDENTIAL)){
             GLCharge glres = getGLRate(RESB);
             GLCharge glpatr = getGLRate("PATR");
@@ -106,7 +105,7 @@ public class BillCompute extends BCompute {
         sapdata.setLineCode(sapline);
         sapdata.setOld_amount(oldamout);
         sapdata.setOld_price(oldprice);
-        double total = price+amount+oldamout+oldprice;
+        double total = price+amount+oldamout+oldprice+oldamout;
         sapdata.setTotal_amount(total);
         billDao.insertSAPData(sapdata);
     }
