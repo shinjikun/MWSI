@@ -12,11 +12,11 @@ setlocal ENABLEEXTENSIONS EnableDelayedExpansion
 @rem ds content directory
 set ds_content_dir=c:\directory_of_contents\
 
-@rem ds content upload directory location
-set ds_upload_dir=%ds_content_dir%uploads
-
 @rem ds content download directory location
-set ds_download_dir=%ds_content_dir%downloads
+set ds_upload_dir=%ds_content_dir%downloads
+
+@rem ds content upload directory location
+set ds_download_dir=%ds_content_dir%uploads
 
 @rem ds content db dump directory location
 set ds_dbdump=%ds_content_dir%dbdump
@@ -160,7 +160,7 @@ call :check_devices
 
 )
 
-if /I "%cmd_arg%"=="download" (
+if /I "%cmd_arg%"=="upload" (
 	call :check_devices
 	if  "!is_device!"=="1" (
 			call :pull_files_block
@@ -169,7 +169,7 @@ if /I "%cmd_arg%"=="download" (
 		)
 	goto :skip
 		)
-if /I "%cmd_arg%"=="upload" (
+if /I "%cmd_arg%"=="download" (
 	call :check_devices
 	if  "!is_device!"=="1" (
 			call :push_files_block
@@ -248,7 +248,7 @@ exit /B 0
 
 	call :start_app
 	if  "!is_installed!"=="1" (
-			set actiontype=download
+			set actiontype=upload
 			set statustype=started
 			call :send_broadmsg
 			IF not exist %ds_download_dir% (mkdir %ds_download_dir%)
@@ -257,7 +257,7 @@ exit /B 0
             @rem remove trailing spaces
             For /f "tokens=* delims= " %%a in ("!mytime!") do (set mytime=%%a)
 
-            adb pull %rover_app_dir%/downloads/	%ds_download_dir%\!mydate!_!mytime!
+            adb pull %rover_app_dir%/uploads/	%ds_download_dir%\!mydate!_!mytime!
 			set statustype=ended
 			call :send_broadmsg
 			echo Completed
@@ -270,7 +270,7 @@ exit /B 0
 :push_files_block
 	call :start_app
 	if  "!is_installed!"=="1" (
-			set actiontype=upload
+			set actiontype=download
 			set statustype=started
 			call :send_broadmsg
 
@@ -314,7 +314,7 @@ exit /B 0
 
 		 ) else (
 		 	@rem param2 is a file
-		 	adb push %param2% %rover_app_dir%/uploads/
+		 	adb push %param2% %rover_app_dir%/downloads/
 			)
 
 	)

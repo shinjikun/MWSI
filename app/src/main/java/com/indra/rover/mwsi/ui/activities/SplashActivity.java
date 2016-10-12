@@ -66,7 +66,7 @@ public class SplashActivity extends AppCompatActivity  implements Constants,
     }
 
     private void parseFiles(){
-         String dir = android.os.Environment.getExternalStorageDirectory()+"/"+getPackageName()+"/uploads";
+         String dir = android.os.Environment.getExternalStorageDirectory()+"/"+getPackageName()+"/downloads";
          File parentDir = new File(dir);
          File[] files = parentDir.listFiles();
          FileParser fileParser = new FileParser(this);

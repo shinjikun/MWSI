@@ -65,7 +65,10 @@ public class FileUploader  extends AsyncTask<String[],Integer,String> {
             if(isMultiBook){
                 fileName = "BKMBU.txt";
             }
-            File contentDir=new File(android.os.Environment.getExternalStorageDirectory(),mContext.getPackageName()+"/downloads");
+            File contentDir=new File(android.os.Environment.getExternalStorageDirectory(),mContext.getPackageName()+"/uploads");
+            if(!contentDir.exists()){
+                contentDir.mkdir();
+            }
             File file = new File(contentDir, fileName);
 
             CSVWriter writer = new CSVWriter(new FileWriter(file), '|',CSVWriter.NO_QUOTE_CHARACTER);
@@ -90,12 +93,18 @@ public class FileUploader  extends AsyncTask<String[],Integer,String> {
             if(isMultiBook){
                 fileName = "FCMB.txt";
             }
-            File contentDir=new File(android.os.Environment.getExternalStorageDirectory(),mContext.getPackageName()+"/downloads");
+            File contentDir=new File(android.os.Environment.getExternalStorageDirectory(),mContext.getPackageName()+"/uploads");
+            if(!contentDir.exists()){
+                contentDir.mkdir();
+            }
+            List<String[]> mete = mrDao.query_fconn();
+            if(mete.isEmpty())
+                return;
             File file = new File(contentDir, fileName);
             CSVWriter writer = new CSVWriter(new FileWriter(file), '|',CSVWriter.NO_QUOTE_CHARACTER);
             //String[] column_names =    mContext.getResources().getStringArray(R.array.fc_columns);
             //writer.writeNext(column_names);
-            List<String[]> mete = mrDao.query_fconn();
+
             int size = mete.size();
             for(int i=0;i<size;i++){
                 String[] record = mete.get(i);
@@ -116,12 +125,18 @@ public class FileUploader  extends AsyncTask<String[],Integer,String> {
             if(isMultiBook){
                 fileName = "SAPMB.txt";
             }
-            File contentDir=new File(android.os.Environment.getExternalStorageDirectory(),mContext.getPackageName()+"/downloads");
+            File contentDir=new File(android.os.Environment.getExternalStorageDirectory(),mContext.getPackageName()+"/uploads");
             File file = new File(contentDir, fileName);
+            if(!contentDir.exists()){
+                contentDir.mkdir();
+            }
+            List<String[]> mete = mrDao.query_sap();
+            if(mete.isEmpty())
+                return;
             CSVWriter writer = new CSVWriter(new FileWriter(file), '|',CSVWriter.NO_QUOTE_CHARACTER);
             //String[] column_names =    mContext.getResources().getStringArray(R.array.fc_columns);
             //writer.writeNext(column_names);
-            List<String[]> mete = mrDao.query_sap();
+
             int size = mete.size();
             for(int i=0;i<size;i++){
                 String[] record = mete.get(i);

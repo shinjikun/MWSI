@@ -99,7 +99,7 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
             txtFiles.setText("");
             setDrawable(R.drawable.ic_completed);
             prefs.setData(HAS_ROVER_UPDATE,false);
-            deleteFiles("downloads");
+            deleteFiles("uploads");
         }
     }
 
@@ -186,14 +186,14 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
             String action = b.getString("action");
             String status = b.getString("status");
 
-            if(action.equals("download")){
+            if(action.equals("upload")){
                 setDrawable(R.drawable.ic_upload);
                 txtSubTitle.setText(String.valueOf("Uploading files to DS"));
                 downloadAction(status,b);
             }
-            else if(action.equals("upload")){
+            else if(action.equals("download")){
                 setDrawable(R.drawable.ic_download);
-                txtSubTitle.setText(String.valueOf("Downloading files to DS"));
+                txtSubTitle.setText(String.valueOf("Downloading files from DS"));
                 uploadAction(status,b);
             }
             else if(action.equals("updatedb")){

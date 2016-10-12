@@ -28,13 +28,13 @@ public class FileUtils {
             downloadDir.mkdirs();
         }
         //this will contain the capture images of reported OCs
-        File imagesDir = new File(downloadDir,"images");
+        File imagesDir = new File(uploadDir,"images");
         if(!imagesDir.exists()){
             imagesDir.mkdirs();
         }
 
         //this will contain the signature of customer who received the receipt of meter reading
-        File signatures = new File(downloadDir,"signatures");
+        File signatures = new File(uploadDir,"signatures");
         if(!signatures.exists()){
             signatures.mkdirs();
         }

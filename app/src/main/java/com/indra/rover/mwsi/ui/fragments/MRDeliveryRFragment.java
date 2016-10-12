@@ -311,7 +311,7 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
 
     private File getImageFile(){
         File    contentDir=new File(android.os.Environment.getExternalStorageDirectory()
-                ,"com.indra.rover.mwsi/downloads/signatures");
+                ,"com.indra.rover.mwsi/uploads/signatures");
         if(!contentDir.exists())
             contentDir.mkdir();
         StringBuilder strBuilder = new StringBuilder();

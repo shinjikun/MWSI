@@ -442,7 +442,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
 
     private void saveCaptureImage(int ocType,Bitmap bitMap){
         File    contentDir=new File(android.os.Environment.getExternalStorageDirectory()
-                ,getActivity().getPackageName()+"/downloads/images");
+                ,getActivity().getPackageName()+"/uploads/images");
         if(!contentDir.exists())
             contentDir.mkdir();
         StringBuilder strBuilder = new StringBuilder();
@@ -555,7 +555,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
 
      File getImageFile(int ocType){
         File    contentDir=new File(android.os.Environment.getExternalStorageDirectory()
-                ,"com.indra.rover.mwsi/downloads/images");
+                ,"com.indra.rover.mwsi/uploads/images");
         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append(crdocno);
         strBuilder.append('-');

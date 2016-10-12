@@ -112,7 +112,7 @@ public class SignatureActivity extends AppCompatActivity implements
     private void saveSignature(){
         Bitmap bitMap = signPanel.getBitmap();
         File contentDir=new File(android.os.Environment.getExternalStorageDirectory()
-                ,getPackageName()+"/downloads/signatures");
+                ,getPackageName()+"/uploads/signatures");
         if(!contentDir.exists())
             contentDir.mkdir();
         StringBuilder strBuilder = new StringBuilder();
@@ -153,7 +153,7 @@ public class SignatureActivity extends AppCompatActivity implements
 
     private File getImageFile(){
         File    contentDir=new File(android.os.Environment.getExternalStorageDirectory()
-                ,getPackageName()+"/downloads/signatures");
+                ,getPackageName()+"/uploads/signatures");
         if(!contentDir.exists())
             contentDir.mkdir();
         StringBuilder strBuilder = new StringBuilder();
