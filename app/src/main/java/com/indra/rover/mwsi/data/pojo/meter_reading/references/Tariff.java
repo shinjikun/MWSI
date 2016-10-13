@@ -33,4 +33,40 @@ public class Tariff {
         this.old_tierAmount = cursor.getDouble(cursor.getColumnIndexOrThrow("OLD_TIER_AMOUNT"));
         this.effectDate = cursor.getString(cursor.getColumnIndexOrThrow("EFFECTIVITY_DATE"));
     }
+
+    public double getBaseAmount() {
+        return baseAmount;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public double getTierAmount() {
+        return tierAmount;
+    }
+
+    public double getOld_price() {
+        return old_price;
+    }
+
+    public double getOld_baseAmount() {
+        return old_baseAmount;
+    }
+
+    public double getOld_tierAmount() {
+        return old_tierAmount;
+    }
+
+    public int getLowLimit() {
+        return lowLimit;
+    }
+
+    public int getHighLimit() {
+        return highLimit;
+    }
+
+    public int getCons_band() {
+        return cons_band;
+    }
 }

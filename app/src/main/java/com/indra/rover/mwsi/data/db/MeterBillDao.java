@@ -56,7 +56,7 @@ public class MeterBillDao extends ModelDao {
         HashMap<String,GLCharge> hashMap = new HashMap();
         try{
             open();
-            String sql_stmt = "select * from R_GLOBAL_CHARGES where GL_CHARGE_CODE";
+            String sql_stmt = "select * from R_GLOBAL_CHARGES ";
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
                 do {

@@ -23,6 +23,12 @@ public abstract  class BCompute {
     HashMap<String,GLCharge> hashGLRates;
 
     final String RESB= "RESB";
+    final String PATR = "PATR";
+    final String RLDS = "RLDS";
+    final String CERA = "CERA";
+    final String FCDA = "FCDA";
+    final String ENVM = "ENVM";
+    final String SEWR = "SEWR";
     final String RESIDENTIAL ="0001";
     final String SEMIBIZ = "0002";
     final String COMMER = "0003";

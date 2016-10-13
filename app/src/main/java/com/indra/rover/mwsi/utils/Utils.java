@@ -7,6 +7,7 @@ import android.os.Vibrator;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -140,6 +141,19 @@ public class Utils {
      public static String formatString(String str){
         return  str.replaceAll("\n"," ");
      }
+
+
+    /**
+     * round double data type to 2 decimal places
+     * e.g  200.3456 = 200.35
+     * @param val value to be rounded
+     * @return rounded value to 2 decimal places
+     */
+    public static double roundDouble(double val){
+        DecimalFormat df = new DecimalFormat("#.##");
+        return  Double.valueOf(df.format(val));
+
+    }
 
 
 

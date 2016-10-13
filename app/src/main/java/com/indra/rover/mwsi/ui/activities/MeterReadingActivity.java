@@ -491,9 +491,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                             case CS_CHILD:
                             case MB_CHILD:
                             case MB_MOTHER:
-
-                                BillCompute bill = new BillCompute(this,this);
-                                bill.compute(meterDao.getMeterBill(meterInfo.getDldocno()));
+                                if(!readstat.equals("P")||!readstat.equals("Q")){
+                                    BillCompute bill = new BillCompute(this,this);
+                                    bill.compute(meterDao.getMeterBill(meterInfo.getDldocno()));
+                                }
                                 break;
                         }
 
@@ -859,6 +860,6 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onPostBillResult(MeterBill mtrBill) {
-
+        changeToPrinted(meterInfo.getReadStat());
     }
 }

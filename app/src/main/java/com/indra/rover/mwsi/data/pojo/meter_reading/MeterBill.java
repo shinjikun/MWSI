@@ -17,6 +17,7 @@ public class MeterBill {
     double totalAmt;
     String bulk_flg;
     String gt34_flg;
+    String acctNum;
     /**
      * Present Reading Date
      */
@@ -39,6 +40,7 @@ public class MeterBill {
         this.gt34_flg = cursor.getString(cursor.getColumnIndexOrThrow("GT34FLAG"));
         this.presRdgDate =  cursor.getString(cursor.getColumnIndexOrThrow("PRESRDG"));
         this.prevRdgDate =  cursor.getString(cursor.getColumnIndexOrThrow("PREVRDGDATE"));
+        this.acctNum = cursor.getString(cursor.getColumnIndexOrThrow("ACCTNUM"));
     }
 
     public String getGt34_flg() {
@@ -63,5 +65,17 @@ public class MeterBill {
 
     public String getId() {
         return id;
+    }
+
+    public String getAcctNum() {
+        return acctNum;
+    }
+
+    public double getBasicCharge() {
+        return basicCharge;
+    }
+
+    public String getRatetype() {
+        return ratetype;
     }
 }

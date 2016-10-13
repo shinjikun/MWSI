@@ -17,8 +17,7 @@ public class GLCharge {
     public GLCharge(Cursor cursor){
         this.gl_code =cursor.getString(cursor.getColumnIndexOrThrow("GL_CHARGE_CODE"));
         String rate = cursor.getString(cursor.getColumnIndexOrThrow("GL_RATE"));
-        boolean isEmpty = Utils.isNotEmpty(rate);
-        if(!isEmpty){
+        if(Utils.isNotEmpty(rate)){
             this.gl_rate = Double.parseDouble(rate);
         }
         this.gl_desc = cursor.getString(cursor.getColumnIndexOrThrow("GL_CHARGE_DESC"));
