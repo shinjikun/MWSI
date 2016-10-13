@@ -80,6 +80,18 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
             case R.id.btnCancel:
                 finish();
                 break;
+            case R.id.button0:
+            case R.id.button1:
+            case R.id.button2:
+            case R.id.button3:
+            case R.id.button4:
+            case R.id.button5:
+            case R.id.button6:
+            case R.id.button7:
+            case R.id.button8:
+            case R.id.button9:
+                numKeys(view);
+               break;
 
         }
 

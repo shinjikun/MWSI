@@ -65,7 +65,7 @@
             app:layout_rowWeight="1"
             app:layout_gravity="fill"
             style="@style/CalculatorButton"
-            android:onClick="numKeys"
+            android:onClick="onClick"
             android:tag="7"/>
         <Button android:text="@string/num8"
             android:id="@+id/button8"
@@ -75,7 +75,7 @@
             app:layout_rowWeight="1"
             app:layout_gravity="fill"
             style="@style/CalculatorButton"
-            android:onClick="numKeys"
+            android:onClick="onClick"
             android:tag="8"/>
         <Button android:text="@string/num9"
             android:id="@+id/button9"
@@ -85,7 +85,7 @@
             app:layout_rowWeight="1"
             app:layout_gravity="fill"
             style="@style/CalculatorButton"
-            android:onClick="numKeys"
+            android:onClick="onClick"
             android:tag="9"/>
         <Button android:text="@string/str_enter1"
             android:id="@+id/btnBackSpace"
@@ -106,7 +106,7 @@
             app:layout_rowWeight="1"
             app:layout_gravity="fill"
             style="@style/CalculatorButton"
-            android:onClick="numKeys"
+            android:onClick="onClick"
             android:tag="4"/>
         <Button android:text="@string/num5"
             android:id="@+id/button5"
@@ -116,7 +116,7 @@
             app:layout_rowWeight="1"
             app:layout_gravity="fill"
             style="@style/CalculatorButton"
-            android:onClick="numKeys"
+            android:onClick="onClick"
             android:tag="5"/>
         <Button android:text="@string/num6"
             android:id="@+id/button6"
@@ -126,7 +126,7 @@
             app:layout_rowWeight="1"
             app:layout_gravity="fill"
             style="@style/CalculatorButton"
-            android:onClick="numKeys"
+            android:onClick="onClick"
             android:tag="6"/>
         <Button android:text="@string/str_clear"
             android:id="@+id/btnClear"
@@ -146,7 +146,7 @@
             android:layout_height="0dp"
             app:layout_gravity="fill"
             style="@style/CalculatorButton"
-            android:onClick="numKeys"
+            android:onClick="onClick"
             android:tag="1"/>
         <Button android:text="@string/num2"
             android:id="@+id/button2"
@@ -156,7 +156,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             style="@style/CalculatorButton"
-            android:onClick="numKeys"
+            android:onClick="onClick"
             android:tag="2"/>
         <Button android:text="@string/num3"
             android:id="@+id/button3"
@@ -166,7 +166,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             style="@style/CalculatorButton"
-            android:onClick="numKeys"
+            android:onClick="onClick"
             android:tag="3"/>
         <Button
             android:id="@+id/btnEnter"
@@ -191,7 +191,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             style="@style/CalculatorButton"
-            android:onClick="numKeys"
+            android:onClick="onClick"
             android:tag="0"/>
         <Button android:text="@android:string/cancel"
             android:id="@+id/btnCancel"
