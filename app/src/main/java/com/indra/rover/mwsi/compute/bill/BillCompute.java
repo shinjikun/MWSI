@@ -82,46 +82,63 @@ public class BillCompute extends BCompute {
 
         }
         else {
-        discount =    minimumCharge(meterBill);
+            minimumCharge(meterBill);
         }
 
-        otherCharges(meterBill, discount);
+        otherCharges(meterBill);
+        totalAmount(meterBill);
         if(listener!=null){
             listener.onPostBillResult(meterBill);
         }
     }
 
 
-    void otherCharges(MeterBill meterBill, double zdiscn){
-     double zcera =   computeCERA(meterBill);
-     double zfcda =   computeFCDA(meterBill);
-     double tota_water_charge =computeENVM(meterBill, zdiscn, zcera, zfcda);
-     computeSCharge(meterBill, tota_water_charge);
+    private void otherCharges(MeterBill meterBill){
+     computeCERA(meterBill);
+     computeFCDA(meterBill);
+     computeENVM(meterBill);
+     computeSewerCharge(meterBill);
+     computeMSCCharge(meterBill);
+     computeSCDiscount(meterBill);
+     computeTotChargeB4Tax(meterBill);
+     computeForVAT(meterBill);
+
     }
 
-    double computeCERA(MeterBill meterBill){
+    private void totalAmount(MeterBill meterBill){
+        double totCurB4Tax = meterBill.getTotcurb4tax();
+        double vat =  meterBill.getVat();
+        double totalAmount = totCurB4Tax + vat;
+        totalAmount = Utils.roundDouble(totalAmount);
+    }
+
+    private void computeCERA(MeterBill meterBill){
         int consumption = meterBill.getConsumption();
         GLCharge glCERA =  getGLRate(CERA);
         double zcera = consumption * glCERA.getGl_rate();
         if(zcera>0){
             zcera = Utils.roundDouble(zcera);
             insertSAPData(meterBill,"ZCERA",0.00,zcera,0 );
+            meterBill.setCera(zcera);
         }
-        return zcera;
+
     }
 
-    double computeFCDA(MeterBill meterBill){
+    private void computeFCDA(MeterBill meterBill){
         int consumption = meterBill.getConsumption();
         GLCharge glFCDA =  getGLRate(FCDA);
         double zfcda = consumption * glFCDA.getGl_rate();
         if(zfcda>0){
             zfcda = Utils.roundDouble(zfcda);
             insertSAPData(meterBill,"ZFCDA",0.00,zfcda,0 );
+            meterBill.setFcda(zfcda);
         }
-        return zfcda;
     }
 
-    double  computeENVM(MeterBill meterBill, double zdiscn, double zcera, double zfcda){
+    private void  computeENVM(MeterBill meterBill){
+        double  zdiscn = meterBill.getDiscount();
+        double  zcera =  meterBill.getCera();
+        double  zfcda = meterBill.getFcda();
         double  total_water_charge = meterBill.getBasicCharge() +zcera+zfcda+zdiscn;
         GLCharge glevm = getGLRate(ENVM);
         double  zenv = total_water_charge * glevm.getGl_rate();
@@ -129,14 +146,37 @@ public class BillCompute extends BCompute {
         if(zenv>0){
             zenv = Utils.roundDouble(zenv);
             insertSAPData(meterBill,"ZENV",0.00,zenv,0 );
+            meterBill.setEnv_charge(zenv);
         }
-        return total_water_charge;
+
     }
 
-    void computeSCharge(MeterBill meterBill, double total_water_charges){
+
+    private void computeMSCCharge(MeterBill meterBill){
+        double msc_amout =  meterBill.getMsc_amount();
+        String gt34flg = meterBill.getGt34_flg();
+        if(Utils.isNotEmpty(gt34flg)){
+
+            if(gt34flg.equals("1")){
+                double months_factor =  1.323;
+                msc_amout =    msc_amout * months_factor;
+            }
+        }
+
+        insertSAPData(meterBill,"ZMSC",0.00, msc_amout,0);
+        meterBill.setMsc_amount(msc_amout);
+
+    }
+
+
+   private void computeSewerCharge(MeterBill meterBill){
+       double  zdiscn = meterBill.getDiscount();
+       double  zcera =  meterBill.getCera();
+       double  zfcda = meterBill.getFcda();
+       double  total_water_charges = meterBill.getBasicCharge() +zcera+zfcda+zdiscn;
         String billClass = meterBill.getBillClass();
         String rate_type = meterBill.getRatetype();
-        if(billClass.equals(COMMER)||billClass.equals(INDUSTRIAL)){
+        if(billClass.equals(COMMERCIAL)||billClass.equals(INDUSTRIAL)){
             if(rate_type.equals("S")||rate_type.equals("A")||
                     rate_type.equals("SA")||rate_type.equals("HA")){
                 GLCharge glevm = getGLRate(SEWR);
@@ -144,12 +184,40 @@ public class BillCompute extends BCompute {
                 if(zsewer>0){
                     zsewer = Utils.roundDouble(zsewer);
                     insertSAPData(meterBill,"ZSEWER",0.00,zsewer,0 );
+                    meterBill.setSewer_charge(zsewer);
                 }
             }
         }
     }
 
-    double minimumCharge(MeterBill  meterBill){
+    private void computeSCDiscount(MeterBill meterBill){
+        meterBill.setSc_discount(0.0);
+    }
+
+    /**
+     *  compute for current charges before tax
+     * @param meterBill
+     */
+    private void computeTotChargeB4Tax(MeterBill meterBill){
+      double totb4Tax =  billDao.getTotalAmount(meterBill.getId());
+        meterBill.setTotcurb4tax(totb4Tax);
+
+    }
+
+    private void computeForVAT(MeterBill meterBill){
+        String vatExempt = meterBill.getVatExempt();
+        if(Utils.isNotEmpty(vatExempt)){
+            if(vatExempt.equals("1")){
+                double  totChargeB4Tax = meterBill.getTotcurb4tax();
+                GLCharge glVAT =  getGLRate(VATX);
+                double vat =  totChargeB4Tax * glVAT.getGl_rate();
+                vat = Utils.roundDouble(vat);
+                meterBill.setVat(vat);
+            }
+        }
+    }
+
+   private void minimumCharge(MeterBill  meterBill){
         double basic_Charge;
         double discount=0.0;
         if(meterBill.getBillClass().equals(RESIDENTIAL)){
@@ -165,6 +233,7 @@ public class BillCompute extends BCompute {
             zdispa = Utils.roundDouble(zdispa);
             discount = Utils.roundDouble(zdiscn+ zdispa);
             basic_Charge = Utils.roundDouble(basic_Charge);
+            meterBill.setDiscount(discount);
             updateBasicCharge(meterBill,basic_Charge,discount);
             insertSAPData(meterBill,"ZBASIC",basic_Charge,basic_Charge,meterBill.getConsumption() );
             insertSAPData(meterBill,"ZDISCN",0.00,zdiscn,0 );
@@ -178,10 +247,11 @@ public class BillCompute extends BCompute {
            updateBasicCharge(meterBill,basic_Charge,0.0);
           insertSAPData(meterBill,"ZBASIC",basic_Charge,basic_Charge,meterBill.getConsumption() );
         }
-    return discount;
+        meterBill.setBasicCharge(basic_Charge);
+
     }
 
-    void updateBasicCharge(MeterBill meterBill,double basic_charge,double discount){
+    private void updateBasicCharge(MeterBill meterBill,double basic_charge,double discount){
         billDao.updateBasicCharge(basic_charge,discount,meterBill.getId());
         meterBill.setBasicCharge(basic_charge);
     }
@@ -189,12 +259,20 @@ public class BillCompute extends BCompute {
     @Override
     void getBulkBasicCharge(MeterBill meterBill) {
 
-        otherCharges(meterBill, 0.0);
+        otherCharges(meterBill);
+        totalAmount(meterBill);
+        if(listener!=null){
+            listener.onPostBillResult(meterBill);
+        }
     }
 
     @Override
     void getGT3BasicCharge(MeterBill meterBill) {
-        otherCharges(meterBill, 0.0);
+        otherCharges(meterBill);
+        totalAmount(meterBill);
+        if(listener!=null){
+            listener.onPostBillResult(meterBill);
+        }
     }
 
 
@@ -208,12 +286,11 @@ public class BillCompute extends BCompute {
         return 0;
     }
 
-
-    public void insertSAPData(MeterBill meterBill, String sapline, double price, double amount, int quantity){
+    private void insertSAPData(MeterBill meterBill, String sapline, double price, double amount, int quantity){
         insertSAPData( meterBill, sapline, price, amount,0,0,quantity );
     }
 
-    public void insertSAPData(MeterBill meterBill, String sapline,
+    private void insertSAPData(MeterBill meterBill, String sapline,
                               double price, double amount, double oldprice, double oldamout, int quantity){
         SAPData sapdata = new SAPData();
         sapdata.setDocNO(meterBill.getId());

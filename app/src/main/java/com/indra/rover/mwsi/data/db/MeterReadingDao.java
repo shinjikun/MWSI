@@ -347,6 +347,32 @@ public class MeterReadingDao extends ModelDao {
         }
     }
 
+
+    public void updateMeterBill(MeterBill meterBill){
+        try {
+            open();
+            open();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("BASIC_CHARGE",meterBill.getBasicCharge());
+            contentValues.put("DISCOUNT",meterBill.getDiscount());
+            contentValues.put("CERA",meterBill.getCera());
+            contentValues.put("FCDA",meterBill.getFcda());
+            contentValues.put("ENV_CHARGE",meterBill.getEnv_charge());
+            contentValues.put("SEWER_CHARGE",meterBill.getSewer_charge());
+            contentValues.put("MSC_AMOUNT",meterBill.getMsc_amount());
+            contentValues.put("SC_DISCOUNT",meterBill.getSc_discount());
+            contentValues.put("TOTCHRG_WO_TAX",meterBill.getTotcurb4tax());
+            contentValues.put("VAT_CHARGE",meterBill.getVat());
+            contentValues.put("TOT_CURR_CHARGE",meterBill.getVat()+meterBill.getTotcurb4tax());
+            String where= "ULDOCNO=?";
+            database.update("T_UPLOAD",contentValues,where,new String[]{meterBill.getId()});
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+    }
+
     /**
      * Reset Reading
      * @param crdocid
@@ -478,8 +504,10 @@ public class MeterReadingDao extends ModelDao {
             open();
             String sql_stmt="Select d.DLDOCNO, c.BILLED_CONS,d.BILL_CLASS,d.RATE_TYPE,u.BASIC_CHARGE," +
                     "u.DISCOUNT,u.SUBTOTAL_AMT,u.TOTAL_AMT_DUE,d.BULK_FLAG,d.GT34FLAG, " +
-                    "c.PRESRDG, d.PREVRDGDATE,u.ACCTNUM from T_DOWNLOAD d, T_UPLOAD u,T_CURRENT_RDG c " +
-                    "where d.DLDOCNO = u.ULDOCNO and c.CRDOCNO= u.ULDOCNO and d.DLDOCNO='"+dldocno+"'";
+                    "c.PRESRDG, d.PREVRDGDATE,u.ACCTNUM,d.METER_SIZE, r.MSC_AMOUNT,d.VAT_EXEMPT " +
+                    "from T_DOWNLOAD d, T_UPLOAD u,T_CURRENT_RDG c, R_MISC r " +
+                    "where r.METER_SIZE = d.METER_SIZE and  " +
+                    "d.DLDOCNO = u.ULDOCNO and c.CRDOCNO= u.ULDOCNO and d.DLDOCNO='"+dldocno+"'";
             Cursor cursor =database.rawQuery(sql_stmt,null);
 
             if (cursor.moveToFirst()) {

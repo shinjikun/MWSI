@@ -18,9 +18,9 @@ import java.util.List;
 public abstract  class BCompute {
 
     BillComputeListener listener;
-    Context context;
+    private Context context;
     MeterBillDao billDao;
-    HashMap<String,GLCharge> hashGLRates;
+    private HashMap<String,GLCharge> hashGLRates;
 
     final String RESB= "RESB";
     final String PATR = "PATR";
@@ -29,9 +29,10 @@ public abstract  class BCompute {
     final String FCDA = "FCDA";
     final String ENVM = "ENVM";
     final String SEWR = "SEWR";
+    final String VATX = "VATX";
     final String RESIDENTIAL ="0001";
     final String SEMIBIZ = "0002";
-    final String COMMER = "0003";
+    final String COMMERCIAL = "0003";
     final String INDUSTRIAL ="0004";
     final String HBCOM ="9992";
     final String HBINDUS = "9993";
@@ -43,7 +44,7 @@ public abstract  class BCompute {
         hashGLRates = billDao.getGLRates();
     }
 
-    public GLCharge getGLRate(String code){
+     GLCharge getGLRate(String code){
          return hashGLRates.get(code);
     }
 
@@ -53,26 +54,26 @@ public abstract  class BCompute {
 
     /**
      * compute basic charge amount based on tariff schedule
-     * @return
+     *
      */
   abstract void getBasicCharge(MeterBill meterBill);
 
     /**
      *  Special computation  for basic charge amount for BP> 34 days
-     * @return computed basic charge
+     *
      */
     abstract void getBulkBasicCharge(MeterBill meterBill);
 
     /**
      *  Total Basic Charge for Bulk Account
-     * @return
+     *
      */
   abstract     void getGT3BasicCharge(MeterBill meterBill);
 
     /**
      *  Total Basic Charge for HR/LT Accounts
      * @param l
-     * @return
+     *
      */
   abstract    double getHRLBasicCharge(long l);
 
@@ -80,7 +81,7 @@ public abstract  class BCompute {
      *   Get Basic Charge based on OC only entry
      * @param l
      * @param oc oc code
-     * @return
+     *
      */
    abstract   double getOCBasicCharge(long l,char oc);
 

@@ -861,5 +861,6 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onPostBillResult(MeterBill mtrBill) {
         changeToPrinted(meterInfo.getReadStat());
+        meterDao.updateMeterBill(mtrBill);
     }
 }

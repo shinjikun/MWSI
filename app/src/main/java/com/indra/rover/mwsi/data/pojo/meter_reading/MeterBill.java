@@ -2,22 +2,20 @@ package com.indra.rover.mwsi.data.pojo.meter_reading;
 
 import android.database.Cursor;
 
-/**
- * Created by Indra on 9/27/2016.
- */
 public class MeterBill {
 
-    String id;
-    int consumption;
-    String billClass;
-    String ratetype;
-    double basicCharge;
-    double discount;
-    double subtotal;
-    double totalAmt;
-    String bulk_flg;
-    String gt34_flg;
-    String acctNum;
+    private  String id;
+    private int consumption;
+    private String billClass;
+    private String ratetype;
+    private double basicCharge;
+    private double discount;
+    private double subtotal;
+    private double totalAmt;
+    private String bulk_flg;
+    private String gt34_flg;
+    private String acctNum;
+    private String vatExempt;
     /**
      * Present Reading Date
      */
@@ -26,6 +24,8 @@ public class MeterBill {
      * Previous Reading Date
      */
     String prevRdgDate;
+
+    double msc_amount;
 
     public MeterBill(Cursor cursor){
         this.id =cursor.getString(cursor.getColumnIndexOrThrow("DLDOCNO"));
@@ -41,6 +41,8 @@ public class MeterBill {
         this.presRdgDate =  cursor.getString(cursor.getColumnIndexOrThrow("PRESRDG"));
         this.prevRdgDate =  cursor.getString(cursor.getColumnIndexOrThrow("PREVRDGDATE"));
         this.acctNum = cursor.getString(cursor.getColumnIndexOrThrow("ACCTNUM"));
+        this.msc_amount = cursor.getDouble(cursor.getColumnIndexOrThrow("MSC_AMOUNT"));
+        this.vatExempt = cursor.getString(cursor.getColumnIndexOrThrow("VAT_EXEMPT"));
     }
 
     public String getGt34_flg() {
@@ -77,5 +79,99 @@ public class MeterBill {
 
     public String getRatetype() {
         return ratetype;
+    }
+
+
+
+    public double getMsc_amount() {
+        return msc_amount;
+    }
+
+
+    double cera;
+    double fcda;
+    double env_charge;
+    double sewer_charge;
+    double sc_discount;
+    /**
+     * Total current charges before tax
+     */
+    private double totcurb4tax;
+
+    private double vat;
+
+
+    public void setCera(double cera) {
+        this.cera = cera;
+    }
+
+    public void setFcda(double fcda) {
+        this.fcda = fcda;
+    }
+
+    public void setEnv_charge(double env_charge) {
+        this.env_charge = env_charge;
+    }
+
+    public double getEnv_charge() {
+        return env_charge;
+    }
+
+    public void setSewer_charge(double sewer_charge) {
+        this.sewer_charge = sewer_charge;
+    }
+
+    public double getSewer_charge() {
+        return sewer_charge;
+    }
+
+    public void setSc_discount(double sc_discount) {
+        this.sc_discount = sc_discount;
+    }
+
+    public double getSc_discount() {
+        return sc_discount;
+    }
+
+    public void setMsc_amount(double msc_amount) {
+        this.msc_amount = msc_amount;
+    }
+
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public double getFcda() {
+        return fcda;
+    }
+
+    public double getCera() {
+        return cera;
+    }
+
+    public void setTotcurb4tax(double totcurb4tax) {
+        this.totcurb4tax = totcurb4tax;
+    }
+
+    public double getTotcurb4tax() {
+        return totcurb4tax;
+    }
+
+    public String getVatExempt() {
+        return vatExempt;
+    }
+
+    public void setVat(double vat) {
+        this.vat = vat;
+    }
+
+
+    public double getVat() {
+        return vat;
     }
 }

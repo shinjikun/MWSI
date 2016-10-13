@@ -140,5 +140,59 @@ public class MeterBillDao extends ModelDao {
     }
 
 
+    public void updateTotalAmount(double total_amount){
+
+    }
+
+
+
+
+
+
+
+    /**
+     *
+     * @param sapdocno
+     * @return
+     */
+    public double getTotalAmount(String sapdocno){
+        double total =0.0;
+        try {
+            open();
+            String sql_stmt = "select sum(TOTAL_AMOUNT) as TOTAL from T_SAP_DETAILS where SAPDOCNO='"+sapdocno+"'";
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                  total =  cursor.getDouble(cursor.getColumnIndexOrThrow("TOTAL"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+
+        return total;
+    }
+
+
+    public void deleteZBasic(String sapdocno){
+       try {
+           open();
+           String sql_stmt = "delete from T_SAP_DETAILS where  SAP_LINE_CODE='ZBASIC' " +
+                   "and SAPDOCNO='"+sapdocno+"'";
+           Cursor cursor = database.rawQuery(sql_stmt,null);
+            cursor.close();
+       }catch (Exception e){
+            e.printStackTrace();
+       }finally {
+           close();
+       }
+
+
+    }
+
+
 
 }
