@@ -17,26 +17,43 @@ repositories {
 
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'maynilad'
+            keyPassword 'maynilad'
+            storeFile file('../key/keystore.jks')
+            storePassword 'maynilad'
+        }
+    }
+    def major_number = System.getenv("ANDROID_MAJOR_NUMBER") as Integer ?: 1
+    def minor_number = System.getenv("ANDROID_MINOR_NUMBER") as Integer ?: 0
+   // def patch_number = System.getenv("ANDROID_PATCH_NUMBER") as Integer ?: 0
+    def version_code = System.getenv("ANDROID_BUILD_NUMBER") as Integer ?: 1
+    def version_name = major_number+"."+minor_number+"."+version_code
+    def app_name = "maynilad-" + version_name
     compileSdkVersion 22
     buildToolsVersion "24.0.1"
-
     defaultConfig {
         applicationId "com.indra.rover.mwsi"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode version_code
+        versionName version_name
+        project.ext.set("archivesBaseName","maynilad-"+versionName);
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+            debuggable true
+            resValue "string", "application_name", app_name
         }
         debug {
             debuggable true
+            resValue "string", "application_name", app_name + "-DEBUG"
         }
     }
-
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'

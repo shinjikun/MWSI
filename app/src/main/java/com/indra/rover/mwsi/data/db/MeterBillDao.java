@@ -11,9 +11,6 @@ import com.indra.rover.mwsi.data.pojo.meter_reading.references.Tariff;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by Indra on 10/10/2016.
- */
 public class MeterBillDao extends ModelDao {
 
     public MeterBillDao(Context context){
@@ -140,9 +137,6 @@ public class MeterBillDao extends ModelDao {
     }
 
 
-    public void updateTotalAmount(double total_amount){
-
-    }
 
 
 
@@ -150,11 +144,7 @@ public class MeterBillDao extends ModelDao {
 
 
 
-    /**
-     *
-     * @param sapdocno
-     * @return
-     */
+
     public double getTotalAmount(String sapdocno){
         double total =0.0;
         try {
