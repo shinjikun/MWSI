@@ -21,18 +21,20 @@ public class BillCompute extends BCompute {
     public void compute(MeterBill meterBill) {
      String gt34flg = meterBill.getGt34_flg();
      String  bulkflg = meterBill.getBulk_flg();
+        if(Utils.isNotEmpty(bulkflg)){
+            if(bulkflg.equals("1")){
+                getBulkBasicCharge(meterBill);
+                return;
+            }
+        }
+
         if(Utils.isNotEmpty(gt34flg)){
             if(gt34flg.equals("1")){
               getGT3BasicCharge(meterBill);
                 return;
             }
         }
-         if(Utils.isNotEmpty(bulkflg)){
-            if(bulkflg.equals("1")){
-                getBulkBasicCharge(meterBill);
-                return;
-            }
-        }
+
         getBasicCharge(meterBill);
 
     }
@@ -69,13 +71,15 @@ public class BillCompute extends BCompute {
                     amount = price * quantity;
                     totalAmount = amount +old_amount;
                     basic_charge += totalAmount;
-                    insertSAPData(meterBill,"ZBASIC",price,amount,old_price,old_amount,quantity);
+                    insertSAPData(meterBill,"ZBASIC",price,amount,old_price,
+                            old_amount,String.valueOf(quantity));
                         break;
                 }
                 totalAmount = amount+ old_amount;
                 basic_charge += totalAmount;
 
-                insertSAPData(meterBill,"ZBASIC",price,amount,old_price,old_amount,quantity);
+                insertSAPData(meterBill,"ZBASIC",price,amount,old_price,old_amount,
+                        String.valueOf(quantity));
 
             }
             updateBasicCharge(meterBill,basic_charge,discount);
@@ -110,6 +114,7 @@ public class BillCompute extends BCompute {
         double vat =  meterBill.getVat();
         double totalAmount = totCurB4Tax + vat;
         totalAmount = Utils.roundDouble(totalAmount);
+        meterBill.setTotcurcharge(totalAmount);
     }
 
     private void computeCERA(MeterBill meterBill){
@@ -126,8 +131,9 @@ public class BillCompute extends BCompute {
 
     private void computeFCDA(MeterBill meterBill){
         int consumption = meterBill.getConsumption();
+        double basicCharge = meterBill.getBasicCharge();
         GLCharge glFCDA =  getGLRate(FCDA);
-        double zfcda = consumption * glFCDA.getGl_rate();
+        double zfcda = basicCharge * glFCDA.getGl_rate();
         if(zfcda>0){
             zfcda = Utils.roundDouble(zfcda);
             insertSAPData(meterBill,"ZFCDA",0.00,zfcda,0 );
@@ -191,7 +197,31 @@ public class BillCompute extends BCompute {
     }
 
     private void computeSCDiscount(MeterBill meterBill){
-        meterBill.setSc_discount(0.0);
+        String rate_type = meterBill.getRatetype();
+
+        int consumption = meterBill.getConsumption();
+        //check for Rate type
+        //senior citizen living in residential area
+        if(rate_type.equals("SW")||rate_type.equals("SA")){
+            //only applies if consumption is less than 30 cu mm
+            if(consumption <=30){
+                GLCharge glscdiscn = getGLRate(SCDS);
+                double discount= meterBill.getBasicCharge() * -(glscdiscn.getGl_rate());
+                //round to the nearest centavos
+                discount = Utils.roundDouble(discount);
+                insertSAPData(meterBill,"ZDISSC",0.00,discount,0);
+                meterBill.setSc_discount(discount);
+            }
+        }
+        else if(rate_type.equals("HW")||rate_type.equals("HA")){
+            GLCharge glscdiscn = getGLRate(HFTA);
+            double discount= meterBill.getBasicCharge() * -(glscdiscn.getGl_rate());
+            //round to the nearest centavos
+            discount = Utils.roundDouble(discount);
+            insertSAPData(meterBill,"ZDISSC",0.00,discount,0);
+            meterBill.setSc_discount(discount);
+        }
+
     }
 
     /**
@@ -238,16 +268,18 @@ public class BillCompute extends BCompute {
             insertSAPData(meterBill,"ZBASIC",basic_Charge,basic_Charge,meterBill.getConsumption() );
             insertSAPData(meterBill,"ZDISCN",0.00,zdiscn,0 );
             insertSAPData(meterBill,"ZDISPA",0.00,zdispa,0 );
+            meterBill.setBasicCharge(basic_Charge+zdiscn+zdispa);
         }
         else {
-        ArrayList<Tariff> arryTariff = billDao.getTariffs(meterBill.getBillClass());
-        Tariff tariff = arryTariff.get(0);
-          basic_Charge =  tariff.getTierAmount();
+            ArrayList<Tariff> arryTariff = billDao.getTariffs(meterBill.getBillClass());
+            Tariff tariff = arryTariff.get(0);
+            basic_Charge =  tariff.getTierAmount();
             basic_Charge = Utils.roundDouble(basic_Charge);
-           updateBasicCharge(meterBill,basic_Charge,0.0);
-          insertSAPData(meterBill,"ZBASIC",basic_Charge,basic_Charge,meterBill.getConsumption() );
+            updateBasicCharge(meterBill,basic_Charge,0.0);
+            insertSAPData(meterBill,"ZBASIC",basic_Charge,basic_Charge,meterBill.getConsumption() );
+            meterBill.setBasicCharge(basic_Charge);
         }
-        meterBill.setBasicCharge(basic_Charge);
+
 
     }
 
@@ -258,6 +290,61 @@ public class BillCompute extends BCompute {
 
     @Override
     void getBulkBasicCharge(MeterBill meterBill) {
+        int consumption =  meterBill.getConsumption();
+        String strusers = meterBill.getNumusers();
+        double discount =0.0;
+        if(Utils.isNotEmpty(strusers)){
+            int numUser = Integer.parseInt(strusers);
+            double ave_cons =  consumption/numUser;
+            ave_cons = Utils.roundDouble(ave_cons);
+            if(ave_cons>10.0){
+                ArrayList<Tariff> arryTariff = billDao.getTariffs(meterBill.getBillClass());
+                double basic_charge=0.0;
+                int size = arryTariff.size();
+                for(int i=0;i<size;i++){
+                    Tariff tariff = arryTariff.get(i);
+                    int low_limit = tariff.getLowLimit();
+                    int high_limit = tariff.getHighLimit();
+                    double amount = tariff.getBaseAmount();
+                    double old_amount = 0.0;//tariff.getOld_baseAmount();
+                    double old_price = 0.0;//tariff.getOld_price();
+                    int quantity = tariff.getCons_band();
+                    double price = tariff.getPrice();
+                    double totalAmount;
+
+                    if(i==0){
+                        price =amount;
+                    }
+                    else {
+                        amount = price * quantity;
+                    }
+
+                    if(low_limit<=ave_cons && ave_cons<=high_limit){
+                        double quantity1 = ave_cons - low_limit +1;
+                        amount = price * quantity1;
+                        totalAmount = amount +old_amount;
+                        basic_charge += totalAmount;
+                         insertSAPData(meterBill,"ZAVEPRC",price,amount,old_price,old_amount,
+                                 String.valueOf(quantity1));
+                        break;
+                    }
+                    totalAmount = amount+ old_amount;
+                    basic_charge += totalAmount;
+
+                    insertSAPData(meterBill,"ZAVEPRC",price,amount,old_price,
+                            old_amount,String.valueOf(quantity));
+
+                }
+                double final_basic_charge =  basic_charge * numUser;
+                final_basic_charge = Utils.roundDouble(final_basic_charge);
+                updateBasicCharge(meterBill,final_basic_charge,discount);
+                insertSAPData(meterBill,"ZBASIC",0.00,final_basic_charge,0 );
+            }
+            else {
+                minimumCharge(meterBill);
+            }
+
+        }
 
         otherCharges(meterBill);
         totalAmount(meterBill);
@@ -268,6 +355,7 @@ public class BillCompute extends BCompute {
 
     @Override
     void getGT3BasicCharge(MeterBill meterBill) {
+        int consumption =  meterBill.getConsumption();
         otherCharges(meterBill);
         totalAmount(meterBill);
         if(listener!=null){
@@ -287,11 +375,11 @@ public class BillCompute extends BCompute {
     }
 
     private void insertSAPData(MeterBill meterBill, String sapline, double price, double amount, int quantity){
-        insertSAPData( meterBill, sapline, price, amount,0,0,quantity );
+        insertSAPData( meterBill, sapline, price, amount,0,0,String.valueOf(quantity ));
     }
 
     private void insertSAPData(MeterBill meterBill, String sapline,
-                              double price, double amount, double oldprice, double oldamout, int quantity){
+                              double price, double amount, double oldprice, double oldamout, String quantity){
         SAPData sapdata = new SAPData();
         sapdata.setDocNO(meterBill.getId());
         sapdata.setPrice(price);

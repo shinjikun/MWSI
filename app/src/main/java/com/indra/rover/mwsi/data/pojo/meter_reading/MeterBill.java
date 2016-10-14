@@ -16,6 +16,7 @@ public class MeterBill {
     private String gt34_flg;
     private String acctNum;
     private String vatExempt;
+    private String numusers;
     /**
      * Present Reading Date
      */
@@ -43,6 +44,7 @@ public class MeterBill {
         this.acctNum = cursor.getString(cursor.getColumnIndexOrThrow("ACCTNUM"));
         this.msc_amount = cursor.getDouble(cursor.getColumnIndexOrThrow("MSC_AMOUNT"));
         this.vatExempt = cursor.getString(cursor.getColumnIndexOrThrow("VAT_EXEMPT"));
+        this.numusers = cursor.getString(cursor.getColumnIndexOrThrow("NUMUSERS"));
     }
 
     public String getGt34_flg() {
@@ -98,6 +100,7 @@ public class MeterBill {
      */
     private double totcurb4tax;
 
+    private double totcurcharge;
     private double vat;
 
 
@@ -173,5 +176,18 @@ public class MeterBill {
 
     public double getVat() {
         return vat;
+    }
+
+
+    public String getNumusers() {
+        return numusers;
+    }
+
+    public void setTotcurcharge(double totcurcharge) {
+        this.totcurcharge = totcurcharge;
+    }
+
+    public double getTotcurcharge() {
+        return totcurcharge;
     }
 }

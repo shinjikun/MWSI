@@ -331,6 +331,10 @@ public class ConnectDao extends ModelDao {
         return query(selectstmt);
     }
 
+
+
+
+
     public List<String[]> query_upload(String mruNO, boolean isMultiBook){
 
         String selectstmt = "Select u.MRU as BOOKNO, u.ACCTNUM,u.ULDOCNO, c.METERNO,c.MR_TYPE_CODE as READTAG , c.RDG_DATE as RDGDATE ,c.RDG_TIME as RDGTIME ," +

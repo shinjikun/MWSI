@@ -14,6 +14,7 @@ import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.ConnectDao;
 import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.FileUploader;
+import com.indra.rover.mwsi.utils.FileUploader1;
 import com.indra.rover.mwsi.utils.PreferenceKeys;
 import com.indra.rover.mwsi.utils.Utils;
 
@@ -23,7 +24,8 @@ import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 import java.util.List;
 
-public class LockedAppActivity extends AppCompatActivity implements Constants,FileUploader.UploadListener {
+public class LockedAppActivity extends AppCompatActivity implements Constants,
+        FileUploader.UploadListener,FileUploader1.UploadListener {
 
     ImageView img;
     TextView txtTitle,txtSubTitle,txtFiles;
@@ -86,6 +88,24 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
 
 
     }
+
+    private void datadumpAction(String status, Bundle b){
+        if(status.equals("started")){
+            txtTitle.setText(getResources().getText(R.string.lock_title_inprogress));
+            fileDumping();
+        } else if(status.equals("ended")){
+
+
+            txtTitle.setText(getResources().getText(R.string.lock_title_completed));
+            txtSubTitle.setText("");
+            txtFiles.setText("");
+            setDrawable(R.drawable.ic_completed);
+
+           // deleteFiles("datadump");
+        }
+    }
+
+
 
     private void downloadAction(String status, Bundle b){
         if(status.equals("started")){
@@ -206,6 +226,11 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
                 txtSubTitle.setText(String.valueOf("Dumping Rover DB to DS"));
                 pulldbAction(status,b);
             }
+            else if(action.equals("datadump")){
+                setDrawable(R.drawable.ic_db_update);
+                txtSubTitle.setText(String.valueOf("Dumping Rover DB to DS"));
+                datadumpAction(status ,b);
+            }
 
 
 
@@ -227,6 +252,16 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,Fi
             lst = arry.toArray(lst);
             fileUploader.execute(lst);
 
+    }
+
+    private void fileDumping(){
+        FileUploader1 fileUploader = new FileUploader1(this);
+        fileUploader.setListener(this);
+        ConnectDao mr = new ConnectDao(this);
+        List<String> arry =  mr.fetchMRUs();
+        String[] lst = new String[arry.size()];
+        lst = arry.toArray(lst);
+        fileUploader.execute(lst);
     }
 
 

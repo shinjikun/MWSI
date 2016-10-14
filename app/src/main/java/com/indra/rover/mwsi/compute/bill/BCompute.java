@@ -30,6 +30,8 @@ public abstract  class BCompute {
     final String ENVM = "ENVM";
     final String SEWR = "SEWR";
     final String VATX = "VATX";
+    final String SCDS = "SCDS";
+    final String HFTA = "HFTA";
     final String RESIDENTIAL ="0001";
     final String SEMIBIZ = "0002";
     final String COMMERCIAL = "0003";

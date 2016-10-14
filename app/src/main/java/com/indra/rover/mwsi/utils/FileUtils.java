@@ -50,6 +50,10 @@ public class FileUtils {
         if(!db.exists()){
             db.mkdirs();
         }
-
+        //create directory for datadump
+        db = new File(contentDir,"datadump");
+        if(!db.exists()){
+            db.mkdir();
+        }
     }
 }

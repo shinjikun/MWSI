@@ -20,6 +20,8 @@ set ds_download_dir=%ds_content_dir%uploads
 
 @rem ds content db dump directory location
 set ds_dbdump=%ds_content_dir%dbdump
+
+set datadump=%ds_content_dir%datadump
 @rem rover database dump  file name
 set rover_db_dump=DBDUMP
 
@@ -71,6 +73,18 @@ if /I "%cmd_arg%"=="pulldb" (
 	call :check_devices
 	if  "!is_device!"=="1" (
 			call :pulldb
+		) else (
+		echo No connected device
+		)
+	goto :skip
+		)
+
+
+
+if /I "%cmd_arg%"=="datadump" (
+	call :check_devices
+	if  "!is_device!"=="1" (
+			call :datadump
 		) else (
 		echo No connected device
 		)
@@ -219,6 +233,31 @@ exit /B 0
 		echo !app_status!
 
 exit /B 0
+:datadump
+
+	call :start_app
+	if  "!is_installed!"=="1" (
+			set actiontype=datadump
+			set statustype=started
+			call :send_broadmsg
+		IF not exist %datadump% (mkdir %datadump%)
+		For /f "tokens=2-4 delims=/ " %%a in ('date /t') do (set mydate=%%c-%%a-%%b)
+        For /f "tokens=1-2 delims=/:" %%a in ("%TIME%") do (set mytime=%%a%%b)
+        @rem remove trailing spaces
+        for /f "tokens=* delims= " %%a in ("!mytime!") do (set mytime=%%a)
+
+
+            adb pull %rover_app_dir%/datadump/	%datadump%\!mydate!_!mytime!
+			set statustype=ended
+			call :send_broadmsg
+			echo Completed
+			)else (
+			echo Rover App not installed
+	)
+
+exit /B 0
+
+
 
 :pulldb
 

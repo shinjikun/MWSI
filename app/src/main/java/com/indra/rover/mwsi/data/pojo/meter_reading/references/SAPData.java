@@ -6,7 +6,7 @@ public class SAPData {
     String lineCode;
     String docNO;
     String acctNum;
-    int quantity;
+    String quantity;
     double price;
     double amount;
     double total_amount;
@@ -23,7 +23,7 @@ public class SAPData {
         this.lineCode =cursor.getString(cursor.getColumnIndexOrThrow("SAP_LINE_CODE"));
         this.docNO = cursor.getString(cursor.getColumnIndexOrThrow("SAPDOCNO"));
         this.acctNum = cursor.getString(cursor.getColumnIndexOrThrow("ACCTNUM"));
-        this.quantity = cursor.getInt(cursor.getColumnIndexOrThrow("QUANTITY"));
+        this.quantity = cursor.getString(cursor.getColumnIndexOrThrow("QUANTITY"));
         this.price = cursor.getDouble(cursor.getColumnIndexOrThrow("PRICE"));
         this.amount = cursor.getDouble(cursor.getColumnIndexOrThrow("AMOUNT"));
         this.total_amount = cursor.getDouble(cursor.getColumnIndexOrThrow("TOTAL_AMOUNT"));
@@ -44,7 +44,7 @@ public class SAPData {
         return acctNum;
     }
 
-    public int getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
@@ -97,7 +97,7 @@ public class SAPData {
         this.price = price;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 

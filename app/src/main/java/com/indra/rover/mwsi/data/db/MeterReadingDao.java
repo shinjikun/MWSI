@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.util.Log;
 
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterBill;
@@ -351,7 +352,6 @@ public class MeterReadingDao extends ModelDao {
     public void updateMeterBill(MeterBill meterBill){
         try {
             open();
-            open();
             ContentValues contentValues = new ContentValues();
             contentValues.put("BASIC_CHARGE",meterBill.getBasicCharge());
             contentValues.put("DISCOUNT",meterBill.getDiscount());
@@ -504,10 +504,11 @@ public class MeterReadingDao extends ModelDao {
             open();
             String sql_stmt="Select d.DLDOCNO, c.BILLED_CONS,d.BILL_CLASS,d.RATE_TYPE,u.BASIC_CHARGE," +
                     "u.DISCOUNT,u.SUBTOTAL_AMT,u.TOTAL_AMT_DUE,d.BULK_FLAG,d.GT34FLAG, " +
-                    "c.PRESRDG, d.PREVRDGDATE,u.ACCTNUM,d.METER_SIZE, r.MSC_AMOUNT,d.VAT_EXEMPT " +
-                    "from T_DOWNLOAD d, T_UPLOAD u,T_CURRENT_RDG c, R_MISC r " +
+                    "c.PRESRDG, d.PREVRDGDATE,u.ACCTNUM,d.METER_SIZE, r.MSC_AMOUNT,d.VAT_EXEMPT,d.NUMUSERS " +
+                    "from T_DOWNLOAD d, T_UPLOAD u,T_CURRENT_RDG c, R_MSC r " +
                     "where r.METER_SIZE = d.METER_SIZE and  " +
                     "d.DLDOCNO = u.ULDOCNO and c.CRDOCNO= u.ULDOCNO and d.DLDOCNO='"+dldocno+"'";
+            Log.i("Test",sql_stmt);
             Cursor cursor =database.rawQuery(sql_stmt,null);
 
             if (cursor.moveToFirst()) {
