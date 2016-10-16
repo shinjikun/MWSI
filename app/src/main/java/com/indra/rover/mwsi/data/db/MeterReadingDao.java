@@ -41,9 +41,9 @@ public class MeterReadingDao extends ModelDao {
         List<MeterInfo> arry = new ArrayList<>();
         String sql_stmt = "select  t.MRU,t.SEQNO,t.METERNO,t.DLDOCNO,t.GRP_FLAG,t.BLOCK_TAG, " +
                 "c.RDG_TRIES,c.PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS, " +
-                "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE from T_DOWNLOAD t," +
+                "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE,u.PRINT_TAG from T_DOWNLOAD t," +
                 " R_BILL_CLASS r,T_CURRENT_RDG c where t.BILL_CLASS = r.BILL_CLASS " +
-                "and t.DLDOCNO = c.CRDOCNO  and c.MRU='"+mruID+"'";
+                "and t.DLDOCNO = c.CRDOCNO  and t.DLDOCNO = u.ULDOCNO and c.MRU='"+mruID+"'";
         try{
             open();
             Cursor cursor = database.rawQuery(sql_stmt,null);
@@ -69,9 +69,9 @@ public class MeterReadingDao extends ModelDao {
         MeterInfo meterInfo= null;
         String sql_stmt = "select  t.MRU,t.SEQNO,t.METERNO,t.DLDOCNO,t.GRP_FLAG,t.BLOCK_TAG, " +
                 "c.RDG_TRIES,c.PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS, " +
-                "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE from T_DOWNLOAD t," +
-                " R_BILL_CLASS r,T_CURRENT_RDG c where t.BILL_CLASS = r.BILL_CLASS " +
-                "and t.DLDOCNO = c.CRDOCNO  and c.CRDOCNO='"+id+"'";
+                "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE,u.PRINT_TAG from T_DOWNLOAD t," +
+                " R_BILL_CLASS r,T_CURRENT_RDG c, T_UPLOAD u where t.BILL_CLASS = r.BILL_CLASS " +
+                "and t.DLDOCNO = c.CRDOCNO and t.DLDOCNO = u.ULDOCNO and c.CRDOCNO='"+id+"'";
         try{
             open();
             Cursor cursor = database.rawQuery(sql_stmt,null);
@@ -96,9 +96,9 @@ public class MeterReadingDao extends ModelDao {
         List<MeterInfo> arry = new ArrayList<>();
         String sql_stmt = "select  t.MRU,t.SEQNO,t.METERNO,t.DLDOCNO,t.GRP_FLAG,t.BLOCK_TAG, " +
                 "c.RDG_TRIES,c.PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS, " +
-                "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE from T_DOWNLOAD t, " +
-                "R_BILL_CLASS r,T_CURRENT_RDG c where t.BILL_CLASS = r.BILL_CLASS and " +
-                "t.DLDOCNO = c.CRDOCNO   and " +
+                "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE,u.PRINT_TAG from T_DOWNLOAD t, " +
+                "R_BILL_CLASS r,T_CURRENT_RDG c, T_UPLOAD u where t.BILL_CLASS = r.BILL_CLASS and " +
+                "t.DLDOCNO = c.CRDOCNO   and t.DLDOCNO = u.ULDOCNO and " +
                 "MRU='"+mruID+ "' and "+column+" like '%"+searchValue+"%'";
         try{
             open();
@@ -121,6 +121,11 @@ public class MeterReadingDao extends ModelDao {
     }
 
 
+    /**
+     * fetch from the db the Meter reading History
+     * @param dldocno id to be search
+     * @return
+     */
     public MeterRHistory fetchConHistory(String dldocno){
         MeterRHistory meterRHistory = null;
         String sql_stmt = "Select MRU,DLDOCNO,METERNO,ACCTNUM,CUSTNAME,CUSTADDRESS," +
@@ -283,7 +288,7 @@ public class MeterReadingDao extends ModelDao {
         try{
             open();
             ContentValues contentValues = new ContentValues();
-            contentValues.put("PRINT_TAG",meterCons.getPrint_tag());
+            contentValues.put("PRINT_TAG",String.valueOf(meterCons.getPrintTag()));
             String where= "ULDOCNO=?";
             database.update("T_UPLOAD",contentValues,where,new String[]{uldocid});
         }catch(Exception e){

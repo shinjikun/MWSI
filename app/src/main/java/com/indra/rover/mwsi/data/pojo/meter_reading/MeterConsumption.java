@@ -5,11 +5,11 @@ import android.database.Cursor;
 
 public class MeterConsumption {
 
-    String  id;
-    String acct_status;
-    String meter_number;
-    String num_dials;
-    int max_cap;
+    private String  id;
+    private String acct_status;
+    private String meter_number;
+    private String num_dials;
+    private int max_cap;
     String grp_flag;
     String block_tag;
     String disc_tag;
@@ -30,35 +30,35 @@ public class MeterConsumption {
     //previous oc Code 1
     String prevff1;
     //previous oc Code 2
-    String prevff2;
+    private String prevff2;
     //OC code 1
-    String ffcode1;
+    private String ffcode1;
     //OC code 2
-    String ffcode2;
+    private String ffcode2;
     //present reading
-    String present_rdg;
+    private String present_rdg;
     //present billed consumption
-    int billed_cons;
-    String constype_code;
+    private int billed_cons;
+    private String constype_code;
     //Has new meter info, replacement date or initial reading?
-    String dreplmtr_code;
+    private String dreplmtr_code;
     /**
      * Special  Computation
      */
-    String spComp;
+    private String spComp;
     /**
      * Previous Consumption AVERAGE
      */
-    String prev_con_avg;
+    private String prev_con_avg;
 
-    String  csmb_type_code;
-    String  csmb_parent;
-    String acct_num;
-    String range_code;
-    String readstat;
+    private String  csmb_type_code;
+    private String  csmb_parent;
+    private String acct_num;
+    private String range_code;
+    private String readstat;
 
 
-    String print_tag;
+    private char print_tag;
 
 
     public MeterConsumption(Cursor cursor){
@@ -114,7 +114,7 @@ public class MeterConsumption {
 
     /**
      * number of dial corresponding value
-     * @return
+     * @return max cap value
      */
     public int getMax_cap() {
         return max_cap;
@@ -185,9 +185,7 @@ public class MeterConsumption {
         return bill_prev_act_tag;
     }
 
-    public void setPresent_rdg(String present_rdg) {
-        this.present_rdg = present_rdg;
-    }
+
 
     public int getBilled_cons() {
         return billed_cons;
@@ -214,9 +212,6 @@ public class MeterConsumption {
         return csmb_type_code;
     }
 
-    public void setAcct_num(String acct_num) {
-        this.acct_num = acct_num;
-    }
 
     public String getAcct_num() {
         return acct_num;
@@ -230,19 +225,16 @@ public class MeterConsumption {
         return readstat;
     }
 
-    public String getRange_code() {
-        return range_code;
-    }
 
     public void setRange_code(String range_code) {
         this.range_code = range_code;
     }
 
-    public void setPrint_tag(String print_tag) {
+    public void setPrintTag(char print_tag) {
         this.print_tag = print_tag;
     }
 
-    public String getPrint_tag() {
+    public char getPrintTag() {
         return print_tag;
     }
 }

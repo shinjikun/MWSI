@@ -13,7 +13,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -475,38 +474,16 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 }
                 break;
             case R.id.btnPrint:
-
-                String readstat = meterInfo.getReadStat();
-                String bill_str = meterInfo.getBill_scheme();
-                if(readstat.equals("U")){
-                  noPrint_Bill(0);
-                }
-                else {
-                    if(Utils.isNotEmpty(bill_str)) {
-                        int bill_scheme = Integer.parseInt(bill_str);
-                        //String accoutNumb = meterInfo
-                        switch (bill_scheme){
-                            case REG_SCHEME:
-                            case CS_MOTHER:
-                            case CS_CHILD:
-                            case MB_CHILD:
-                            case MB_MOTHER:
-                                if(!readstat.equals("P")||!readstat.equals("Q")){
-                                    BillCompute bill = new BillCompute(this,this);
-                                    bill.compute(meterDao.getMeterBill(meterInfo.getDldocno()));
-                                }
-                                break;
-                        }
-
-                    }
-
-                }
-
+                computeBill();
                 //
                 break;
         }
     }
 
+    /**
+     *
+     * @param readstat
+     */
     void changeToPrinted(String readstat){
         String newReadStat="P";
         if(readstat.equals("E")){
@@ -667,30 +644,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     }
 
-    @Override
-    public void onPostConsResult(MeterConsumption meterConsumption) {
-        meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
-        meterDao.updatePrintTag(meterConsumption,meterInfo.getDldocno());
-        comp_cons_range(meterConsumption);
-    }
 
-    @Override
-    public void onPrintChildMeters(MeterConsumption meterConsumption,
-                                   List<MeterConsumption> childMeters) {
-        //print child meters
-        meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
-        meterDao.updatePrintTag(meterConsumption,meterInfo.getDldocno());
-        comp_cons_range(meterConsumption);
-        meterInfo.setPresent_reading(meterConsumption.getPresent_rdg());
-        int size = childMeters.size();
-        for(int i= 0; i<size;i++){
-            MeterConsumption childMeter = childMeters.get(i);
-            meterDao.updateConsumption(childMeter,childMeter.getId());
-
-            //print child
-        }
-        //print child meter
-    }
 
      void comp_cons_range(MeterConsumption mtrCons){
          int consumption = mtrCons.getBilled_cons();
@@ -797,6 +751,48 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     }
 
+    void computeBill(){
+
+        String readstatstr = meterInfo.getReadStat();
+        int norecompute = 0;
+        char readstat = readstatstr.charAt(0);
+
+        switch(readstat){
+
+            case 'U':
+                noPrint_Bill(0);
+                break;
+            case 'P':
+            case 'Q':
+                // bill already printed, no recompute required, just reprint!
+                norecompute =1;
+                break;
+            case 'R':
+            case 'E':
+                switch (meterInfo.getPrintTag()){
+                    case MeterInfo.BILLABLE:
+                        norecompute =0;
+                        break;
+                    case MeterInfo.NONBILLABLE:
+                        noPrint_Bill(2);
+                        break;
+                    case MeterInfo.BILLNOPRINT:
+                        break;
+                }
+                break;
+
+        }
+
+     if(norecompute==0){
+         BillCompute bill = new BillCompute(this,this);
+         bill.compute(meterDao.getMeterBill(meterInfo.getDldocno()));
+     }
+
+
+    }
+
+
+
     /**
      *  Message based on parameter: 0=unread,  2=blocked, 3=unread MB mother meter
      */
@@ -860,8 +856,38 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         dlgUtils.showOKDialog("READING ENTRY",strBuilder.toString());
     }
 
+
+
+    @Override
+    public void onPostConsResult(MeterConsumption meterConsumption) {
+        meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
+        meterInfo.setPrintTag(meterConsumption.getPrintTag());
+        meterDao.updatePrintTag(meterConsumption,meterInfo.getDldocno());
+        comp_cons_range(meterConsumption);
+    }
+
+    @Override
+    public void onPrintChildMeters(MeterConsumption meterConsumption,
+                                   List<MeterConsumption> childMeters) {
+        //print child meters
+        meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
+        meterInfo.setPrintTag(meterConsumption.getPrintTag());
+        meterDao.updatePrintTag(meterConsumption,meterInfo.getDldocno());
+        comp_cons_range(meterConsumption);
+        meterInfo.setPresent_reading(meterConsumption.getPresent_rdg());
+        int size = childMeters.size();
+        for(int i= 0; i<size;i++){
+            MeterConsumption childMeter = childMeters.get(i);
+            meterDao.updateConsumption(childMeter,childMeter.getId());
+
+            //print child
+        }
+        //print child meter
+    }
+
     @Override
     public void onPostBillResult(MeterBill mtrBill) {
+
         changeToPrinted(meterInfo.getReadStat());
         meterDao.updateMeterBill(mtrBill);
     }

@@ -1,6 +1,7 @@
 package com.indra.rover.mwsi.compute.consumption;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
+import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 import com.indra.rover.mwsi.utils.Utils;
 
 /**
@@ -50,13 +51,13 @@ public class CompBlockAccn extends  Compute{
                 //if yes use secnario3 to get the bill consumption
                 int bill_consumption = scenario2();
                 meterConsObj.setBilled_cons(bill_consumption);
-                meterConsObj.setPrint_tag(BILLABLE);
+                meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                 //tag as adjusted
                 decisionC();
             }
             int bill_consumption =   scenario2();
             meterConsObj.setBilled_cons(bill_consumption);
-            meterConsObj.setPrint_tag(BILLABLE);
+            meterConsObj.setPrintTag(MeterInfo.BILLABLE);
             //tag as adjusted
             decisionC();
         }
@@ -65,7 +66,7 @@ public class CompBlockAccn extends  Compute{
             int average_consumption=  Integer.parseInt(meterConsObj.getAve_consumption());
             meterConsObj.setBilled_cons(average_consumption);
             meterConsObj.setConstype_code(AVERAGE);
-            meterConsObj.setPrint_tag(BILLABLE);
+            meterConsObj.setPrintTag(MeterInfo.BILLABLE);
             decisionC();
 
         }else if(dreplmtr_code.equals("3")){
@@ -74,7 +75,7 @@ public class CompBlockAccn extends  Compute{
                 //if yes use secnario3 to get the bill consumption
                 int bill_consumption = scenario3();
                 meterConsObj.setBilled_cons(bill_consumption);
-                meterConsObj.setPrint_tag(BILLABLE);
+                meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                 //tag as adjusted
                 decisionC();
             }
@@ -96,7 +97,7 @@ public class CompBlockAccn extends  Compute{
             if(Utils.isNotEmpty(previous_reading)){
                 int bill_consumption = scenario4();
                 meterConsObj.setBilled_cons(bill_consumption);
-                meterConsObj.setPrint_tag(BILLABLE);
+                meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                 //tag as adjusted
                 decisionC();
             }
@@ -104,7 +105,7 @@ public class CompBlockAccn extends  Compute{
                 //get consumption by default
                 int bill_cosumption =defaultCondition();
                 meterConsObj.setBilled_cons(bill_cosumption);
-                meterConsObj.setPrint_tag(BILLABLE);
+                meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                 //tag as actual
                 decisionA();
             }
@@ -113,7 +114,7 @@ public class CompBlockAccn extends  Compute{
                 int bill_cosumption = scenario3();
                 meterConsObj.setBilled_cons(bill_cosumption);
                 //tag as adjusted
-                meterConsObj.setPrint_tag(BILLABLE);
+                meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                 decisionC();
             }
             else {
@@ -138,7 +139,7 @@ public class CompBlockAccn extends  Compute{
                 if(pres_rdg>prev_rdg){
                     int bill_consumption = scenario4();
                     meterConsObj.setBilled_cons(bill_consumption);
-                    meterConsObj.setPrint_tag(BILLABLE);
+                    meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                     //tag as actual
                     decisionA();
                 }
@@ -149,7 +150,7 @@ public class CompBlockAccn extends  Compute{
                     if(block_tag.equals("P")){
                         int bill_consumption = scenario6();
                         meterConsObj.setBilled_cons(bill_consumption);
-                        meterConsObj.setPrint_tag(BILLABLE);
+                        meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                         decisionC();
                         //tag as adjusted
                     }

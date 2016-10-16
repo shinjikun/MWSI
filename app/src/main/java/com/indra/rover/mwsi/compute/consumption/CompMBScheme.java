@@ -2,14 +2,12 @@ package com.indra.rover.mwsi.compute.consumption;
 
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
+import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 
 import java.util.List;
 
-/**
- * Created by Indra on 9/28/2016.
- */
 public class CompMBScheme extends Compute implements Compute.ConsumptionListener {
-    MeterReadingDao mtrDao;
+    private MeterReadingDao mtrDao;
     public CompMBScheme(ConsumptionListener listener) {
         super(listener);
     }
@@ -77,7 +75,7 @@ public class CompMBScheme extends Compute implements Compute.ConsumptionListener
         }
 
         if(listener!=null){
-            meterConsObj.setPrint_tag(NOTPRINTABLE);
+            meterConsObj.setPrintTag(MeterInfo.BILLNOPRINT);
             listener.onPrintChildMeters(parentMeter,childMeters);
         }
     }

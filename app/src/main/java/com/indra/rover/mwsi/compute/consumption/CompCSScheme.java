@@ -2,14 +2,13 @@ package com.indra.rover.mwsi.compute.consumption;
 
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
+import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 
 import java.util.List;
 
-/**
- * Created by Indra on 9/28/2016.
- */
+
 public class CompCSScheme extends Compute implements Compute.ConsumptionListener {
-    MeterReadingDao mtrDao;
+    private MeterReadingDao mtrDao;
     public CompCSScheme(ConsumptionListener listener) {
         super(listener);
     }
@@ -40,11 +39,11 @@ public class CompCSScheme extends Compute implements Compute.ConsumptionListener
                 int parent_consumption = meterConsumption.getBilled_cons();
                 int sum = parent_consumption - totalCons;
                 if(sum>=0){
-                    meterConsumption.setPrint_tag(NOTBILLABLE);
+                    meterConsumption.setPrintTag(MeterInfo.BILLNOPRINT);
                     decisionA();
                 }
                 else {
-                    meterConsumption.setPrint_tag(NOTBILLABLE);
+                    meterConsumption.setPrintTag(MeterInfo.BILLNOPRINT);
                     decisionB();
                 }
             }

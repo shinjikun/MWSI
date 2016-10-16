@@ -4,44 +4,48 @@ import android.database.Cursor;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.CustomerInfo;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.BillClass;
+import com.indra.rover.mwsi.utils.Utils;
 
 import java.io.Serializable;
 
-/**
- * Created by Indra on 9/7/2016.
- */
 public class MeterInfo implements Serializable {
 
     /**
      * MRU ID
      */
-    String mru_id;
+  private  String mru_id;
 
     /**
      *  Sequence Number
      */
-    String seq_number;
+  private String seq_number;
 
 
-    String meter_number;
-    String grp_flag;
-    String block_tag;
-    String dldocno;
-    CustomerInfo customerInfo;
+  private  String meter_number;
+  private  String grp_flag;
+  private  String block_tag;
+  private  String dldocno;
+  private  CustomerInfo customerInfo;
 
-    BillClass billClass;
+  private  BillClass billClass;
 
-    String rdg_tries;
-    String present_reading;
+  private  String rdg_tries;
+  private  String present_reading;
     //read stat
-    String readStat;
+  private  String readStat;
     //bill scheme
-    String bill_scheme;
-    String account_num;
+  private  String bill_scheme;
+  private  String account_num;
     //childs parent
-    String childs_parent;
+  private  String childs_parent;
 
-    String range_code;
+  private  String range_code;
+
+  public static final char BILLABLE ='3';
+  public static final char BILLNOPRINT ='2';
+  public static final char NONBILLABLE ='1';
+
+   private  char printTag;
     public MeterInfo(Cursor cursor){
         this.mru_id =cursor.getString(cursor.getColumnIndexOrThrow("MRU"));
         this.seq_number = cursor.getString(cursor.getColumnIndexOrThrow("SEQNO"));
@@ -58,7 +62,10 @@ public class MeterInfo implements Serializable {
         this.range_code = cursor.getString(cursor.getColumnIndexOrThrow("RANGE_CODE"));
         this.customerInfo = new CustomerInfo(cursor);
         this.billClass = new BillClass(cursor);
-
+        String str = cursor.getString(cursor.getColumnIndexOrThrow("PRINT_TAG"));
+        if(Utils.isNotEmpty(str)){
+            printTag = str.charAt(0);
+        }
 
     }
 
@@ -142,5 +149,13 @@ public class MeterInfo implements Serializable {
 
     public void setRange_code(String range_code) {
         this.range_code = range_code;
+    }
+
+    public void setPrintTag(char print_tag) {
+        this.printTag = print_tag;
+    }
+
+    public char getPrintTag() {
+        return printTag;
     }
 }

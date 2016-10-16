@@ -1,6 +1,7 @@
 package com.indra.rover.mwsi.compute.consumption;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
+import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 import com.indra.rover.mwsi.utils.Utils;
 
 import java.util.List;
@@ -48,9 +49,6 @@ public class Compute {
     final String SP6 = "6";
 
 
-    final String BILLABLE ="3";
-    final String NOTPRINTABLE ="2";
-    final String NOTBILLABLE ="1";
     public Compute(ConsumptionListener listener){
         this.listener = listener;
     }
@@ -213,7 +211,7 @@ public class Compute {
      */
      void decisionE(){
         meterConsObj.setSpComp(SP0);
-         meterConsObj.setPrint_tag(BILLABLE);
+         meterConsObj.setPrintTag(MeterInfo.BILLABLE);
          meterConsObj.setBilled_cons(minimum_bill);
         meterConsObj.setConstype_code(AVERAGE);
         if(listener!=null){
@@ -222,7 +220,7 @@ public class Compute {
     }
 
      void noBill(){
-         meterConsObj.setPrint_tag(NOTBILLABLE);
+         meterConsObj.setPrintTag(MeterInfo.NONBILLABLE);
         if(listener!=null){
             listener.onPostConsResult(meterConsObj);
         }
