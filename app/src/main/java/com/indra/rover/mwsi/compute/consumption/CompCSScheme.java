@@ -40,9 +40,11 @@ public class CompCSScheme extends Compute implements Compute.ConsumptionListener
                 int parent_consumption = meterConsumption.getBilled_cons();
                 int sum = parent_consumption - totalCons;
                 if(sum>=0){
+                    meterConsumption.setPrint_tag(NOTBILLABLE);
                     decisionA();
                 }
                 else {
+                    meterConsumption.setPrint_tag(NOTBILLABLE);
                     decisionB();
                 }
             }

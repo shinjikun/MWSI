@@ -77,6 +77,7 @@ public class CompMBScheme extends Compute implements Compute.ConsumptionListener
         }
 
         if(listener!=null){
+            meterConsObj.setPrint_tag(NOTPRINTABLE);
             listener.onPrintChildMeters(parentMeter,childMeters);
         }
     }

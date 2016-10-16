@@ -202,6 +202,25 @@ public class ConnectDao extends ModelDao {
             values.put("GD_CHARGE",records[74]);
             values.put("OTHER_CHARGES",records[75]);
             values.put("ULDOCNO",records[10]);
+
+             if(Utils.isNotEmpty(records[14])){
+                 if(records[14].equals("K")){
+                     values.put("PRINT_TAG","2");
+                 }
+             }
+
+            if(Utils.isNotEmpty(records[80])){
+                int bill_scheme =  Integer.parseInt(records[80]);
+                switch (bill_scheme){
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                        values.put("PRINT_TAG","2");
+                        break;
+                }
+            }
+
             rowInsert = database.insert("T_UPLOAD", null, values);
 
         }catch(Exception e){

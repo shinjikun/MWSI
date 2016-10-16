@@ -341,6 +341,8 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                  percent = .20f;
                  break;
              case 6:
+             case 7:
+             case 8:
                  percent = .40f;
                  break;
          }

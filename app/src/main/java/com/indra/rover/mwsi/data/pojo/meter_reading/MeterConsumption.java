@@ -56,6 +56,11 @@ public class MeterConsumption {
     String acct_num;
     String range_code;
     String readstat;
+
+
+    String print_tag;
+
+
     public MeterConsumption(Cursor cursor){
         this.id =cursor.getString(cursor.getColumnIndexOrThrow("DLDOCNO"));
         this.acct_status = cursor.getString(cursor.getColumnIndexOrThrow("ACCT_STATUS"));
@@ -231,5 +236,13 @@ public class MeterConsumption {
 
     public void setRange_code(String range_code) {
         this.range_code = range_code;
+    }
+
+    public void setPrint_tag(String print_tag) {
+        this.print_tag = print_tag;
+    }
+
+    public String getPrint_tag() {
+        return print_tag;
     }
 }

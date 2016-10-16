@@ -670,6 +670,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onPostConsResult(MeterConsumption meterConsumption) {
         meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
+        meterDao.updatePrintTag(meterConsumption,meterInfo.getDldocno());
         comp_cons_range(meterConsumption);
     }
 
@@ -678,6 +679,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                                    List<MeterConsumption> childMeters) {
         //print child meters
         meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
+        meterDao.updatePrintTag(meterConsumption,meterInfo.getDldocno());
         comp_cons_range(meterConsumption);
         meterInfo.setPresent_reading(meterConsumption.getPresent_rdg());
         int size = childMeters.size();

@@ -30,3 +30,11 @@ adb shell am start -n com.indra.rover.mwsi/.ui.activities.LockedAppActivity --ac
 adb shell am broadcast -a com.indra.rover.mwsi.ROVER_MESSAGE  -p com.indra.rover.mwsi --es action pulldb --es status started
 adb pull  /sdcard/com.indra.rover.mwsi/dbdump ./dbdump
 adb shell am broadcast -a com.indra.rover.mwsi.ROVER_MESSAGE  -p com.indra.rover.mwsi --es action pulldb --es status ended
+
+
+#upload files to rover
+adb shell am start -n com.indra.rover.mwsi/.ui.activities.LockedAppActivity --activity-clear-task --activity-clear-top --activity-single-top
+adb shell am broadcast -a com.indra.rover.mwsi.ROVER_MESSAGE  -p com.indra.rover.mwsi --es action download --es status started
+adb push   downloads /sdcard/com.indra.rover.mwsi/downloads
+adb shell am broadcast -a com.indra.rover.mwsi.ROVER_MESSAGE  -p com.indra.rover.mwsi --es action download --es status ended
+
