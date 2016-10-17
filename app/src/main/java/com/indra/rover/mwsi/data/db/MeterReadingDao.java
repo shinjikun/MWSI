@@ -99,7 +99,7 @@ public class MeterReadingDao extends ModelDao {
                 "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE,u.PRINT_TAG from T_DOWNLOAD t, " +
                 "R_BILL_CLASS r,T_CURRENT_RDG c, T_UPLOAD u where t.BILL_CLASS = r.BILL_CLASS and " +
                 "t.DLDOCNO = c.CRDOCNO   and t.DLDOCNO = u.ULDOCNO and " +
-                "MRU='"+mruID+ "' and "+column+" like '%"+searchValue+"%'";
+                "t.MRU='"+mruID+ "' and "+column+" like '%"+searchValue+"%'";
         try{
             open();
             Cursor cursor = database.rawQuery(sql_stmt,null);
@@ -307,7 +307,7 @@ public class MeterReadingDao extends ModelDao {
             contentValues.put("BILLED_CONS",meterCons.getBilled_cons());
             contentValues.put("CONSTYPE_CODE",meterCons.getConstype_code());
             contentValues.put("SP_COMP",meterCons.getSpComp());
-
+            contentValues.put("MR_TYPE_CODE",meterCons.getMrType());
             String where= "CRDOCNO=?";
             database.update("T_CURRENT_RDG",contentValues,where,new String[]{crdocid});
         }catch(Exception e){
@@ -392,7 +392,7 @@ public class MeterReadingDao extends ModelDao {
             //TOTCHRG_WO_TAX
             double total_amount_due =  meterBill.getVat()+meterBill.getPrevUnpaid()+
                     meterBill.getOther_charges() + meterBill.getTotcurb4tax();
-            contentValues.put("TOTAL_AMOUNT_DUE",total_amount_due);
+            contentValues.put("TOTAL_AMT_DUE",total_amount_due);
             contentValues.put("SUBTOTAL_AMT",total_amount_due);
             String where= "ULDOCNO=?";
             database.update("T_UPLOAD",contentValues,where,new String[]{meterBill.getId()});

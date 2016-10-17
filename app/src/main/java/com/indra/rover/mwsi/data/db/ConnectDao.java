@@ -204,7 +204,7 @@ public class ConnectDao extends ModelDao {
             values.put("GD_CHARGE",records[74]);
             values.put("OTHER_CHARGES",records[75]);
             values.put("ULDOCNO",records[10]);
-
+            values.put("PRINT_COUNT",0);
              if(Utils.isNotEmpty(records[14])){
                  if(records[14].equals("K")){
                      values.put("PRINT_TAG", MeterInfo.BILLNOPRINT);

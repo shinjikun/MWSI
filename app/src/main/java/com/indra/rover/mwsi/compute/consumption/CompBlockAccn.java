@@ -82,7 +82,6 @@ public class CompBlockAccn extends  Compute{
             else {
                 //otherwise NO BILL
                 noBill();
-                System.out.println("NO BILL");
             }
         }
     }
@@ -119,7 +118,6 @@ public class CompBlockAccn extends  Compute{
             }
             else {
                 noBill();
-                System.out.print("NO BILL");
             }
         }
     }
@@ -151,6 +149,7 @@ public class CompBlockAccn extends  Compute{
                         int bill_consumption = scenario6();
                         meterConsObj.setBilled_cons(bill_consumption);
                         meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                        meterConsObj.setMrType(MeterInfo.MRTYPE91);
                         decisionC();
                         //tag as adjusted
                     }

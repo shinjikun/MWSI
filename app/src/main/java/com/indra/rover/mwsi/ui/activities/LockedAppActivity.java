@@ -7,6 +7,8 @@ import android.content.IntentFilter;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,11 +27,12 @@ import java.nio.channels.FileChannel;
 import java.util.List;
 
 public class LockedAppActivity extends AppCompatActivity implements Constants,
-        FileUploader.UploadListener,FileUploader1.UploadListener {
+        FileUploader.UploadListener,FileUploader1.UploadListener,View.OnClickListener {
 
     ImageView img;
     TextView txtTitle,txtSubTitle,txtFiles;
     PreferenceKeys prefs;
+    Button btnRestart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +41,7 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,
         txtTitle = (TextView)findViewById(R.id.txtTitle);
         txtSubTitle = (TextView)findViewById(R.id.txtSubTitle);
         txtFiles =  (TextView)findViewById(R.id.txtFiles);
+        btnRestart =  (Button)findViewById(R.id.btnRestart);
         prefs = new PreferenceKeys(this);
     }
 
@@ -92,9 +96,10 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,
     private void datadumpAction(String status, Bundle b){
         if(status.equals("started")){
             txtTitle.setText(getResources().getText(R.string.lock_title_inprogress));
+            btnRestart.setVisibility(View.GONE);
             fileDumping();
         } else if(status.equals("ended")){
-
+            btnRestart.setVisibility(View.VISIBLE);
 
             txtTitle.setText(getResources().getText(R.string.lock_title_completed));
             txtSubTitle.setText("");
@@ -109,10 +114,11 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,
 
     private void downloadAction(String status, Bundle b){
         if(status.equals("started")){
+            btnRestart.setVisibility(View.GONE);
             txtTitle.setText(getResources().getText(R.string.lock_title_inprogress));
            fileUploader();
         } else if(status.equals("ended")){
-
+            btnRestart.setVisibility(View.VISIBLE);
             prefs.setData(Constants.APP_STATUS,"UPLOADED");
             txtTitle.setText(getResources().getText(R.string.lock_title_completed));
             txtSubTitle.setText("");
@@ -125,9 +131,11 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,
 
     private void uploadAction(String status, Bundle b){
         if(status.equals("started")){
+            btnRestart.setVisibility(View.GONE);
             txtTitle.setText(getResources().getText(R.string.lock_title_inprogress));
         }
          if(status.equals("ended")){
+             btnRestart.setVisibility(View.VISIBLE);
             String appStatus =   prefs.getData(Constants.APP_STATUS,"DOWNLOADED");
             if(appStatus.equals("DOWNLOADED")|| appStatus.equals("UPLOADED")){
                 txtTitle.setText(getResources().getText(R.string.lock_title_completed));
@@ -168,9 +176,11 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,
 
     private void updatedbAction(String status, Bundle b){
         if(status.equals("started")){
+            btnRestart.setVisibility(View.GONE);
             txtTitle.setText(getResources().getText(R.string.lock_title_inprogress));
         }
         if(status.equals("ended")){
+            btnRestart.setVisibility(View.VISIBLE);
             txtTitle.setText(getResources().getText(R.string.lock_title_completed));
             txtSubTitle.setText("");
             txtFiles.setText("");
@@ -181,10 +191,11 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,
 
     private void pulldbAction(String status , Bundle b){
         if(status.equals("started")){
+            btnRestart.setVisibility(View.GONE);
             txtTitle.setText(getResources().getText(R.string.lock_title_inprogress));
             extractDB();
         } else if(status.equals("ended")){
-
+            btnRestart.setVisibility(View.VISIBLE);
             txtTitle.setText(getResources().getText(R.string.lock_title_completed));
             txtSubTitle.setText("");
             txtFiles.setText("");
@@ -279,5 +290,14 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,
                 deleteRecursive(child);
 
         fileOrDirectory.delete();
+    }
+
+    @Override
+    public void onClick(View view) {
+        Intent i = getBaseContext().getPackageManager()
+                .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
+        finish();
     }
 }

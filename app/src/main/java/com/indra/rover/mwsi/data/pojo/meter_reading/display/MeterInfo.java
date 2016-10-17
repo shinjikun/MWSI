@@ -45,6 +45,19 @@ public class MeterInfo implements Serializable {
   public static final int BILLNOPRINT =2;
   public static final int NONBILLABLE =1;
 
+    /**
+     * actual reading actual consumption
+     */
+  public static final String MRTYPE01="01";
+    /**
+     *  actual reading average consumption
+     */
+    public static final String MRTYPE93="93";
+    /**
+     *  no reading average consumption
+     */
+    public static final String MRTYPE91="91";
+
    private  int printTag =0;
     public MeterInfo(Cursor cursor){
         this.mru_id =cursor.getString(cursor.getColumnIndexOrThrow("MRU"));

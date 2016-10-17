@@ -154,4 +154,6 @@
     <string name="sign_clear">Clear Signature</string>
     <string name="sign_cancel">Cancel</string>
     <string name="sign_recipient_name">Recipient Name: </string>
+
+    <string name="lock_restart">Restart Application</string>
 </resources>

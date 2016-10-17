@@ -1,4 +1,4 @@
-package com.indra.rover.mwsi.print;
+package com.indra.rover.mwsi.print.layout;
 
 import android.content.Context;
 

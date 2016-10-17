@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
-import com.indra.rover.mwsi.print.PrintLayout;
-import com.indra.rover.mwsi.print.ZebraLayout;
+import com.indra.rover.mwsi.print.layout.PrintLayout;
+import com.indra.rover.mwsi.print.layout.ZebraLayout;
 import com.zebra.sdk.comm.BluetoothConnection;
 import com.zebra.sdk.comm.Connection;
 import com.zebra.sdk.comm.ConnectionException;

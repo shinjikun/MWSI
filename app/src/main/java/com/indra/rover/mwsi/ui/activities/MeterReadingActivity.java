@@ -37,6 +37,7 @@ import com.indra.rover.mwsi.data.pojo.meter_reading.MeterBill;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.CustomerInfo;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
+import com.indra.rover.mwsi.print.PrintPage;
 import com.indra.rover.mwsi.ui.fragments.MRCustomerInfoFragment;
 import com.indra.rover.mwsi.ui.fragments.MRDeliveryRFragment;
 import com.indra.rover.mwsi.ui.fragments.MROCFragment;
@@ -53,7 +54,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MeterReadingActivity extends AppCompatActivity implements View.OnClickListener ,
-        DialogUtils.DialogListener, Constants, Compute.ConsumptionListener,BCompute.BillComputeListener
+        DialogUtils.DialogListener, Constants, Compute.ConsumptionListener,
+        BCompute.BillComputeListener, PrintPage.PrintPageListener
 {
 
     ViewPager mViewPager;
@@ -482,18 +484,35 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     /**
      * change the current read status to status printed 'P'
-     * @param readstat current read status
      */
-    void changeToPrinted(String readstat){
-        String newReadStat="P";
-        if(readstat.equals("E")){
-            newReadStat="Q";
+    void changeToPrinted(){
+        String readstatstr = meterInfo.getReadStat();
+        char readstat = readstatstr.charAt(0);
+        String newReadStat;
+        switch(readstat){
+            case 'P':
+            case 'Q':
+                break;
+            case 'E':
+                newReadStat="Q";
+                meterDao.updateReadStatus(newReadStat,meterInfo.getDldocno());
+                updateReadStatusDisplay(newReadStat);
+                MainApp.bus.post(new MessageTransport("readstat",newReadStat));
+                mViewPager.setCurrentItem(2);
+                scrollUp();
+                break;
+            case 'R':
+                newReadStat="P";
+                meterDao.updateReadStatus(newReadStat,meterInfo.getDldocno());
+                updateReadStatusDisplay(newReadStat);
+                MainApp.bus.post(new MessageTransport("readstat",newReadStat));
+                mViewPager.setCurrentItem(2);
+                scrollUp();
+                break;
         }
-        meterDao.updateReadStatus(newReadStat,meterInfo.getDldocno());
-        updateReadStatusDisplay(newReadStat);
-        MainApp.bus.post(new MessageTransport("readstat",newReadStat));
-        mViewPager.setCurrentItem(2);
-        scrollUp();
+
+
+
     }
 
      void movePrevious(){
@@ -800,10 +819,15 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
          bill.compute(meterDao.getMeterBill(meterInfo.getDldocno()));
      }
      else {
-
+          startPrinting();
      }
 
 
+    }
+
+    void startPrinting(){
+        PrintPage printPage = new PrintPage(this,this);
+        printPage.execute();
     }
 
 
@@ -903,7 +927,19 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onPostBillResult(MeterBill mtrBill) {
 
-        changeToPrinted(meterInfo.getReadStat());
         meterDao.updateMeterBill(mtrBill);
+        switch(meterInfo.getPrintTag()){
+            case MeterInfo.BILLABLE:
+                startPrinting();
+                break;
+        }
+
+
+    }
+
+    @Override
+    public void onPrintPageResult() {
+        changeToPrinted();
+
     }
 }

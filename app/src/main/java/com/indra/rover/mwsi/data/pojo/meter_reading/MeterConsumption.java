@@ -59,7 +59,7 @@ public class MeterConsumption {
 
 
     private int print_tag;
-
+    private String mrType;
 
     public MeterConsumption(Cursor cursor){
         this.id =cursor.getString(cursor.getColumnIndexOrThrow("DLDOCNO"));
@@ -236,5 +236,13 @@ public class MeterConsumption {
 
     public int getPrintTag() {
         return print_tag;
+    }
+
+    public void setMrType(String mrType) {
+        this.mrType = mrType;
+    }
+
+    public String getMrType() {
+        return mrType;
     }
 }

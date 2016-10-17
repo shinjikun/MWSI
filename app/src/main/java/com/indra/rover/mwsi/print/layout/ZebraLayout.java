@@ -1,8 +1,7 @@
-package com.indra.rover.mwsi.print;
+package com.indra.rover.mwsi.print.layout;
 
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
