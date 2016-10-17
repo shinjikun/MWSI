@@ -42,7 +42,7 @@ public class MeterReadingDao extends ModelDao {
         String sql_stmt = "select  t.MRU,t.SEQNO,t.METERNO,t.DLDOCNO,t.GRP_FLAG,t.BLOCK_TAG, " +
                 "c.RDG_TRIES,c.PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS, " +
                 "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE,u.PRINT_TAG from T_DOWNLOAD t," +
-                " R_BILL_CLASS r,T_CURRENT_RDG c where t.BILL_CLASS = r.BILL_CLASS " +
+                " R_BILL_CLASS r,T_CURRENT_RDG c,T_UPLOAD u where t.BILL_CLASS = r.BILL_CLASS " +
                 "and t.DLDOCNO = c.CRDOCNO  and t.DLDOCNO = u.ULDOCNO and c.MRU='"+mruID+"'";
         try{
             open();
@@ -288,7 +288,9 @@ public class MeterReadingDao extends ModelDao {
         try{
             open();
             ContentValues contentValues = new ContentValues();
-            contentValues.put("PRINT_TAG",String.valueOf(meterCons.getPrintTag()));
+            Log.i("Test","print_tag"+meterCons.getPrintTag());
+
+            contentValues.put("PRINT_TAG",meterCons.getPrintTag());
             String where= "ULDOCNO=?";
             database.update("T_UPLOAD",contentValues,where,new String[]{uldocid});
         }catch(Exception e){
@@ -383,6 +385,15 @@ public class MeterReadingDao extends ModelDao {
             contentValues.put("TOTCHRG_WO_TAX",meterBill.getTotcurb4tax());
             contentValues.put("VAT_CHARGE",meterBill.getVat());
             contentValues.put("TOT_CURR_CHARGE",meterBill.getVat()+meterBill.getTotcurb4tax());
+            //get the total amout due by adding the ff
+            // VAT_CHARGE
+            // PREVUNPAID
+            // OTHER_CHARGES
+            //TOTCHRG_WO_TAX
+            double total_amount_due =  meterBill.getVat()+meterBill.getPrevUnpaid()+
+                    meterBill.getOther_charges() + meterBill.getTotcurb4tax();
+            contentValues.put("TOTAL_AMOUNT_DUE",total_amount_due);
+            contentValues.put("SUBTOTAL_AMT",total_amount_due);
             String where= "ULDOCNO=?";
             database.update("T_UPLOAD",contentValues,where,new String[]{meterBill.getId()});
         }catch (Exception e){
@@ -523,7 +534,8 @@ public class MeterReadingDao extends ModelDao {
             open();
             String sql_stmt="Select d.DLDOCNO, c.BILLED_CONS,d.BILL_CLASS,d.RATE_TYPE,u.BASIC_CHARGE," +
                     "u.DISCOUNT,u.SUBTOTAL_AMT,u.TOTAL_AMT_DUE,d.BULK_FLAG,d.GT34FLAG, " +
-                    "c.PRESRDG, d.PREVRDGDATE,u.ACCTNUM,d.METER_SIZE, r.MSC_AMOUNT,d.VAT_EXEMPT,d.NUMUSERS " +
+                    "c.PRESRDG, d.PREVRDGDATE,u.ACCTNUM,d.METER_SIZE, r.MSC_AMOUNT,d.VAT_EXEMPT,d.NUMUSERS," +
+                    "u.VAT_CHARGE, u.PREVUNPAID,u.OTHER_CHARGES " +
                     "from T_DOWNLOAD d, T_UPLOAD u,T_CURRENT_RDG c, R_MSC r " +
                     "where r.METER_SIZE = d.METER_SIZE and  " +
                     "d.DLDOCNO = u.ULDOCNO and c.CRDOCNO= u.ULDOCNO and d.DLDOCNO='"+dldocno+"'";

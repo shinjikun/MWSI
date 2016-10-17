@@ -3,7 +3,9 @@ package com.indra.rover.mwsi.data.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 ;
+import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 import com.indra.rover.mwsi.utils.Utils;
 
 import java.util.ArrayList;
@@ -205,7 +207,7 @@ public class ConnectDao extends ModelDao {
 
              if(Utils.isNotEmpty(records[14])){
                  if(records[14].equals("K")){
-                     values.put("PRINT_TAG","2");
+                     values.put("PRINT_TAG", MeterInfo.BILLNOPRINT);
                  }
              }
 
@@ -216,7 +218,7 @@ public class ConnectDao extends ModelDao {
                     case 2:
                     case 3:
                     case 4:
-                        values.put("PRINT_TAG","2");
+                        values.put("PRINT_TAG", MeterInfo.BILLNOPRINT);
                         break;
                 }
             }
@@ -360,10 +362,10 @@ public class ConnectDao extends ModelDao {
                 "c.RECMD_SEQNO as SEQNO, c.FFCODE1 as BILLR_OC, c.FFCODE2 as FFCODE,c.REMARKS, c.PRESRDG as BILLED_RDG, c.RDG_TRIES as TRIES," +
                 "c.BILLED_CONS as BILLED_CONS, c.RANGE_CODE as RANGECODE, c.CONSTYPE_CODE as CONSTAG, c.MR_TYPE_CODE as NEWMTRBRAND," +
                 "c.NEW_METERNO as NEWMTRNUM, c.DEL_CODE as DEL_CODE,c.DELIV_DATE as DELIVERY_DATE, c.DELIV_TIME as DELIVERY_TIME, c.DELIV_REMARKS as DEL_REMARKS," +
-                "1 as SANZPER,u.BASIC_CHARGE as BASECHRG, u.DISCOUNT,u.CERA,u.FCDA,u.ENV_CHARGE as ENVCHRG, u.SEWER_CHARGE as SEWERCHRG, 1 as PREPAYADJ," +
+                "d.NUMUSERS as SANZPER,u.BASIC_CHARGE as BASECHRG, u.DISCOUNT,u.CERA,u.FCDA,u.ENV_CHARGE as ENVCHRG, u.SEWER_CHARGE as SEWERCHRG, 0 as PREPAYADJ," +
                 "u.METER_CHARGES as MSC, u.SC_DISCOUNT as SCDISC, u.TOTCHRG_WO_TAX as TOTCHRGWOTAX , u.VAT_CHARGE as VAT ,0 as PIA," +
                 "u.SUBTOTAL_AMT as TOTCURRCHRG, u.TOTAL_AMT_DUE as TOTAMT_DUE, u.PRINT_COUNT as BPRINTCNT, u.PRINT_TAG ,c.BILLPRINT_DATE as PRINT_DATE," +
-                "1 as SP_BILL_RULE , c.SP_COMP from T_UPLOAD u, T_CURRENT_RDG c where u.ULDOCNO = c.CRDOCNO";
+                "d.SPBILL_RULE , c.SP_COMP from T_UPLOAD u, T_CURRENT_RDG c, T_DOWNLOAD d where u.ULDOCNO = c.CRDOCNO and u.ULDOCNO = d.DLDOCNO";
         StringBuilder str = new StringBuilder();
         str.append(selectstmt);
         if(!isMultiBook){
@@ -371,6 +373,8 @@ public class ConnectDao extends ModelDao {
             str.append(mruNO);
             str.append('\'');
         }
+        Log.i("Test",str.toString());
+
         return query(str.toString());
 
     }

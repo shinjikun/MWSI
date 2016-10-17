@@ -58,7 +58,7 @@ public class MeterConsumption {
     private String readstat;
 
 
-    private char print_tag;
+    private int print_tag;
 
 
     public MeterConsumption(Cursor cursor){
@@ -230,11 +230,11 @@ public class MeterConsumption {
         this.range_code = range_code;
     }
 
-    public void setPrintTag(char print_tag) {
+    public void setPrintTag(int print_tag) {
         this.print_tag = print_tag;
     }
 
-    public char getPrintTag() {
+    public int getPrintTag() {
         return print_tag;
     }
 }

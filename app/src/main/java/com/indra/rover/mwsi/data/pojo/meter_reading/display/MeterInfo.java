@@ -41,11 +41,11 @@ public class MeterInfo implements Serializable {
 
   private  String range_code;
 
-  public static final char BILLABLE ='3';
-  public static final char BILLNOPRINT ='2';
-  public static final char NONBILLABLE ='1';
+  public static final int BILLABLE =3;
+  public static final int BILLNOPRINT =2;
+  public static final int NONBILLABLE =1;
 
-   private  char printTag;
+   private  int printTag =0;
     public MeterInfo(Cursor cursor){
         this.mru_id =cursor.getString(cursor.getColumnIndexOrThrow("MRU"));
         this.seq_number = cursor.getString(cursor.getColumnIndexOrThrow("SEQNO"));
@@ -64,7 +64,7 @@ public class MeterInfo implements Serializable {
         this.billClass = new BillClass(cursor);
         String str = cursor.getString(cursor.getColumnIndexOrThrow("PRINT_TAG"));
         if(Utils.isNotEmpty(str)){
-            printTag = str.charAt(0);
+            printTag =Integer.parseInt(str);
         }
 
     }
@@ -151,11 +151,11 @@ public class MeterInfo implements Serializable {
         this.range_code = range_code;
     }
 
-    public void setPrintTag(char print_tag) {
+    public void setPrintTag(int print_tag) {
         this.printTag = print_tag;
     }
 
-    public char getPrintTag() {
+    public int getPrintTag() {
         return printTag;
     }
 }

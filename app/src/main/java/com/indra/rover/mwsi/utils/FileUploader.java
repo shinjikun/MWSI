@@ -2,6 +2,7 @@ package com.indra.rover.mwsi.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.ConnectDao;
@@ -9,6 +10,7 @@ import com.opencsv.CSVWriter;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.Arrays;
 import java.util.List;
 
 /**

@@ -2,6 +2,8 @@ package com.indra.rover.mwsi.data.pojo.meter_reading;
 
 import android.database.Cursor;
 
+import com.indra.rover.mwsi.utils.Utils;
+
 public class MeterBill {
 
     private  String id;
@@ -17,6 +19,10 @@ public class MeterBill {
     private String acctNum;
     private String vatExempt;
     private String numusers;
+
+    double  other_charges;
+    double prevUnpaid;
+
     /**
      * Present Reading Date
      */
@@ -45,6 +51,16 @@ public class MeterBill {
         this.msc_amount = cursor.getDouble(cursor.getColumnIndexOrThrow("MSC_AMOUNT"));
         this.vatExempt = cursor.getString(cursor.getColumnIndexOrThrow("VAT_EXEMPT"));
         this.numusers = cursor.getString(cursor.getColumnIndexOrThrow("NUMUSERS"));
+        String str =  cursor.getString(cursor.getColumnIndexOrThrow("OTHER_CHARGES"));
+        String str1 =  cursor.getString(cursor.getColumnIndexOrThrow("PREVUNPAID"));
+
+        if(Utils.isNotEmpty(str)){
+            other_charges = Double.parseDouble(str);
+        }
+        if(Utils.isNotEmpty(str1)){
+            prevUnpaid = Double.parseDouble(str);
+        }
+
     }
 
     public String getGt34_flg() {
@@ -189,5 +205,13 @@ public class MeterBill {
 
     public double getTotcurcharge() {
         return totcurcharge;
+    }
+
+    public double getPrevUnpaid() {
+        return prevUnpaid;
+    }
+
+    public double getOther_charges() {
+        return other_charges;
     }
 }

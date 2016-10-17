@@ -481,8 +481,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     }
 
     /**
-     *
-     * @param readstat
+     * change the current read status to status printed 'P'
+     * @param readstat current read status
      */
     void changeToPrinted(String readstat){
         String newReadStat="P";
@@ -646,64 +646,6 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
 
 
-     void comp_cons_range(MeterConsumption mtrCons){
-         int consumption = mtrCons.getBilled_cons();
-         String strrange_code="-";
-         int range_code =0 ;
-         if(consumption!=0) {
-             String str = mtrCons.getAve_consumption();
-             int ave_cons ;
-             if(Utils.isNotEmpty(str)){
-                 ave_cons = Integer.parseInt(str);
-                 if(ave_cons != 0){
-                     ave_cons = consumption;
-                     // Compute percentage difference and return range code
-
-                 }
-                 // Compute percentage difference and return range code
-                 int   pcntDiff = ((consumption - ave_cons)/ave_cons) * 100;
-                 int type = -1;
-                 if (pcntDiff >= 0){
-                     type= 1;
-                 }
-
-                 int devi = meterDao.getRTolerance(ave_cons,type);
-
-                 // pcntDiff is positive
-                 if(type == 1){
-                     if (pcntDiff > devi){
-                         snackbar("Consumption Very High");
-                         range_code = VERY_HIGH;
-                     }
-                     else {
-                         range_code = NORMAL;
-                     }
-                 }
-                 else  {
-                     if (-pcntDiff > devi){
-                         snackbar("Consumption Very Low");
-                         range_code = VERY_LOW;
-                     }
-                     else {
-                         range_code = NORMAL;
-                     }
-                 }
-         }
-
-
-
-            strrange_code = String.valueOf(range_code);
-         }else {
-             Snackbar snackbar = Snackbar
-                     .make(coordinatorLayout, "Zero Consumption", Snackbar.LENGTH_LONG);
-
-             snackbar.show();
-         }
-         mtrCons.setRange_code(strrange_code);
-         meterInfo.setRange_code(strrange_code);
-         meterDao.updateRangeCode(strrange_code,meterInfo.getDldocno());
-
-    }
 
     @Subscribe
     public void getMessage(MessageTransport msgTransport) {
@@ -722,6 +664,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     }
 
+    /**
+     * Compute Consumption
+     * @param dldocno
+     */
      void computeConsumption(String dldocno){
         MeterConsumption mterCons = meterDao.getConsumption(dldocno);
          if(mterCons==null)
@@ -751,6 +697,65 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     }
 
+    void computeConsRange(MeterConsumption mtrCons){
+        int consumption = mtrCons.getBilled_cons();
+        String strrange_code="-";
+        int range_code =0 ;
+        if(consumption!=0) {
+            String str = mtrCons.getAve_consumption();
+            int ave_cons ;
+            if(Utils.isNotEmpty(str)){
+                ave_cons = Integer.parseInt(str);
+                if(ave_cons != 0){
+                    ave_cons = consumption;
+                    // Compute percentage difference and return range code
+                }
+                // Compute percentage difference and return range code
+                int   pcntDiff = ((consumption - ave_cons)/ave_cons) * 100;
+                int type = -1;
+                if (pcntDiff >= 0){
+                    type= 1;
+                }
+                int devi = meterDao.getRTolerance(ave_cons,type);
+                // pcntDiff is positive
+                if(type == 1){
+                    if (pcntDiff > devi){
+                        snackbar("Consumption Very High");
+                        range_code = VERY_HIGH;
+                    }
+                    else {
+                        range_code = NORMAL;
+                    }
+                }
+                else  {
+                    if (-pcntDiff > devi){
+                        snackbar("Consumption Very Low");
+                        range_code = VERY_LOW;
+                    }
+                    else {
+                        range_code = NORMAL;
+                    }
+                }
+            }
+
+
+
+            strrange_code = String.valueOf(range_code);
+        }else {
+            Snackbar snackbar = Snackbar
+                    .make(coordinatorLayout, "Zero Consumption", Snackbar.LENGTH_LONG);
+
+            snackbar.show();
+            //vibrate
+            Utils.vibrate(this);
+        }
+        mtrCons.setRange_code(strrange_code);
+        meterInfo.setRange_code(strrange_code);
+        meterDao.updateRangeCode(strrange_code,meterInfo.getDldocno());
+
+    }
+
+
     void computeBill(){
 
         String readstatstr = meterInfo.getReadStat();
@@ -764,20 +769,27 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 break;
             case 'P':
             case 'Q':
+                //if 2nd attempt to print, status is already 'p', KAM Account should still not be printed.
+                if(Utils.isNotEmpty(meterInfo.getGrp_flag())){
+                    if(meterInfo.getGrp_flag().equals("K")){
+                        noPrint_Bill(4);
+                        return;
+                    }
+                }
                 // bill already printed, no recompute required, just reprint!
                 norecompute =1;
                 break;
             case 'R':
             case 'E':
                 switch (meterInfo.getPrintTag()){
+                    case MeterInfo.BILLNOPRINT:
                     case MeterInfo.BILLABLE:
                         norecompute =0;
                         break;
                     case MeterInfo.NONBILLABLE:
                         noPrint_Bill(2);
                         break;
-                    case MeterInfo.BILLNOPRINT:
-                        break;
+
                 }
                 break;
 
@@ -786,6 +798,9 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
      if(norecompute==0){
          BillCompute bill = new BillCompute(this,this);
          bill.compute(meterDao.getMeterBill(meterInfo.getDldocno()));
+     }
+     else {
+
      }
 
 
@@ -863,7 +878,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
         meterInfo.setPrintTag(meterConsumption.getPrintTag());
         meterDao.updatePrintTag(meterConsumption,meterInfo.getDldocno());
-        comp_cons_range(meterConsumption);
+        computeConsRange(meterConsumption);
     }
 
     @Override
@@ -873,7 +888,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
         meterInfo.setPrintTag(meterConsumption.getPrintTag());
         meterDao.updatePrintTag(meterConsumption,meterInfo.getDldocno());
-        comp_cons_range(meterConsumption);
+        computeConsRange(meterConsumption);
         meterInfo.setPresent_reading(meterConsumption.getPresent_rdg());
         int size = childMeters.size();
         for(int i= 0; i<size;i++){

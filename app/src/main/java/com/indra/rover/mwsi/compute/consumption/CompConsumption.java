@@ -4,6 +4,7 @@ package com.indra.rover.mwsi.compute.consumption;
 import android.util.Log;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
+import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 import com.indra.rover.mwsi.utils.Utils;
 
 import java.util.List;
@@ -62,6 +63,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
             }
             //reading only plus billed related OC
             else if(Utils.isNotEmpty(oc1)){
+                meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                 //tag as average
                 decisionB();
             }
@@ -79,17 +81,24 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                     //is previous oc1 is OC11, OC12, OC14
                     if(prev_oc2.equals("11")||prev_oc2.equals("12")||prev_oc2.equals("14")){
                         //use decision D - bill consumption set to minimum - tag as average
+                        meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                         decisionE();
                     }
                     else {
+                        meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                        meterConsObj.setSpComp("0");
                         //use decision B  average consumption set to billed consumption - tag as average
                         decisionB();
                     }
                 }else{
+                    meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                    meterConsObj.setSpComp("0");
                     decisionB();
                 }
             }
             else {
+                meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                meterConsObj.setSpComp("0");
                 //or OC only excluding 11,12,14
                 decisionB();
             }
@@ -126,12 +135,14 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                 if(Utils.isNotEmpty(previous_reading)){
                     int bill_consumption = scenario4();
                     meterConsObj.setBilled_cons(bill_consumption);
+                    meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                     //tag as adjusted
                     decisionC();
                 }else{
                     //get default consumption
                     int bill_consumption =  defaultCondition();
                     meterConsObj.setBilled_cons(bill_consumption);
+                    meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                     decisionA();
                 }
             }else {
@@ -140,10 +151,12 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                     //if yes use secnario3 to get the bill consumption
                     int bill_consumption = scenario3();
                     meterConsObj.setBilled_cons(bill_consumption);
+                    meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                     //tag as adjusted
                     decisionC();
                 }
                 else {
+                    meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                     //otherwise tag as AVERAGE
                     decisionB();
                 }
@@ -156,15 +169,18 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                     //if yes use secnario3 to get the bill consumption
                     int bill_consumption = scenario2();
                     meterConsObj.setBilled_cons(bill_consumption);
+                    meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                     //tag as adjusted
                     decisionC();
                 }
                int bill_consumption =   scenario2();
                 meterConsObj.setBilled_cons(bill_consumption);
+                meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                 //tag as adjusted
                 decisionC();
             }
             else if(dreplmtr_code.equals("2")){
+                meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                 //tag as average
                 decisionB();
 
@@ -175,10 +191,12 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                     int bill_consumption = scenario3();
                     meterConsObj.setBilled_cons(bill_consumption);
                     //tag as adjusted
+                    meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                     decisionC();
                 }
                 else {
                     //otherwise tag as AVERAGE
+                    meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                     decisionB();
                 }
             }
@@ -200,10 +218,12 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                 //if previous OC 26 or 29
                 if(prev_oc1.equals(INTERCHANGEMR)||prev_oc2.equals(NEW_METER)){
                     //if yes
+                    meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                     decisionD();
                 }else{
                 int bill_consumption =   defaultCondition();
                 meterConsObj.setBilled_cons(bill_consumption);
+                    meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                     decisionC();
                 }
 
@@ -212,6 +232,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
             else {
                 int bill_consumption =   defaultCondition();
                 meterConsObj.setBilled_cons(bill_consumption);
+                meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                 decisionA();
             }
         }else {
@@ -252,6 +273,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                         //use scenario 4 to compute the consumption
                         int bill_consumption = scenario4();
                         meterConsObj.setBilled_cons(bill_consumption);
+                        meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                         //tag as adjusted
                         decisionC();
                     }
@@ -260,10 +282,12 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                         int bill_cosumption = scenario5();
                         //consumption computed less than zero
                         if(bill_cosumption<0){
+                            meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                             decisionB();
                         }else {
                             //use consumption computed as consumption
                             meterConsObj.setBilled_cons(bill_cosumption);
+                            meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                             //tag as adjusted
                             decisionC();
                         }
@@ -273,6 +297,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                     //use scenario 4 to compute the consumption
                     int bill_consumption = scenario4();
                     meterConsObj.setBilled_cons(bill_consumption);
+                    meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                     //tag as adjusted
                     decisionC();
                 }
@@ -281,6 +306,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                 //use scenario 4 to compute the consumption
                 int bill_consumption = scenario4();
                 meterConsObj.setBilled_cons(bill_consumption);
+                meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                 //tag as adjusted
                 decisionC();
             }
@@ -289,6 +315,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
             //use scenario 4 to compute the consumption
             int bill_consumption = scenario4();
             meterConsObj.setBilled_cons(bill_consumption);
+            meterConsObj.setPrintTag(MeterInfo.BILLABLE);
             //tag as adjusted
             decisionC();
         }
@@ -304,23 +331,27 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
             if(isLess){
                 if(Utils.isNotEmpty(oc2)){
                     if(oc2.equals(NEW_METER)){
+                        meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                         //TAG AS average
                         decisionB();
                     }
                     else {
                         meterConsObj.setBilled_cons(bill_consumption);
+                        meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                         //tag as actual
                         decisionA();
                     }
                 }
                 else {
                     meterConsObj.setBilled_cons(bill_consumption);
+                    meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                     //tag as actual
                     decisionA();
                 }
             }
             else {
                 //tag as average
+                meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                 decisionB();
             }
         }
