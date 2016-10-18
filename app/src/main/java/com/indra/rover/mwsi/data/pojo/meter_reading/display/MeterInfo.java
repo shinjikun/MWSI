@@ -59,6 +59,7 @@ public class MeterInfo implements Serializable {
     public static final String MRTYPE91="91";
 
    private  int printTag =0;
+    private int printCount=0;
     public MeterInfo(Cursor cursor){
         this.mru_id =cursor.getString(cursor.getColumnIndexOrThrow("MRU"));
         this.seq_number = cursor.getString(cursor.getColumnIndexOrThrow("SEQNO"));
@@ -73,7 +74,9 @@ public class MeterInfo implements Serializable {
         this.childs_parent = cursor.getString(cursor.getColumnIndexOrThrow("CSMB_PARENT"));
         this.account_num = cursor.getString(cursor.getColumnIndexOrThrow("ACCTNUM"));
         this.range_code = cursor.getString(cursor.getColumnIndexOrThrow("RANGE_CODE"));
+        this.printCount = cursor.getInt(cursor.getColumnIndexOrThrow("PRINT_COUNT"));
         this.customerInfo = new CustomerInfo(cursor);
+
         this.billClass = new BillClass(cursor);
         String str = cursor.getString(cursor.getColumnIndexOrThrow("PRINT_TAG"));
         if(Utils.isNotEmpty(str)){
@@ -170,5 +173,13 @@ public class MeterInfo implements Serializable {
 
     public int getPrintTag() {
         return printTag;
+    }
+
+    public void setPrintCount(int printCount) {
+        this.printCount = printCount;
+    }
+
+    public int getPrintCount() {
+        return printCount;
     }
 }

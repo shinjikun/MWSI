@@ -2,6 +2,7 @@ package com.indra.rover.mwsi.ui.activities;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -328,7 +329,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 .setAction("Re Enter", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                      //  showMeterRdgDialog();
+
                     }
                 });
 
@@ -478,8 +479,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 }
                 break;
             case R.id.btnPrint:
-                computeBill();
-                //
+               chkBluetoothConn();
                 break;
         }
     }
@@ -494,6 +494,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         switch(readstat){
             case 'P':
             case 'Q':
+                meterDao.updatePrintDate(Utils.getFormattedDate(),meterInfo.getDldocno());
                 break;
             case 'E':
                 newReadStat="Q";
@@ -816,7 +817,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
         }
 
-        Log.i("Test","no recomputed"+norecompute);
+
      if(norecompute==0){
          BillCompute bill = new BillCompute(this,this);
          bill.compute(meterDao.getMeterBill(meterInfo.getDldocno()));
@@ -943,8 +944,29 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onPrintPageResult(String str) {
-        Log.i("Test",str);
         changeToPrinted();
 
     }
+
+    /**
+     * check if the device bluetooth is enable/on
+     * if not force the user to turn on
+     */
+    private void chkBluetoothConn(){
+        BluetoothAdapter   BTAdapter = BluetoothAdapter.getDefaultAdapter();
+        if(BTAdapter == null){
+            dlgUtils.showOKDialog("BLUETOOTH NOT SUPPORTED","Your phone does not support bluetooth");
+        }else {
+            if (!BTAdapter.isEnabled()) {
+                // Bluetooth is not enable :)
+            }
+            else {
+                computeBill();
+            }
+        }
+    }
+
+
+
+
 }
