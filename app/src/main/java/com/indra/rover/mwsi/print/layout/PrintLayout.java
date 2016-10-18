@@ -1,6 +1,7 @@
 package com.indra.rover.mwsi.print.layout;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 
@@ -46,9 +47,12 @@ public  abstract class PrintLayout {
         strPrint.append(billFooter(mtrPrint));
         strPrint.append(billValidity(mtrPrint));
         //add if there is a disconnection notice in the bill
-        strPrint.append(billDiscon(mtrPrint));
+        if(mtrPrint.getAcct_status().equals("1")){
+            strPrint.append(billDiscon(mtrPrint));
+        }
         //footer breadcrumbs
         strPrint.append(breadCrumbsFooter());
+        Log.i("Test",strPrint.toString());
         return strPrint.toString();
     }
 

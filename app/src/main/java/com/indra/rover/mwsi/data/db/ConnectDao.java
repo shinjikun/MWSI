@@ -339,7 +339,8 @@ public class ConnectDao extends ModelDao {
 
     public List<String[]> query_sap(){
         String selectstmt ="select RECNUM, SAPDOCNO, ACCTNUM,SAP_LINE_CODE,QUANTITY," +
-                "PRICE,AMOUNT,OLD_PRICE,OLD_AMOUNT,TOTAL_AMOUNT from T_SAP_DETAILS;";
+                "PRICE,AMOUNT,OLD_PRICE,OLD_AMOUNT,TOTAL_AMOUNT from T_SAP_DETAILS " +
+                "ORDER BY RECNUM ASC";
 
 
         return query(selectstmt);

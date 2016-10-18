@@ -4,11 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.util.Log;
+
 
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterBill;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterDelivery;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterOC;
@@ -288,7 +289,7 @@ public class MeterReadingDao extends ModelDao {
         try{
             open();
             ContentValues contentValues = new ContentValues();
-            Log.i("Test","print_tag"+meterCons.getPrintTag());
+
 
             contentValues.put("PRINT_TAG",meterCons.getPrintTag());
             String where= "ULDOCNO=?";
@@ -539,7 +540,7 @@ public class MeterReadingDao extends ModelDao {
                     "from T_DOWNLOAD d, T_UPLOAD u,T_CURRENT_RDG c, R_MSC r " +
                     "where r.METER_SIZE = d.METER_SIZE and  " +
                     "d.DLDOCNO = u.ULDOCNO and c.CRDOCNO= u.ULDOCNO and d.DLDOCNO='"+dldocno+"'";
-            Log.i("Test",sql_stmt);
+
             Cursor cursor =database.rawQuery(sql_stmt,null);
 
             if (cursor.moveToFirst()) {
@@ -722,5 +723,41 @@ public class MeterReadingDao extends ModelDao {
         return arry;
     }
 
+    public MeterPrint getMeterPrint(String dldocno){
+        MeterPrint meterPrint = null;
+        String sql_stmt="Select d.MRU ,bc.BC_DESC,bc.BC_ADDRESS,bc.BC_TIN, \n" +
+                "bl.BILL_CLASS_DESC, d.SOA_NUMBER,\n" +
+                "d.ACCTNUM,d.CUSTNAME,d.CUSTADDRESS,d.ACCT_STATUS,d.TIN,d.TENANT_NAME,d.SC_ID,\n" +
+                "d.SEQNO,c.METERNO,c.BILLED_CONS,c.CONSTYPE_CODE,c.RDG_DATE,d.PREVRDGDATE,d.ACTPREVRDG,c.PRESRDG,\n" +
+                "d.PREVCONSLINE1, d.PREVCONSLINE2,d.WBPAYDTLS1,d.WBPAYDTLS2,d.GDPAYDTLS,d.MISCPAYDTLS,\n" +
+                "u.BASIC_CHARGE,u.FCDA,u.CERA,u.ENV_CHARGE,u.SEWER_CHARGE,u.MSC_AMOUNT,\n" +
+                "u.TOTCHRG_WO_TAX,u.VAT_CHARGE,u.TOT_CURR_CHARGE,d.SPBILL_RULE,\n" +
+                "SEPTIC_CHARGE,CHANGESIZE_CHARGE,MISC_CHARGE,INSTALL_SEWER_CHARGE,AMORTIZATION,\n" +
+                "INSTALL_WTR_IND,INSTALL_SEWER_DUE,INSTALL_SEW_IND,GD_AMOUNT_DUE,INSTALL_GD_IND,AMORT_DUE,\n" +
+                "INSTALL_AMORT_IND,RESTORATION_DUE,RESTORATION_IND,ILLEGALITIES_DUE,ILLEGALITIES_IND,\n" +
+                "UNMIGRATED_WATER_DUE,UNMIGRATED_WATER_IND,UNMIGRATED_SEWER_DUE,UNMIGRATED_SEWER_IND,\n" +
+                "PENALTIES_DUE,UNMIGRATED_AR_WATER,UNMIGRATED_AR_IC,RECOVERY\n" +
+                "from R_BUSINESS_CENTER bc, T_MRU_INFO mi , T_DOWNLOAD d, R_BILL_CLASS bl , T_CURRENT_RDG c,\n" +
+                "T_UPLOAD u\n" +
+                "where mi.BC_CODE=bc.BC_CODE and  d.MRU=mi.MRU and bl.BILL_CLASS=d.BILL_CLASS and c.CRDOCNO = d.DLDOCNO and \n" +
+                "u.ULDOCNO = d.DLDOCNO and d.DLDOCNO='"+dldocno+"'";
+
+        try{
+            open();
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    meterPrint = new MeterPrint(cursor);
+
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+        return meterPrint;
+    }
 
 }

@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +36,7 @@ import com.indra.rover.mwsi.compute.consumption.Compute;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterBill;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.CustomerInfo;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 import com.indra.rover.mwsi.print.PrintPage;
@@ -814,6 +816,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
         }
 
+        Log.i("Test","no recomputed"+norecompute);
      if(norecompute==0){
          BillCompute bill = new BillCompute(this,this);
          bill.compute(meterDao.getMeterBill(meterInfo.getDldocno()));
@@ -827,7 +830,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     void startPrinting(){
         PrintPage printPage = new PrintPage(this,this);
-        printPage.execute();
+        MeterPrint meterPrint = meterDao.getMeterPrint(meterInfo.getDldocno());
+        printPage.execute(meterPrint);
     }
 
 
@@ -938,7 +942,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
-    public void onPrintPageResult() {
+    public void onPrintPageResult(String str) {
+        Log.i("Test",str);
         changeToPrinted();
 
     }

@@ -1,6 +1,10 @@
 package com.indra.rover.mwsi.print;
 
 import android.content.Context;
+import android.util.Log;
+
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
+import com.indra.rover.mwsi.print.layout.ZebraLayout;
 
 public class PrintPage {
 
@@ -11,14 +15,20 @@ public class PrintPage {
         this.listener = listener;
     }
 
-    public void execute(){
+    public void execute(MeterPrint meterPrint){
+        if(meterPrint!=null){
+            ZebraLayout zebraLayout =new ZebraLayout(this.context);
+            String str = zebraLayout.contentPrint(meterPrint);
+            Log.i("Test","str"+str);
             if(listener!=null){
-                listener.onPrintPageResult();
+                listener.onPrintPageResult(str);
             }
+        }
+
     }
 
     public interface  PrintPageListener{
-         void onPrintPageResult();
+         void onPrintPageResult(String str);
     }
 
 }

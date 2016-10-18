@@ -29,10 +29,24 @@ public class ZebraLayout   extends   PrintLayout{
     @Override
     public String billHeader(MeterPrint mtrPrint) {
         StringBuilder str = new StringBuilder();
+        str.append("! 0 200 200 175 1\r\n");
+        str.append("JOURNAL\r\n");
+        str.append("PCX 42 10 !<maynilad.pcx\r\n");
+        str.append("T 5 0 400 6 Maynilad Water Services Inc\r\n" );
+        str.append("T 5 0 400 39 MWSS Compound\r\n" );
+        str.append("T 7 0 400 62 ");
+        str.append(mtrPrint.getBcAddress());
+        str.append("\r\n");
+        str.append("T 7 0 400 86 VAT Reg TIN ");
+        str.append(mtrPrint.getBcTin());
+        str.append("\r\n");
+        str.append("T 7 0 400 117 Permit No. 0107-116-00006-CBA/AR\r\n" );
+        str.append("T 7 0 400 150 Machine No. "+Build.SERIAL+" \r\n" );
+        str.append("PRINT\r\n");
+        /*
         String cpclData = "! 0 200 200 175 1\r\n" +
                 "JOURNAL\r\n" +
                 "PCX 42 10 !<maynilad.pcx\r\n"+
-                //"BOX 12 10 222 147 2\r\n" +
                 "T 5 0 400 6 Maynilad Water Services Inc\r\n" +
                 "T 5 0 400 39 MWSS Compound\r\n" +
                 "T 7 0 400 62 Katipunan Road, Balara, QC\r\n" +
@@ -41,6 +55,7 @@ public class ZebraLayout   extends   PrintLayout{
                 "T 7 0 400 150 Machine No. "+Build.SERIAL+" \r\n" +
                 "PRINT\r\n";
         str.append(cpclData);
+        */
         return str.toString();
     }
 
@@ -92,7 +107,8 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! U1 SETLP 5 0 24");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
-        str.append("SOA # 04000000000000695051");
+        str.append("SOA # ");
+        str.append(mtrPrint.getSOA());
         str.append("\r\n");
         str.append("! U1 CENTER 383\r\n");
         str.append("! U1 SETLP 5 0 24\r\n");
@@ -116,40 +132,40 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! U1 SETSP 0\r\r\n");
         str.append(setBold(0));
         str.append(context.getString(R.string.print_contract_num));
-        str.append("  :");
+        str.append("  : ");
         str.append("! U1 CENTER\r\n");
         str.append("! U1 SETLP 5 1 48");
         str.append("! U1 SETSP 3\r\n");
         str.append(setBold(1));
-        str.append(" 61483179");
+        str.append(mtrPrint.getAcctNum());
         str.append("\r\n");
         str.append("! U1 SETLP 5 0 24\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
         str.append(context.getString(R.string.print_acct_name));
-        str.append("          :");
-        str.append(" Juanito Baquiran");
+        str.append("          : ");
+        str.append(mtrPrint.getCustName());
         str.append("\r\n");
         str.append("! U1 SETLP 5 0 24\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
         str.append(context.getString(R.string.print_address));
-        str.append("       :");
-        str.append(" B10 L9 RD 13 GSIS HILLS SUBD CALOOCAN");
+        str.append("       : ");
+        str.append(mtrPrint.getCustAddress());
         str.append("\r\r\n");
         str.append("! U1 SETLP 5 0 24\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
         str.append(context.getString(R.string.print_rate));
-        str.append("              :");
-        str.append(" Residential");
+        str.append("            : ");
+        str.append(mtrPrint.getBillClass());
         str.append("\r\n");
         str.append("! U1 SETLP 5 0 24\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
         str.append(context.getString(R.string.print_business_area));
-        str.append("         :");
-        str.append(" Quirino-Roosevelt");
+        str.append("         : ");
+        str.append(mtrPrint.getBcDesc());
         str.append("\r\n");
         str.append(linePrint());
         return str.toString();
@@ -171,23 +187,23 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("Meter No.       MRU No.     Seq No.");
         str.append("\r\n");
         str.append("    ");
-        str.append(context.getString(R.string.print_meter_value));
+        str.append(mtrPrint.getMeterNO());
         str.append("\r\n");
         str.append(context.getString(R.string.print_reading_date));
-        str.append("      :");
-        str.append(" 08/10/2016");
+        str.append("        : ");
+        str.append(mtrPrint.getPresRdgDate());
         str.append("\r\n");
         str.append(context.getString(R.string.print_pres_rdg));
-        str.append("        :");
-        str.append(" 33333");
+        str.append("     : ");
+        str.append(mtrPrint.getPresRdg());
         str.append("\r\n");
         str.append(context.getString(R.string.print_prev_rdg));
-        str.append("       :");
-        str.append(" 33333");
+        str.append("    : ");
+        str.append(mtrPrint.getPrevRdg());
         str.append("\r\n");
         str.append(context.getString(R.string.print_cosumption));
-        str.append("  :");
-        str.append(" 33333");
+        str.append("  : ");
+        str.append(mtrPrint.getBillCons());
         str.append("\r\n");
         str.append(context.getString(R.string.print_prevcons));
         str.append("\r\n");
@@ -219,6 +235,14 @@ public class ZebraLayout   extends   PrintLayout{
         str.append(setBold(0));
         str.append("Desc  Net Amount  VAT  Total Amount OR# Date Tax Code\r\n");
         str.append("\r\n");
+        str.append("\r\n");
+        str.append(mtrPrint.getWbPaydtls1());
+        str.append("\r\n");
+        str.append(mtrPrint.getWbPaydtls2());
+        str.append("\r\n");
+        str.append(mtrPrint.getMiscPaydtls());
+        str.append("\r\n");
+        str.append(mtrPrint.getGdPaydtls());
         str.append("\r\n");
         str.append("! U1 CENTER\r\n");
         str.append("! U1 SETLP 0 2 18\r\n");
@@ -270,6 +294,13 @@ public class ZebraLayout   extends   PrintLayout{
         for(int i=0;i<size;i++){
             str.append(TAB_SPACE);
             str.append(arry[i]);
+            String temp =  arry[i];
+            String value = mtrPrint.cur_charges.get(i);
+            if(value.equals("0")){
+                value ="-";
+            }
+
+            str.append(addSpace(temp,63-TAB_SPACE.length(),value));
             str.append("\r\n");
         }
         str.append("\r\n");
@@ -343,7 +374,7 @@ public class ZebraLayout   extends   PrintLayout{
     @Override
     public String billDiscon(MeterPrint mtrPrint) {
         StringBuilder str = new StringBuilder();
-
+        /*
         String cpclData = "! 0 200 200 160 1\r\n" +
                 "JOURNAL\r\n" +
                 "PCX 12 10 !<maynilad.pcx\n"+
@@ -354,8 +385,22 @@ public class ZebraLayout   extends   PrintLayout{
                 "T 7 0 470 86 VAT Reg TIN 005-393-442-000\r\n" +
                 "T 0 2 470 117 Permit No. 0107-116-00006-CBA/AR\r\n" +
                 "PRINT\r\n";
+         */
         str.append(lineBreakPrint());
-        str.append(cpclData);
+        //str.append(cpclData);
+        str.append("! 0 200 200 160 1\r\n");
+        str.append("JOURNAL\r\n");
+        str.append("PCX 12 10 !<maynilad.pcx\n");
+        str.append("T 5 0 470 6 Maynilad Water Services Inc\r\n");
+        str.append("T 5 0 470 39 MWSS Compound\r\n");
+        str.append("T 7 0 470 62 ");
+        str.append(mtrPrint.getBcAddress());
+        str.append("\r\n");
+        str.append("T 7 0 470 86 VAT Reg TIN ");
+        str.append(mtrPrint.getBcTin());
+        str.append("\r\n");
+        str.append("T 0 2 470 117 Permit No. 0107-116-00006-CBA/AR\r\n");
+        str.append("PRINT\r\n");
         str.append("! U1 CENTER\r\n");
         str.append("! U1 SETLP 5 0 24");
         str.append("! U1 SETSP 5\r\n");
@@ -366,7 +411,7 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! U1 SETLP 5 1 48");
         str.append("! U1 SETSP 3\r\n");
         str.append(setBold(1));
-        str.append("Juanito Baquiran");
+        str.append(mtrPrint.getCustName());
         str.append("\r\n");
         str.append("! U1 CENTER\r\n");
         str.append("! U1 SETLP 5 0 24");
