@@ -34,8 +34,8 @@ public interface  Constants {
    int MB_MOTHER =2;
    int MB_CHILD =5;
 
-   int NORMAL=0;
-   int VERY_LOW =3;
-   int VERY_HIGH=4;
+   String NORMAL="0";
+   String VERY_LOW ="3";
+   String VERY_HIGH="4";
 
 }

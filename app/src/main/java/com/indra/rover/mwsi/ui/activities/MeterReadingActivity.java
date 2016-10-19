@@ -333,7 +333,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 .setAction("Re Enter", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
+                        loadMeterInput();
                     }
                 });
 
@@ -759,14 +759,14 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     void computeConsRange(MeterConsumption mtrCons){
         int consumption = mtrCons.getBilled_cons();
-        String strrange_code="-";
-        int range_code =0 ;
+
+        String range_code ="0" ;
         if(consumption!=0) {
             String str = mtrCons.getAve_consumption();
             int ave_cons ;
             if(Utils.isNotEmpty(str)){
                 ave_cons = Integer.parseInt(str);
-                if(ave_cons != 0){
+                if(ave_cons == 0){
                     ave_cons = consumption;
                     // Compute percentage difference and return range code
                 }
@@ -799,21 +799,40 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             }
 
 
+            if(range_code.equals(NORMAL)){
+                String presRdg= mtrCons.getPresent_rdg();
+                String prevRdg = mtrCons.getPrev_rdg();
+                if(Utils.isNotEmpty(presRdg)){
+                    if(Utils.isNotEmpty(prevRdg)){
+                        int pres_rdg =  Integer.parseInt(presRdg);
+                        int prev_rdg = Integer.parseInt(prevRdg);
+                        //if present reading is greater than previous reading
+                        if(pres_rdg<prev_rdg){
+                            range_code = "-";
+                            snackbar("Negative Consumption");
 
-            strrange_code = String.valueOf(range_code);
+                        }
+                    }
+                }
+                else {
+                    snackbar("Negative Consumption");
+                    range_code = "-";
+                }
+            }
+
+
+
+
         }else {
-            Snackbar snackbar = Snackbar
-                    .make(coordinatorLayout, "Zero Consumption", Snackbar.LENGTH_LONG);
-
-            snackbar.show();
-            //vibrate
-            Utils.vibrate(this);
+            snackbar("Zero Consumption");
+            range_code = NORMAL;
         }
-        mtrCons.setRange_code(strrange_code);
-        meterInfo.setRange_code(strrange_code);
-        meterDao.updateRangeCode(strrange_code,meterInfo.getDldocno());
+        mtrCons.setRange_code(range_code);
+        meterInfo.setRange_code(range_code);
+        meterDao.updateRangeCode(range_code,meterInfo.getDldocno());
 
     }
+
 
 
     void computeBill(){
