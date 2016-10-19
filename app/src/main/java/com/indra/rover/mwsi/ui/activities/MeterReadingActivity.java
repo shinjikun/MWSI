@@ -255,6 +255,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
      void updateReadStatusDisplay(String readStatus){
         meterInfo.setReadStat(readStatus);
+         arry.get(current).setReadStat(readStatus);
         meterStatus();
     }
 
@@ -329,7 +330,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     public void snackbar(String message){
         Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE)
+                .make(coordinatorLayout, message, Snackbar.LENGTH_LONG)
                 .setAction("Re Enter", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -358,7 +359,9 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
      void setReadingValue(String value){
         TextView txt = (TextView)findViewById(R.id.txtReading);
         txt.setText(value);
+         arry.get(current).setPresent_reading(value);
         meterInfo.setPresent_reading(value);
+
         String formattedTime = Utils.getFormattedTime();
         if(!prefs.getData(IS_FIRST_RDG,false)){
             prefs.setData(READ_START_TIME,formattedTime);
@@ -712,6 +715,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 String readStat = meterInfo.getReadStat();
                 if(readStat.equals("U")) {
                     meterInfo.setReadStat("R");
+                    arry.get(current).setPresent_reading("R");
                 }
             updateReadingInDB(meterInfo.getPresRdg());
             //update read status
@@ -720,6 +724,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         } else if(action.equals("delcode")){
             String delcode = msgTransport.getMessage();
             meterInfo.setDelCode(delcode);
+            arry.get(current).setDelCode(delcode);
         }
 
     }
@@ -829,6 +834,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         }
         mtrCons.setRange_code(range_code);
         meterInfo.setRange_code(range_code);
+        arry.get(current).setRange_code(range_code);
         meterDao.updateRangeCode(range_code,meterInfo.getDldocno());
 
     }
@@ -963,6 +969,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     public void onPostConsResult(MeterConsumption meterConsumption) {
         meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
         meterInfo.setPrintTag(meterConsumption.getPrintTag());
+        arry.get(current).setPrintTag(meterConsumption.getPrintTag());
         meterDao.updatePrintTag(meterConsumption,meterInfo.getDldocno());
         computeConsRange(meterConsumption);
     }
@@ -973,9 +980,11 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         //print child meters
         meterDao.updateConsumption(meterConsumption,meterInfo.getDldocno());
         meterInfo.setPrintTag(meterConsumption.getPrintTag());
+        arry.get(current).setPrintTag(meterConsumption.getPrintTag());
         meterDao.updatePrintTag(meterConsumption,meterInfo.getDldocno());
         computeConsRange(meterConsumption);
         meterInfo.setPresent_reading(meterConsumption.getPresent_rdg());
+        arry.get(current).setPresent_reading(meterConsumption.getPresent_rdg());
         int size = childMeters.size();
         for(int i= 0; i<size;i++){
             MeterConsumption childMeter = childMeters.get(i);

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.utils.DialogUtils;
@@ -40,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(!gpsTracker.canGetLocation()){
             gpsTracker.showSettingsAlert();
         }
+
+        TextView txt = (TextView)findViewById(R.id.txtDeviceID);
+        txt.setText(Build.SERIAL);
 
     }
 

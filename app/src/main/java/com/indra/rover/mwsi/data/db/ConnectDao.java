@@ -366,7 +366,8 @@ public class ConnectDao extends ModelDao {
                 "d.NUMUSERS as SANZPER,u.BASIC_CHARGE as BASECHRG, u.DISCOUNT,u.CERA,u.FCDA,u.ENV_CHARGE as ENVCHRG, u.SEWER_CHARGE as SEWERCHRG, 0 as PREPAYADJ," +
                 "u.METER_CHARGES as MSC, u.SC_DISCOUNT as SCDISC, u.TOTCHRG_WO_TAX as TOTCHRGWOTAX , u.VAT_CHARGE as VAT ,0 as PIA," +
                 "u.SUBTOTAL_AMT as TOTCURRCHRG, u.TOTAL_AMT_DUE as TOTAMT_DUE, u.PRINT_COUNT as BPRINTCNT, u.PRINT_TAG ,c.BILLPRINT_DATE as PRINT_DATE," +
-                "d.SPBILL_RULE , c.SP_COMP from T_UPLOAD u, T_CURRENT_RDG c, T_DOWNLOAD d where u.ULDOCNO = c.CRDOCNO and u.ULDOCNO = d.DLDOCNO";
+                "d.SPBILL_RULE , c.SP_COMP from T_UPLOAD u, T_CURRENT_RDG c, T_DOWNLOAD d where  c.DEL_CODE NOTNULL and c.DEL_CODE !='' and u.ULDOCNO = c.CRDOCNO and u.ULDOCNO = d.DLDOCNO";
+        Log.i("Test",selectstmt);
         StringBuilder str = new StringBuilder();
         str.append(selectstmt);
         if(!isMultiBook){

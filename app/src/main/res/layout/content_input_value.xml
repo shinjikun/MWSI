@@ -41,6 +41,9 @@
         android:textSize="40sp"
         android:maxLines="1"
         android:maxLength="7"
+        android:enabled="false"
+        android:textColor="@drawable/textblackcolor"
+
         />
 
     <android.support.v7.widget.GridLayout
