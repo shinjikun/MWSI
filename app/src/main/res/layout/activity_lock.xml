@@ -55,7 +55,7 @@
 
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="@string/lock_restart"
         android:id="@+id/btnRestart"
         android:layout_below="@+id/txtFiles"
@@ -63,6 +63,9 @@
         android:gravity="center"
         android:layout_marginTop="10dp"
         android:onClick="onClick"
-        android:visibility="gone"/>
+        android:visibility="visible"
+        android:background="@drawable/btn_active_rounded"
+        android:textColor="@android:color/white"
+        android:padding="10dp"/>
 
 </RelativeLayout>

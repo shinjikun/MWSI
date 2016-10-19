@@ -300,4 +300,9 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,
         startActivity(i);
         finish();
     }
+
+    @Override
+    public void onBackPressed() {
+        //disable the back button
+    }
 }

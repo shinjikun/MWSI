@@ -97,8 +97,8 @@ public class MRRemarksFragment extends Fragment  implements View.OnClickListener
                    setEditMode(true);
                }
                else {
-
-                   dialogUtils.showOKDialog(2,"No Remarks Entry","Cannot Enter a Remark for an Unprinted Bill!",new Bundle());
+                   dialogUtils.showOKDialog(2,"No Remarks Entry","Cannot " +
+                           "Enter a Remark for an Unprinted Bill!",new Bundle());
                }
 
                break;

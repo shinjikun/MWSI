@@ -3,6 +3,7 @@ package com.indra.rover.mwsi.ui.activities;
 import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -55,6 +56,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class MeterReadingActivity extends AppCompatActivity implements View.OnClickListener ,
         DialogUtils.DialogListener, Constants, Compute.ConsumptionListener,
@@ -76,8 +78,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     ImageButton btnPrev, btnNext;
     final int SEARCH_REQ =99;
     final int INPUT_REQ =68;
+    final int BLUETOOTH_REQ=72;
     final int DLG_RESET=75;
     final int DLG_EDITMODE=67;
+    final int DLG_DELIV = 779;
     DialogUtils dlgUtils;
     TextView txtFilter;
     //Button btnPrint;
@@ -465,6 +469,13 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                             "Proceed to the Previous Record?",bundle);
                 }
                 else {
+                    if(meterInfo.getReadStat().equals("P")||meterInfo.getReadStat().equals("Q")){
+                        if(!Utils.isNotEmpty(meterInfo.getDelCode())){
+                            dlgUtils.showOKDialog(DLG_DELIV,null,"You have to enter a delivery code " +
+                                    "before proceeding to the previous record",new Bundle());
+                            return;
+                        }
+                    }
                     movePrevious();
                 }
                 break;
@@ -475,6 +486,14 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                     dlgUtils.showYesNoDialog(DLG_EDITMODE,"There are still unsave record.\n" +
                             "Proceed to the Next Record?",bundle);
                 }else {
+                    if(meterInfo.getReadStat().equals("P")||meterInfo.getReadStat().equals("Q")){
+                        if(!Utils.isNotEmpty(meterInfo.getDelCode())){
+                            dlgUtils.showOKDialog(DLG_DELIV,null,"You have to enter a delivery code " +
+                                    "before proceeding to the next record",new Bundle());
+                            return;
+                        }
+                    }
+
                     moveNext();
                 }
                 break;
@@ -623,6 +642,18 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 setReadingValue(value);
                 computeConsumption(meterInfo.getDldocno());
             }
+        } else if(requestCode == BLUETOOTH_REQ){
+            if(resultCode ==  Activity.RESULT_OK){
+                BluetoothAdapter   bTAdapter = BluetoothAdapter.getDefaultAdapter();
+                if(bTAdapter != null){
+                    Set<BluetoothDevice> pairedDevices = bTAdapter.getBondedDevices();
+                    for (BluetoothDevice device : pairedDevices) {
+                        Log.i("Test","device name"+device.getName());
+                        Log.i("Test","device address"+device.getAddress());
+                        Log.i("Test","device bond state"+device.getBondState());
+                    }
+                }
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -658,6 +689,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                     movePrevious();
                 }
                 break;
+            case DLG_DELIV:
+                mViewPager.setCurrentItem(2);
+                scrollUp();
+                break;
         }
     }
 
@@ -682,6 +717,9 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             //update read status
             updateReadStatusDisplay(meterInfo.getReadStat());
             computeConsumption(meterInfo.getDldocno());
+        } else if(action.equals("delcode")){
+            String delcode = msgTransport.getMessage();
+            meterInfo.setDelCode(delcode);
         }
 
     }
@@ -950,15 +988,18 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     /**
      * check if the device bluetooth is enable/on
-     * if not force the user to turn on
+     * if not force the user to turn it on
      */
     private void chkBluetoothConn(){
         BluetoothAdapter   BTAdapter = BluetoothAdapter.getDefaultAdapter();
         if(BTAdapter == null){
-            dlgUtils.showOKDialog("BLUETOOTH NOT SUPPORTED","Your phone does not support bluetooth");
+            dlgUtils.showOKDialog("BLUETOOTH NOT SUPPORTED","Your phone " +
+                    "does not support bluetooth");
         }else {
             if (!BTAdapter.isEnabled()) {
                 // Bluetooth is not enable :)
+                Intent enableBT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBT, BLUETOOTH_REQ);
             }
             else {
                 computeBill();

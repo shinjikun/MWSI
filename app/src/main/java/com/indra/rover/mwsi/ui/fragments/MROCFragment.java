@@ -203,13 +203,15 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
 
         }
         // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, arryOC1codes);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_spinner_item, arryOC1codes);
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // attaching data adapter to spinner
         oc1_opt.getSpn().setAdapter(dataAdapter);
 
-        dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, arryOC2codes);
+        dataAdapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_spinner_item, arryOC2codes);
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // attaching data adapter to spinner

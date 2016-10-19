@@ -33,7 +33,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MRDeliveryRFragment extends Fragment  implements View.OnClickListener,DialogUtils.DialogListener, AdapterView.OnItemSelectedListener{
+public class MRDeliveryRFragment extends Fragment  implements View.OnClickListener,
+        DialogUtils.DialogListener, AdapterView.OnItemSelectedListener{
     /**
      * id paramater
      */
@@ -187,7 +188,8 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
                     editMode(true);
                 }
                 else {
-                    dialogUtils.showOKDialog(2,"No Delivery Remarks Entry","Cannot Enter a Delivery Remark " +
+                    dialogUtils.showOKDialog(2,"No Delivery Remarks Entry",
+                            "Cannot Enter a Delivery Remark " +
                             "for an Unprinted Bill!",new Bundle());
                 }
                 break;
@@ -231,10 +233,16 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
         String spncode = deliv_opt.getSelectedItem();
         deliv_opt.setValues(spncode);
         boolean isNewDelivery = true;
-        if(Utils.isNotEmpty(meterDelivery.getDeliv_date())&&Utils.isNotEmpty(meterDelivery.getDeliv_time())){
+        if(Utils.isNotEmpty(meterDelivery.getDeliv_date())&&
+                Utils.isNotEmpty(meterDelivery.getDeliv_time())){
             isNewDelivery = false;
         }
         mtrReadingDao.addDelivRemarks(deliv_code,remarks,crdocno, isNewDelivery);
+        if(Utils.isNotEmpty(deliv_code)){
+            MainApp.bus.post(new MessageTransport("delcode",deliv_code));
+        }
+
+
         editMode(false);
     }
 
