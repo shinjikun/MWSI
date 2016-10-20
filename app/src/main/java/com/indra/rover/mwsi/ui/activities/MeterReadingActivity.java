@@ -329,7 +329,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
 
     public void snackbar(String message){
-        Snackbar snackbar = Snackbar
+         Snackbar snackbar = Snackbar
                 .make(coordinatorLayout, message, Snackbar.LENGTH_LONG)
                 .setAction("Re Enter", new View.OnClickListener() {
                     @Override
@@ -715,7 +715,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 String readStat = meterInfo.getReadStat();
                 if(readStat.equals("U")) {
                     meterInfo.setReadStat("R");
-                    arry.get(current).setPresent_reading("R");
+                    arry.get(current).setReadStat("R");
                 }
             updateReadingInDB(meterInfo.getPresRdg());
             //update read status
@@ -880,14 +880,16 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
         }
 
+    if(meterInfo.getPrintTag()!=MeterInfo.NONBILLABLE){
+        if(norecompute==0){
+            BillCompute bill = new BillCompute(this,this);
+            bill.compute(meterDao.getMeterBill(meterInfo.getDldocno()));
+        }
+        else {
+            startPrinting();
+        }
+    }
 
-     if(norecompute==0){
-         BillCompute bill = new BillCompute(this,this);
-         bill.compute(meterDao.getMeterBill(meterInfo.getDldocno()));
-     }
-     else {
-          startPrinting();
-     }
 
 
     }

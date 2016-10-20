@@ -20,7 +20,25 @@
         android:layout_height="wrap_content"
         android:text="@string/settings_pair_bluetooth"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/btnPair" />
+        android:id="@+id/btnPair"
+        android:background="@drawable/btn_active_rounded"
+        android:textColor="@android:color/white"
+        android:padding="5dp"
+        android:visibility="visible"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sampletxt"
+        android:id="@+id/btnUnPair"
+        android:drawableLeft="@drawable/ic_print_big"
+        android:drawableStart="@drawable/ic_print_big"
+        android:gravity="left|center_vertical"
+        android:background="@drawable/btn_active_rounded"
+        android:textColor="@android:color/white"
+        android:padding="5dp"
+        android:visibility="gone"
+        />
 
     <LinearLayout
         android:id="@+id/pnl_admin_settings"

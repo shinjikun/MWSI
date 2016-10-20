@@ -13,7 +13,9 @@ import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
+import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.GPSTracker;
+import com.indra.rover.mwsi.utils.PreferenceKeys;
 import com.indra.rover.mwsi.utils.Utils;
 
 public class InputValueActivity extends AppCompatActivity implements View.OnClickListener {
@@ -26,7 +28,7 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
     MeterInfo meterInfo;
     String oldValue;
     GPSTracker gpsTracker;
-
+    PreferenceKeys prefs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +38,7 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
         gpsTracker =  new GPSTracker(this);
         txtValues =  (EditText) findViewById(R.id.txtValue);
         mtrDao = new MeterReadingDao(this);
+        prefs = PreferenceKeys.getInstance(this);
         // add back arrow to toolbar
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -135,13 +138,16 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
         }
 
 
-        String latitude = null;
-        String longtitude = null;
-        if(gpsTracker.canGetLocation()){
-            latitude = String.valueOf(gpsTracker.getLatitude());
-            longtitude = String.valueOf(gpsTracker.getLongitude());
+        String latitude = "";
+        String longtitude = "";
+         if(prefs.getData(Constants.GPS_LOGGING_ENABLED,true)){
+             if(gpsTracker.canGetLocation()){
+                 latitude = String.valueOf(gpsTracker.getLatitude());
+                 longtitude = String.valueOf(gpsTracker.getLongitude());
 
-        }
+             }
+         }
+
         mtrDao.updateReading(Utils.getFormattedDate(),
                 Utils.getFormattedTime(),
                 value,latitude,longtitude,tries, meterInfo.getDldocno(),meterInfo.getReadStat()

@@ -38,4 +38,7 @@ public interface  Constants {
    String VERY_LOW ="3";
    String VERY_HIGH="4";
 
+   String BLUEDNAME="bname";
+   String BLUEMAC ="bmac";
+
 }

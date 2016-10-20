@@ -1,15 +1,20 @@
 package com.indra.rover.mwsi.ui.activities;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -21,13 +26,18 @@ import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.PreferenceKeys;
 
-public class SettingsActivity extends AppCompatActivity implements View.OnClickListener,Constants {
+import java.util.Set;
+
+public class SettingsActivity extends AppCompatActivity implements View.OnClickListener,
+        Constants,DialogUtils.DialogListener {
 
     PreferenceKeys prefs;
     DialogUtils dialogUtils;
-    Button btnPair;
+    Button btnPair,btnUnPair;
     final int STAT_CHANGE_PASS =888;
     final int REQUEST_BLUETOOTH = 700;
+    boolean isBluetoothOn = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +55,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         dialogUtils = new DialogUtils(this);
         btnPair =  (Button)findViewById(R.id.btnPair);
         btnPair.setOnClickListener(this);
+        btnUnPair =  (Button)findViewById(R.id.btnUnPair);
+        btnUnPair.setOnClickListener(this);
         init();
     }
 
@@ -68,7 +80,15 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 showLogin();
                 break;
             case R.id.btnPair:
-                btPair();
+                if(!isBluetoothOn){
+                    Intent enableBT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBT, REQUEST_BLUETOOTH);
+                }
+                else {
+                  dlg();
+                }
+
+
                 break;
         }
     }
@@ -172,30 +192,150 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
+
+
     /**
      * check if bluetooth is turn on if not request to turn on... the result will be catch by onactivityResult method
      */
-    private void btPair(){
+    private void bluetoothCon(){
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter != null) {
             if (!mBluetoothAdapter.isEnabled()) {
                 // Bluetooth is not enable :)
                 //request to turn on
-                Intent enableBT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBT, REQUEST_BLUETOOTH);
+                isBluetoothOn = false;
+                btnPair.setText("Turn On Bluetooth");
             }
+            else {
+                isBluetoothOn = true;
+                boolean isFound = false;
+                String btName = prefs.getData(BLUEDNAME,"");
+                String btMac = prefs.getData(BLUEMAC,"");
+                Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+                for (BluetoothDevice device : pairedDevices) {
+
+                    if(device.getBondState() == BluetoothDevice.BOND_BONDED){
+                        if(btMac.equals(device.getAddress())){
+
+                            btName = device.getName();
+                            btMac = device.getAddress();
+                            prefs.setData(BLUEDNAME,btName);
+                            prefs.setData(BLUEMAC,btMac);
+                            isFound = true;
+                            break;
+                        }
+
+                    }
+                }//end of for
+                if(isFound){
+                    btnPair.setVisibility(View.GONE);
+                    btnUnPair.setVisibility(View.VISIBLE);
+                    btnUnPair.setText(btName+"\n"+btMac);
+                }else {
+                    btnPair.setText("Pair to Bluetooth Printer");
+                }
+
+            } //end if
         }
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_BLUETOOTH){
-            //if(resultCode == RESULT_OK){
-            //
-            //}
+            if(resultCode ==  Activity.RESULT_OK){
+               bluetoothCon();
+            }
         }
 
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void dialog_confirm(int dialog_id, Bundle params) {
+
+    }
+
+    @Override
+    public void dialog_cancel(int dialog_id, Bundle params) {
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bluetoothCon();
+    }
+
+    private void dlg(){
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
+        builderSingle.setTitle("Select One to Pair:");
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.select_dialog_singlechoice);
+        arrayAdapter.add("Hardik");
+        arrayAdapter.add("Archit");
+        arrayAdapter.add("Jignesh");
+        arrayAdapter.add("Umang");
+        arrayAdapter.add("Gatti");
+        arrayAdapter.add("Jignesh");
+        arrayAdapter.add("Umang");
+        arrayAdapter.add("Gatti");
+        arrayAdapter.add("Jignesh");
+        arrayAdapter.add("Umang");
+        arrayAdapter.add("Gatti");
+        builderSingle.setNegativeButton(
+                "cancel",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builderSingle.setAdapter(
+                arrayAdapter,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String strName = arrayAdapter.getItem(which);
+                        AlertDialog.Builder builderInner = new AlertDialog.Builder(
+                                SettingsActivity.this);
+                        builderInner.setMessage(strName);
+                        builderInner.setTitle("Your Selected Item is");
+                        builderInner.setPositiveButton(
+                                "Ok",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(
+                                            DialogInterface dialog,
+                                            int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        builderInner.show();
+                    }
+                });
+        builderSingle.show();
+    }
+
+
+    private class BPrinters{
+        String name;
+        String macAddress;
+        public BPrinters(String name,String macAddress){
+            this.macAddress = macAddress;
+            this.name = name;
+        }
+
+        public String getMacAddress() {
+            return macAddress;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 }
