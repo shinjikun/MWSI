@@ -383,6 +383,7 @@ public class BillCompute extends BCompute {
                     double old_amount = 0.0;//tariff.getOld_baseAmount();
                     double old_price = 0.0;//tariff.getOld_price();
                     int quantity = tariff.getCons_band();
+                    quantity = quantity * (int)gtfactor;
                     double price = tariff.getPrice();
                     double totalAmount;
 
@@ -390,12 +391,13 @@ public class BillCompute extends BCompute {
                         price =amount;
                     }
                     else {
-                        amount = price * quantity;
+                        amount = price * gtfactor;
                     }
 
                     if(low_limit<=consumption && consumption<=high_limit){
                         quantity = consumption - low_limit +1;
-                        amount = price * quantity;
+                        quantity = quantity *(int)gtfactor;
+                        amount = price * gtfactor;
                         totalAmount = amount +old_amount;
                         basic_charge += totalAmount;
                         insertSAPData(meterBill,"ZBASIC",price,amount,old_price,
