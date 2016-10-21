@@ -19,7 +19,7 @@ public class MeterBill {
     private String acctNum;
     private String vatExempt;
     private String numusers;
-
+    private String gt34factor;
     double  other_charges;
     double prevUnpaid;
 
@@ -51,6 +51,7 @@ public class MeterBill {
         this.msc_amount = cursor.getDouble(cursor.getColumnIndexOrThrow("MSC_AMOUNT"));
         this.vatExempt = cursor.getString(cursor.getColumnIndexOrThrow("VAT_EXEMPT"));
         this.numusers = cursor.getString(cursor.getColumnIndexOrThrow("NUMUSERS"));
+        this.gt34factor = cursor.getString(cursor.getColumnIndexOrThrow("GT34FACTOR"));
         String str =  cursor.getString(cursor.getColumnIndexOrThrow("OTHER_CHARGES"));
         String str1 =  cursor.getString(cursor.getColumnIndexOrThrow("PREVUNPAID"));
 
@@ -213,5 +214,9 @@ public class MeterBill {
 
     public double getOther_charges() {
         return other_charges;
+    }
+
+    public String getGt34factor() {
+        return gt34factor;
     }
 }

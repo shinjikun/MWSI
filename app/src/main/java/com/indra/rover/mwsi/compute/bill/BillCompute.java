@@ -191,6 +191,13 @@ public class BillCompute extends BCompute {
                     zsewer = Utils.roundDouble(zsewer);
                     insertSAPData(meterBill,"ZSEWER",0.00,zsewer,0 );
                     meterBill.setSewer_charge(zsewer);
+                    //Since Sewer Only rate type, remove all records related to
+                    // Basic Charge from the table, i.e. set Basic Charge = 0.00
+
+                    if(rate_type.equals("S")){
+                       meterBill.setBasicCharge(0.0);
+                        billDao.deleteZBasic(meterBill.getId());
+                    }
                 }
             }
         }
@@ -356,6 +363,60 @@ public class BillCompute extends BCompute {
     @Override
     void getGT3BasicCharge(MeterBill meterBill) {
         int consumption =  meterBill.getConsumption();
+        String gt34factor = meterBill.getGt34factor();
+        double discount =0.00;
+        if(Utils.isNotEmpty(gt34factor)){
+            double gtfactor = Double.parseDouble(gt34factor);
+            gtfactor = Utils.roundDouble6(gtfactor);
+
+            Double d = Double.valueOf(consumption/gtfactor);
+            int ave_cons =d.intValue();
+            if(ave_cons>10){
+                ArrayList<Tariff> arryTariff = billDao.getTariffs(meterBill.getBillClass());
+                double basic_charge=0.0;
+                int size = arryTariff.size();
+                for(int i=0;i<size;i++){
+                    Tariff tariff = arryTariff.get(i);
+                    int low_limit = tariff.getLowLimit();
+                    int high_limit = tariff.getHighLimit();
+                    double amount = tariff.getBaseAmount();
+                    double old_amount = 0.0;//tariff.getOld_baseAmount();
+                    double old_price = 0.0;//tariff.getOld_price();
+                    int quantity = tariff.getCons_band();
+                    double price = tariff.getPrice();
+                    double totalAmount;
+
+                    if(i==0){
+                        price =amount;
+                    }
+                    else {
+                        amount = price * quantity;
+                    }
+
+                    if(low_limit<=consumption && consumption<=high_limit){
+                        quantity = consumption - low_limit +1;
+                        amount = price * quantity;
+                        totalAmount = amount +old_amount;
+                        basic_charge += totalAmount;
+                        insertSAPData(meterBill,"ZBASIC",price,amount,old_price,
+                                old_amount,String.valueOf(quantity));
+                        break;
+                    }
+                    totalAmount = amount+ old_amount;
+                    basic_charge += totalAmount;
+
+                    insertSAPData(meterBill,"ZBASIC",price,amount,old_price,old_amount,
+                            String.valueOf(quantity));
+
+                }
+                updateBasicCharge(meterBill,basic_charge,discount);
+
+            }
+            else {
+                minimumCharge(meterBill);
+            }
+        }
+
         otherCharges(meterBill);
         totalAmount(meterBill);
         if(listener!=null){

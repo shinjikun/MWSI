@@ -157,6 +157,20 @@ public class Utils {
 
 
 
+    /**
+     * round double data type to 6 decimal places
+     * e.g  200.3456377 = 200.3456378
+     * @param val value to be rounded
+     * @return rounded value to 2 decimal places
+     */
+    public static double roundDouble6(double val){
+        DecimalFormat df = new DecimalFormat("#.######");
+        return  Double.valueOf(df.format(val));
+
+    }
+
+
+
 
 
 }
