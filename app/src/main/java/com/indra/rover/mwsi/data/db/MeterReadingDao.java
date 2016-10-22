@@ -15,6 +15,7 @@ import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterOC;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterRHistory;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterRemarks;
+import com.indra.rover.mwsi.data.pojo.meter_reading.display.NewMeterInfo;
 import com.indra.rover.mwsi.utils.Utils;
 
 import java.util.ArrayList;
@@ -65,6 +66,32 @@ public class MeterReadingDao extends ModelDao {
 
 
         return arry;
+    }
+
+
+
+    public ArrayList<NewMeterInfo> fetchNewMeters(String mru_id){
+        ArrayList<NewMeterInfo> arryList = new ArrayList<>();
+        String sql_stmt = "select * from T_FCONN where FCMRU='"+mru_id+"'";
+        try{
+            open();
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    NewMeterInfo meterInfo = new NewMeterInfo(cursor);
+                    arryList.add(meterInfo);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            close();
+        }
+
+
+
+        return arryList;
     }
 
 

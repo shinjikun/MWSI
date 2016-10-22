@@ -45,7 +45,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:hint="@string/str_sample_text"
             android:id="@+id/txtMeterNumber"
 
             android:layout_alignParentTop="true"
@@ -144,7 +143,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:hint="@string/str_sample_text"
             android:id="@+id/txtSeqNum"
 
             android:layout_alignParentTop="true"
@@ -168,8 +166,8 @@
         android:layout_marginTop="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save"
-        android:id="@+id/button3"
+        android:text="@string/save"
+        android:id="@+id/btnSave"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/btn_active_rounded"
         android:textColor="@android:color/white"

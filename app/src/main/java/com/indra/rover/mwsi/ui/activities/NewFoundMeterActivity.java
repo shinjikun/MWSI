@@ -15,8 +15,18 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.data.db.MeterReadingDao;
+import com.indra.rover.mwsi.data.pojo.meter_reading.display.NewMeterInfo;
+
+import java.util.ArrayList;
 
 public class NewFoundMeterActivity extends AppCompatActivity  implements View.OnClickListener{
+
+    String mru_id;
+    MeterReadingDao meterDao;
+    int current =0;
+    ArrayList<NewMeterInfo> arry;
+    NewMeterInfo meterInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +43,24 @@ public class NewFoundMeterActivity extends AppCompatActivity  implements View.On
         }
 
         findViewById(R.id.btnMREdit).setOnClickListener(this);
+        Bundle extras = getIntent().getExtras();
+        meterDao = new MeterReadingDao(this);
+        arry = new ArrayList<>();
+        if (extras != null) {
+            this.mru_id = extras.getString("mru_id");
+            this.arry = meterDao.fetchNewMeters(this.mru_id);
+            prepareData(current);
+        }
+    }
+
+
+
+    private void prepareData(int index){
+        if(!arry.isEmpty()){
+            meterInfo = arry.get(index);
+
+
+        }
     }
 
 
