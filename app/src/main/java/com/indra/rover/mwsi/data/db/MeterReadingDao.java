@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-
+import android.util.Log;
 
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterBill;
@@ -38,6 +38,18 @@ public class MeterReadingDao extends ModelDao {
     public void close() {
         database.close();
     }
+
+    boolean isExistData(String tablename,String columnname,String param){
+        String selectSql = String.format(
+                "SELECT "+columnname+" from "+tablename+" where "+columnname+" = '\"%s\"' limit 1", param);
+        Cursor cursor = database.rawQuery(selectSql, null);
+
+        boolean result = cursor.moveToFirst();
+        cursor.close();
+        return result;
+    }
+
+
 
     public List<MeterInfo> fetchInfos(String mruID){
         List<MeterInfo> arry = new ArrayList<>();
@@ -566,7 +578,7 @@ public class MeterReadingDao extends ModelDao {
         try {
             open();
             String sql_stmt="Select d.DLDOCNO, c.BILLED_CONS,d.BILL_CLASS,d.RATE_TYPE,u.BASIC_CHARGE," +
-                    "u.DISCOUNT,u.SUBTOTAL_AMT,u.TOTAL_AMT_DUE,d.BULK_FLAG,d.GT34FLAG,d.GT34FACTOR " +
+                    "u.DISCOUNT,u.SUBTOTAL_AMT,u.TOTAL_AMT_DUE,d.BULK_FLAG,d.GT34FLAG,d.GT34FACTOR, " +
                     "c.PRESRDG, d.PREVRDGDATE,u.ACCTNUM,d.METER_SIZE, r.MSC_AMOUNT,d.VAT_EXEMPT,d.NUMUSERS," +
                     "u.VAT_CHARGE, u.PREVUNPAID,u.OTHER_CHARGES " +
                     "from T_DOWNLOAD d, T_UPLOAD u,T_CURRENT_RDG c, R_MSC r " +
@@ -791,5 +803,61 @@ public class MeterReadingDao extends ModelDao {
         }
         return meterPrint;
     }
+
+
+    public void deleteFMeter(NewMeterInfo meterInfo){
+        try {
+            open();
+            String sql_stmt = "delete from T_FCONN where  FCMRU='"+meterInfo.getMru_id()+"' " +
+                    "and METERNO='"+meterInfo.getMeterNo()+"'";
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            cursor.moveToFirst();
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+
+
+    }
+
+    public long addFConn(NewMeterInfo meterInfo, boolean state){
+
+        long rowInsert =0;
+        try {
+            open();
+            ContentValues values = new ContentValues();
+            if(isExistData("T_CURRENT_RDG","METERNO",meterInfo.getMeterNo())){
+                return -1 ;
+            }
+
+            if(isExistData("T_FCONN","METERNO",meterInfo.getMeterNo())){
+                return -2 ;
+            }
+            values.put("FCMRU",meterInfo.getMru_id());
+            values.put("SEQNO",meterInfo.getSeqno());
+            values.put("METERNO",meterInfo.getMeterNo());
+            values.put("CUSTADDRESS",meterInfo.getCustAdd());
+            values.put("CUSTNAME",meterInfo.getCustName());
+            values.put("PRESRDG",meterInfo.getPresRdg());
+            values.put("RDG_DATE",meterInfo.getRdg_date());
+            values.put("RDG_TIME",meterInfo.getRdg_time());
+            if(state){
+                rowInsert = database.insert("T_FCONN", null, values);
+            }
+              else {
+                String where= "METERNO=?";
+                database.update("T_FCONN",values,where,new String[]{meterInfo.getMeterNo()});
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+        return rowInsert;
+    }
+
+
 
 }

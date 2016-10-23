@@ -46,7 +46,7 @@ public class FileParser extends AsyncTask<File,Integer,String> {
                     } else
                         parseFile(file);
                     //remove the parsed file in directory
-                    file.delete();
+                   // file.delete();
                 }
             }
         }

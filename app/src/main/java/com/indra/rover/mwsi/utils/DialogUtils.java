@@ -16,15 +16,9 @@ import com.indra.rover.mwsi.R;
  * Created by leonardoilagan on 3/27/16.
  * *
  */
-public class DialogUtils  implements View.OnClickListener{
-    DialogListener listener =null;
-    int dialog_id;
-    Dialog dialog;
-    Button btndlgYes,btndlgNo;
-    ImageButton btndlgClose;
-    TextView txtdlg_title,txtdlg_body;
-    Bundle params;
-    Context context;
+public class DialogUtils  {
+   private DialogListener listener =null;
+   private Context context;
 
 
 
@@ -39,19 +33,38 @@ public class DialogUtils  implements View.OnClickListener{
     }
 
 
-    public void showYesNoDialog(int dialog_id,String title,String message,Bundle params){
-        this.dialog_id = dialog_id;
-        this.params = params;
-         dialog = new Dialog(context);
+    public void showYesNoDialog(final  int dialog_id,String title,String message,final Bundle params){
+        final Dialog  dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_yes_no);
         dialog.setCancelable(false);
         ImageButton dlgBtnClose = (ImageButton)dialog.findViewById(R.id.dlg_btn_close);
-        dlgBtnClose.setOnClickListener(this);
+        dlgBtnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
         Button btn =  (Button)dialog.findViewById(R.id.dlg_btn_no);
-        btn.setOnClickListener(this);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(listener!=null){
+                    listener.dialog_cancel(dialog_id,params);
+                }
+                dialog.dismiss();
+            }
+        });
         btn =  (Button)dialog.findViewById(R.id.dlg_btn_yes);
-        btn.setOnClickListener(this);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(listener!=null){
+                    listener.dialog_confirm(dialog_id,params);
+                }
+                dialog.dismiss();
+            }
+        });
         TextView txt = (TextView)dialog.findViewById(R.id.dlg_title);
         if(title == null){
             txt.setVisibility(View.GONE);
@@ -73,18 +86,23 @@ public class DialogUtils  implements View.OnClickListener{
     }
 
 
-    public void showOKDialog(int dialog_id,String title,String message,Bundle params){
-        this.dialog_id = dialog_id;
-        this.params = params;
-        dialog = new Dialog(context);
+    public void showOKDialog(final int dialog_id,String title,String message,final Bundle params){
+        final Dialog  dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_ok);
         dialog.setCancelable(false);
         ImageButton dlgBtnClose = (ImageButton)dialog.findViewById(R.id.dlg_btn_close);
-        //dlgBtnClose.setOnClickListener(this);
         dlgBtnClose.setVisibility(View.INVISIBLE);
         Button btn =  (Button)dialog.findViewById(R.id.dlg_btn_yes);
-        btn.setOnClickListener(this);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(listener!=null){
+                    listener.dialog_confirm(dialog_id,params);
+                }
+                dialog.dismiss();
+            }
+        });
         TextView txt = (TextView)dialog.findViewById(R.id.dlg_title);
         if(title == null){
             txt.setVisibility(View.GONE);
@@ -100,30 +118,6 @@ public class DialogUtils  implements View.OnClickListener{
 
     public void setListener(DialogListener listener) {
         this.listener = listener;
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        switch (id){
-            case R.id.dlg_btn_close:
-                dialog.dismiss();
-                break;
-            case R.id.dlg_btn_yes:
-                if(listener!=null){
-                    listener.dialog_confirm(dialog_id,this.params);
-                }
-                dialog.dismiss();
-                break;
-            case R.id.dlg_btn_no:
-                if(listener!=null){
-                    listener.dialog_cancel(dialog_id,this.params);
-                }
-                dialog.dismiss();
-                break;
-
-
-        }
     }
 
     public interface DialogListener{

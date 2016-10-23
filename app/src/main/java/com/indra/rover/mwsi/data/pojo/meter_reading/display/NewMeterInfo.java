@@ -17,6 +17,12 @@ public class NewMeterInfo {
     String rdg_date;
     String rdg_time;
 
+
+    public  NewMeterInfo(){
+
+    }
+
+
     public NewMeterInfo(Cursor cursor) {
         this.mru_id = cursor.getString(cursor.getColumnIndexOrThrow("FCMRU"));
         this.seqno = cursor.getString(cursor.getColumnIndexOrThrow("SEQNO"));
@@ -30,5 +36,68 @@ public class NewMeterInfo {
 
     }
 
+    public String getMeterNo() {
+        return meterNo;
+    }
+
+    public String getCustAdd() {
+        return custAdd;
+    }
+
+    public String getCustName() {
+        return custName;
+    }
+
+    public String getMru_id() {
+        return mru_id;
+    }
+
+    public String getPresRdg() {
+        return presRdg;
+    }
+
+    public String getSeqno() {
+        return seqno;
+    }
+
+    public String getRdg_date() {
+        return rdg_date;
+    }
+
+    public String getRdg_time() {
+        return rdg_time;
+    }
+
+    public void setCustAdd(String custAdd) {
+        this.custAdd = custAdd;
+    }
+
+    public void setCustName(String custName) {
+        this.custName = custName;
+    }
+
+    public void setMeterNo(String meterNo) {
+        this.meterNo = meterNo;
+    }
+
+    public void setMru_id(String mru_id) {
+        this.mru_id = mru_id;
+    }
+
+    public void setPresRdg(String presRdg) {
+        this.presRdg = presRdg;
+    }
+
+    public void setRdg_date(String rdg_date) {
+        this.rdg_date = rdg_date;
+    }
+
+    public void setRdg_time(String rdg_time) {
+        this.rdg_time = rdg_time;
+    }
+
+    public void setSeqno(String seqno) {
+        this.seqno = seqno;
+    }
 
 }

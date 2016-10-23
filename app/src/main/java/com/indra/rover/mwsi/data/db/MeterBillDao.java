@@ -136,15 +136,6 @@ public class MeterBillDao extends ModelDao {
         }
     }
 
-
-
-
-
-
-
-
-
-
     public double getTotalAmount(String sapdocno){
         double total =0.0;
         try {
@@ -173,7 +164,8 @@ public class MeterBillDao extends ModelDao {
            String sql_stmt = "delete from T_SAP_DETAILS where  SAP_LINE_CODE='ZBASIC' " +
                    "and SAPDOCNO='"+sapdocno+"'";
            Cursor cursor = database.rawQuery(sql_stmt,null);
-            cursor.close();
+           cursor.moveToFirst();
+           cursor.close();
        }catch (Exception e){
             e.printStackTrace();
        }finally {

@@ -38,3 +38,6 @@ adb shell am broadcast -a com.indra.rover.mwsi.ROVER_MESSAGE  -p com.indra.rover
 adb push   downloads /sdcard/com.indra.rover.mwsi/downloads
 adb shell am broadcast -a com.indra.rover.mwsi.ROVER_MESSAGE  -p com.indra.rover.mwsi --es action download --es status ended
 
+
+
+

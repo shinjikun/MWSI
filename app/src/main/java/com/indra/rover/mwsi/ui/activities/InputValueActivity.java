@@ -22,8 +22,8 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
     EditText txtValues;
     MeterReadingDao mtrDao;
     int type;
-    int MR_TYPE1=1;
-    int MR_TYPE2=2;
+    public static final int MR_TYPE1=1;
+    public static final int MR_TYPE2=2;
     String docid;
     MeterInfo meterInfo;
     String oldValue;
@@ -55,6 +55,10 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
                     oldValue = meterInfo.getPresRdg();
                     txtValues.setText(meterInfo.getPresRdg());
                 }
+            }
+            else if(type == MR_TYPE2){
+                String value = extras.getString("value");
+                txtValues.setText(value);
             }
 
         }
@@ -162,7 +166,8 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
 
 
         if(!value.equals(oldValue)){
-            setValue();
+            if(type == MR_TYPE1)
+                setValue();
             intent.putExtra("value",value);
             if (getParent() == null) {
                 setResult(Activity.RESULT_OK, intent);

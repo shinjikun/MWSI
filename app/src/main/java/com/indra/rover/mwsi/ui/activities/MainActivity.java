@@ -120,8 +120,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+
+
     @Override
     public void onPostUploadResult(boolean status) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        mDialogUtils.showYesNoDialog(DLG_CLOSE,"Close the app?", new Bundle());
     }
 }

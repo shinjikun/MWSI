@@ -52,7 +52,7 @@ public class Utils {
      * @return
      */
     public static String getFormattedTime(){
-        String time = (DateFormat.format("HH:mm:ss", new java.util.Date()).toString());
+        String time = (DateFormat.format("kk:mm:ss", new java.util.Date()).toString());
         return time;
     }
 
@@ -70,7 +70,7 @@ public class Utils {
     public static String getCurrentDate(){
         //"yyyy-MM-dd'T'HH:mm:ssZ"
         //"dd-MM-yyyy hh:mm:ss"
-        String date = (DateFormat.format("yyyy-MM-dd HH:mm:ss", new java.util.Date()).toString());
+        String date = (DateFormat.format("yyyy-MM-dd kk:mm:ss", new java.util.Date()).toString());
         return date;
     }
 
@@ -79,7 +79,7 @@ public class Utils {
         if(strDate ==null ||strDate.isEmpty()){
             return "";
         }
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss", Locale.US);
         try {
             Date date1 = formatter.parse(strDate);
 
@@ -97,7 +97,7 @@ public class Utils {
     public static boolean compareDate(String strDate1, String strDate2) {
 
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss", Locale.US);
         try {
             Date date1 = formatter.parse(strDate1);
             Date date2 = formatter.parse(strDate2);
@@ -161,7 +161,7 @@ public class Utils {
      * round double data type to 6 decimal places
      * e.g  200.3456377 = 200.3456378
      * @param val value to be rounded
-     * @return rounded value to 2 decimal places
+     * @return rounded value to 6 decimal places
      */
     public static double roundDouble6(double val){
         DecimalFormat df = new DecimalFormat("#.######");

@@ -256,7 +256,6 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
      void updateReadStatusDisplay(String readStatus){
         meterInfo.setReadStat(readStatus);
          arry.get(current).setReadStat(readStatus);
-        meterStatus();
     }
 
 
@@ -435,6 +434,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.action_new:
                 intent = new Intent(this,NewFoundMeterActivity.class);
+                intent.putExtra("mru_id",mru_id);
                 startActivity(intent);
                 break;
         }

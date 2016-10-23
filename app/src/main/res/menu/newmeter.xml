@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:title="@string/add_new_meter"
+        android:icon="@drawable/ic_add"
+        android:id="@+id/mnuAddNew"
+        android:visible="true"
+        app:showAsAction="always"
+        android:orderInCategory="1"
+        android:menuCategory="secondary"
+         />
+    <item android:title="@string/delete_meter"
+        android:id="@+id/mnuDelMeter" />
+</menu>
