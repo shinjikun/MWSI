@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -26,6 +27,7 @@ import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.PreferenceKeys;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener,
@@ -37,6 +39,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     final int STAT_CHANGE_PASS =888;
     final int REQUEST_BLUETOOTH = 700;
     boolean isBluetoothOn = true;
+    ArrayList<BPrinters> arryPrinters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         btnPair.setOnClickListener(this);
         btnUnPair =  (Button)findViewById(R.id.btnUnPair);
         btnUnPair.setOnClickListener(this);
+
         init();
     }
 
@@ -269,23 +273,26 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void dlg(){
+        arryPrinters = new ArrayList<>();
+        BluetoothAdapter   bTAdapter = BluetoothAdapter.getDefaultAdapter();
+        if(bTAdapter != null){
+            Set<BluetoothDevice> pairedDevices = bTAdapter.getBondedDevices();
+            for (BluetoothDevice device : pairedDevices) {
+                BPrinters bPrinters = new BPrinters(device.getName(),device.getAddress());
+                arryPrinters.add(bPrinters);
+            }
+        }
+
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
         builderSingle.setTitle("Select One to Pair:");
 
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.select_dialog_singlechoice);
-        arrayAdapter.add("Hardik");
-        arrayAdapter.add("Archit");
-        arrayAdapter.add("Jignesh");
-        arrayAdapter.add("Umang");
-        arrayAdapter.add("Gatti");
-        arrayAdapter.add("Jignesh");
-        arrayAdapter.add("Umang");
-        arrayAdapter.add("Gatti");
-        arrayAdapter.add("Jignesh");
-        arrayAdapter.add("Umang");
-        arrayAdapter.add("Gatti");
+        for(int i=0;i<arryPrinters.size();i++){
+           arrayAdapter.add(arryPrinters.get(i).getName());
+        }
+
         builderSingle.setNegativeButton(
                 "cancel",
                 new DialogInterface.OnClickListener() {

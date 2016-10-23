@@ -84,7 +84,7 @@
             android:name=".ui.activities.NewFoundMeterActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -99,7 +99,8 @@
         <activity
             android:name=".ui.activities.InputValueActivity"
             android:label="@string/title_activity_input_value"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".ui.activities.BluetoothDemo"></activity>
     </application>
 
 </manifest>

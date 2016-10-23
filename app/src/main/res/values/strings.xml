@@ -156,7 +156,7 @@
     <string name="sign_recipient_name">Recipient Name: </string>
 
     <string name="lock_restart">Restart Application</string>
-    <string  name="sampletxt">Zebra\n343:22:22:22</string>
+    <string name="sampletxt">Zebra\n343:22:22:22</string>
     <string name="save">Save</string>
     <string name="add_new_meter">Add New Meter</string>
     <string name="delete_meter">Delete Meter</string>
