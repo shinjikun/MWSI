@@ -5,22 +5,26 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.utils.Constants;
@@ -40,6 +44,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     final int REQUEST_BLUETOOTH = 700;
     boolean isBluetoothOn = true;
     ArrayList<BPrinters> arryPrinters;
+    ImageButton btnPrint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +65,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         btnPair.setOnClickListener(this);
         btnUnPair =  (Button)findViewById(R.id.btnUnPair);
         btnUnPair.setOnClickListener(this);
-
+        btnPrint = (ImageButton)findViewById(R.id.btnPrint);
+        btnPrint.setOnClickListener(this);
         init();
     }
 
@@ -91,9 +97,12 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 else {
                   dlg();
                 }
-
+                break;
+            case R.id.btnPrint:
 
                 break;
+
+
         }
     }
 
@@ -170,6 +179,13 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         });
 
         Switch switch3 = (Switch)findViewById(R.id.swteod);
+        boolean isEODEnabled =prefs.getData(PRINT_EOD_ENABLED,true);
+        if(isEODEnabled){
+            findViewById(R.id.pnl_eod).setVisibility(View.VISIBLE);
+        }
+        else {
+            findViewById(R.id.pnl_eod).setVisibility(View.GONE);
+        }
         switch3.setChecked(prefs.getData(PRINT_EOD_ENABLED,true));
         switch3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -177,6 +193,12 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 String message = isChecked?"Enabled":"Disabled";
 
                 dialogUtils.showOKDialog("EOD PRINTING : "+message);
+                if(isChecked){
+                    findViewById(R.id.pnl_eod).setVisibility(View.VISIBLE);
+                }
+                else {
+                    findViewById(R.id.pnl_eod).setVisibility(View.GONE);
+                }
             }
         });
 
@@ -186,6 +208,33 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onClick(View view) {
                 loadChangePass();
+            }
+        });
+
+        final EditText editText = (EditText) findViewById(R.id.txtEODcount);
+        editText.setText(prefs.getData(PRINT_EOD_COUNT,"30"));
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    String value = v.getText().toString();
+                    if(value.equals("")){
+                        dialogUtils.showOKDialog("Can't be empty");
+
+                    }
+                    else {
+                        prefs.setData(PRINT_EOD_COUNT,value);
+                        dialogUtils.showOKDialog("EOD Count Changed Successfully!");
+                    }
+
+                    handled = true;
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(editText.getWindowToken(),
+                            InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                }
+
+                return handled;
             }
         });
     }

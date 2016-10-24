@@ -11,6 +11,7 @@ public interface  Constants {
    String PRINT_STUB_ENABLED="printstub";
 
    String PRINT_EOD_ENABLED="eod";
+   String PRINT_EOD_COUNT = "eodcount";
 
    String APP_STATUS = "app_status";
 

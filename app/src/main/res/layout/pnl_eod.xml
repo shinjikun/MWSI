@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:layout_marginBottom="3dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Meter Count :"
+        android:id="@+id/txtEODLabel"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_margin="10dp"
+       />
+
+
+    <EditText
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/txtEODcount"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/txtEODLabel"
+        android:layout_toEndOf="@+id/txtEODLabel"
+        android:padding="4dp"
+        android:background="@drawable/txt_rounded_border"
+        android:maxLength="2"
+        android:imeOptions="actionDone"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textSize="20sp"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:contentDescription="@string/print"
+        android:id="@+id/btnPrint"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/txtEODcount"
+        android:layout_toEndOf="@+id/txtEODcount"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:background="@drawable/btn_active_rounded"
+        android:textColor="@android:color/white"
+        android:padding="10dp"
+        android:src="@drawable/ic_print"/>
+
+</RelativeLayout>
