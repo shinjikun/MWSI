@@ -22,6 +22,7 @@ public class BillCompute extends BCompute {
     public void compute(MeterBill meterBill) {
      String gt34flg = meterBill.getGt34_flg();
      String  bulkflg = meterBill.getBulk_flg();
+
         if(Utils.isNotEmpty(bulkflg)){
             if(bulkflg.equals("1")){
                 getBulkBasicCharge(meterBill);
@@ -131,7 +132,6 @@ public class BillCompute extends BCompute {
     }
 
     private void computeFCDA(MeterBill meterBill){
-        int consumption = meterBill.getConsumption();
         double basicCharge = meterBill.getBasicCharge();
         GLCharge glFCDA =  getGLRate(FCDA);
         double zfcda = basicCharge * glFCDA.getGl_rate();

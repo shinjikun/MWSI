@@ -25,16 +25,25 @@ public class MeterBill {
     String spbillrule;
 
     /**
-     * Present Reading Date
+     * Present Reading
      */
-    String presRdgDate;
+    String presRdg;
     /**
      * Previous Reading Date
      */
     String prevRdgDate;
+    /**
+     * Present Reading Date
+     */
+    String presRdgDate;
 
     double msc_amount;
-
+    //prorate variables
+    String fcda_pro;
+    String tariff_pro;
+    String cera_pro;
+    String env_pro;
+    String sew_pro;
 
 
     public MeterBill(Cursor cursor){
@@ -48,8 +57,9 @@ public class MeterBill {
         this.totalAmt = cursor.getDouble(cursor.getColumnIndexOrThrow("TOTAL_AMT_DUE"));
         this.bulk_flg = cursor.getString(cursor.getColumnIndexOrThrow("BULK_FLAG"));
         this.gt34_flg = cursor.getString(cursor.getColumnIndexOrThrow("GT34FLAG"));
-        this.presRdgDate =  cursor.getString(cursor.getColumnIndexOrThrow("PRESRDG"));
+        this.presRdg =  cursor.getString(cursor.getColumnIndexOrThrow("PRESRDG"));
         this.prevRdgDate =  cursor.getString(cursor.getColumnIndexOrThrow("PREVRDGDATE"));
+        this.presRdgDate = cursor.getString(cursor.getColumnIndexOrThrow("RDG_DATE"));
         this.acctNum = cursor.getString(cursor.getColumnIndexOrThrow("ACCTNUM"));
         this.msc_amount = cursor.getDouble(cursor.getColumnIndexOrThrow("MSC_AMOUNT"));
         this.vatExempt = cursor.getString(cursor.getColumnIndexOrThrow("VAT_EXEMPT"));
@@ -65,6 +75,13 @@ public class MeterBill {
             prevUnpaid = Double.parseDouble(str);
         }
         this.spbillrule =  cursor.getString(cursor.getColumnIndexOrThrow("SPBILL_RULE"));
+
+        //PRORATE
+        this.tariff_pro = cursor.getString(cursor.getColumnIndexOrThrow("TARIFF_PRORATE"));
+        this.fcda_pro =  cursor.getString(cursor.getColumnIndexOrThrow("FCDA_PRORATE"));
+        this.cera_pro =  cursor.getString(cursor.getColumnIndexOrThrow("CERA_PRORATE"));
+        this.env_pro =  cursor.getString(cursor.getColumnIndexOrThrow("ENV_PRORATE"));
+        this.sew_pro = cursor.getString(cursor.getColumnIndexOrThrow("SEW_PROATE"));
 
     }
 
@@ -226,5 +243,21 @@ public class MeterBill {
 
     public String getSpbillrule() {
         return spbillrule;
+    }
+
+    /**
+     * Present Reading Date
+     * @return
+     */
+    public String getPresRdgDate() {
+        return presRdgDate;
+    }
+
+    /**
+     * Previous Reading Date
+     * @return
+     */
+    public String getPrevRdgDate() {
+        return prevRdgDate;
     }
 }

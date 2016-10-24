@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.os.Vibrator;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.Log;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -168,6 +169,46 @@ public class Utils {
         return  Double.valueOf(df.format(val));
 
     }
+
+
+    /**
+     *
+     * @param strDate1 date 1
+     * @param strDate2 date 2
+     * @return difference === strDate1 - strDate2
+     */
+    public static long dateDiff(String strDate1,String strDate2){
+        int differenceDates=0;
+        try {
+
+            //Dates to compare
+            String CurrentDate=  "09/24/2015";
+            String FinalDate=  "09/26/2015";
+
+            Date date1;
+            Date date2;
+
+            SimpleDateFormat dates = new SimpleDateFormat("MM/dd/yyyy");
+
+            //Setting dates
+            date1 = dates.parse(CurrentDate);
+            date2 = dates.parse(FinalDate);
+
+            //Comparing dates
+            long difference = Math.abs(date1.getTime() - date2.getTime());
+             differenceDates = (int)difference / (24 * 60 * 60 * 1000);
+
+            //Convert long to String
+            String dayDifference = Long.toString(differenceDates);
+
+            Log.e("HERE","HERE: " + dayDifference);
+
+        } catch (Exception exception) {
+            Log.e("DIDN'T WORK", "exception " + exception);
+        }
+        return differenceDates;
+    }
+
 
 
 

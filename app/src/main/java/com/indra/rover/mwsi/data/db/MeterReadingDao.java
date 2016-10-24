@@ -579,7 +579,7 @@ public class MeterReadingDao extends ModelDao {
             open();
             String sql_stmt="Select d.DLDOCNO, c.BILLED_CONS,d.BILL_CLASS,d.RATE_TYPE,u.BASIC_CHARGE,\n" +
                     "u.DISCOUNT,u.SUBTOTAL_AMT,u.TOTAL_AMT_DUE,d.BULK_FLAG,d.GT34FLAG,d.GT34FACTOR,\n" +
-                    "c.PRESRDG, d.PREVRDGDATE,u.ACCTNUM,d.METER_SIZE, r.MSC_AMOUNT,d.VAT_EXEMPT,d.NUMUSERS,\n" +
+                    "c.PRESRDG, d.PREVRDGDATE,c.RDG_DATE,u.ACCTNUM,d.METER_SIZE, r.MSC_AMOUNT,d.VAT_EXEMPT,d.NUMUSERS,\n" +
                     "u.VAT_CHARGE, u.PREVUNPAID,u.OTHER_CHARGES, d.SPBILL_RULE,\n" +
                     "d.TARIFF_PRORATE, d.FCDA_PRORATE, d.CERA_PRORATE, d.ENV_PRORATE, d.SEW_PROATE\n" +
                     "from T_DOWNLOAD d, T_UPLOAD u,T_CURRENT_RDG c, R_MSC r \n" +
