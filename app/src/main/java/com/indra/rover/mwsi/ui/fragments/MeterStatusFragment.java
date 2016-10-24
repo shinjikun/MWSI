@@ -62,7 +62,7 @@ public class MeterStatusFragment extends Fragment {
             selectedMRU = mruDao.getMRU(mruID);
             this.mSelectedMRU = mruID;
         }
-        MainApp.bus.register(this);
+
     }
 
     @Override
@@ -71,7 +71,7 @@ public class MeterStatusFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_meter_status, container, false);
         // Inflate the layout for this fragment
          mLayout= (LinearLayout) view.findViewById(R.id.pnl_status);
-
+        MainApp.bus.register(this);
         setup();
 
         return  view;

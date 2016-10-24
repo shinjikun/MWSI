@@ -78,7 +78,7 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
         }
         dialogUtils = new DialogUtils(getActivity());
         dialogUtils.setListener(this);
-        MainApp.bus.register(this);
+
     }
 
     @Override
@@ -94,6 +94,7 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
          deliv_opt.getBtnClr().setOnClickListener(this);
          deliv_opt.getSpn().setOnItemSelectedListener(this);
         btnSign =  (Button)mView.findViewById(R.id.btnSignature);
+        MainApp.bus.register(this);
         initContent();
         setUp();
         return mView;
@@ -239,7 +240,12 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
         }
         mtrReadingDao.addDelivRemarks(deliv_code,remarks,crdocno, isNewDelivery);
         if(Utils.isNotEmpty(deliv_code)){
-            MainApp.bus.post(new MessageTransport("delcode",deliv_code));
+            try{
+                MainApp.bus.post(new MessageTransport("delcode",deliv_code));
+            }catch (Exception e){
+
+            }
+
         }
 
 

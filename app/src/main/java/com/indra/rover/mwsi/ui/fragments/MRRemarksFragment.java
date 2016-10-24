@@ -51,7 +51,7 @@ public class MRRemarksFragment extends Fragment  implements View.OnClickListener
              meterRemarks = meterReadingDao.getRemarks(mParamID);
         }
 
-        MainApp.bus.register(this);
+
     }
 
     @Override
@@ -63,6 +63,7 @@ public class MRRemarksFragment extends Fragment  implements View.OnClickListener
         mView.findViewById(R.id.btnOKMRDesc).setOnClickListener(this);
         mView.findViewById(R.id.btnCancelMRDesc).setOnClickListener(this);
         mView.findViewById(R.id.btnEditMRRemarks).setOnClickListener(this);
+        MainApp.bus.register(this);
         setUp();
         return mView;
     }

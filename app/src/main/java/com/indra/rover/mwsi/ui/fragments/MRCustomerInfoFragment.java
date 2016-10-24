@@ -55,13 +55,14 @@ public class MRCustomerInfoFragment extends Fragment {
             RefTableDao refDao = new RefTableDao(getActivity());
             arryOCs = refDao.getOCodes();
         }
-        MainApp.bus.register(this);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mLayout = inflater.inflate(R.layout.fragment_mrcustomer_info, container, false);
+        MainApp.bus.register(this);
         setUp();
         return mLayout;
     }

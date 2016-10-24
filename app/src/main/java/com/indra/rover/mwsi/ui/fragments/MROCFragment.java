@@ -80,8 +80,10 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
         }
         dlgUtils = new DialogUtils(getActivity());
         dlgUtils.setListener(this);
-        MainApp.bus.register(this);
+
     }
+
+
 
 
     private void launchCamera(int id){
@@ -174,7 +176,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
         mView.findViewById(R.id.btnCancel).setOnClickListener(this);
         mView.findViewById(R.id.btnSave).setOnClickListener(this);
         mView.findViewById(R.id.btnEdit).setOnClickListener(this);
-
+        MainApp.bus.register(this);
         initContent();
         setUp();
         return mView;
@@ -336,7 +338,12 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
 
     private void startReading(String newOC1,String newOC2){
         if(!newOC2.equals(meterOC.getOc2())&& !newOC1.equals(meterOC.getOc1())){
-            MainApp.bus.post(new MessageTransport("reading"));
+            try {
+                MainApp.bus.post(new MessageTransport("reading"));
+            }catch (Exception e){
+
+            }
+
         }
 
 

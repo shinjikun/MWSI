@@ -168,7 +168,12 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     }
 
      void navigate(String dldocno){
-        MainApp.bus.post(new MessageTransport("navigate",dldocno));
+         try{
+             MainApp.bus.post(new MessageTransport("navigate",dldocno));
+         }catch (Exception e){
+             e.printStackTrace();
+         }
+
     }
 
      void prepareData(int index){
@@ -522,17 +527,21 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 newReadStat="Q";
                 meterDao.updateReadStatus(newReadStat,meterInfo.getDldocno());
                 updateReadStatusDisplay(newReadStat);
-                MainApp.bus.post(new MessageTransport("readstat",newReadStat));
                 mViewPager.setCurrentItem(2);
                 scrollUp();
+
                 break;
             case 'R':
                 newReadStat="P";
                 meterDao.updateReadStatus(newReadStat,meterInfo.getDldocno());
                 updateReadStatusDisplay(newReadStat);
-                MainApp.bus.post(new MessageTransport("readstat",newReadStat));
                 mViewPager.setCurrentItem(2);
                 scrollUp();
+                try{
+                    MainApp.bus.post(new MessageTransport("readstat",newReadStat));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 break;
         }
 
