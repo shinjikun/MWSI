@@ -6,6 +6,7 @@ import android.database.Cursor;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.GLCharge;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.SAPData;
+import com.indra.rover.mwsi.data.pojo.meter_reading.references.SPBillRule;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.Tariff;
 
 import java.util.ArrayList;
@@ -46,6 +47,28 @@ public class MeterBillDao extends ModelDao {
             close();
         }
         return glCharge;
+    }
+
+
+    public HashMap<String,SPBillRule> getSPBill(){
+            HashMap<String,SPBillRule> hashMap =  new HashMap<>();
+        try{
+            open();
+            String sql_stmt = "Select * from R_SPBILL_RULE ";
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    SPBillRule spBillRule = new SPBillRule(cursor);
+                    hashMap.put(spBillRule.getId(),spBillRule);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+        return hashMap;
     }
 
 

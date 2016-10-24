@@ -5,6 +5,7 @@ import android.content.Context;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterBill;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.GLCharge;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.SAPData;
+import com.indra.rover.mwsi.data.pojo.meter_reading.references.SPBillRule;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.Tariff;
 import com.indra.rover.mwsi.utils.Utils;
 
@@ -147,8 +148,19 @@ public class BillCompute extends BCompute {
         double  zfcda = meterBill.getFcda();
         double  total_water_charge = meterBill.getBasicCharge() +zcera+zfcda+zdiscn;
         GLCharge glevm = getGLRate(ENVM);
-        double  zenv = total_water_charge * glevm.getGl_rate();
 
+        double glrate = glevm.getGl_rate();
+        //check if special bill rule is enable if yes then apply
+        // the meycauyan  billing rule to compute evnm
+        //otherwise use the default computation using glrate of envm in the tariff table
+        if(Utils.isNotEmpty(meterBill.getSpbillrule())){
+            String spid = meterBill.getSpbillrule();
+            if(spid.equals("1")){
+                SPBillRule spBillRule = getSPBillRule(spid);
+                glrate = spBillRule.getSpl_rate();
+            }
+        }
+        double  zenv = total_water_charge * glrate;
         if(zenv>0){
             zenv = Utils.roundDouble(zenv);
             insertSAPData(meterBill,"ZENV",0.00,zenv,0 );

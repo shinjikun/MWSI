@@ -7,6 +7,7 @@ import com.indra.rover.mwsi.data.pojo.meter_reading.MeterBill;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterConsumption;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.GLCharge;
+import com.indra.rover.mwsi.data.pojo.meter_reading.references.SPBillRule;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +22,7 @@ public abstract  class BCompute {
     private Context context;
     MeterBillDao billDao;
     private HashMap<String,GLCharge> hashGLRates;
-
+    private HashMap<String,SPBillRule> hashSPBill;
     final String RESB= "RESB";
     final String PATR = "PATR";
     final String RLDS = "RLDS";
@@ -44,12 +45,17 @@ public abstract  class BCompute {
         this.context = context;
         billDao = new MeterBillDao(this.context);
         hashGLRates = billDao.getGLRates();
+        hashSPBill = billDao.getSPBill();
     }
 
      GLCharge getGLRate(String code){
          return hashGLRates.get(code);
     }
 
+
+    SPBillRule getSPBillRule(String id){
+        return hashSPBill.get(id);
+    }
 
    public abstract void compute(MeterBill  meterBill);
 

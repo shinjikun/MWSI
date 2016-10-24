@@ -22,6 +22,7 @@ public class MeterBill {
     private String gt34factor;
     double  other_charges;
     double prevUnpaid;
+    String spbillrule;
 
     /**
      * Present Reading Date
@@ -33,6 +34,8 @@ public class MeterBill {
     String prevRdgDate;
 
     double msc_amount;
+
+
 
     public MeterBill(Cursor cursor){
         this.id =cursor.getString(cursor.getColumnIndexOrThrow("DLDOCNO"));
@@ -61,6 +64,7 @@ public class MeterBill {
         if(Utils.isNotEmpty(str1)){
             prevUnpaid = Double.parseDouble(str);
         }
+        this.spbillrule =  cursor.getString(cursor.getColumnIndexOrThrow("SPBILL_RULE"));
 
     }
 
@@ -218,5 +222,9 @@ public class MeterBill {
 
     public String getGt34factor() {
         return gt34factor;
+    }
+
+    public String getSpbillrule() {
+        return spbillrule;
     }
 }
