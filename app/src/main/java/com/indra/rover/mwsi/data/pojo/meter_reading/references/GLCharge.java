@@ -13,6 +13,7 @@ public class GLCharge {
  double gl_rate;
  String effectivity_date;
  String gl_desc;
+ double gl_rate_old=0;
 
     public GLCharge(Cursor cursor){
         this.gl_code =cursor.getString(cursor.getColumnIndexOrThrow("GL_CHARGE_CODE"));
@@ -20,6 +21,11 @@ public class GLCharge {
         if(Utils.isNotEmpty(rate)){
             this.gl_rate = Double.parseDouble(rate);
         }
+        String oldrate = cursor.getString(cursor.getColumnIndexOrThrow("GL_RATE_OLD"));
+        if(Utils.isNotEmpty(oldrate)){
+            this.gl_rate_old = Double.parseDouble(oldrate);
+        }
+
         this.gl_desc = cursor.getString(cursor.getColumnIndexOrThrow("GL_CHARGE_DESC"));
         this.effectivity_date = cursor.getString(cursor.getColumnIndexOrThrow("EFFECTIVITY_DATE"));
     }
@@ -38,5 +44,9 @@ public class GLCharge {
 
     public String getGl_desc() {
         return gl_desc;
+    }
+
+    public double getGl_rate_old() {
+        return gl_rate_old;
     }
 }

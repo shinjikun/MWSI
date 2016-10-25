@@ -120,25 +120,75 @@ public class BillCompute extends BCompute {
     }
 
     private void computeCERA(MeterBill meterBill){
+        String strpro = meterBill.getCeraPro();
         int consumption = meterBill.getConsumption();
         GLCharge glCERA =  getGLRate(CERA);
         double zcera = consumption * glCERA.getGl_rate();
+        double oldamount = 0.0;
+        //old days -  effective date - previous reading date +1
+        int OD = Utils.dateDiff(glCERA.getEffectivity_date(),meterBill.getPrevRdgDate()) +1;
+        //new days = present reading date - effectivity  date +1
+        int ND = Utils.dateDiff(meterBill.getPresRdgDate(),glCERA.getEffectivity_date())+1;
+        //billing period present reading date - previous reading date
+        int DBP = Utils.dateDiff(meterBill.getPresRdgDate(),meterBill.getPrevRdgDate());
+        /*
+        if(Utils.isNotEmpty(strpro)){
+            char proratetype =  strpro.charAt(0);
+            switch (proratetype){
+                case PRO_TYPE1 :
+                    zcera = consumption * glCERA.getGl_rate();
+                    break;
+                case PRO_TYPE3:
+                    oldamount = consumption * (glCERA.getGl_rate_old()*(OD/DBP));
+                    zcera = consumption * (glCERA.getGl_rate()*(ND/DBP));
+                    break;
+
+            }
+        }
+        */
+
         if(zcera>0){
             zcera = Utils.roundDouble(zcera);
-            insertSAPData(meterBill,"ZCERA",0.00,zcera,0 );
-            meterBill.setCera(zcera);
+            insertSAPData(meterBill,"ZCERA",zcera,oldamount );
+            meterBill.setCera(zcera+oldamount);
         }
 
     }
 
     private void computeFCDA(MeterBill meterBill){
+        String strpro = meterBill.getFcdaPro();
         double basicCharge = meterBill.getBasicCharge();
         GLCharge glFCDA =  getGLRate(FCDA);
+        //new amount
         double zfcda = basicCharge * glFCDA.getGl_rate();
+        //old amount
+        double oldamount=0.0;
+        //old days -  effective date - previous reading date
+        int OD = Utils.dateDiff(glFCDA.getEffectivity_date(),meterBill.getPrevRdgDate()) +1;
+        //new days = present reading date - effectivity  date +1
+        int ND = Utils.dateDiff(meterBill.getPresRdgDate(),glFCDA.getEffectivity_date())+1;
+        //billing period present reading date - previous reading date
+        int DBP = Utils.dateDiff(meterBill.getPresRdgDate(),meterBill.getPrevRdgDate());
+        /*
+        if(Utils.isNotEmpty(strpro)){
+            char proratetype =  strpro.charAt(0);
+            switch (proratetype){
+                case PRO_TYPE1 :
+                    zfcda = basicCharge * glFCDA.getGl_rate();
+                    oldamount = glFCDA.getGl_rate_old();
+                    break;
+                case PRO_TYPE3:
+                    oldamount = basicCharge * (glFCDA.getGl_rate_old()*(OD/DBP));
+                    zfcda = basicCharge * (glFCDA.getGl_rate()*(ND/DBP));
+                    break;
+
+            }
+        }
+        */
         if(zfcda>0){
             zfcda = Utils.roundDouble(zfcda);
-            insertSAPData(meterBill,"ZFCDA",0.00,zfcda,0 );
-            meterBill.setFcda(zfcda);
+            insertSAPData(meterBill,"ZFCDA",zfcda,oldamount );
+            meterBill.setFcda(zfcda+oldamount);
         }
     }
 
@@ -451,6 +501,12 @@ public class BillCompute extends BCompute {
 
     private void insertSAPData(MeterBill meterBill, String sapline, double price, double amount, int quantity){
         insertSAPData( meterBill, sapline, price, amount,0,0,String.valueOf(quantity ));
+    }
+
+    private void insertSAPData(MeterBill meterBill,String sapline,double amount,double oldAmount){
+        double price =0;
+        double oldprice =0;
+        insertSAPData( meterBill, sapline, price, amount,oldprice,oldAmount,"0");
     }
 
     private void insertSAPData(MeterBill meterBill, String sapline,

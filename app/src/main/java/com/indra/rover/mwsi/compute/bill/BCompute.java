@@ -40,6 +40,20 @@ public abstract  class BCompute {
     final String HBCOM ="9992";
     final String HBINDUS = "9993";
 
+
+    /**
+     * no proration but use the old gl rate
+     */
+    final  char PRO_TYPE1='-';
+    /**
+     * no proration..applied the standard computation
+     */
+    final  char PRO_TYPE2='0';
+    /**
+     * apply the prorate based on the formula
+     */
+    final  char PRO_TYPE3='1';
+
     public BCompute(BillComputeListener listener, Context context){
         this.listener = listener;
         this.context = context;

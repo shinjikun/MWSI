@@ -177,7 +177,7 @@ public class MeterBill {
     }
 
     public void setMsc_amount(double msc_amount) {
-        this.msc_amount = msc_amount;
+        this.msc_amount  = msc_amount;
     }
 
 
@@ -261,5 +261,17 @@ public class MeterBill {
      */
     public String getPrevRdgDate() {
         return prevRdgDate;
+    }
+
+    public String getFcdaPro() {
+        return fcda_pro;
+    }
+
+    public String getCeraPro() {
+        return cera_pro;
+    }
+
+    public String getSewPro() {
+        return sew_pro;
     }
 }

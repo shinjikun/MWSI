@@ -177,7 +177,7 @@ public class Utils {
      * @param strDate2 date 2
      * @return difference === strDate1 - strDate2
      */
-    public static long dateDiff(String strDate1,String strDate2){
+    public static int dateDiff(String strDate1,String strDate2){
         int differenceDates=0;
         try {
             Date date1;
@@ -203,9 +203,9 @@ public class Utils {
              differenceDates = (int)difference / (24 * 60 * 60 * 1000);
 
             //Convert long to String
-            String dayDifference = Long.toString(differenceDates);
 
-            Log.e("HERE","HERE: " + dayDifference);
+
+
 
         } catch (Exception exception) {
             Log.e("DIDN'T WORK", "exception " + exception);
