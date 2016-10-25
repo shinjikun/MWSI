@@ -106,7 +106,7 @@ public class MeterStatusFragment extends Fragment {
 
         item = new CustomItemView(getActivity());
         item.setLabel("Found Connected :");
-        String foundConnect = String.valueOf(selectedMRU.getActive_count());
+        String foundConnect = String.valueOf(mruDao.countFConn(mSelectedMRU));
         item.setValue(foundConnect);
         item.setLayoutParams(layoutParams);
         mLayout.addView(item);

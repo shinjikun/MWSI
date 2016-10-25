@@ -133,6 +133,9 @@ public class MeterBill {
     double env_charge;
     double sewer_charge;
     double sc_discount;
+
+
+
     /**
      * Total current charges before tax
      */

@@ -180,22 +180,26 @@ public class Utils {
     public static long dateDiff(String strDate1,String strDate2){
         int differenceDates=0;
         try {
-
-            //Dates to compare
-            String CurrentDate=  "09/24/2015";
-            String FinalDate=  "09/26/2015";
-
             Date date1;
             Date date2;
+            SimpleDateFormat dates = new SimpleDateFormat("MM/dd/yyyy",Locale.US);
 
-            SimpleDateFormat dates = new SimpleDateFormat("MM/dd/yyyy");
-
+            long dateTime1 =0;
+            if(Utils.isNotEmpty(strDate1)){
+                date1 = dates.parse(strDate1);
+                dateTime1 = date1.getTime();
+            }
+            long dateTime2=0;
+            if(Utils.isNotEmpty(strDate1)){
+                date2 = dates.parse(strDate2);
+                dateTime1 = date2.getTime();
+            }
             //Setting dates
-            date1 = dates.parse(CurrentDate);
-            date2 = dates.parse(FinalDate);
+
+
 
             //Comparing dates
-            long difference = Math.abs(date1.getTime() - date2.getTime());
+            long difference = Math.abs(dateTime1 - dateTime2);
              differenceDates = (int)difference / (24 * 60 * 60 * 1000);
 
             //Convert long to String

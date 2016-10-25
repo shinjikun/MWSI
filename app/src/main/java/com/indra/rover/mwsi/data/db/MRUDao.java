@@ -132,6 +132,38 @@ public class MRUDao  extends  ModelDao{
     }
 
 
+    /**
+     * Count the number of found meters
+     * @return number of new found meters
+     */
+    public int countFConn(String mruid){
+        int count =0;
+        try {
+            open();
+            StringBuilder str_b_stmt = new StringBuilder();
+            str_b_stmt.append("Select count(*)  as COUNTNUM from T_FCONN");
+            if(!mruid.equals("All")){
+                str_b_stmt.append(" where FCMRU = '");
+                str_b_stmt.append(mruid);
+                str_b_stmt.append('\'');
+            }
+
+            Cursor cursor = database.rawQuery(str_b_stmt.toString(),null);
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNTNUM"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            cursor.close();
+        }catch (SQLException sql){
+            sql.printStackTrace();
+        }finally {
+            close();
+        }
+        return  count;
+    }
+
 
     public int countUnRead(String mruid,String type){
         int count =0;
@@ -143,8 +175,9 @@ public class MRUDao  extends  ModelDao{
             str_b_stmt.append(type);
             str_b_stmt.append("' and t.CRDOCNO = d.DLDOCNO ");
             if(!mruid.equals("All")){
-                str_b_stmt.append(" and d.MRU = ");
+                str_b_stmt.append(" and d.MRU = '");
                 str_b_stmt.append(mruid);
+                str_b_stmt.append('\'');
             }
             Cursor cursor = database.rawQuery(str_b_stmt.toString(),null);
             if (cursor.moveToFirst()) {
@@ -203,8 +236,9 @@ public class MRUDao  extends  ModelDao{
                     "d , T_UPLOAD u where   t.CRDOCNO = d.DLDOCNO  and d.DLDOCNO = u.ULDOCNO and " +
                     "u.PRINT_TAG =3 and (t.READSTAT='R' or t.READSTAT='E')");
             if(!mruid.equals("All")){
-                str_b_stmt.append(" and d.MRU = ");
+                str_b_stmt.append(" and d.MRU = '");
                 str_b_stmt.append(mruid);
+                str_b_stmt.append('\'');
             }
             Cursor cursor = database.rawQuery(str_b_stmt.toString(),null);
             if (cursor.moveToFirst()) {
@@ -236,8 +270,9 @@ public class MRUDao  extends  ModelDao{
                     "where  t.RANGE_CODE='3' or t.RANGE_CODE='4'");
             str_b_stmt.append(" and t.CRDOCNO = d.DLDOCNO ");
             if(!mruid.equals("All")){
-                str_b_stmt.append(" and d.MRU = ");
+                str_b_stmt.append(" and d.MRU = '");
                 str_b_stmt.append(mruid);
+                str_b_stmt.append('\'');
             }
             Cursor cursor = database.rawQuery(str_b_stmt.toString(),null);
             if (cursor.moveToFirst()) {
@@ -265,12 +300,12 @@ public class MRUDao  extends  ModelDao{
         try {
             open();
             StringBuilder str_b_stmt = new StringBuilder();
-            str_b_stmt.append("Select count(READSTAT)  as COUNTNUM from T_CURRENT_RDG  t, T_DOWNLOAD d  " +
-                    "where  t.RANGE_CODE='Z'");
-            str_b_stmt.append(" and t.CRDOCNO = d.DLDOCNO ");
+            str_b_stmt.append("Select count(READSTAT)  as COUNTNUM from T_CURRENT_RDG  t " +
+                    "where  t.BILLED_CONS='0'");
             if (!mruid.equals("All")) {
-                str_b_stmt.append(" and d.MRU = ");
+                str_b_stmt.append(" and MRU = '");
                 str_b_stmt.append(mruid);
+                str_b_stmt.append('\'');
             }
             Cursor cursor = database.rawQuery(str_b_stmt.toString(), null);
             if (cursor.moveToFirst()) {
@@ -302,8 +337,9 @@ public class MRUDao  extends  ModelDao{
                     "where  t.DEL_CODE IS NOT NULL and t.DEL_CODE !='07'");
             str_b_stmt.append(" and t.CRDOCNO = d.DLDOCNO ");
             if (!mruid.equals("All")) {
-                str_b_stmt.append(" and d.MRU = ");
+                str_b_stmt.append(" and d.MRU = '");
                 str_b_stmt.append(mruid);
+                str_b_stmt.append('\'');
             }
             Cursor cursor = database.rawQuery(str_b_stmt.toString(), null);
             if (cursor.moveToFirst()) {
@@ -336,8 +372,9 @@ public class MRUDao  extends  ModelDao{
                     "where  t.DEL_CODE IS NOT NULL and t.DEL_CODE ='07'");
             str_b_stmt.append(" and t.CRDOCNO = d.DLDOCNO ");
             if (!mruid.equals("All")) {
-                str_b_stmt.append(" and d.MRU = ");
+                str_b_stmt.append(" and d.MRU = '");
                 str_b_stmt.append(mruid);
+                str_b_stmt.append('\'');
             }
             Cursor cursor = database.rawQuery(str_b_stmt.toString(), null);
             if (cursor.moveToFirst()) {
@@ -366,14 +403,13 @@ public class MRUDao  extends  ModelDao{
         try {
             open();
             StringBuilder str_b_stmt = new StringBuilder();
-            str_b_stmt.append("select count(*) as COUNTNUM  from T_CURRENT_RDG t, T_DOWNLOAD d  where " +
-                    "t.CRDOCNO = d.DLDOCNO and  t.FFCODE1 IS NOT NULL or t.FFCODE2 IS NOT NULL");
+            str_b_stmt.append("select count(*) as COUNTNUM  from T_CURRENT_RDG t  where \n" +
+                    " (t.FFCODE1 IS NOT NULL or t.FFCODE2 IS NOT NULL)");
             if (!mruid.equals("All")) {
-                str_b_stmt.append(" and d.MRU = '");
+                str_b_stmt.append(" and t.MRU = '");
                 str_b_stmt.append(mruid);
                 str_b_stmt.append("'");
             }
-
             Cursor cursor = database.rawQuery(str_b_stmt.toString(), null);
             if (cursor.moveToFirst()) {
                 do {
