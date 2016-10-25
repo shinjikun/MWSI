@@ -66,13 +66,12 @@ public class MeterBill {
         this.numusers = cursor.getString(cursor.getColumnIndexOrThrow("NUMUSERS"));
         this.gt34factor = cursor.getString(cursor.getColumnIndexOrThrow("GT34FACTOR"));
         String str =  cursor.getString(cursor.getColumnIndexOrThrow("OTHER_CHARGES"));
-        String str1 =  cursor.getString(cursor.getColumnIndexOrThrow("PREVUNPAID"));
-
         if(Utils.isNotEmpty(str)){
             other_charges = Double.parseDouble(str);
         }
+        String str1 =  cursor.getString(cursor.getColumnIndexOrThrow("PREVUNPAID"));
         if(Utils.isNotEmpty(str1)){
-            prevUnpaid = Double.parseDouble(str);
+            prevUnpaid = Double.parseDouble(str1);
         }
         this.spbillrule =  cursor.getString(cursor.getColumnIndexOrThrow("SPBILL_RULE"));
 

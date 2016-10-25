@@ -15,13 +15,16 @@ public class FileParser extends AsyncTask<File,Integer,String> {
     private DownloadListener listener;
     private ConnectDao mRDao;
     private boolean isResourceFile;
+    Context context;
     public FileParser(Context context){
         mRDao = new ConnectDao(context);
         this.isResourceFile = false;
+        this.context =context;
     }
 
     public FileParser(Context context,boolean isResourceFile){
         mRDao = new ConnectDao(context);
+        this.context = context;
         this.isResourceFile = isResourceFile;
     }
 
@@ -46,7 +49,7 @@ public class FileParser extends AsyncTask<File,Integer,String> {
                     } else
                         parseFile(file);
                     //remove the parsed file in directory
-                   // file.delete();
+                  //  file.delete();
                 }
             }
         }
@@ -79,6 +82,8 @@ public class FileParser extends AsyncTask<File,Integer,String> {
             String [] record;
             //truncate table
             mRDao.truncateTables();
+            //delete files recursively
+            deleteFiles();
             while ((record = reader.readNext()) != null) {
                 // nextLine[] is an array of values from the line
 
@@ -128,8 +133,9 @@ public class FileParser extends AsyncTask<File,Integer,String> {
         try {
 
             CSVReader reader = new CSVReader(new FileReader(file), '|', '\"');
-
+            //truncate T_MRU table
             mRDao.truncateMRUTable();
+
             String [] record;
             while ((record = reader.readNext()) != null) {
                 // nextLine[] is an array of values from the line
@@ -146,6 +152,20 @@ public class FileParser extends AsyncTask<File,Integer,String> {
     public interface DownloadListener {
         void onPostDownloadResult(boolean status,boolean isResourceFile);
         void onPreDownloadResult(boolean  isResourceFile);
+    }
+
+    private void deleteFiles(String  path){
+        File    contentDir=new File(android.os.Environment.getExternalStorageDirectory()
+                ,context.getPackageName()+path);
+        if(contentDir.exists()){
+            if (contentDir.isDirectory())
+                for (File child : contentDir.listFiles())
+                    child.delete();
+        }
+    }
+    private void deleteFiles(){
+        deleteFiles("/uploads/signatures");
+        deleteFiles("/uploads/images");
     }
 
 

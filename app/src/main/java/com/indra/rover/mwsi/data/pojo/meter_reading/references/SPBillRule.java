@@ -17,7 +17,7 @@ public class SPBillRule {
 
     public SPBillRule(Cursor cursor){
 
-        this.id =cursor.getString(cursor.getColumnIndexOrThrow("GL_CHARGE_CODE"));
+        this.id =cursor.getString(cursor.getColumnIndexOrThrow("SPBILL_RULE"));
         //this.desc = cursor.getString(cursor.getColumnIndexOrThrow("SPBILL_DESC"));
         //this.glratecomp = cursor.getString(cursor.getColumnIndexOrThrow("GLRATECOMP"));
         this.spl_rate = cursor.getDouble(cursor.getColumnIndexOrThrow("SPL_RATE"));

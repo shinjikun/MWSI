@@ -261,6 +261,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
      void updateReadStatusDisplay(String readStatus){
         meterInfo.setReadStat(readStatus);
          arry.get(current).setReadStat(readStatus);
+         meterStatus();
     }
 
 
@@ -652,6 +653,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 meterInfo = meterDao.fetchInfo(id);
                 updateReadStatusDisplay(meterInfo.getReadStat());
                 setReadingValue(value);
+
                 computeConsumption(meterInfo.getDldocno());
             }
         } else if(requestCode == BLUETOOTH_REQ){
