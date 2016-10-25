@@ -200,9 +200,29 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
            txt.setText(page);
            txt = (TextView)findViewById(R.id.txtRateCode);
            txt.setText(meterInfo.getBillClass().getDesc());
+           txt.setOnClickListener(this);
            meterStatus();
            navigate(meterInfo.getDldocno());
+           int textColor = Color.BLACK;
+           if(Utils.isNotEmpty(meterInfo.getRange_code())){
+              String rcodestr = meterInfo.getRange_code();
+               char rangecode = rcodestr.charAt(0);
+               switch (rangecode){
+                   case '-':
+                       textColor = getResources().getColor(R.color.red_colr);
+                       break;
+                   case '3':
+                       textColor = getResources().getColor(R.color.red_colr);
+                       break;
+                   case '4':
+                       textColor = getResources().getColor(R.color.red_colr);
+                       break;
+
+               }
+           }
+
            txt = (TextView)findViewById(R.id.txtReading);
+           txt.setTextColor(textColor);
            if(Utils.isNotEmpty(meterInfo.getPresRdg())){
 
                txt.setText(meterInfo.getPresRdg());
@@ -335,13 +355,18 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     public void snackbar(String message){
          Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, message, Snackbar.LENGTH_LONG)
-                .setAction("Re Enter", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        loadMeterInput();
-                    }
-                });
+                .make(coordinatorLayout, message, Snackbar.LENGTH_LONG);
+
+        if(!meterInfo.getReadStat().equals("P")|| !meterInfo.getReadStat().equals("Q")){
+            snackbar.setAction("Re Enter", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    loadMeterInput();
+                }
+            });
+        }
+
 
 
         // Changing message text color
@@ -364,6 +389,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
      void setReadingValue(String value){
         TextView txt = (TextView)findViewById(R.id.txtReading);
         txt.setText(value);
+
          arry.get(current).setPresent_reading(value);
         meterInfo.setPresent_reading(value);
 
@@ -515,6 +541,24 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.btnPrint:
                chkBluetoothConn();
+                break;
+            case R.id.txtReading:
+                if(Utils.isNotEmpty(meterInfo.getRange_code())){
+                    String rcodestr = meterInfo.getRange_code();
+                    char rangecode = rcodestr.charAt(0);
+                    switch (rangecode){
+                        case '-':
+                           snackbar("Negative Consumption");
+                            break;
+                        case '3':
+                           snackbar("Very Low Consumption");
+                            break;
+                        case '4':
+                            snackbar("Very High Consumption");
+                            break;
+
+                    }
+                }
                 break;
         }
     }
@@ -782,7 +826,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     void computeConsRange(MeterConsumption mtrCons){
         int consumption = mtrCons.getBilled_cons();
-
+        int textColor = Color.BLACK;
         String range_code ="0" ;
         if(consumption!=0) {
             String str = mtrCons.getAve_consumption();
@@ -803,8 +847,9 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 // pcntDiff is positive
                 if(type == 1){
                     if (pcntDiff > devi){
-                        snackbar("Consumption Very High");
+                        snackbar("Very High Consumption");
                         range_code = VERY_HIGH;
+                        textColor =  getResources().getColor(R.color.red_colr);
                     }
                     else {
                         range_code = NORMAL;
@@ -812,8 +857,9 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 }
                 else  {
                     if (-pcntDiff > devi){
-                        snackbar("Consumption Very Low");
+                        snackbar("Very Low Consumption");
                         range_code = VERY_LOW;
+                        textColor =  getResources().getColor(R.color.red_colr);
                     }
                     else {
                         range_code = NORMAL;
@@ -833,6 +879,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                         if(pres_rdg<prev_rdg){
                             range_code = "-";
                             snackbar("Negative Consumption");
+                            textColor =  getResources().getColor(R.color.red_colr);
 
                         }
                     }
@@ -840,6 +887,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 else {
                     snackbar("Negative Consumption");
                     range_code = "-";
+                    textColor =  getResources().getColor(R.color.red_colr);
                 }
             }
 
@@ -849,11 +897,18 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         }else {
             snackbar("Zero Consumption");
             range_code = NORMAL;
+            textColor =  getResources().getColor(R.color.red_colr);
+
         }
+
         mtrCons.setRange_code(range_code);
         meterInfo.setRange_code(range_code);
         arry.get(current).setRange_code(range_code);
         meterDao.updateRangeCode(range_code,meterInfo.getDldocno());
+        TextView txt = (TextView)findViewById(R.id.txtReading);
+        txt.setOnClickListener(this);
+        txt.setTextColor(textColor);
+        txt.setText(meterInfo.getPresRdg());
 
     }
 

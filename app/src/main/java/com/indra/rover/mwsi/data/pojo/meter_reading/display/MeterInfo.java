@@ -61,6 +61,7 @@ public class MeterInfo implements Serializable {
    private  int printTag =0;
     private int printCount=0;
 
+    private int numDials=5;
     private String del_code;
     public MeterInfo(Cursor cursor){
         this.mru_id =cursor.getString(cursor.getColumnIndexOrThrow("MRU"));
@@ -78,6 +79,7 @@ public class MeterInfo implements Serializable {
         this.range_code = cursor.getString(cursor.getColumnIndexOrThrow("RANGE_CODE"));
         this.del_code = cursor.getString(cursor.getColumnIndexOrThrow("DEL_CODE"));
         this.printCount = cursor.getInt(cursor.getColumnIndexOrThrow("PRINT_COUNT"));
+        this.numDials = cursor.getInt(cursor.getColumnIndexOrThrow("NODIALS"));
         this.customerInfo = new CustomerInfo(cursor);
 
         this.billClass = new BillClass(cursor);
@@ -193,5 +195,9 @@ public class MeterInfo implements Serializable {
 
     public void setDelCode(String del_code) {
         this.del_code = del_code;
+    }
+
+    public int getNumDials() {
+        return numDials;
     }
 }

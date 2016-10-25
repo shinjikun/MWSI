@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -29,6 +30,7 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
     String oldValue;
     GPSTracker gpsTracker;
     PreferenceKeys prefs;
+    int maxlength = 10;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +56,9 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
                 if(meterInfo !=null){
                     oldValue = meterInfo.getPresRdg();
                     txtValues.setText(meterInfo.getPresRdg());
+                    int numDials = meterInfo.getNumDials();
+                    txtValues.setFilters(new InputFilter[]{new InputFilter.LengthFilter(numDials)});
+
                 }
             }
             else if(type == MR_TYPE2){
