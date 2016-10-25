@@ -2,6 +2,7 @@ package com.indra.rover.mwsi.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 
 import com.indra.rover.mwsi.R;
@@ -65,7 +66,7 @@ public class FileUploader  extends AsyncTask<String[],Integer,String> {
         try {
             String fileName = "BK"+mruNo.substring(mruNo.length()-4)+"U.txt";
             if(isMultiBook){
-                fileName = "BKMBU.txt";
+                fileName = "BKUMB_"+ Build.SERIAL+"_"+Utils.getCurrentDate("MMdd")+".txt";
             }
             File contentDir=new File(android.os.Environment.getExternalStorageDirectory(),mContext.getPackageName()+"/uploads");
             if(!contentDir.exists()){
@@ -93,7 +94,7 @@ public class FileUploader  extends AsyncTask<String[],Integer,String> {
         try{
             String fileName = "FC"+mruNo.substring(mruNo.length()-4)+".txt";
             if(isMultiBook){
-                fileName = "FCMB.txt";
+                fileName = "FCMB_"+ Build.SERIAL+"_"+Utils.getCurrentDate("MMdd")+".txt";
             }
             File contentDir=new File(android.os.Environment.getExternalStorageDirectory(),mContext.getPackageName()+"/uploads");
             if(!contentDir.exists()){
@@ -125,7 +126,7 @@ public class FileUploader  extends AsyncTask<String[],Integer,String> {
 
             String fileName = "SAP"+mruNo.substring(mruNo.length()-4)+".txt";
             if(isMultiBook){
-                fileName = "SAPMB.txt";
+                fileName = "SAPMB_"+ Build.SERIAL+"_"+Utils.getCurrentDate("MMdd")+".txt";
             }
             File contentDir=new File(android.os.Environment.getExternalStorageDirectory(),mContext.getPackageName()+"/uploads");
             File file = new File(contentDir, fileName);

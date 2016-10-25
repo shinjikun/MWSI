@@ -348,7 +348,7 @@ public class ConnectDao extends ModelDao {
 
     public List<String[]> query_fconn(){
         String selectstmt ="select FCMRU, METERNO,SEQNO, RDG_DATE,RDG_TIME," +
-                "CUSTNAME,CUSTADDRESS,PRESRDG from T_FCONN";
+                "CUSTNAME,PRESRDG,CUSTADDRESS from T_FCONN";
 
         return query(selectstmt);
     }
@@ -359,14 +359,18 @@ public class ConnectDao extends ModelDao {
 
     public List<String[]> query_upload(String mruNO, boolean isMultiBook){
 
-        String selectstmt = "Select u.MRU as BOOKNO, u.ACCTNUM,u.ULDOCNO, c.METERNO,c.MR_TYPE_CODE as READTAG , c.RDG_DATE as RDGDATE ,c.RDG_TIME as RDGTIME ," +
-                "c.RECMD_SEQNO as SEQNO, c.FFCODE1 as BILLR_OC, c.FFCODE2 as FFCODE,c.REMARKS, c.PRESRDG as BILLED_RDG, c.RDG_TRIES as TRIES," +
-                "c.BILLED_CONS as BILLED_CONS, c.RANGE_CODE as RANGECODE, c.CONSTYPE_CODE as CONSTAG, c.MR_TYPE_CODE as NEWMTRBRAND," +
-                "c.NEW_METERNO as NEWMTRNUM, c.DEL_CODE as DEL_CODE,c.DELIV_DATE as DELIVERY_DATE, c.DELIV_TIME as DELIVERY_TIME, c.DELIV_REMARKS as DEL_REMARKS," +
-                "d.NUMUSERS as SANZPER,u.BASIC_CHARGE as BASECHRG, u.DISCOUNT,u.CERA,u.FCDA,u.ENV_CHARGE as ENVCHRG, u.SEWER_CHARGE as SEWERCHRG, 0 as PREPAYADJ," +
-                "u.METER_CHARGES as MSC, u.SC_DISCOUNT as SCDISC, u.TOTCHRG_WO_TAX as TOTCHRGWOTAX , u.VAT_CHARGE as VAT ,0 as PIA," +
-                "u.SUBTOTAL_AMT as TOTCURRCHRG, u.TOTAL_AMT_DUE as TOTAMT_DUE, u.PRINT_COUNT as BPRINTCNT, u.PRINT_TAG ,c.BILLPRINT_DATE as PRINT_DATE," +
-                "d.SPBILL_RULE , c.SP_COMP from T_UPLOAD u, T_CURRENT_RDG c, T_DOWNLOAD d where  c.DEL_CODE NOTNULL and c.DEL_CODE !='' and u.ULDOCNO = c.CRDOCNO and u.ULDOCNO = d.DLDOCNO";
+        String selectstmt = " Select u.MRU as BOOKNO, u.ACCTNUM,u.ULDOCNO, c.METERNO,c.MR_TYPE_CODE as READTAG , c.RDG_DATE as RDGDATE ,c.RDG_TIME as RDGTIME ,\n" +
+                " c.RECMD_SEQNO as SEQNO, c.FFCODE1 as BILLR_OC, c.FFCODE2 as FFCODE,c.REMARKS, c.PRESRDG as BILLED_RDG, c.RDG_TRIES as TRIES,\n" +
+                " c.BILLED_CONS as BILLED_CONS, c.RANGE_CODE as RANGECODE, c.CONSTYPE_CODE as CONSTAG, c.MR_TYPE_CODE as NEWMTRBRAND,\n" +
+                " c.NEW_METERNO as NEWMTRNUM, c.DEL_CODE as DEL_CODE,c.DELIV_DATE as DELIVERY_DATE, c.DELIV_TIME as DELIVERY_TIME, c.DELIV_REMARKS as DEL_REMARKS,\n" +
+                " d.NUMUSERS as SANZPER,\n" +
+                " d.TARIFF_PRORATE,d.CERA_PRORATE,d.FCDA_PRORATE,d.ENV_PRORATE,d.SEW_PROATE,\n" +
+                " u.BASIC_CHARGE as BASECHRG, u.DISCOUNT,u.CERA,u.FCDA,u.ENV_CHARGE as ENVCHRG, u.SEWER_CHARGE as SEWERCHRG, 0 as PREPAYADJ,\n" +
+                " u.MSC_AMOUNT as MSC, u.SC_DISCOUNT as SCDISC, u.TOTCHRG_WO_TAX as TOTCHRGWOTAX , u.VAT_CHARGE as VAT ,0 as PIA,\n" +
+                " u.SUBTOTAL_AMT as TOTCURRCHRG, u.TOTAL_AMT_DUE as TOTAMT_DUE, u.PRINT_COUNT as BPRINTCNT, u.PRINT_TAG ,c.BILLPRINT_DATE as PRINT_DATE,\n" +
+                " d.SPBILL_RULE ,0 as SP_BILL_PRORATE, c.SP_COMP from T_UPLOAD u, T_CURRENT_RDG c, T_DOWNLOAD d where  " +
+                //"c.DEL_CODE NOTNULL and  (c.READSTAT ='P' or c.READSTAT='Q') and \n" +
+                " u.ULDOCNO = c.CRDOCNO and u.ULDOCNO = d.DLDOCNO";
         Log.i("Test",selectstmt);
         StringBuilder str = new StringBuilder();
         str.append(selectstmt);

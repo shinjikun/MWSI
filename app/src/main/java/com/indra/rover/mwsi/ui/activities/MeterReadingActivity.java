@@ -479,11 +479,15 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 }
                 else {
                     if(meterInfo.getReadStat().equals("P")||meterInfo.getReadStat().equals("Q")){
-                        if(!Utils.isNotEmpty(meterInfo.getDelCode())){
-                            dlgUtils.showOKDialog(DLG_DELIV,null,"You have to enter a delivery code " +
-                                    "before proceeding to the previous record",new Bundle());
-                            return;
+
+                        if(meterInfo.getPrintTag() == MeterInfo.BILLABLE){
+                            if(!Utils.isNotEmpty(meterInfo.getDelCode())){
+                                dlgUtils.showOKDialog(DLG_DELIV,null,"You have to enter a delivery code " +
+                                        "before proceeding to the previous record",new Bundle());
+                                return;
+                            }
                         }
+
                     }
                     movePrevious();
                 }
@@ -495,13 +499,16 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                     dlgUtils.showYesNoDialog(DLG_EDITMODE,"There are still unsave record.\n" +
                             "Proceed to the Next Record?",bundle);
                 }else {
-                    if(meterInfo.getReadStat().equals("P")||meterInfo.getReadStat().equals("Q")){
-                        if(!Utils.isNotEmpty(meterInfo.getDelCode())){
-                            dlgUtils.showOKDialog(DLG_DELIV,null,"You have to enter a delivery code " +
-                                    "before proceeding to the next record",new Bundle());
-                            return;
+                    if(meterInfo.getPrintTag() == MeterInfo.BILLABLE){
+                        if(meterInfo.getReadStat().equals("P")||meterInfo.getReadStat().equals("Q")){
+                            if(!Utils.isNotEmpty(meterInfo.getDelCode())){
+                                dlgUtils.showOKDialog(DLG_DELIV,null,"You have to enter a delivery code " +
+                                        "before proceeding to the next record",new Bundle());
+                                return;
+                            }
                         }
                     }
+
 
                     moveNext();
                 }
