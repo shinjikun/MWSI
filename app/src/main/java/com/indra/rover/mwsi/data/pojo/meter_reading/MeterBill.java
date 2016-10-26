@@ -274,4 +274,8 @@ public class MeterBill {
     public String getSewPro() {
         return sew_pro;
     }
+
+    public String getTariffPro(){
+        return tariff_pro;
+    }
 }

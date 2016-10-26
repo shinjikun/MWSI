@@ -43,6 +43,11 @@ public class BillCompute extends BCompute {
 
     @Override
     void getBasicCharge(MeterBill meterBill) {
+
+        String strpro = meterBill.getTariffPro();
+
+
+
         int consumption = meterBill.getConsumption();
         double discount =0.00;
 
@@ -50,6 +55,20 @@ public class BillCompute extends BCompute {
             String spid = meterBill.getSpbillrule();
             if(spid.equals("1")){
                 spBillRule = getSPBillRule(spid);
+            }
+        }
+
+        if(Utils.isNotEmpty(strpro)){
+            char proratetype =  strpro.charAt(0);
+            switch (proratetype){
+                case PRO_TYPE1 :
+                    //  zcera = consumption * gl_rate;
+                    break;
+                case PRO_TYPE3:
+                    // oldamount = consumption * (gl_rate_old*(OD/DBP));
+                    //  zcera = consumption * (gl_rate*(ND/DBP));
+                    break;
+
             }
         }
 
