@@ -182,16 +182,17 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
     @Override
     public void onClick(View view) {
          int id = view.getId();
+        File file;
         switch (id){
             case R.id.btnEditMRDelivery:
                 String readstat = meterDelivery.getReadstat();
                 if(readstat.equals("P")||readstat.equals("Q")){
-                    editMode(true);
-                }
-                else {
                     dialogUtils.showOKDialog(2,"No Delivery Remarks Entry",
                             "Cannot Enter a Delivery Remark " +
-                            "for an Unprinted Bill!",new Bundle());
+                                    "for already billed accounts!",new Bundle());
+                }
+                else {
+                   editMode(true);
                 }
                 break;
             case R.id.btnCancelMRDelivery:
@@ -202,9 +203,12 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
                 break;
             case R.id.btnClrOpt:
                 deliv_opt.setSelection(0);
+                  file = getImageFile();
+                if(file.exists())
+                    file.delete();
                 break;
             case R.id.btnSignature:
-                File  file = getImageFile();
+                 file = getImageFile();
                 if(file.exists()){
                     showImageDlg(MainApp.isEditMode);
                 }
@@ -227,16 +231,30 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
 
         int index = deliv_opt.getSelectedItemPosition();
         String deliv_code ="";
-
+        int required_sig =0;
         if(index !=0){
          deliv_code =   arrayList.get(index-1).getDel_code();
+          required_sig =  arrayList.get(index-1).getDel_signreq_flag();
         }
+
+        if(required_sig ==1){
+            File file = getImageFile();
+            if(!file.exists()){
+                dialogUtils.showOKDialog("You are required to ask for a signature");
+                return;
+            }
+        }
+
+
         String spncode = deliv_opt.getSelectedItem();
         deliv_opt.setValues(spncode);
+
+
+
         boolean isNewDelivery = true;
         if(Utils.isNotEmpty(meterDelivery.getDeliv_date())&&
                 Utils.isNotEmpty(meterDelivery.getDeliv_time())){
-            isNewDelivery = false;
+              isNewDelivery = false;
         }
         mtrReadingDao.addDelivRemarks(deliv_code,remarks,crdocno, isNewDelivery);
         if(Utils.isNotEmpty(deliv_code)){

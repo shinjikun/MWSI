@@ -1,25 +1,29 @@
 package com.indra.rover.mwsi.ui.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 import com.indra.rover.mwsi.utils.Constants;
+import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.GPSTracker;
 import com.indra.rover.mwsi.utils.PreferenceKeys;
 import com.indra.rover.mwsi.utils.Utils;
 
-public class InputValueActivity extends AppCompatActivity implements View.OnClickListener {
+public class InputValueActivity extends AppCompatActivity implements View.OnClickListener, DialogUtils.DialogListener {
     EditText txtValues;
     MeterReadingDao mtrDao;
     int type;
@@ -31,6 +35,12 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
     GPSTracker gpsTracker;
     PreferenceKeys prefs;
     int maxlength = 10;
+    int textColor;
+    boolean isDefect;
+    TextView txtStatus,txtTitle;
+    DialogUtils dlgUtils;
+    boolean askForSecond =false;
+    String firstValue="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +51,11 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
         txtValues =  (EditText) findViewById(R.id.txtValue);
         mtrDao = new MeterReadingDao(this);
         prefs = PreferenceKeys.getInstance(this);
+        txtStatus =  (TextView) findViewById(R.id.txtStatus);
+        txtTitle = (TextView)findViewById(R.id.txtTitle);
+        isDefect = false;
+        dlgUtils = new DialogUtils(this);
+        dlgUtils.setListener(this);
         // add back arrow to toolbar
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -55,9 +70,14 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
                 meterInfo = mtrDao.fetchInfo(docid);
                 if(meterInfo !=null){
                     oldValue = meterInfo.getPresRdg();
-                    txtValues.setText(meterInfo.getPresRdg());
-                    int numDials = meterInfo.getNumDials();
-                    txtValues.setFilters(new InputFilter[]{new InputFilter.LengthFilter(numDials)});
+                    cons();
+                    if(!isDefect){
+                        txtValues.setText(meterInfo.getPresRdg());
+                    }
+
+
+                  //  int numDials = meterInfo.getNumDials();
+                    // txtValues.setFilters(new InputFilter[]{new InputFilter.LengthFilter(numDials)});
 
                 }
             }
@@ -67,6 +87,43 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
             }
 
         }
+
+
+    }
+
+    private void cons(){
+        String message="";
+        if(Utils.isNotEmpty(meterInfo.getRange_code())) {
+            String rcodestr = meterInfo.getRange_code();
+            char rangecode = rcodestr.charAt(0);
+            switch (rangecode) {
+                case '-':
+                    isDefect = true;
+                    textColor = getResources().getColor(R.color.red_colr);
+                    message = "Negative Consumption";
+                    break;
+                case '3':
+                    isDefect = true;
+                    textColor = getResources().getColor(R.color.red_colr);
+                    message = "Very Low Consumption";
+                    break;
+                case '4':
+                    isDefect = true;
+                    textColor = getResources().getColor(R.color.red_colr);
+                    message = "Very High Consumption";
+                    break;
+
+            }
+
+        }
+        if(Utils.isNotEmpty(meterInfo.getBilled_cons())) {
+            if(meterInfo.getBilled_cons().equals("0")){
+                message = "Zero Consumption";
+                isDefect =true;
+            }
+        }
+
+            txtStatus.setText(message);
 
 
     }
@@ -87,7 +144,13 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
                 break;
 
             case R.id.btnEnter:
-                sendResult();
+                if(isDefect){
+                    sendResultDef();
+                }
+                else {
+                    sendResult();
+                }
+
                 break;
             case R.id.btnCancel:
                 finish();
@@ -164,10 +227,38 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
     }
 
 
+    void sendResultDef(){
+        String value = txtValues.getText().toString();
+
+            if(!askForSecond){
+                dlgUtils.showOKDialog("Re-enter Reading");
+                txtTitle.setText("Re-enter Reading");
+                txtValues.setText("");
+                firstValue = value;
+                askForSecond =true;
+
+            } else{
+
+            if(!firstValue.equals(value)){
+                dlgUtils.showOKDialog("Re-entered reading does not match the first entered reading. ");
+                txtValues.setText("");
+                vibrate(this);
+
+            }
+            else {
+                sendResult();
+            }
+        }
+
+
+    }
+
 
      void sendResult(){
         String value = txtValues.getText().toString();
         Intent intent = new Intent();
+
+
 
 
         if(!value.equals(oldValue)){
@@ -183,4 +274,27 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
 
         finish();
     }
+
+    @Override
+    public void dialog_confirm(int dialog_id, Bundle params) {
+
+    }
+
+    @Override
+    public void dialog_cancel(int dialog_id, Bundle params) {
+
+    }
+
+
+    /**
+     *
+     * vibrate utils
+     * @param context
+     */
+    public static void vibrate(Context context){
+        Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        // Vibrate for 700 milliseconds
+        v.vibrate(700);
+    }
+
 }

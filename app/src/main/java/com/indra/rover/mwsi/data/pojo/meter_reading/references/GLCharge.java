@@ -49,4 +49,16 @@ public class GLCharge {
     public double getGl_rate_old() {
         return gl_rate_old;
     }
+
+    public void setGl_code(String gl_code) {
+        this.gl_code = gl_code;
+    }
+
+    public void setGl_rate_old(double gl_rate_old) {
+        this.gl_rate_old = gl_rate_old;
+    }
+
+    public void setGl_rate(double gl_rate) {
+        this.gl_rate = gl_rate;
+    }
 }

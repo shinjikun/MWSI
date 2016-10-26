@@ -1,5 +1,8 @@
 package com.indra.rover.mwsi.adapters;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
+import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.MRUDao;
 import com.indra.rover.mwsi.data.pojo.MRU;
@@ -24,10 +28,12 @@ public class MRUListAdapter  extends RecyclerView.Adapter<MRUListAdapter.MyViewH
     OnItemClickListener listener;
     MRUDao mruDao;
 
+
     public MRUListAdapter(List<MRU> mru, OnItemClickListener listener, MRUDao mruDao){
         this.arryList = mru;
         this.listener = listener;
         this.mruDao = mruDao;
+
     }
 
     @Override
@@ -65,6 +71,7 @@ public class MRUListAdapter  extends RecyclerView.Adapter<MRUListAdapter.MyViewH
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
          TextView txtUnRead , txtMRUID, txtUnPrinted,txtUnDelivered,txtMruTotal;
+        View parentView;
         public MyViewHolder(View itemView) {
             super(itemView);
             txtMRUID =  (TextView) itemView.findViewById(R.id.txtMRUID);
@@ -72,6 +79,7 @@ public class MRUListAdapter  extends RecyclerView.Adapter<MRUListAdapter.MyViewH
             txtUnPrinted = (TextView) itemView.findViewById(R.id.txtUnPrinted);
             txtUnDelivered = (TextView)itemView.findViewById(R.id.txtUnDelivered);
             txtMruTotal = (TextView)itemView.findViewById(R.id.txtMruTotal);
+            parentView =  itemView.findViewById(R.id.parent);
         }
 
          void bind(final MRU item,final  int position, final OnItemClickListener listener) {

@@ -14,16 +14,26 @@
     tools:showIn="@layout/activity_input_value">
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/red_colr"
+        android:id="@+id/txtStatus"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+
+    <TextView
         android:text="@string/str_enter_value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/txtStatus"
         android:layout_centerHorizontal="true"
         android:id="@+id/txtTitle"
         android:gravity="center"
         android:textStyle="bold"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:layout_margin="10dp"/>
+        android:layout_margin="5dp"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -208,5 +218,6 @@
             style="@style/CalculatorButtonAction"/>
 
     </android.support.v7.widget.GridLayout>
+
 
 </RelativeLayout>

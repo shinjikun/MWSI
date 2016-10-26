@@ -8,6 +8,7 @@
     android:layout_marginRight="@dimen/fragments_margin"
     android:layout_marginEnd="@dimen/fragments_margin"
     android:background="@drawable/panel_rounded_border"
+    android:id="@+id/parent"
     android:padding="8dp">
 
 

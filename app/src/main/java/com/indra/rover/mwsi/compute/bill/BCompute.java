@@ -53,6 +53,7 @@ public abstract  class BCompute {
      * apply the prorate based on the formula
      */
     final  char PRO_TYPE3='1';
+    SPBillRule spBillRule;
 
     public BCompute(BillComputeListener listener, Context context){
         this.listener = listener;
@@ -60,11 +61,25 @@ public abstract  class BCompute {
         billDao = new MeterBillDao(this.context);
         hashGLRates = billDao.getGLRates();
         hashSPBill = billDao.getSPBill();
+        spBillRule = null;
     }
 
      GLCharge getGLRate(String code){
          return hashGLRates.get(code);
     }
+
+    GLCharge getGLCharge(String code){
+        GLCharge glCharge = getGLRate(code);
+        if(spBillRule!=null){
+            double gl_rate = spBillRule.getSpl_rate();
+            double gl_rate_old = spBillRule.getSpl_oldrate();
+            glCharge.setGl_rate(gl_rate);
+            glCharge.setGl_rate_old(gl_rate_old);
+        }
+
+        return  glCharge;
+    }
+
 
 
     SPBillRule getSPBillRule(String id){

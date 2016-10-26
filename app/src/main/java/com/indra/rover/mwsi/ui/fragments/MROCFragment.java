@@ -58,6 +58,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
     CustomSpinView oc1_opt;
     CustomSpinView oc2_opt;
     Button btnCapOC1,btnCapOC2;
+
     public MROCFragment() {
     }
 
@@ -262,6 +263,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
 
     @Subscribe
     public void getMessage(MessageTransport msgTransport) {
+
         String action = msgTransport.getAction();
         if(action.equals("navigate")){
             crdocno = msgTransport.getMessage();
@@ -328,6 +330,27 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
         }
         oc1_opt.setValues(oc1_opt.getSpn().getSelectedItem().toString());
         oc2_opt.setValues(oc2_opt.getSpn().getSelectedItem().toString());
+
+        boolean  isOk =true;
+        if(Utils.isNotEmpty(oc1)){
+            File  file = getImageFile(CAM_OC1);
+            if(!file.exists()){
+                isOk = false;
+            }
+        }
+
+        if(Utils.isNotEmpty(oc2)){
+            File  file = getImageFile(CAM_OC2);
+            if(!file.exists()){
+                isOk = false;
+            }
+        }
+
+        if(!isOk){
+            dlgUtils.showOKDialog("You are required to capture a Image for OC");
+            return;
+        }
+
 
         mtrDao.addOC(oc1,oc2,crdocno);
         startReading(oc1,oc2);
@@ -463,6 +486,10 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
         }
         btn.setText("Capture Image");
         lbl.setText("");
+        File file = getImageFile(ocType);
+        if(file.exists()){
+            file.delete();
+        }
     }
 
     private void saveCaptureImage(int ocType,Bitmap bitMap){

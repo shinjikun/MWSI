@@ -45,6 +45,14 @@ public class BillCompute extends BCompute {
     void getBasicCharge(MeterBill meterBill) {
         int consumption = meterBill.getConsumption();
         double discount =0.00;
+
+        if(Utils.isNotEmpty(meterBill.getSpbillrule())){
+            String spid = meterBill.getSpbillrule();
+            if(spid.equals("1")){
+                spBillRule = getSPBillRule(spid);
+            }
+        }
+
         //if consumption is above minimum
         if(consumption>10){
             ArrayList<Tariff> arryTariff = billDao.getTariffs(meterBill.getBillClass());
@@ -100,6 +108,7 @@ public class BillCompute extends BCompute {
 
 
     private void otherCharges(MeterBill meterBill){
+
      computeCERA(meterBill);
      computeFCDA(meterBill);
      computeENVM(meterBill);
@@ -122,30 +131,39 @@ public class BillCompute extends BCompute {
     private void computeCERA(MeterBill meterBill){
         String strpro = meterBill.getCeraPro();
         int consumption = meterBill.getConsumption();
-        GLCharge glCERA =  getGLRate(CERA);
-        double zcera = consumption * glCERA.getGl_rate();
-        double oldamount = 0.0;
+        GLCharge glRateObj =  getGLCharge(CERA);
         //old days -  effective date - previous reading date +1
-        int OD = Utils.dateDiff(glCERA.getEffectivity_date(),meterBill.getPrevRdgDate()) +1;
+        int OD = Utils.dateDiff(glRateObj.getEffectivity_date(),meterBill.getPrevRdgDate()) +1;
         //new days = present reading date - effectivity  date +1
-        int ND = Utils.dateDiff(meterBill.getPresRdgDate(),glCERA.getEffectivity_date())+1;
+        int ND = Utils.dateDiff(meterBill.getPresRdgDate(),glRateObj.getEffectivity_date())+1;
         //billing period present reading date - previous reading date
         int DBP = Utils.dateDiff(meterBill.getPresRdgDate(),meterBill.getPrevRdgDate());
-        /*
+
+        double  gl_rate =  glRateObj.getGl_rate();
+        double  gl_rate_old =  glRateObj.getGl_rate_old();
+
+        //check if special bill rule is enable if yes then apply
+        // billing rule to compute cera
+        //otherwise use the default computation using glrate of cera in the tariff table
+
+
+        double zcera = consumption * gl_rate;
+        double oldamount = 0.0;
+
         if(Utils.isNotEmpty(strpro)){
             char proratetype =  strpro.charAt(0);
             switch (proratetype){
                 case PRO_TYPE1 :
-                    zcera = consumption * glCERA.getGl_rate();
+                    zcera = consumption * gl_rate;
                     break;
                 case PRO_TYPE3:
-                    oldamount = consumption * (glCERA.getGl_rate_old()*(OD/DBP));
-                    zcera = consumption * (glCERA.getGl_rate()*(ND/DBP));
+                    oldamount = consumption * (gl_rate_old*(OD/DBP));
+                    zcera = consumption * (gl_rate*(ND/DBP));
                     break;
 
             }
         }
-        */
+
 
         if(zcera>0){
             zcera = Utils.roundDouble(zcera);
@@ -158,33 +176,37 @@ public class BillCompute extends BCompute {
     private void computeFCDA(MeterBill meterBill){
         String strpro = meterBill.getFcdaPro();
         double basicCharge = meterBill.getBasicCharge();
-        GLCharge glFCDA =  getGLRate(FCDA);
-        //new amount
-        double zfcda = basicCharge * glFCDA.getGl_rate();
-        //old amount
-        double oldamount=0.0;
+        GLCharge glRateObj =  getGLCharge(FCDA);
         //old days -  effective date - previous reading date
-        int OD = Utils.dateDiff(glFCDA.getEffectivity_date(),meterBill.getPrevRdgDate()) +1;
+        int OD = Utils.dateDiff(glRateObj.getEffectivity_date(),meterBill.getPrevRdgDate()) +1;
         //new days = present reading date - effectivity  date +1
-        int ND = Utils.dateDiff(meterBill.getPresRdgDate(),glFCDA.getEffectivity_date())+1;
+        int ND = Utils.dateDiff(meterBill.getPresRdgDate(),glRateObj.getEffectivity_date())+1;
         //billing period present reading date - previous reading date
         int DBP = Utils.dateDiff(meterBill.getPresRdgDate(),meterBill.getPrevRdgDate());
-        /*
+
+        double  gl_rate =  glRateObj.getGl_rate();
+        double  gl_rate_old =  glRateObj.getGl_rate_old();
+
+        //new amount
+        double zfcda = basicCharge * gl_rate;
+        //old amount
+        double oldamount=0.0;
+
         if(Utils.isNotEmpty(strpro)){
             char proratetype =  strpro.charAt(0);
             switch (proratetype){
                 case PRO_TYPE1 :
-                    zfcda = basicCharge * glFCDA.getGl_rate();
-                    oldamount = glFCDA.getGl_rate_old();
+                    zfcda = basicCharge * gl_rate;
+                    oldamount = gl_rate_old;
                     break;
                 case PRO_TYPE3:
-                    oldamount = basicCharge * (glFCDA.getGl_rate_old()*(OD/DBP));
-                    zfcda = basicCharge * (glFCDA.getGl_rate()*(ND/DBP));
+                    oldamount = basicCharge * (gl_rate_old*(OD/DBP));
+                    zfcda = basicCharge * (gl_rate*(ND/DBP));
                     break;
 
             }
         }
-        */
+
         if(zfcda>0){
             zfcda = Utils.roundDouble(zfcda);
             insertSAPData(meterBill,"ZFCDA",zfcda,oldamount );
@@ -197,20 +219,11 @@ public class BillCompute extends BCompute {
         double  zcera =  meterBill.getCera();
         double  zfcda = meterBill.getFcda();
         double  total_water_charge = meterBill.getBasicCharge() +zcera+zfcda+zdiscn;
-        GLCharge glevm = getGLRate(ENVM);
+        GLCharge glRateObj = getGLCharge(ENVM);
+        double gl_rate = glRateObj.getGl_rate();
+        double gl_rate_old =  glRateObj.getGl_rate_old();
 
-        double glrate = glevm.getGl_rate();
-        //check if special bill rule is enable if yes then apply
-        // the meycauyan  billing rule to compute evnm
-        //otherwise use the default computation using glrate of envm in the tariff table
-        if(Utils.isNotEmpty(meterBill.getSpbillrule())){
-            String spid = meterBill.getSpbillrule();
-            if(spid.equals("1")){
-                SPBillRule spBillRule = getSPBillRule(spid);
-                glrate = spBillRule.getSpl_rate();
-            }
-        }
-        double  zenv = total_water_charge * glrate;
+        double  zenv = total_water_charge * gl_rate;
         if(zenv>0){
             zenv = Utils.roundDouble(zenv);
             insertSAPData(meterBill,"ZENV",0.00,zenv,0 );
@@ -244,11 +257,22 @@ public class BillCompute extends BCompute {
        double  total_water_charges = meterBill.getBasicCharge() +zcera+zfcda+zdiscn;
         String billClass = meterBill.getBillClass();
         String rate_type = meterBill.getRatetype();
+        GLCharge glRateObj = getGLCharge(SEWR);
+
+       double gl_rate =  glRateObj.getGl_rate();
+       double gl_rate_old = glRateObj.getGl_rate_old();
+
+       if(spBillRule!=null){
+           if(spBillRule.getGlratecomp().equals(SEWR))
+               gl_rate = spBillRule.getSpl_rate();
+               gl_rate_old = spBillRule.getSpl_oldrate();
+       }
+
         if(billClass.equals(COMMERCIAL)||billClass.equals(INDUSTRIAL)){
             if(rate_type.equals("S")||rate_type.equals("A")||
                     rate_type.equals("SA")||rate_type.equals("HA")){
-                GLCharge glevm = getGLRate(SEWR);
-                double zsewer = total_water_charges * glevm.getGl_rate();
+
+                double zsewer = total_water_charges * gl_rate;
                 if(zsewer>0){
                     zsewer = Utils.roundDouble(zsewer);
                     insertSAPData(meterBill,"ZSEWER",0.00,zsewer,0 );
@@ -269,13 +293,15 @@ public class BillCompute extends BCompute {
         String rate_type = meterBill.getRatetype();
 
         int consumption = meterBill.getConsumption();
+
         //check for Rate type
         //senior citizen living in residential area
         if(rate_type.equals("SW")||rate_type.equals("SA")){
             //only applies if consumption is less than 30 cu mm
             if(consumption <=30){
-                GLCharge glscdiscn = getGLRate(SCDS);
+                GLCharge glscdiscn = getGLCharge(SCDS);
                 double discount= meterBill.getBasicCharge() * -(glscdiscn.getGl_rate());
+
                 //round to the nearest centavos
                 discount = Utils.roundDouble(discount);
                 insertSAPData(meterBill,"ZDISSC",0.00,discount,0);
@@ -283,7 +309,7 @@ public class BillCompute extends BCompute {
             }
         }
         else if(rate_type.equals("HW")||rate_type.equals("HA")){
-            GLCharge glscdiscn = getGLRate(HFTA);
+            GLCharge glscdiscn = getGLCharge(HFTA);
             double discount= meterBill.getBasicCharge() * -(glscdiscn.getGl_rate());
             //round to the nearest centavos
             discount = Utils.roundDouble(discount);
@@ -308,7 +334,7 @@ public class BillCompute extends BCompute {
         if(Utils.isNotEmpty(vatExempt)){
             if(vatExempt.equals("1")){
                 double  totChargeB4Tax = meterBill.getTotcurb4tax();
-                GLCharge glVAT =  getGLRate(VATX);
+                GLCharge glVAT =  getGLCharge(VATX);
                 double vat =  totChargeB4Tax * glVAT.getGl_rate();
                 vat = Utils.roundDouble(vat);
                 meterBill.setVat(vat);
@@ -320,9 +346,9 @@ public class BillCompute extends BCompute {
         double basic_Charge;
         double discount=0.0;
         if(meterBill.getBillClass().equals(RESIDENTIAL)){
-            GLCharge glres = getGLRate(RESB);
-            GLCharge glpatr = getGLRate(PATR);
-            GLCharge glrdls = getGLRate(RLDS);
+            GLCharge glres = getGLCharge(RESB);
+            GLCharge glpatr = getGLCharge(PATR);
+            GLCharge glrdls = getGLCharge(RLDS);
             basic_Charge = glres.getGl_rate();
             meterBill.setBasicCharge(basic_Charge);
             double zdiscn = basic_Charge * -(glrdls.getGl_rate());

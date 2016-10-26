@@ -95,11 +95,11 @@ public class MRRemarksFragment extends Fragment  implements View.OnClickListener
            case R.id.btnEditMRRemarks:
                String readstat = meterRemarks.getReadstat();
                if(readstat.equals("P")||readstat.equals("Q")){
-                   setEditMode(true);
-               }
-               else {
                    dialogUtils.showOKDialog(2,"No Remarks Entry","Cannot " +
                            "Enter a Remark for an Unprinted Bill!",new Bundle());
+               }
+               else {
+                  setEditMode(true);
                }
 
                break;

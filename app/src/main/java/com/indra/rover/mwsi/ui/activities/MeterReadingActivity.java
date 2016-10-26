@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -581,6 +583,11 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 updateReadStatusDisplay(newReadStat);
                 mViewPager.setCurrentItem(2);
                 scrollUp();
+                try{
+                    MainApp.bus.post(new MessageTransport("readstat",newReadStat));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
 
                 break;
             case 'R':
@@ -1059,6 +1066,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         meterInfo.setPrintTag(meterConsumption.getPrintTag());
         arry.get(current).setPrintTag(meterConsumption.getPrintTag());
         meterDao.updatePrintTag(meterConsumption,meterInfo.getDldocno());
+        meterInfo.setBilled_cons(String.valueOf(meterConsumption.getBilled_cons()));
+        arry.get(current).setBilled_cons(String.valueOf(meterConsumption.getBilled_cons()));
         computeConsRange(meterConsumption);
     }
 
@@ -1124,6 +1133,16 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     }
 
 
+    /**
+     *
+     * vibrate utils
+     * @param context
+     */
+    public static void vibrate(Context context){
+        Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        // Vibrate for 700 milliseconds
+        v.vibrate(700);
+    }
 
 
 }

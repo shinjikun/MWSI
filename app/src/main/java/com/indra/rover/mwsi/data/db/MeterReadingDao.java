@@ -56,7 +56,7 @@ public class MeterReadingDao extends ModelDao {
         String sql_stmt = "select  t.MRU,t.SEQNO,t.METERNO,t.DLDOCNO,t.GRP_FLAG,t.BLOCK_TAG, " +
                 "c.RDG_TRIES,c.PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS,t.NODIALS, " +
                 "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE,u.PRINT_TAG," +
-                "u.PRINT_COUNT,c.DEL_CODE,t.NODIALS " +
+                "u.PRINT_COUNT,c.DEL_CODE,t.NODIALS,c.BILLED_CONS " +
                 "from T_DOWNLOAD t," +
                 " R_BILL_CLASS r,T_CURRENT_RDG c,T_UPLOAD u where t.BILL_CLASS = r.BILL_CLASS " +
                 "and t.DLDOCNO = c.CRDOCNO  and t.DLDOCNO = u.ULDOCNO and c.MRU='"+mruID+"'";
@@ -113,7 +113,7 @@ public class MeterReadingDao extends ModelDao {
         String sql_stmt = "select  t.MRU,t.SEQNO,t.METERNO,t.DLDOCNO,t.GRP_FLAG,t.BLOCK_TAG, " +
                 "c.RDG_TRIES,c.PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS, " +
                 "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE," +
-                "u.PRINT_TAG,u.PRINT_COUNT,c.DEL_CODE,t.NODIALS " +
+                "u.PRINT_TAG,u.PRINT_COUNT,c.DEL_CODE,t.NODIALS,c.BILLED_CONS " +
                 " from T_DOWNLOAD t," +
                 " R_BILL_CLASS r,T_CURRENT_RDG c, T_UPLOAD u where t.BILL_CLASS = r.BILL_CLASS " +
                 "and t.DLDOCNO = c.CRDOCNO and t.DLDOCNO = u.ULDOCNO and c.CRDOCNO='"+id+"'";
@@ -142,7 +142,7 @@ public class MeterReadingDao extends ModelDao {
         String sql_stmt = "select  t.MRU,t.SEQNO,t.METERNO,t.DLDOCNO,t.GRP_FLAG,t.BLOCK_TAG, " +
                 "c.RDG_TRIES,c.PRESRDG,t.ACCTNUM,t.CUSTNAME,t.CUSTADDRESS,t.BILL_CLASS, " +
                 "r.BILL_CLASS_DESC, c.READSTAT,c.CSMB_TYPE_CODE,c.CSMB_PARENT,c.RANGE_CODE," +
-                "u.PRINT_TAG,u.PRINT_COUNT,c.DEL_CODE,t.NODIALS from T_DOWNLOAD t, " +
+                "u.PRINT_TAG,u.PRINT_COUNT,c.DEL_CODE,t.NODIALS,c.BILLED_CONS from T_DOWNLOAD t, " +
                 "R_BILL_CLASS r,T_CURRENT_RDG c, T_UPLOAD u where t.BILL_CLASS = r.BILL_CLASS and " +
                 "t.DLDOCNO = c.CRDOCNO   and t.DLDOCNO = u.ULDOCNO and " +
                 "t.MRU='"+mruID+ "' and "+column+" like '%"+searchValue+"%'";
