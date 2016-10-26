@@ -309,7 +309,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                         return ;
                     }
                     else {
-                        int countChildPrinted = meterDao.countChildBilled(accoutNumb);
+                        int countChildPrinted = meterDao.countMBChildBilled(accoutNumb);
                         if(countChildPrinted!=0){
                             rdg_disabled(3);
                             return;
@@ -318,7 +318,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                     }
                     break;
                 case CS_MOTHER:
-                    int countP = meterDao.countChildBilled(accoutNumb);
+                    int countP = meterDao.countCSChildBilled(accoutNumb);
                     if(countP!=0){
                         rdg_disabled(2);
                         return;
@@ -327,7 +327,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                     break;
                 case MB_CHILD:
                     String parent_id = meterInfo.getParentID();
-                    int countChildPrinted = meterDao.countChildBilled(parent_id);
+                    int countChildPrinted = meterDao.countMBChildBilled(parent_id);
                     if(countChildPrinted!=0){
                         rdg_disabled(4);
                         return;
@@ -934,6 +934,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                         return;
                     }
                 }
+
+
                 // bill already printed, no recompute required, just reprint!
                 norecompute =1;
                 break;
@@ -954,6 +956,17 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         }
 
     if(meterInfo.getPrintTag()!=MeterInfo.NONBILLABLE){
+        String bill_str = meterInfo.getBill_scheme();
+        int bill_scheme =  Integer.parseInt(bill_str);
+        //dont print the bill if the mb child's parent is not yet read
+        if(bill_scheme == MB_CHILD){
+            String parent_id = meterInfo.getParentID();
+            boolean  isRead =meterDao.isParentMeterRead(parent_id,mru_id);
+            if(!isRead){
+                noPrint_Bill(3);
+                return;
+            }
+        }
         if(norecompute==0){
             BillCompute bill = new BillCompute(this,this);
             bill.compute(meterDao.getMeterBill(meterInfo.getDldocno()));
@@ -987,9 +1000,9 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                case 1: strBuilder.append("More than 9x!"); break;
                case 2: strBuilder.append("Blocked Acct!"); break;
                case 3:
-                   strBuilder.append("Child Mtr w/");
+                   strBuilder.append("Child Meter w/");
                    strBuilder.append('\n');
-                   strBuilder.append("Unread MB Mother Mtr");
+                   strBuilder.append("Unread MB Mother Meter");
                    break;
                case 4: strBuilder.append("KAM Acct!"); break;
            }

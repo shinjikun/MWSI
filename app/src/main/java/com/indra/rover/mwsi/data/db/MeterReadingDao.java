@@ -677,6 +677,33 @@ public class MeterReadingDao extends ModelDao {
         return count;
     }
 
+
+    public boolean isParentMeterRead(String parent_id,String mru_id){
+         boolean isRead = true;
+        int count =0;
+        try {
+            open();
+            String str ="Select count(*) as COUNTNUM from T_CURRENT_RDG where  ACCTNUM='"+parent_id
+                    +"' and MRU = '"+mru_id+"'";
+            Cursor cursor = database.rawQuery(str,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNTNUM"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception sql){
+            sql.printStackTrace();
+        }finally {
+            close();
+        }
+
+        if(count==0)
+            isRead =false;
+
+        return isRead;
+    }
+
     public int countChildUnRead(String parent_id){
         int count=0;
         try {
@@ -699,12 +726,12 @@ public class MeterReadingDao extends ModelDao {
     }
 
 
-    public int countChildBilled(String parent_id){
+    public int countMBChildBilled(String parent_id){
         int count=0;
         try {
             open();
             String str ="select count(*) as COUNTNUM from T_CURRENT_RDG where  csmb_parent='"+
-                    parent_id+"' and  ( READSTAT = 'P' OR READSTAT='Q' )";
+                    parent_id+"' and  ( READSTAT!='P' OR READSTAT!='Q' )";
             Cursor cursor = database.rawQuery(str,null);
             if (cursor.moveToFirst()) {
                 do {
@@ -726,7 +753,7 @@ public class MeterReadingDao extends ModelDao {
         try {
             open();
             String str ="select count(*) as COUNTNUM from T_CURRENT_RDG where  csmb_parent='"+
-                    parent_id+"' and  ( READSTAT != 'P' OR READSTAT !='Q' )";
+                    parent_id+"' and  ( BILLED_CONS IS NOT NULL AND BILLED_CONS!='' )";
             Cursor cursor = database.rawQuery(str,null);
             if (cursor.moveToFirst()) {
                 do {

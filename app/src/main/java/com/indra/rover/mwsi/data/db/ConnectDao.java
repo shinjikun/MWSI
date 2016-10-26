@@ -21,7 +21,10 @@ public class ConnectDao extends ModelDao {
     public ConnectDao(Context context){
         super(context);
     }
-
+    final int MBMother =2 ;
+    final int MBChild =5;
+    final int CSMother =1;
+    final int CSChild = 3;
     @Override
     public void open() {
         database = dbHelper.openDB();
@@ -214,10 +217,9 @@ public class ConnectDao extends ModelDao {
             if(Utils.isNotEmpty(records[80])){
                 int bill_scheme =  Integer.parseInt(records[80]);
                 switch (bill_scheme){
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
+                    case CSMother:
+                    case CSChild:
+                    case MBMother:
                         values.put("PRINT_TAG", MeterInfo.BILLNOPRINT);
                         break;
                 }

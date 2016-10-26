@@ -372,7 +372,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
                         return ;
                     }
                     else {
-                        int countChildPrinted = mtrDao.countChildBilled(accoutNumb);
+                        int countChildPrinted = mtrDao.countMBChildBilled(accoutNumb);
                         if(countChildPrinted!=0){
                             noOCEntry(2);
                             return;
@@ -383,7 +383,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
                 case CS_CHILD:
                 case MB_CHILD:
                     String parent_code = meterOC.getChilds_parent();
-                    int countChildPrinted = mtrDao.countChildBilled(parent_code);
+                    int countChildPrinted = mtrDao.countMBChildBilled(parent_code);
                     if(countChildPrinted!=0){
                         noOCEntry(4);
                         return;

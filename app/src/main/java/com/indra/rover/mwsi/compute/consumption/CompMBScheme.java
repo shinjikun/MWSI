@@ -42,6 +42,7 @@ public class CompMBScheme extends Compute implements Compute.ConsumptionListener
             else {
                 //print child meters
                if(listener!=null){
+                   meterConsObj.setPrintTag(MeterInfo.BILLNOPRINT);
                    listener.onPrintChildMeters(meterConsumption,mbChilds);
                }
             }
@@ -71,7 +72,7 @@ public class CompMBScheme extends Compute implements Compute.ConsumptionListener
                 //tag parent as adjusted
                 parentMeter.setConstype_code(ADJUSTED);
             }
-
+            childMeters.set(i,childMeter);
         }
 
         if(listener!=null){

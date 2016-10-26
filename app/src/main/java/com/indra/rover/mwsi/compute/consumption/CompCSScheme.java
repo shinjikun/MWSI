@@ -25,6 +25,9 @@ public class CompCSScheme extends Compute implements Compute.ConsumptionListener
 
     @Override
     public void onPostConsResult(MeterConsumption meterConsumption) {
+             //use special condition 5 to compute for consumption
+             int bill_cosumption = scenario5();
+             meterConsumption.setBilled_cons(bill_cosumption);
 
             String parent_code =  meterConsumption.getAcct_num();
             List<MeterConsumption> csChilds = mtrDao.getMeterChilds(parent_code);
