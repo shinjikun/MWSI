@@ -16,6 +16,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -58,6 +59,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
     CustomSpinView oc1_opt;
     CustomSpinView oc2_opt;
     Button btnCapOC1,btnCapOC2;
+    EditText txtRemarks;
 
     public MROCFragment() {
     }
@@ -99,6 +101,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
         mView = inflater.inflate(R.layout.fragment_mroc, container, false);
         oc1_opt =  (CustomSpinView)mView.findViewById(R.id.oc1_opt);
         oc2_opt =  (CustomSpinView)mView.findViewById(R.id.oc2_opt);
+        txtRemarks = (EditText)mView.findViewById(R.id.txtMRCDesc);
         btnCapOC1 = (Button)mView.findViewById(R.id.btnCapOc1);
         btnCapOC1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -259,6 +262,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
         else {
             mView.findViewById(R.id.btnCapOc2).setVisibility(View.GONE);
         }
+        txtRemarks.setEnabled(isEditMode);
     }
 
     @Subscribe
@@ -312,12 +316,24 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
             else {
                 btnCapOC2.setText("Capture Image");
             }
+            String remarks =  meterOC.getRemarks();
+            if(Utils.isNotEmpty(remarks)){
+                txtRemarks.setText(remarks);
+            }
         }
 
         editMode(false);
     }
 
     private void saveDB(){
+
+        String remarks = String.valueOf(txtRemarks.getText());
+        if(!Utils.isNotEmpty(remarks)){
+            dlgUtils.showOKDialog("You are required to enter an OC remarks");
+            return;
+        }
+
+
         int index = oc1_opt.getSpn().getSelectedItemPosition();
         String oc1 ="";
         String oc2 ="";
@@ -352,7 +368,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
         }
 
 
-        mtrDao.addOC(oc1,oc2,crdocno);
+        mtrDao.addOC(oc1,oc2,crdocno, remarks);
         startReading(oc1,oc2);
         editMode(false);
 
@@ -379,6 +395,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
             noOCEntry(1);
             return;
         }
+
 
         if(Utils.isNotEmpty(bill_str)) {
             int bill_scheme = Integer.parseInt(bill_str);

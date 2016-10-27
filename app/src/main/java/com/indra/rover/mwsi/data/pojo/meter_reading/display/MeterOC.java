@@ -29,6 +29,8 @@ public class MeterOC {
     String account_num;
     //childs parent
     String childs_parent;
+    //remarks
+    String remarks;
 
     public MeterOC(Cursor cursor) {
         this.crdocno = cursor.getString(cursor.getColumnIndexOrThrow("CRDOCNO"));
@@ -38,6 +40,7 @@ public class MeterOC {
         this.bill_scheme = cursor.getString(cursor.getColumnIndexOrThrow("CSMB_TYPE_CODE"));
         this.childs_parent = cursor.getString(cursor.getColumnIndexOrThrow("CSMB_PARENT"));
         this.account_num = cursor.getString(cursor.getColumnIndexOrThrow("ACCTNUM"));
+        this.remarks = cursor.getString(cursor.getColumnIndexOrThrow("REMARKS"));
     }
 
     public String getReadstat() {
@@ -66,5 +69,9 @@ public class MeterOC {
 
     public String getChilds_parent() {
         return childs_parent;
+    }
+
+    public String getRemarks() {
+        return remarks;
     }
 }

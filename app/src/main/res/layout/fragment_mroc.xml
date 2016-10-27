@@ -49,4 +49,23 @@
         android:text="@string/btn_capture_image"
        android:layout_gravity="center" />
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/txtMRCDesc"
+        android:layout_marginTop="5dp"
+        android:padding="4dp"
+        android:hint="@string/mr_c_remarks"
+        android:background="@drawable/txt_rounded_border"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:nextFocusLeft="@+id/btnCapOc2"
+        android:textColor="@drawable/textblackcolor"
+        android:maxLines="1"
+        android:enabled="false"
+        />
+
+
 </LinearLayout>

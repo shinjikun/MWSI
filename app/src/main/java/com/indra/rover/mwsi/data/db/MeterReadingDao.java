@@ -243,13 +243,14 @@ public class MeterReadingDao extends ModelDao {
         }
     }
 
-    public void addOC(String oc1,String oc2, String crdocid){
+    public void addOC(String oc1, String oc2, String crdocid, String remarks){
         try {
             open();
             ContentValues contentValues = new ContentValues();
 
             contentValues.put("FFCODE1",oc1);
             contentValues.put("FFCODE2",oc2);
+            contentValues.put("REMARKS",remarks);
             String where= "CRDOCNO=?";
             database.update("T_CURRENT_RDG",contentValues,where,new String[]{crdocid});
         }catch (Exception e){
@@ -525,7 +526,7 @@ public class MeterReadingDao extends ModelDao {
         try {
             open();
             String sql_stmt = "SELECT CRDOCNO, FFCODE1,FFCODE2,READSTAT," +
-                    "CSMB_TYPE_CODE,CSMB_PARENT,ACCTNUM  from " +
+                    "CSMB_TYPE_CODE,CSMB_PARENT,ACCTNUM,REMARKS  from " +
                     " T_CURRENT_RDG where CRDOCNO='"+crdocno+"'";
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
