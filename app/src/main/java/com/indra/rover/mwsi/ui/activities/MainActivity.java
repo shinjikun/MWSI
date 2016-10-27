@@ -89,39 +89,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-
-
-
-    private void extractDB(){
-        try {
-            File    contentDir=new File(android.os.Environment.getExternalStorageDirectory(),getPackageName()+"/dbdump");
-
-            if (contentDir.canWrite()) {
-                String currentDBPath = "/data/data/" + getPackageName() + "/databases/MCFSRNB";
-                String backupDBPath = "backupname.db";
-                File currentDB = new File(currentDBPath);
-                File backupDB = new File(contentDir, backupDBPath);
-
-                if (currentDB.exists()) {
-                    FileChannel src = new FileInputStream(currentDB).getChannel();
-                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                    dst.transferFrom(src, 0, src.size());
-                    src.close();
-                    dst.close();
-                }
-            }
-        } catch (Exception e) {
-
-        }
-
-
-    }
-
-
-
-
-
-
     @Override
     public void onPostUploadResult(boolean status) {
 

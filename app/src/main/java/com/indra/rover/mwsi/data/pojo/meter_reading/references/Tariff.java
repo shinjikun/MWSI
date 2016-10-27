@@ -69,4 +69,8 @@ public class Tariff {
     public int getCons_band() {
         return cons_band;
     }
+
+    public String getEffectDate() {
+        return effectDate;
+    }
 }

@@ -44,13 +44,9 @@ public class BillCompute extends BCompute {
     @Override
     void getBasicCharge(MeterBill meterBill) {
 
-        String strpro = meterBill.getTariffPro();
-
-
-
         int consumption = meterBill.getConsumption();
         double discount =0.00;
-
+        String strpro = meterBill.getTariffPro();
         if(Utils.isNotEmpty(meterBill.getSpbillrule())){
             String spid = meterBill.getSpbillrule();
             if(spid.equals("1")){
@@ -58,18 +54,11 @@ public class BillCompute extends BCompute {
             }
         }
 
-        if(Utils.isNotEmpty(strpro)){
-            char proratetype =  strpro.charAt(0);
-            switch (proratetype){
-                case PRO_TYPE1 :
-                    //  zcera = consumption * gl_rate;
-                    break;
-                case PRO_TYPE3:
-                    // oldamount = consumption * (gl_rate_old*(OD/DBP));
-                    //  zcera = consumption * (gl_rate*(ND/DBP));
-                    break;
 
-            }
+        char proratetype = PRO_TYPE2;
+        if(Utils.isNotEmpty(strpro)){
+             proratetype =  strpro.charAt(0);
+
         }
 
         //if consumption is above minimum
@@ -79,11 +68,18 @@ public class BillCompute extends BCompute {
             int size = arryTariff.size();
             for(int i=0;i<size;i++){
                 Tariff tariff = arryTariff.get(i);
+                //old days -  effective date - previous reading date +1
+                int OD = Utils.dateDiff(tariff.getEffectDate(),meterBill.getPrevRdgDate()) +1;
+                //new days = present reading date - effectivity  date +1
+                int ND = Utils.dateDiff(meterBill.getPresRdgDate(),tariff.getEffectDate())+1;
+                //billing period present reading date - previous reading date
+                int DBP = Utils.dateDiff(meterBill.getPresRdgDate(),meterBill.getPrevRdgDate());
+
                 int low_limit = tariff.getLowLimit();
                 int high_limit = tariff.getHighLimit();
                 double amount = tariff.getBaseAmount();
-                double old_amount = 0.0;//tariff.getOld_baseAmount();
-                double old_price = 0.0;//tariff.getOld_price();
+                double old_amount = 0.0;
+                double old_price = 0.0;
                 int quantity = tariff.getCons_band();
                 double price = tariff.getPrice();
                 double totalAmount;
@@ -94,19 +90,39 @@ public class BillCompute extends BCompute {
                 else {
                     amount = price * quantity;
                 }
+                switch (proratetype){
+                    case PRO_TYPE1 :
+                        old_price = tariff.getOld_price();
+                        old_amount = tariff.getOld_tierAmount() *quantity;
+                            break;
+                    case PRO_TYPE3:
+                        if(i == 0){
+                            old_price = tariff.getOld_tierAmount();
+                        }
+                        else {
+                            old_price =  tariff.getOld_price();
+                        }
+
+                        old_amount = old_price*quantity *(OD/DBP);
+                        amount = price*quantity * (ND/DBP);
+                            break;
+                    }
 
                 if(low_limit<=consumption && consumption<=high_limit){
                     quantity = consumption - low_limit +1;
                     amount = price * quantity;
                     totalAmount = amount +old_amount;
                     basic_charge += totalAmount;
+                    meterBill.newbasic+=amount;
+                    meterBill.oldbasic+=old_amount;
                     insertSAPData(meterBill,"ZBASIC",price,amount,old_price,
                             old_amount,String.valueOf(quantity));
                         break;
                 }
                 totalAmount = amount+ old_amount;
                 basic_charge += totalAmount;
-
+                meterBill.newbasic+=amount;
+                meterBill.oldbasic+=old_amount;
                 insertSAPData(meterBill,"ZBASIC",price,amount,old_price,old_amount,
                         String.valueOf(quantity));
 
@@ -187,6 +203,8 @@ public class BillCompute extends BCompute {
         if(zcera>0){
             zcera = Utils.roundDouble(zcera);
             insertSAPData(meterBill,"ZCERA",zcera,oldamount );
+            meterBill.newcera = zcera;
+            meterBill.oldcera = oldamount;
             meterBill.setCera(zcera+oldamount);
         }
 
@@ -222,13 +240,14 @@ public class BillCompute extends BCompute {
                     oldamount = basicCharge * (gl_rate_old*(OD/DBP));
                     zfcda = basicCharge * (gl_rate*(ND/DBP));
                     break;
-
             }
         }
 
         if(zfcda>0){
             zfcda = Utils.roundDouble(zfcda);
             insertSAPData(meterBill,"ZFCDA",zfcda,oldamount );
+            meterBill.newfcda = zfcda;
+            meterBill.oldfcda = oldamount;
             meterBill.setFcda(zfcda+oldamount);
         }
     }
@@ -237,16 +256,42 @@ public class BillCompute extends BCompute {
         double  zdiscn = meterBill.getDiscount();
         double  zcera =  meterBill.getCera();
         double  zfcda = meterBill.getFcda();
-        double  total_water_charge = meterBill.getBasicCharge() +zcera+zfcda+zdiscn;
+        String strpro = meterBill.getEnvPro();
         GLCharge glRateObj = getGLCharge(ENVM);
+        //old days -  effective date - previous reading date
+        int OD = Utils.dateDiff(glRateObj.getEffectivity_date(),meterBill.getPrevRdgDate()) +1;
+        //new days = present reading date - effectivity  date +1
+        int ND = Utils.dateDiff(meterBill.getPresRdgDate(),glRateObj.getEffectivity_date())+1;
+        //billing period present reading date - previous reading date
+        int DBP = Utils.dateDiff(meterBill.getPresRdgDate(),meterBill.getPrevRdgDate());
+
+
+        //new water charge
+        double  tot_water_chrg = meterBill.getBasicCharge() +zcera+zfcda+zdiscn;
+        //old water charge;
+        double old_total_water_chrg = 0.0;
+
+
         double gl_rate = glRateObj.getGl_rate();
         double gl_rate_old =  glRateObj.getGl_rate_old();
 
-        double  zenv = total_water_charge * gl_rate;
+        if(Utils.isNotEmpty(strpro)){
+            char proratetype =  strpro.charAt(0);
+            switch (proratetype){
+                case PRO_TYPE1 :
+                case PRO_TYPE3:
+                    old_total_water_chrg = (meterBill.oldbasic+
+                            meterBill.oldcera+meterBill.oldfcda) * gl_rate_old;
+                    break;
+            }
+        }
+
+        double  zenv = tot_water_chrg * gl_rate;
         if(zenv>0){
             zenv = Utils.roundDouble(zenv);
-            insertSAPData(meterBill,"ZENV",0.00,zenv,0 );
-            meterBill.setEnv_charge(zenv);
+
+            insertSAPData(meterBill,"ZENV",zenv,old_total_water_chrg);
+            meterBill.setEnv_charge(zenv+old_total_water_chrg);
         }
 
     }
@@ -273,25 +318,47 @@ public class BillCompute extends BCompute {
        double  zdiscn = meterBill.getDiscount();
        double  zcera =  meterBill.getCera();
        double  zfcda = meterBill.getFcda();
+       String strpro = meterBill.getSewPro();
        double  total_water_charges = meterBill.getBasicCharge() +zcera+zfcda+zdiscn;
+       double  old_total_water_charges = meterBill.oldbasic +meterBill.oldcera+
+               meterBill.oldfcda+zdiscn;
         String billClass = meterBill.getBillClass();
         String rate_type = meterBill.getRatetype();
         GLCharge glRateObj = getGLCharge(SEWR);
 
+
+       //old days -  effective date - previous reading date
+       int OD = Utils.dateDiff(glRateObj.getEffectivity_date(),meterBill.getPrevRdgDate()) +1;
+       //new days = present reading date - effectivity  date +1
+       int ND = Utils.dateDiff(meterBill.getPresRdgDate(),glRateObj.getEffectivity_date())+1;
+       //billing period present reading date - previous reading date
+       int DBP = Utils.dateDiff(meterBill.getPresRdgDate(),meterBill.getPrevRdgDate());
+
        double gl_rate =  glRateObj.getGl_rate();
        double gl_rate_old = glRateObj.getGl_rate_old();
+       double oldamount=0.0;
 
-       if(spBillRule!=null){
-           if(spBillRule.getGlratecomp().equals(SEWR))
-               gl_rate = spBillRule.getSpl_rate();
-               gl_rate_old = spBillRule.getSpl_oldrate();
-       }
 
         if(billClass.equals(COMMERCIAL)||billClass.equals(INDUSTRIAL)){
             if(rate_type.equals("S")||rate_type.equals("A")||
                     rate_type.equals("SA")||rate_type.equals("HA")){
 
                 double zsewer = total_water_charges * gl_rate;
+
+                if(Utils.isNotEmpty(strpro)){
+                    char proratetype =  strpro.charAt(0);
+                    switch (proratetype){
+                        case PRO_TYPE1 :
+
+                         //   oldamount = gl_rate_old;
+                            break;
+                        case PRO_TYPE3:
+                            oldamount = old_total_water_charges * (gl_rate_old*(OD/DBP));
+                            zsewer = total_water_charges * (gl_rate*(ND/DBP));
+                            break;
+                    }
+                }
+
                 if(zsewer>0){
                     zsewer = Utils.roundDouble(zsewer);
                     insertSAPData(meterBill,"ZSEWER",0.00,zsewer,0 );
@@ -302,6 +369,8 @@ public class BillCompute extends BCompute {
                     if(rate_type.equals("S")){
                        meterBill.setBasicCharge(0.0);
                         billDao.deleteZBasic(meterBill.getId());
+                        meterBill.oldbasic =0.0;
+                        meterBill.newbasic =0.0;
                     }
                 }
             }
@@ -363,8 +432,14 @@ public class BillCompute extends BCompute {
 
    private void minimumCharge(MeterBill  meterBill){
         double basic_Charge;
+       String strpro = meterBill.getTariffPro();
         double discount=0.0;
-        if(meterBill.getBillClass().equals(RESIDENTIAL)){
+        double old_price =0.0;
+        double old_amount=0.0;
+
+
+
+       if(meterBill.getBillClass().equals(RESIDENTIAL)){
             GLCharge glres = getGLCharge(RESB);
             GLCharge glpatr = getGLCharge(PATR);
             GLCharge glrdls = getGLCharge(RLDS);
@@ -379,6 +454,8 @@ public class BillCompute extends BCompute {
             basic_Charge = Utils.roundDouble(basic_Charge);
             meterBill.setDiscount(discount);
             updateBasicCharge(meterBill,basic_Charge,discount);
+            insertSAPData(meterBill,"ZBASIC",basic_Charge,basic_Charge,old_price,
+                    old_amount,String.valueOf(meterBill.getConsumption()));
             insertSAPData(meterBill,"ZBASIC",basic_Charge,basic_Charge,meterBill.getConsumption() );
             insertSAPData(meterBill,"ZDISCN",0.00,zdiscn,0 );
             insertSAPData(meterBill,"ZDISPA",0.00,zdispa,0 );
@@ -390,7 +467,39 @@ public class BillCompute extends BCompute {
             basic_Charge =  tariff.getTierAmount();
             basic_Charge = Utils.roundDouble(basic_Charge);
             updateBasicCharge(meterBill,basic_Charge,0.0);
-            insertSAPData(meterBill,"ZBASIC",basic_Charge,basic_Charge,meterBill.getConsumption() );
+
+
+
+           //old days -  effective date - previous reading date +1
+           int OD = Utils.dateDiff(tariff.getEffectDate(),meterBill.getPrevRdgDate()) +1;
+           //new days = present reading date - effectivity  date +1
+           int ND = Utils.dateDiff(meterBill.getPresRdgDate(),tariff.getEffectDate())+1;
+           //billing period present reading date - previous reading date
+           int DBP = Utils.dateDiff(meterBill.getPresRdgDate(),meterBill.getPrevRdgDate());
+
+
+           if(Utils.isNotEmpty(strpro)){
+               char proratetype =  strpro.charAt(0);
+               switch (proratetype){
+                   case PRO_TYPE1 :
+                       old_price = tariff.getOld_price();
+                       old_amount = tariff.getOld_tierAmount();
+                       break;
+                   case PRO_TYPE3:
+                           old_price = tariff.getOld_tierAmount();
+
+
+                       old_amount = old_price *(OD/DBP);
+                       basic_Charge = basic_Charge * (ND/DBP);
+                       break;
+
+
+               }
+           }
+
+
+           insertSAPData(meterBill,"ZBASIC",basic_Charge,basic_Charge,old_price,
+                   old_amount,String.valueOf(meterBill.getConsumption()));
             meterBill.setBasicCharge(basic_Charge);
         }
 
@@ -407,6 +516,20 @@ public class BillCompute extends BCompute {
         int consumption =  meterBill.getConsumption();
         String strusers = meterBill.getNumusers();
         double discount =0.0;
+
+        String strpro = meterBill.getTariffPro();
+        if(Utils.isNotEmpty(meterBill.getSpbillrule())){
+            String spid = meterBill.getSpbillrule();
+            if(spid.equals("1")){
+                spBillRule = getSPBillRule(spid);
+            }
+        }
+        char proratetype = PRO_TYPE2;
+        if(Utils.isNotEmpty(strpro)){
+            proratetype =  strpro.charAt(0);
+
+        }
+
         if(Utils.isNotEmpty(strusers)){
             int numUser = Integer.parseInt(strusers);
             double ave_cons =  consumption/numUser;
@@ -417,6 +540,14 @@ public class BillCompute extends BCompute {
                 int size = arryTariff.size();
                 for(int i=0;i<size;i++){
                     Tariff tariff = arryTariff.get(i);
+
+                    //old days -  effective date - previous reading date +1
+                    int OD = Utils.dateDiff(tariff.getEffectDate(),meterBill.getPrevRdgDate()) +1;
+                    //new days = present reading date - effectivity  date +1
+                    int ND = Utils.dateDiff(meterBill.getPresRdgDate(),tariff.getEffectDate())+1;
+                    //billing period present reading date - previous reading date
+                    int DBP = Utils.dateDiff(meterBill.getPresRdgDate(),meterBill.getPrevRdgDate());
+
                     int low_limit = tariff.getLowLimit();
                     int high_limit = tariff.getHighLimit();
                     double amount = tariff.getBaseAmount();
@@ -433,6 +564,24 @@ public class BillCompute extends BCompute {
                         amount = price * quantity;
                     }
 
+                    switch (proratetype){
+                        case PRO_TYPE1 :
+                            old_price = tariff.getOld_price();
+                            old_amount = tariff.getOld_tierAmount();
+                            break;
+                        case PRO_TYPE3:
+                            if(i == 0){
+                                old_price = tariff.getOld_tierAmount();
+                            }
+                            else {
+                                old_price =  tariff.getOld_price();
+                            }
+
+                            old_amount = old_price *(OD/DBP);
+                            amount = price*quantity * (ND/DBP);
+                            break;
+                    }
+
                     if(low_limit<=ave_cons && ave_cons<=high_limit){
                         double quantity1 = ave_cons - low_limit +1;
                         amount = price * quantity1;
@@ -444,7 +593,8 @@ public class BillCompute extends BCompute {
                     }
                     totalAmount = amount+ old_amount;
                     basic_charge += totalAmount;
-
+                    meterBill.newbasic+=amount;
+                    meterBill.oldbasic+=old_amount;
                     insertSAPData(meterBill,"ZAVEPRC",price,amount,old_price,
                             old_amount,String.valueOf(quantity));
 
@@ -472,6 +622,18 @@ public class BillCompute extends BCompute {
         int consumption =  meterBill.getConsumption();
         String gt34factor = meterBill.getGt34factor();
         double discount =0.00;
+        String strpro = meterBill.getTariffPro();
+        if(Utils.isNotEmpty(meterBill.getSpbillrule())){
+            String spid = meterBill.getSpbillrule();
+            if(spid.equals("1")){
+                spBillRule = getSPBillRule(spid);
+            }
+        }
+        char proratetype = PRO_TYPE2;
+        if(Utils.isNotEmpty(strpro)){
+            proratetype =  strpro.charAt(0);
+
+        }
         if(Utils.isNotEmpty(gt34factor)){
             double gtfactor = Double.parseDouble(gt34factor);
             gtfactor = Utils.roundDouble6(gtfactor);
@@ -484,6 +646,16 @@ public class BillCompute extends BCompute {
                 int size = arryTariff.size();
                 for(int i=0;i<size;i++){
                     Tariff tariff = arryTariff.get(i);
+
+
+                    //old days -  effective date - previous reading date +1
+                    int OD = Utils.dateDiff(tariff.getEffectDate(),meterBill.getPrevRdgDate()) +1;
+                    //new days = present reading date - effectivity  date +1
+                    int ND = Utils.dateDiff(meterBill.getPresRdgDate(),tariff.getEffectDate())+1;
+                    //billing period present reading date - previous reading date
+                    int DBP = Utils.dateDiff(meterBill.getPresRdgDate(),meterBill.getPrevRdgDate());
+
+
                     int low_limit = tariff.getLowLimit();
                     int high_limit = tariff.getHighLimit();
                     double amount = tariff.getBaseAmount();
@@ -501,6 +673,29 @@ public class BillCompute extends BCompute {
                         amount = price * gtfactor;
                     }
 
+                    switch (proratetype){
+                        case PRO_TYPE1 :
+                            old_price = tariff.getOld_price() *gtfactor;
+                            old_amount = tariff.getOld_tierAmount() * gtfactor;
+                            if(i==0){
+                                price =amount;
+                            }
+                            else {
+                                amount = price * gtfactor;
+                            }
+
+                            break;
+                        case PRO_TYPE3:
+                            if(i == 0){
+                                old_price = tariff.getOld_tierAmount();
+                            }
+                            else {
+                                old_price =  tariff.getOld_price();
+                            }
+                            old_amount = gtfactor* old_price *(OD/DBP);
+                            amount = gtfactor * price *  (ND/DBP);
+                            break;
+                    }
                     if(low_limit<=consumption && consumption<=high_limit){
                         quantity = consumption - low_limit +1;
                         quantity = quantity *(int)gtfactor;
@@ -513,7 +708,8 @@ public class BillCompute extends BCompute {
                     }
                     totalAmount = amount+ old_amount;
                     basic_charge += totalAmount;
-
+                    meterBill.newbasic+=amount;
+                    meterBill.oldbasic+=old_amount;
                     insertSAPData(meterBill,"ZBASIC",price,amount,old_price,old_amount,
                             String.valueOf(quantity));
 

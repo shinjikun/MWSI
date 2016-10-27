@@ -278,4 +278,15 @@ public class MeterBill {
     public String getTariffPro(){
         return tariff_pro;
     }
+
+    public String getEnvPro(){
+        return env_pro;
+    }
+
+     public double oldbasic;
+     public double newbasic;
+     public double oldfcda;
+     public double newfcda;
+     public double oldcera;
+     public double newcera;
 }
