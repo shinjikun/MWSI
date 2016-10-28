@@ -500,7 +500,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.fabLeft:
                 bundle = new Bundle();
-                bundle.putString("action","next");
+                bundle.putString("action","previous");
                 if(MainApp.isEditMode){
                     dlgUtils.showYesNoDialog(DLG_EDITMODE,"There are still unsave record.\n" +
                             "Proceed to the Previous Record?",bundle);
@@ -522,7 +522,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.fabRight:
                 bundle = new Bundle();
-                bundle.putString("action","previous");
+                bundle.putString("action","next");
                 if(MainApp.isEditMode){
                     dlgUtils.showYesNoDialog(DLG_EDITMODE,"There are still unsave record.\n" +
                             "Proceed to the Next Record?",bundle);

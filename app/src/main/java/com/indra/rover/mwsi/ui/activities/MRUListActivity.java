@@ -57,14 +57,17 @@ public class MRUListActivity extends AppCompatActivity  implements OnItemClickLi
         mRecycleview.setAdapter(mAdapter);
         dialogUtils = new DialogUtils(this);
         dialogUtils.setListener(this);
-        prepareData();
-
-
     }
 
 
-    private void prepareData(){
+    @Override
+    protected void onResume() {
+        super.onResume();
+        prepareData();
+    }
 
+    private void prepareData(){
+        mruList.clear();
        List<MRU> mMRU = mruDao.getMRUs();
         for (MRU mru : mMRU) {
             mruList.add(mru);
