@@ -192,7 +192,7 @@ public class Utils {
             long dateTime2=0;
             if(Utils.isNotEmpty(strDate1)){
                 date2 = dates.parse(strDate2);
-                dateTime1 = date2.getTime();
+                dateTime2 = date2.getTime();
             }
             //Setting dates
 
@@ -200,7 +200,7 @@ public class Utils {
 
             //Comparing dates
             long difference = Math.abs(dateTime1 - dateTime2);
-             differenceDates = (int)difference / (24 * 60 * 60 * 1000);
+             differenceDates = (int)Math.abs(difference / (24 * 60 * 60 * 1000));
 
             //Convert long to String
 

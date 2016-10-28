@@ -33,7 +33,6 @@ import com.indra.rover.mwsi.ui.widgets.CustomSpinView;
 import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.MessageTransport;
-import com.indra.rover.mwsi.utils.PreferenceKeys;
 import com.indra.rover.mwsi.utils.Utils;
 import com.squareup.otto.Subscribe;
 
@@ -93,7 +92,7 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
     private void launchCamera(int id){
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
        startActivityForResult(intent, id);
-        PreferenceKeys.getInstance(getActivity()).setData("EditMode",MainApp.isEditMode);
+
     }
 
     @Override
@@ -317,7 +316,6 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
             else {
                 btnCapOC2.setText("Capture Image");
             }
-            txtRemarks.setText("");
             String remarks =  meterOC.getRemarks();
             if(Utils.isNotEmpty(remarks)){
                 txtRemarks.setText(remarks);

@@ -186,14 +186,14 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
         switch (id){
             case R.id.btnEditMRDelivery:
                 String readstat = meterDelivery.getReadstat();
-                if(readstat.equals("P")||readstat.equals("Q")){
+                if(!readstat.equals("P")&&!readstat.equals("Q")){
                     dialogUtils.showOKDialog(2,"No Delivery Remarks Entry",
                             "Cannot Enter a Delivery Remark " +
-                                    "for already billed accounts!",new Bundle());
+                                    "for unprinted bill accounts!",new Bundle());
                 }
-                else {
+                else
                    editMode(true);
-                }
+
                 break;
             case R.id.btnCancelMRDelivery:
                 editMode(false);

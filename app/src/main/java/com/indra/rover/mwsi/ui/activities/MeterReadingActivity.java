@@ -506,6 +506,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                             "Proceed to the Previous Record?",bundle);
                 }
                 else {
+
                     if(meterInfo.getReadStat().equals("P")||meterInfo.getReadStat().equals("Q")){
 
                         if(meterInfo.getPrintTag() == MeterInfo.BILLABLE){
@@ -517,6 +518,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                         }
 
                     }
+
                     movePrevious();
                 }
                 break;
@@ -527,6 +529,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                     dlgUtils.showYesNoDialog(DLG_EDITMODE,"There are still unsave record.\n" +
                             "Proceed to the Next Record?",bundle);
                 }else {
+
+
                     if(meterInfo.getPrintTag() == MeterInfo.BILLABLE){
                         if(meterInfo.getReadStat().equals("P")||meterInfo.getReadStat().equals("Q")){
                             if(!Utils.isNotEmpty(meterInfo.getDelCode())){

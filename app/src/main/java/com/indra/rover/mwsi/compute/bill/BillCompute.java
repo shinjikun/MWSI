@@ -84,33 +84,55 @@ public class BillCompute extends BCompute {
                 double price = tariff.getPrice();
                 double totalAmount;
 
+
                 if(i==0){
                     price =amount;
-                }
-                else {
-                    amount = price * quantity;
-                }
-                switch (proratetype){
-                    case PRO_TYPE1 :
-                        old_price = tariff.getOld_price();
-                        old_amount = tariff.getOld_tierAmount() *quantity;
-                            break;
-                    case PRO_TYPE3:
-                        if(i == 0){
-                            old_price = tariff.getOld_tierAmount();
-                        }
-                        else {
-                            old_price =  tariff.getOld_price();
-                        }
-
-                        old_amount = old_price*quantity *(OD/DBP);
-                        amount = price*quantity * (ND/DBP);
+                    switch (proratetype){
+                        case PRO_TYPE3:
+                        case PRO_TYPE1:
+                            old_amount =  tariff.getOld_baseAmount();
+                            old_price = old_amount;
                             break;
                     }
 
-                if(low_limit<=consumption && consumption<=high_limit){
+                }
+                else {
+                    switch (proratetype){
+                        case PRO_TYPE1:
+                            amount = price * quantity;
+                            break;
+                        case PRO_TYPE2:
+                            amount = price * quantity;
+                            old_price = tariff.getOld_price();
+                            old_amount =  old_price * quantity;
+                            break;
+                        case PRO_TYPE3:
+                            old_price = tariff.getOld_price();
+                            amount = price*quantity *  ((double)ND/(double)DBP);
+                            old_amount = old_price*quantity *  ((double)OD/(double)DBP);
+                            break;
+                    }
+                }
+
+               if(low_limit<=consumption && consumption<=high_limit){
                     quantity = consumption - low_limit +1;
-                    amount = price * quantity;
+                   switch (proratetype){
+                       case PRO_TYPE1:
+                           amount = price * quantity;
+                           break;
+                       case PRO_TYPE2:
+                           amount = price * quantity;
+                           old_price = tariff.getOld_price();
+                           old_amount =  old_price * quantity;
+                           break;
+                       case PRO_TYPE3:
+                           old_price = tariff.getOld_price();
+                           amount = price*quantity *  ((double)ND/(double)DBP);
+                           old_amount = old_price*quantity *   ((double)OD/(double)DBP);
+                           break;
+                   }
+                   old_amount = Utils.roundDouble(old_amount);
+                   amount = Utils.roundDouble(amount);
                     totalAmount = amount +old_amount;
                     basic_charge += totalAmount;
                     meterBill.newbasic+=amount;
@@ -119,6 +141,8 @@ public class BillCompute extends BCompute {
                             old_amount,String.valueOf(quantity));
                         break;
                 }
+                old_amount = Utils.roundDouble(old_amount);
+                amount = Utils.roundDouble(amount);
                 totalAmount = amount+ old_amount;
                 basic_charge += totalAmount;
                 meterBill.newbasic+=amount;
@@ -192,8 +216,8 @@ public class BillCompute extends BCompute {
                     zcera = consumption * gl_rate;
                     break;
                 case PRO_TYPE3:
-                    oldamount = consumption * (gl_rate_old*(OD/DBP));
-                    zcera = consumption * (gl_rate*(ND/DBP));
+                    oldamount = consumption * (gl_rate_old*((double) OD/(double) DBP));
+                    zcera = consumption * (gl_rate*((double)ND/(double)DBP));
                     break;
 
             }
@@ -237,14 +261,15 @@ public class BillCompute extends BCompute {
                     oldamount = gl_rate_old;
                     break;
                 case PRO_TYPE3:
-                    oldamount = basicCharge * (gl_rate_old*(OD/DBP));
-                    zfcda = basicCharge * (gl_rate*(ND/DBP));
+                    oldamount = basicCharge * (gl_rate_old*((double) OD/(double) DBP));
+                    zfcda = basicCharge * (gl_rate*((double)ND/(double)DBP));
                     break;
             }
         }
 
-        if(zfcda>0){
+        if(zfcda>0.0){
             zfcda = Utils.roundDouble(zfcda);
+            oldamount = Utils.roundDouble(oldamount);
             insertSAPData(meterBill,"ZFCDA",zfcda,oldamount );
             meterBill.newfcda = zfcda;
             meterBill.oldfcda = oldamount;
@@ -289,7 +314,7 @@ public class BillCompute extends BCompute {
         double  zenv = tot_water_chrg * gl_rate;
         if(zenv>0){
             zenv = Utils.roundDouble(zenv);
-
+            old_total_water_chrg = Utils.roundDouble(old_total_water_chrg);
             insertSAPData(meterBill,"ZENV",zenv,old_total_water_chrg);
             meterBill.setEnv_charge(zenv+old_total_water_chrg);
         }
@@ -353,8 +378,8 @@ public class BillCompute extends BCompute {
                          //   oldamount = gl_rate_old;
                             break;
                         case PRO_TYPE3:
-                            oldamount = old_total_water_charges * (gl_rate_old*(OD/DBP));
-                            zsewer = total_water_charges * (gl_rate*(ND/DBP));
+                            oldamount = old_total_water_charges * (gl_rate_old*((double) OD/(double) DBP));
+                            zsewer = total_water_charges * (gl_rate*((double) ND/(double) DBP));
                             break;
                     }
                 }
@@ -486,11 +511,11 @@ public class BillCompute extends BCompute {
                        old_amount = tariff.getOld_tierAmount();
                        break;
                    case PRO_TYPE3:
-                           old_price = tariff.getOld_tierAmount();
-
-
-                       old_amount = old_price *(OD/DBP);
-                       basic_Charge = basic_Charge * (ND/DBP);
+                        old_price = tariff.getOld_tierAmount();
+                       old_amount = old_price *((double) OD/(double) DBP);
+                       basic_Charge = basic_Charge * ((double)ND/(double) DBP);
+                       old_amount = Utils.roundDouble(old_amount);
+                       basic_Charge = Utils.roundDouble(basic_Charge);
                        break;
 
 
@@ -665,47 +690,69 @@ public class BillCompute extends BCompute {
                     quantity = quantity * (int)gtfactor;
                     double price = tariff.getPrice();
                     double totalAmount;
-
                     if(i==0){
                         price =amount;
+                        switch (proratetype){
+                            case PRO_TYPE3:
+                            case PRO_TYPE1:
+                                old_amount =  tariff.getOld_baseAmount();
+                                old_price = old_amount;
+                                break;
+                        }
+
                     }
                     else {
-                        amount = price * gtfactor;
-                    }
-
-                    switch (proratetype){
-                        case PRO_TYPE1 :
-                            old_price = tariff.getOld_price() *gtfactor;
-                            old_amount = tariff.getOld_tierAmount() * gtfactor;
-                            if(i==0){
-                                price =amount;
-                            }
-                            else {
+                        switch (proratetype){
+                            case PRO_TYPE1:
                                 amount = price * gtfactor;
-                            }
-
-                            break;
-                        case PRO_TYPE3:
-                            if(i == 0){
-                                old_price = tariff.getOld_tierAmount();
-                            }
-                            else {
-                                old_price =  tariff.getOld_price();
-                            }
-                            old_amount = gtfactor* old_price *(OD/DBP);
-                            amount = gtfactor * price *  (ND/DBP);
-                            break;
+                                break;
+                            case PRO_TYPE2:
+                                amount = price * gtfactor;
+                                old_price = tariff.getOld_price();
+                                old_amount =  old_price * gtfactor;
+                                break;
+                            case PRO_TYPE3:
+                                old_price = tariff.getOld_price();
+                                amount = price*gtfactor *  ((double)ND/(double)DBP);
+                                old_amount = old_price*gtfactor *  ((double)OD/(double)DBP);
+                                break;
+                        }
                     }
+
                     if(low_limit<=consumption && consumption<=high_limit){
                         quantity = consumption - low_limit +1;
                         quantity = quantity *(int)gtfactor;
-                        amount = price * gtfactor;
+
+                        switch (proratetype){
+                            case PRO_TYPE1:
+                                amount = price * gtfactor;
+                                break;
+                            case PRO_TYPE2:
+                                amount = price * gtfactor;
+                                old_price = tariff.getOld_price();
+                                old_amount =  old_price * gtfactor;
+                                break;
+                            case PRO_TYPE3:
+                                old_price = tariff.getOld_price();
+                                amount = price*gtfactor *  ((double)ND/(double)DBP);
+                                old_amount = old_price*gtfactor *   ((double)OD/(double)DBP);
+                                break;
+                        }
+
+
+                        amount = Utils.roundDouble(amount);
+                        old_amount = Utils.roundDouble(old_amount);
                         totalAmount = amount +old_amount;
                         basic_charge += totalAmount;
+                        meterBill.newbasic+=amount;
+                        meterBill.oldbasic+=old_amount;
                         insertSAPData(meterBill,"ZBASIC",price,amount,old_price,
                                 old_amount,String.valueOf(quantity));
                         break;
                     }
+
+                    amount = Utils.roundDouble(amount);
+                    old_amount = Utils.roundDouble(old_amount);
                     totalAmount = amount+ old_amount;
                     basic_charge += totalAmount;
                     meterBill.newbasic+=amount;
