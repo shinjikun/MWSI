@@ -44,4 +44,11 @@ public interface  Constants {
    String BLUEDNAME="bname";
    String BLUEMAC ="bmac";
 
+   int SEARCH_REQ =99;
+   int INPUT_REQ =68;
+   int BLUETOOTH_REQ=72;
+   int DLG_RESET=75;
+   int DLG_EDITMODE=67;
+   int DLG_DELIV = 779;
+
 }

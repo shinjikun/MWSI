@@ -44,6 +44,8 @@ import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.CustomerInfo;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 import com.indra.rover.mwsi.print.PrintPage;
+import com.indra.rover.mwsi.print.utils.BluetoothHelper;
+import com.indra.rover.mwsi.print.utils.ConnectThread;
 import com.indra.rover.mwsi.ui.fragments.MRCustomerInfoFragment;
 import com.indra.rover.mwsi.ui.fragments.MRDeliveryRFragment;
 import com.indra.rover.mwsi.ui.fragments.MROCFragment;
@@ -62,7 +64,8 @@ import java.util.Set;
 
 public class MeterReadingActivity extends AppCompatActivity implements View.OnClickListener ,
         DialogUtils.DialogListener, Constants, Compute.ConsumptionListener,
-        BCompute.BillComputeListener, PrintPage.PrintPageListener
+        BCompute.BillComputeListener, PrintPage.PrintPageListener,
+        BluetoothHelper.BluetoothHelperEventListener
 {
 
     ViewPager mViewPager;
@@ -89,6 +92,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     //Button btnPrint;
     CoordinatorLayout coordinatorLayout;
     GPSTracker gpsTracker;
+    BluetoothHelper btHelper;
+    BluetoothDevice btDevice;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +105,9 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
         MainApp.bus.register(this);
         gpsTracker =  new GPSTracker(this);
+
+        btHelper = BluetoothHelper.instance();
+        btHelper.setOnBuetoothHelperEventListener(this);
 
         // add back arrow to toolbar
         if (getSupportActionBar() != null){
@@ -720,14 +728,15 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             }
         } else if(requestCode == BLUETOOTH_REQ){
             if(resultCode ==  Activity.RESULT_OK){
-                BluetoothAdapter   bTAdapter = BluetoothAdapter.getDefaultAdapter();
-                if(bTAdapter != null){
-                    Set<BluetoothDevice> pairedDevices = bTAdapter.getBondedDevices();
-                    for (BluetoothDevice device : pairedDevices) {
-                        Log.i("Test","device name"+device.getName());
-                        Log.i("Test","device address"+device.getAddress());
-                        Log.i("Test","device bond state"+device.getBondState());
-                    }
+                String btAddress = prefs.getData(BLUEMAC);
+                btDevice =  btHelper.getBluetoothDevice(btAddress);
+                if(btDevice!=null){
+                    // try to connect to this device
+                    BluetoothHelper.instance().connectTo(btDevice);
+                    computeBill();
+                }
+                else {
+                    dlgUtils.showOKDialog("Please connect a Printer via Bluetooth  in Settings");
                 }
             }
         }
@@ -1111,6 +1120,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onPrintPageResult(String str) {
+       btHelper.sendData(str.getBytes());
         changeToPrinted();
 
     }
@@ -1131,22 +1141,48 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 startActivityForResult(enableBT, BLUETOOTH_REQ);
             }
             else {
-                computeBill();
+                String btAddress = prefs.getData(BLUEMAC);
+                 btDevice =  btHelper.getBluetoothDevice(btAddress);
+                if(btDevice!=null){
+                    BluetoothHelper.instance().connectTo(btDevice);
+                    computeBill();
+                }
+                else {
+                   dlgUtils.showOKDialog("Please connect a Printer via Bluetooth  in Settings");
+                }
+               //
             }
         }
     }
 
 
-    /**
-     *
-     * vibrate utils
-     * @param context
-     */
-    public static void vibrate(Context context){
-        Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        // Vibrate for 700 milliseconds
-        v.vibrate(700);
+
+
+
+    @Override
+    public void bluetoothEventChange(BluetoothHelper.BluetoothHelperEvent event) {
+        switch (event) {
+            case NOT_ENABLED:
+                Intent enableBT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBT, BLUETOOTH_REQ);
+                break;
+            case NOT_SUPPORTED:
+                // if there is no bluetooth
+                break;
+            case CONNECTION_FAILED:
+            case CONNECTION_STABLISHED:
+
+                break;
+        }
     }
 
+    @Override
+    public void bluetoothConnectionStart(ConnectThread connection) {
 
+    }
+
+    @Override
+    public void bluetoothSelected(BluetoothDevice bluetoothDevice) {
+
+    }
 }
