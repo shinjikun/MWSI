@@ -94,7 +94,37 @@ public class SplashActivity extends AppCompatActivity  implements Constants,
         String versionCode = "ver "+ BuildConfig.VERSION_NAME;
         txt.setText(versionCode);
         txtUpdates = (TextView)findViewById(R.id.txtUpdates);
+        if(prefs.getData(isFreshInstall,true)){
+            addShortcut();
+            prefs.setData(isFreshInstall,false);
+        }
     }
+
+    /**
+     * Adding shortcut for SplashActivity in Home Screen
+     */
+    private void addShortcut() {
+        //Adding shortcut for SplashActivity
+        //on Home screen
+        Intent shortcutIntent = new Intent(getApplicationContext(),
+                SplashActivity.class);
+
+        shortcutIntent.setAction(Intent.ACTION_MAIN);
+
+        Intent addIntent = new Intent();
+        addIntent
+                .putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getResources().getString(R.string.app_name));
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+                Intent.ShortcutIconResource.fromContext(getApplicationContext(),
+                        R.mipmap.ic_launcher));
+
+        addIntent
+                .setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+        addIntent.putExtra("duplicate", false);  //may it's already there so don't duplicate
+        getApplicationContext().sendBroadcast(addIntent);
+    }
+
 
 
     @Override

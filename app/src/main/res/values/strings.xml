@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MWSI</string>
+    <string name="app_name">Maynilad</string>
     <string name="action_settings">Settings</string>
 
     <!-- Splash Screen -->
@@ -160,4 +160,13 @@
     <string name="save">Save</string>
     <string name="add_new_meter">Add New Meter</string>
     <string name="delete_meter">Delete Meter</string>
+
+
+    <string name="connecting_to_printer">Connecting to printer&#8230;</string>
+    <string name="connected_to_printer">Connected to printer</string>
+    <string name="no_printer_selected">No printer selected</string>
+    <string name="printer_name">Printer name:</string>
+    <string name="printer_address">Printer address:</string>
+    <string name="discovered_printers">Discovered printers</string>
+    <string name="searching_for_printers">Searching for printers&#8230;</string>
 </resources>

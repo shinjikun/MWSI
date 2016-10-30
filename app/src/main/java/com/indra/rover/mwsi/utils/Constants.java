@@ -27,6 +27,8 @@ public interface  Constants {
 
    String ADMIN_DEFAULT_PASS= "1234";
 
+   String isFreshInstall = "isFresh";
+
    String BLT_PAIRED = "";
 
    int REG_SCHEME =0;
