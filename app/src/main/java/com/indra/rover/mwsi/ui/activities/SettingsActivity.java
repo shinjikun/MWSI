@@ -3,12 +3,16 @@ package com.indra.rover.mwsi.ui.activities;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,15 +31,20 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.print.utils.BluetoothHelper;
+import com.indra.rover.mwsi.print.utils.ConnectThread;
+import com.indra.rover.mwsi.ui.fragments.PrinterConnectionDialog;
 import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.PreferenceKeys;
+import com.indra.rover.mwsi.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener,
-        Constants,DialogUtils.DialogListener {
+        Constants,DialogUtils.DialogListener,BluetoothHelper.BluetoothHelperEventListener {
 
     PreferenceKeys prefs;
     DialogUtils dialogUtils;
@@ -43,9 +52,11 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     final int STAT_CHANGE_PASS =888;
     final int REQUEST_BLUETOOTH = 700;
     boolean isBluetoothOn = true;
-    ArrayList<BPrinters> arryPrinters;
-    ImageButton btnPrint;
+    final int DLG_UNPAIR =123;
 
+    ImageButton btnPrint;
+    BluetoothHelper btHelper;
+    private static final String DIALOG_PRINTER_CONNECT_TAG = "printer_connect";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,14 +70,19 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+
+        btHelper = BluetoothHelper.instance();
+        btHelper.setOnBuetoothHelperEventListener(this);
         prefs = PreferenceKeys.getInstance(this);
         dialogUtils = new DialogUtils(this);
+        dialogUtils.setListener(this);
         btnPair =  (Button)findViewById(R.id.btnPair);
         btnPair.setOnClickListener(this);
         btnUnPair =  (Button)findViewById(R.id.btnUnPair);
         btnUnPair.setOnClickListener(this);
         btnPrint = (ImageButton)findViewById(R.id.btnPrint);
         btnPrint.setOnClickListener(this);
+        registerReceiver(mPairReceiver, new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED));
         init();
     }
 
@@ -95,11 +111,15 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                     startActivityForResult(enableBT, REQUEST_BLUETOOTH);
                 }
                 else {
-                  dlg();
+                  showPrinterList();
                 }
                 break;
             case R.id.btnPrint:
 
+                break;
+
+            case R.id.btnUnPair:
+                dialogUtils.showYesNoDialog(DLG_UNPAIR,"UnPair this Device?", new Bundle());
                 break;
 
 
@@ -264,23 +284,12 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 boolean isFound = false;
                 String btName = prefs.getData(BLUEDNAME,"");
                 String btMac = prefs.getData(BLUEMAC,"");
-                Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-                for (BluetoothDevice device : pairedDevices) {
 
-                    if(device.getBondState() == BluetoothDevice.BOND_BONDED){
-                        if(btMac.equals(device.getAddress())){
+                BluetoothDevice btDevice =   btHelper.getBluetoothDevice(btMac);
 
-                            btName = device.getName();
-                            btMac = device.getAddress();
-                            prefs.setData(BLUEDNAME,btName);
-                            prefs.setData(BLUEMAC,btMac);
-                            isFound = true;
-                            break;
-                        }
 
-                    }
-                }//end of for
-                if(isFound){
+
+                if(btDevice!=null){
                     btnPair.setVisibility(View.GONE);
                     btnUnPair.setVisibility(View.VISIBLE);
                     btnUnPair.setText(btName+"\n"+btMac);
@@ -307,7 +316,17 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void dialog_confirm(int dialog_id, Bundle params) {
+        switch (dialog_id){
+            case DLG_UNPAIR:
+                String btAddress = prefs.getData(BLUEMAC);
+                BluetoothDevice btDevice =  btHelper.getBluetoothDevice(btAddress);
 
+                if(btDevice!=null){
+                    btHelper.unpairDevice(btDevice);
+                }
+
+                break;
+        }
     }
 
     @Override
@@ -321,77 +340,104 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         bluetoothCon();
     }
 
-    private void dlg(){
-        arryPrinters = new ArrayList<>();
-        BluetoothAdapter   bTAdapter = BluetoothAdapter.getDefaultAdapter();
-        if(bTAdapter != null){
-            Set<BluetoothDevice> pairedDevices = bTAdapter.getBondedDevices();
-            for (BluetoothDevice device : pairedDevices) {
-                BPrinters bPrinters = new BPrinters(device.getName(),device.getAddress());
-                arryPrinters.add(bPrinters);
+
+
+    private void showPrinterList(){
+        // Create an instance of the dialog fragment and show it
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        PrinterConnectionDialog printerConnectionDialog = (PrinterConnectionDialog)
+                getFragmentManager().findFragmentByTag(DIALOG_PRINTER_CONNECT_TAG);
+
+        if (printerConnectionDialog == null) {
+            printerConnectionDialog = new PrinterConnectionDialog();
+            printerConnectionDialog.show(ft, DIALOG_PRINTER_CONNECT_TAG);
+        }
+
+
+    }
+
+    @Override
+    public void bluetoothEventChange(BluetoothHelper.BluetoothHelperEvent event) {
+        switch (event) {
+            case NOT_ENABLED:
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, REQUEST_BLUETOOTH);
+                break;
+            case NOT_SUPPORTED:
+                // if there is no bluetooth
+                break;
+            case CONNECTION_FAILED:
+            case CONNECTION_STABLISHED:
+
+                break;
+        }
+    }
+
+    @Override
+    public void bluetoothConnectionStart(ConnectThread connection) {
+
+    }
+
+    @Override
+    public void bluetoothSelected(BluetoothDevice bluetoothDevice) {
+       prefs.setData(BLUEDNAME,bluetoothDevice.getName());
+        prefs.setData(BLUEMAC,bluetoothDevice.getAddress());
+
+        if(bluetoothDevice!=null){
+            if(bluetoothDevice.getBondState()!= BluetoothDevice.BOND_BONDED){
+                btHelper.pairDevice(bluetoothDevice);
+            }
+            String btName = bluetoothDevice.getName();
+            String btMac = bluetoothDevice.getAddress();
+
+            if(!Utils.isNotEmpty(btName)){
+                btName="";
+            }
+            prefs.setData(BLUEDNAME,btName);
+            prefs.setData(BLUEMAC,btMac);
+
+        }else {
+            btnPair.setText("Pair to Bluetooth Printer");
+        }
+
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        BluetoothHelper.instance().destroy();
+        unregisterReceiver(mPairReceiver);
+        super.onDestroy();
+    }
+
+
+
+    private final BroadcastReceiver mPairReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
+                final int state 		= intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR);
+                final int prevState	= intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, BluetoothDevice.ERROR);
+
+                if (state == BluetoothDevice.BOND_BONDED && prevState == BluetoothDevice.BOND_BONDING) {
+                    //showToast("Paired");
+                  String btMac =  prefs.getData(BLUEMAC);
+                  String btName =   prefs.getData(BLUEDNAME);
+                    btnPair.setVisibility(View.GONE);
+                    btnUnPair.setVisibility(View.VISIBLE);
+                    btnUnPair.setText(btName+"\n"+btMac);
+                } else if (state == BluetoothDevice.BOND_NONE && prevState == BluetoothDevice.BOND_BONDED){
+                   // showToast("Unpaired");
+                    //reset save variable after the device is succesfully unpained
+                    prefs.setData(BLUEMAC,"");
+                    prefs.setData(BLUEDNAME,"");
+                    btnPair.setVisibility(View.VISIBLE);
+                    btnUnPair.setVisibility(View.GONE);
+                }
+
+
             }
         }
-
-        AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
-        builderSingle.setTitle("Select One to Pair:");
-
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                this,
-                android.R.layout.select_dialog_singlechoice);
-        for(int i=0;i<arryPrinters.size();i++){
-           arrayAdapter.add(arryPrinters.get(i).getName());
-        }
-
-        builderSingle.setNegativeButton(
-                "cancel",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-        builderSingle.setAdapter(
-                arrayAdapter,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String strName = arrayAdapter.getItem(which);
-                        AlertDialog.Builder builderInner = new AlertDialog.Builder(
-                                SettingsActivity.this);
-                        builderInner.setMessage(strName);
-                        builderInner.setTitle("Your Selected Item is");
-                        builderInner.setPositiveButton(
-                                "Ok",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(
-                                            DialogInterface dialog,
-                                            int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        builderInner.show();
-                    }
-                });
-        builderSingle.show();
-    }
-
-
-    private class BPrinters{
-        String name;
-        String macAddress;
-        public BPrinters(String name,String macAddress){
-            this.macAddress = macAddress;
-            this.name = name;
-        }
-
-        public String getMacAddress() {
-            return macAddress;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
+    };
 }
