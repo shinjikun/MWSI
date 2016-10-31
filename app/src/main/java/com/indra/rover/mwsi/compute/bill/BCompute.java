@@ -48,11 +48,11 @@ public abstract  class BCompute {
     /**
      * no proration..applied the standard computation
      */
-    final  char PRO_TYPE2='0';
+    final  char NOPRORATE ='0';
     /**
      * apply the prorate based on the formula
      */
-    final  char PRO_TYPE3='1';
+    final  char WITHPRORATE ='1';
     SPBillRule spBillRule;
 
     public BCompute(BillComputeListener listener, Context context){
