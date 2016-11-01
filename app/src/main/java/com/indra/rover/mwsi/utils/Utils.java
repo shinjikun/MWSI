@@ -171,6 +171,13 @@ public class Utils {
     }
 
 
+    public static String formatValue(double val){
+        DecimalFormat  df = new DecimalFormat("###,###,###.00");
+
+        return df.format(val);
+    }
+
+
     /**
      *
      * @param strDate1 date 1

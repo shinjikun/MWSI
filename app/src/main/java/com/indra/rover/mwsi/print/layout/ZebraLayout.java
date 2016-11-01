@@ -144,8 +144,16 @@ public class ZebraLayout   extends   PrintLayout{
         str.append(setBold(0));
         str.append(context.getString(R.string.print_acct_name));
         str.append("    : ");
+        str.append(setBold(1));
         str.append(mtrPrint.getCustName());
         str.append("\r\n");
+        str.append(setBold(0));
+        str.append(context.getString(R.string.print_tenant_name));
+        str.append("    : ");
+        str.append(setBold(1));
+        str.append(mtrPrint.getTenantName());
+        str.append("\r\n");
+
         str.append("! U1 SETLP 0 3 18\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
@@ -193,22 +201,34 @@ public class ZebraLayout   extends   PrintLayout{
         str.append(mtrPrint.getSeqNo());
 
         str.append("\r\r\n");
+        str.append(setBold(0));
         str.append(context.getString(R.string.print_reading_date));
         str.append("        : ");
+        str.append(setBold(1));
         str.append(mtrPrint.getPresRdgDate());
         str.append("\r\n");
+        str.append(setBold(0));
         str.append(context.getString(R.string.print_pres_rdg));
         str.append("     : ");
+        str.append(setBold(1));
         str.append(mtrPrint.getPresRdg());
         str.append("\r\n");
+        str.append(setBold(0));
         str.append(context.getString(R.string.print_prev_rdg));
         str.append("    : ");
+        str.append(setBold(1));
         str.append(mtrPrint.getPrevRdg());
         str.append("\r\n");
+        str.append(setBold(0));
         str.append(context.getString(R.string.print_cosumption));
         str.append("  : ");
+        str.append(setBold(1));
         str.append(mtrPrint.getBillCons());
-        str.append("\r\n");
+        if(mtrPrint.getBillCons()<=10){
+            str.append(" minimum");
+        }
+        str.append("\r\r\n");
+        str.append(setBold(0));
         str.append(context.getString(R.string.print_prevcons));
         str.append("\r\n");
         str.append(linePrint());
@@ -301,6 +321,11 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(1));
         str.append(context.getString(R.string.print_bill_period));
+        str.append("   ");
+        str.append(mtrPrint.getSchedRdgDate());
+        str.append("-");
+        str.append(mtrPrint.getDueDate());
+
         str.append("\r\n");
         str.append("! U1 SETLP 0 3 18\r\n");
         str.append("! U1 SETSP 0\r\n");

@@ -2,8 +2,9 @@ package com.indra.rover.mwsi.data.pojo.meter_reading;
 
 import android.database.Cursor;
 
+import com.indra.rover.mwsi.utils.Utils;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class MeterPrint {
   //business class
@@ -22,12 +23,12 @@ public class MeterPrint {
   private String custAddress;
   private String acct_status;
   private String TIN;
-  private String tenant_name;
+  private String tenantName;
   private String sc_id;
   private String soa;
 
   private String meterNO;
-  private String billCons;
+  private int billCons;
   private String presRdgDate;
   private String prevRdgDate;
   private String prevRdg;
@@ -59,7 +60,7 @@ public class MeterPrint {
 
   private String rangeCode;
   private String dueDate;
-
+  private String schedRdgDate;
   public MeterPrint(){
 
   }
@@ -75,7 +76,7 @@ public class MeterPrint {
     this.custAddress = cursor.getString(cursor.getColumnIndexOrThrow("CUSTADDRESS"));
     this.acct_status =  cursor.getString(cursor.getColumnIndexOrThrow("ACCT_STATUS"));
     this.TIN =  cursor.getString(cursor.getColumnIndexOrThrow("TIN"));
-    this.tenant_name = cursor.getString(cursor.getColumnIndexOrThrow("TENANT_NAME"));
+    this.tenantName = cursor.getString(cursor.getColumnIndexOrThrow("TENANT_NAME"));
     this.sc_id = cursor.getString(cursor.getColumnIndexOrThrow("SC_ID"));
     this.soa = cursor.getString(cursor.getColumnIndexOrThrow("SOA_NUMBER"));
 
@@ -83,7 +84,7 @@ public class MeterPrint {
     this.mru = cursor.getString(cursor.getColumnIndexOrThrow("MRU"));
     this.seqNo = cursor.getString(cursor.getColumnIndexOrThrow("SEQNO"));
     this.meterNO = cursor.getString(cursor.getColumnIndexOrThrow("METERNO"));
-    this.billCons = cursor.getString(cursor.getColumnIndexOrThrow("BILLED_CONS"));
+    this.billCons = cursor.getInt(cursor.getColumnIndexOrThrow("BILLED_CONS"));
     this.presRdg = cursor.getString(cursor.getColumnIndexOrThrow("PRESRDG"));
     this.presRdgDate = cursor.getString(cursor.getColumnIndexOrThrow("RDG_DATE"));
     this.prevRdg = cursor.getString(cursor.getColumnIndexOrThrow("ACTPREVRDG"));
@@ -106,29 +107,47 @@ public class MeterPrint {
       this.cera = cursor.getString(cursor.getColumnIndexOrThrow("CERA"));
       this.basicCharge = cursor.getString(cursor.getColumnIndexOrThrow("BASIC_CHARGE"));
       cur_charges = new ArrayList<>();
-      String str = cursor.getString(cursor.getColumnIndexOrThrow("BASIC_CHARGE"));
+      double data = cursor.getDouble(cursor.getColumnIndexOrThrow("BASIC_CHARGE"));
+      String str = Utils.formatValue(data);
       cur_charges.add(str);
-      str =  cursor.getString(cursor.getColumnIndexOrThrow("FCDA"));
+      data =  cursor.getDouble(cursor.getColumnIndexOrThrow("FCDA"));
+      str = Utils.formatValue(data);
       cur_charges.add(str);
-      str  = cursor.getString(cursor.getColumnIndexOrThrow("ENV_CHARGE"));
+
+      data  = cursor.getDouble(cursor.getColumnIndexOrThrow("ENV_CHARGE"));
+      str = Utils.formatValue(data);
       cur_charges.add(str);
-      str = cursor.getString(cursor.getColumnIndexOrThrow("SEWER_CHARGE"));
+
+      data = cursor.getDouble(cursor.getColumnIndexOrThrow("SEWER_CHARGE"));
+      str = Utils.formatValue(data);
       cur_charges.add(str);
-      str = cursor.getString(cursor.getColumnIndexOrThrow("MSC_AMOUNT"));
+
+      data = cursor.getDouble(cursor.getColumnIndexOrThrow("MSC_AMOUNT"));
+      str = Utils.formatValue(data);
       cur_charges.add(str);
-      str = cursor.getString(cursor.getColumnIndexOrThrow("TOTCHRG_WO_TAX"));
+
+      data = cursor.getDouble(cursor.getColumnIndexOrThrow("TOTCHRG_WO_TAX"));
+      str = Utils.formatValue(data);
       cur_charges.add(str);
-      str = cursor.getString(cursor.getColumnIndexOrThrow("VAT_CHARGE"));
+
+      data = cursor.getDouble(cursor.getColumnIndexOrThrow("VAT_CHARGE"));
+      str = Utils.formatValue(data);
       cur_charges.add(str);
-      this.totcurr_charge = cursor.getString(cursor.getColumnIndexOrThrow("TOT_CURR_CHARGE"));
+
+      data = cursor.getDouble(cursor.getColumnIndexOrThrow("TOT_CURR_CHARGE"));
+      str = Utils.formatValue(data);
+      this.totcurr_charge = str;
 
       //billing summary -  other charges
-      this.otherCharges =  cursor.getString(cursor.getColumnIndexOrThrow("OTHER_CHARGES"));
-
+      data =  cursor.getDouble(cursor.getColumnIndexOrThrow("OTHER_CHARGES"));
+      str =  Utils.formatValue(data);
+      this.otherCharges =str;
       this.disConStatus = cursor.getString(cursor.getColumnIndexOrThrow("DISCHECK_FLAG"));
       this.rangeCode = cursor.getString(cursor.getColumnIndexOrThrow("RANGE_CODE"));
       this.dueDate = cursor.getString(cursor.getColumnIndexOrThrow("DUE_DATE"));
-      this.totalamt = cursor.getString(cursor.getColumnIndexOrThrow("TOTAL_AMT_DUE"));
+      this.schedRdgDate = cursor.getString(cursor.getColumnIndexOrThrow("SCHED_RDG_DATE"));
+      double d = cursor.getDouble(cursor.getColumnIndexOrThrow("TOTAL_AMT_DUE"));
+      this.totalamt = Utils.formatValue(d);
   }
 
     public String getBillClass() {
@@ -163,7 +182,7 @@ public class MeterPrint {
         return bcTin;
     }
 
-    public String getBillCons() {
+    public int getBillCons() {
         return billCons;
     }
 
@@ -230,8 +249,8 @@ public class MeterPrint {
     }
 
 
-    public String getTenant_name() {
-        return tenant_name;
+    public String getTenantName() {
+        return tenantName;
     }
 
     public String getTIN() {
@@ -278,5 +297,9 @@ public class MeterPrint {
 
     public String getOtherCharges() {
         return otherCharges;
+    }
+
+    public String getSchedRdgDate() {
+        return schedRdgDate;
     }
 }

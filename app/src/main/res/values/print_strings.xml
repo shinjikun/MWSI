@@ -13,9 +13,10 @@
 
     <!--SERVICE INFORMATION SECTION -->
     <string name="print_contract_num">Contract Account No.</string>
-       <string name="print_acct_name">Account Name</string>
-         <string name="print_address">Service Address</string>
-            <string name="print_rate">Rate Class</string>
+    <string name="print_tenant_name">Tenant Name</string>
+    <string name="print_acct_name">Account Name</string>
+    <string name="print_address">Service Address</string>
+    <string name="print_rate">Rate Class</string>
     <string name="print_business_area">Business Area</string>
     <string name="print_TIN">TIN</string>
     <string name="print_senior_citizen">Senior Citizen ID</string>
@@ -82,8 +83,8 @@
 
 
     <string name="print_advisory1">We observed a significant %1$s in your water consumption. From</string>
-    <string name="print_advisory2">an average consumption of %1$s cu.m. in the previous months, it</string>
-    <string name="print_advisory3">%1$s to %2$s cu.m. this month. You may want to check your</string>
+    <string name="print_advisory2">an average consumption of %1$d cu.m. in the previous months, it</string>
+    <string name="print_advisory3">%1$s to %2$d cu.m. this month. You may want to check your</string>
 
     <array name="print_arry_advisory">
         <item>internal plumbing and waterline for underground leaks and/or </item>

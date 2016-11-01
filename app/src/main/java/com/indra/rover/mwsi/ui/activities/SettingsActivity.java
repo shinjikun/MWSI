@@ -384,14 +384,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
        prefs.setData(BLUEDNAME,bluetoothDevice.getName());
         prefs.setData(BLUEMAC,bluetoothDevice.getAddress());
 
-        if(bluetoothDevice!=null){
-            if(bluetoothDevice.getBondState()!= BluetoothDevice.BOND_BONDED){
-                btHelper.pairDevice(bluetoothDevice);
-            }
-            else if(bluetoothDevice.getBondState()== BluetoothDevice.BOND_BONDED){
-                btHelper.unpairDevice(bluetoothDevice);
 
-            }
+
+
+
             String btName = bluetoothDevice.getName();
             String btMac = bluetoothDevice.getAddress();
 
@@ -401,9 +397,14 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             prefs.setData(BLUEDNAME,btName);
             prefs.setData(BLUEMAC,btMac);
 
-        }else {
-            btnPair.setText("Pair to Bluetooth Printer");
+        if(bluetoothDevice.getBondState()!= BluetoothDevice.BOND_BONDED){
+            btHelper.pairDevice(bluetoothDevice);
+        } else if(bluetoothDevice.getBondState()== BluetoothDevice.BOND_BONDED){
+            btnPair.setVisibility(View.GONE);
+            btnUnPair.setVisibility(View.VISIBLE);
+            btnUnPair.setText(btName+"\n"+btMac);
         }
+
 
     }
 

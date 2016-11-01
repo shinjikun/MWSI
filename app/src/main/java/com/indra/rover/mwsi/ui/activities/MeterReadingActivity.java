@@ -1120,7 +1120,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onPrintPageResult(String str) {
-       //btHelper.sendData(str.getBytes());
+      // btHelper.sendData(str.getBytes());
         changeToPrinted();
 
     }
