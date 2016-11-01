@@ -40,22 +40,25 @@ public class MeterPrint {
   private String wbPaydtls2;
   private String  miscPaydtls;
   private String  gdPaydtls;
+  private String prevInvoiceNo;
 
   private String basicCharge;
-  private String fcda;
   private String cera;
-  private String env_charge;
-  private String sewer_charge;
-  private String msc_amount;
-    /**
-     * total charge without tax
-      */
-  private String totcharg_wotax;
-  private String vat_charge;
     /**
      *  total current charge
       */
   private String totcurr_charge;
+    /**
+     * total amount due
+     */
+  private String totalamt;
+  private String otherCharges;
+
+
+  private String disConStatus;
+
+  private String rangeCode;
+  private String dueDate;
 
   public MeterPrint(){
 
@@ -75,23 +78,31 @@ public class MeterPrint {
     this.tenant_name = cursor.getString(cursor.getColumnIndexOrThrow("TENANT_NAME"));
     this.sc_id = cursor.getString(cursor.getColumnIndexOrThrow("SC_ID"));
     this.soa = cursor.getString(cursor.getColumnIndexOrThrow("SOA_NUMBER"));
+
     //metering info
     this.mru = cursor.getString(cursor.getColumnIndexOrThrow("MRU"));
     this.seqNo = cursor.getString(cursor.getColumnIndexOrThrow("SEQNO"));
     this.meterNO = cursor.getString(cursor.getColumnIndexOrThrow("METERNO"));
     this.billCons = cursor.getString(cursor.getColumnIndexOrThrow("BILLED_CONS"));
     this.presRdg = cursor.getString(cursor.getColumnIndexOrThrow("PRESRDG"));
-      this.presRdgDate = cursor.getString(cursor.getColumnIndexOrThrow("RDG_DATE"));
-      this.prevRdg = cursor.getString(cursor.getColumnIndexOrThrow("ACTPREVRDG"));
+    this.presRdgDate = cursor.getString(cursor.getColumnIndexOrThrow("RDG_DATE"));
+    this.prevRdg = cursor.getString(cursor.getColumnIndexOrThrow("ACTPREVRDG"));
     this.prevRdgDate = cursor.getString(cursor.getColumnIndexOrThrow("PREVRDGDATE"));
-      this.prevConsLine1 = cursor.getString(cursor.getColumnIndexOrThrow("PREVCONSLINE1"));
-      this.prevConsLine2 = cursor.getString(cursor.getColumnIndexOrThrow("PREVCONSLINE2"));
-      //bill and payment history
-        this.wbPaydtls1 = cursor.getString(cursor.getColumnIndexOrThrow("WBPAYDTLS1"));
-        this.wbPaydtls2 = cursor.getString(cursor.getColumnIndexOrThrow("WBPAYDTLS2"));
-        this.gdPaydtls = cursor.getString(cursor.getColumnIndexOrThrow("GDPAYDTLS"));
-        this.miscPaydtls = cursor.getString(cursor.getColumnIndexOrThrow("MISCPAYDTLS"));
-      //billing summary - current charge
+    this.prevConsLine1 = cursor.getString(cursor.getColumnIndexOrThrow("PREVCONSLINE1"));
+    this.prevConsLine2 = cursor.getString(cursor.getColumnIndexOrThrow("PREVCONSLINE2"));
+
+
+    //bill and payment history
+    this.wbPaydtls1 = cursor.getString(cursor.getColumnIndexOrThrow("WBPAYDTLS1"));
+    this.wbPaydtls2 = cursor.getString(cursor.getColumnIndexOrThrow("WBPAYDTLS2"));
+    this.gdPaydtls = cursor.getString(cursor.getColumnIndexOrThrow("GDPAYDTLS"));
+    this.miscPaydtls = cursor.getString(cursor.getColumnIndexOrThrow("MISCPAYDTLS"));
+    this.prevInvoiceNo = cursor.getString(cursor.getColumnIndexOrThrow("PREVINVOICENO"));
+
+
+
+
+      //billing summary - current charges
       this.cera = cursor.getString(cursor.getColumnIndexOrThrow("CERA"));
       this.basicCharge = cursor.getString(cursor.getColumnIndexOrThrow("BASIC_CHARGE"));
       cur_charges = new ArrayList<>();
@@ -111,6 +122,13 @@ public class MeterPrint {
       cur_charges.add(str);
       this.totcurr_charge = cursor.getString(cursor.getColumnIndexOrThrow("TOT_CURR_CHARGE"));
 
+      //billing summary -  other charges
+      this.otherCharges =  cursor.getString(cursor.getColumnIndexOrThrow("OTHER_CHARGES"));
+
+      this.disConStatus = cursor.getString(cursor.getColumnIndexOrThrow("DISCHECK_FLAG"));
+      this.rangeCode = cursor.getString(cursor.getColumnIndexOrThrow("RANGE_CODE"));
+      this.dueDate = cursor.getString(cursor.getColumnIndexOrThrow("DUE_DATE"));
+      this.totalamt = cursor.getString(cursor.getColumnIndexOrThrow("TOTAL_AMT_DUE"));
   }
 
     public String getBillClass() {
@@ -161,13 +179,6 @@ public class MeterPrint {
         return custName;
     }
 
-    public String getEnv_charge() {
-        return env_charge;
-    }
-
-    public String getFcda() {
-        return fcda;
-    }
 
     public String getGdPaydtls() {
         return gdPaydtls;
@@ -185,9 +196,6 @@ public class MeterPrint {
         return mru;
     }
 
-    public String getMsc_amount() {
-        return msc_amount;
-    }
 
     public String getPresRdg() {
         return presRdg;
@@ -221,9 +229,6 @@ public class MeterPrint {
         return seqNo;
     }
 
-    public String getSewer_charge() {
-        return sewer_charge;
-    }
 
     public String getTenant_name() {
         return tenant_name;
@@ -233,17 +238,11 @@ public class MeterPrint {
         return TIN;
     }
 
-    public String getTotcharg_wotax() {
-        return totcharg_wotax;
-    }
 
     public String getTotcurr_charge() {
         return totcurr_charge;
     }
 
-    public String getVat_charge() {
-        return vat_charge;
-    }
 
     public String getWbPaydtls1() {
         return wbPaydtls1;
@@ -255,5 +254,29 @@ public class MeterPrint {
 
     public String getSOA() {
         return soa;
+    }
+
+    public String getDisConStatus() {
+        return disConStatus;
+    }
+
+    public String getRangeCode() {
+        return rangeCode;
+    }
+
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public String getPrevInvoiceNo() {
+        return prevInvoiceNo;
+    }
+
+    public String getTotalamt() {
+        return totalamt;
+    }
+
+    public String getOtherCharges() {
+        return otherCharges;
     }
 }

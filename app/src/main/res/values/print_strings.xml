@@ -5,9 +5,9 @@
     <string name="print_statement">STATEMENT OF ACCOUNT</string>
     <string name="print_service">SERVICE INFORMATION</string>
     <string name="print_meter_info">METERING INFORMATION</string>
-    <string name="print_bill_payment">BILL and PAYMENT HISTORY</string>
+    <string name="print_bill_payment">BILL &amp; PAYMENT HISTORY</string>
     <string name="print_bill_summary">BILLING SUMMARY</string>
-    <string name="print_advisory">ADVISORY</string>
+    <string name="print_advisory">A D V I S O R Y</string>
     <string name="print_notic_discon">NOTICE OF DISCONNECTION</string>
 
 
@@ -22,12 +22,12 @@
 
    <!-- METERING INFO-->
     <string name="print_meter_no">Meter No.</string>
-    <string name="print_meter_value">AJ15-13-156319M</string>
     <string name="print_reading_date">Reading Date</string>
     <string name="print_pres_rdg">Present Reading</string>
     <string name="print_prev_rdg">Previous Reading</string>
     <string name="print_cosumption">Consumption (cu.m)</string>
-    <string name="print_prevcons">Previous 3 Months Consumption</string>
+    <string name="print_prevcons">Previous 3 Months</string>
+    <string name="print_prevcons1">Consumption</string>
 
     <!--BILLING SUMMARY -->
     <string name="print_bill_period">BILLING PERIOD</string>
@@ -43,49 +43,49 @@
         <item>Value Added Tax (VAT) </item>
     </array>
     <array name="print_arry_othercharge">
-        <item>Guarantee Deposit</item>
-        <item>Installation Cost - Water</item>
-        <item>Installation Cost - Sewer</item>
-        <item>Project Amortization Cost</item>
         <item>Installment Due: Guarantee Deposit (4th of 6)</item>
         <item>Installment Due: Installation Cost - Water (99th of 99)</item>
         <item>Installment Due: Installation Cost - Sewer (nth of n)</item>
         <item>Installment Due: Project Amortization Cost (nth of n)</item>
         <item>Installment Due: Restoration Charges (nth of n)</item>
         <item>Installment Due: Penalties for Illegalities (nth of n)</item>
+     </array>
+    <array name="print_arry_othercharge1">
         <item>Reopening Fee</item>
         <item>Metering Charge</item>
         <item>Septic Desludging Charge</item>
         <item>Sprtn/Trnsfr/Chnge Size Charge</item>
         <item>Penalties for Illegalities</item>
-        <item>Unmigrated AR - Water</item>
-        <item>Unmigrated AR - Installation Cost</item>
+    </array>
+
+    <array name="print_arry_othercharge2">
         <item>Installment Due: Unmigrated AR - Water (nth of n)</item>
         <item>Installment Due: Unmigrated AR - IC (nth of n)</item>
         <item>Recovery of Accounts</item>
         <item>Other Miscellaneous Charges</item>
-     </array>
-   <string name="print_refund">Refund/ Rebate/ Overpayment</string>
-   <string name="print_previous">Previous Unpaid Amount (Please pay immediately)</string>
-
-    <!-- ADVISORY SECTION -->
-    <string name="print_advisory_c">We observed a significant increase in your water consumption. From an average consumption of %1$s cu.m. in the previous months, it increased to %2$s cu.m. this month. You may want to check your internal plumbing and waterline for underground leaks and/or unauthorized tappings. For further inquiries regarding the matter, please call Maynilad Hotline 1626. Thank you.</string>
-
-    <!--  NOTICE OF DISCONNECTION SECTION -->
-    <string name="print_discon">Our records show that you have a total amount due of Php %1$s.      We strongly advise you to pay your overdue and/or installment due amount on or before %2$s  to avoid the inconvenience of a disconnected water service.Please disregard this notice if payment has been made. Thank you.</string>
-    <array name="print_arry_discon">
-        <item>Our records show that you have a total amount due of Php %1$s.</item>
-        <item>We strongly advise you to pay your overdue and/or installment due</item>
-        <item>amount on or before %2$s  to avoid the inconvenience of a</item>
-        <item>disconnected water service. Please disregard this notice if payment</item>
-        <item>has been made. Thank you.</item>
-
     </array>
 
+    <string name="print_refund">Refund/ Rebate/ Overpayment</string>
+   <string name="print_previous">Previous Unpaid Amount (Please pay immediately)</string>
+
+
+    <!--  NOTICE OF DISCONNECTION SECTION -->
+
+
+    <string name="print_arry_discon1">Our records show that you have a total amount due of Php %1$s.</string>
+    <string name="print_arry_discon2">We strongly advise you to pay your overdue and/or installment due</string>
+    <string name="print_arry_discon3">amount on or before %1$s  to avoid the inconvenience of a</string>
+    <string name="print_arry_discon4">disconnected water service. Please disregard this notice if payment</string>
+    <string name="print_arry_discon5">has been made. Thank you.</string>
+
+    <!--  ADVISORY SECTION -->
+
+
+    <string name="print_advisory1">We observed a significant %1$s in your water consumption. From</string>
+    <string name="print_advisory2">an average consumption of %1$s cu.m. in the previous months, it</string>
+    <string name="print_advisory3">%1$s to %2$s cu.m. this month. You may want to check your</string>
+
     <array name="print_arry_advisory">
-        <item>We observed a significant increase in your water consumption. From</item>
-        <item>an average consumption of %1$s cu.m. in the previous months, it</item>
-        <item>increased to %2$s cu.m. this month. You may want to check your</item>
         <item>internal plumbing and waterline for underground leaks and/or </item>
         <item>unauthorized tappings. For further inquiries regarding the matter,</item>
         <item>please call Maynilad Hotline 1626.</item>
@@ -94,7 +94,7 @@
 
     <string name="print_total_amount_due">TOTAL AMOUNT DUE</string>
     <string name="print_payment_date">PAYMENT DUE DATE</string>
-    <string name="print_instruction">Please examine your bill carefully. If no complaint is made within 60 days of receipt,
+    <string name="print_instruction">Please examine your bill carefully. If no complaint is made within 60 days of  receipt,
         the bill is considered true and correct.</string>
 
     <string name="print_payment_invoice">INOVOICE NO.</string>

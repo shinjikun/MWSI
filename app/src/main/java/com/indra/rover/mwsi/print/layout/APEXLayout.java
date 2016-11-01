@@ -49,7 +49,7 @@ public class APEXLayout  extends   PrintLayout {
     }
 
     @Override
-    String billAdvisory(MeterPrint mtrPrint) {
+    String billAdvisory(MeterPrint mtrPrint,String range) {
         return "";
     }
 

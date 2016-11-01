@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
+import com.indra.rover.mwsi.utils.Utils;
 
 /**
  * Created by Indra on 10/5/2016.
@@ -19,7 +20,7 @@ public  abstract class PrintLayout {
     abstract String meterInfo(MeterPrint mtrPrint);
     abstract String paymentHistory(MeterPrint mtrPrint);
     abstract String billSummary(MeterPrint mtrPrint);
-    abstract String billAdvisory(MeterPrint mtrPrint);
+    abstract String billAdvisory(MeterPrint mtrPrint,String range);
     abstract String billFooter(MeterPrint mtrPrint);
     abstract String billValidity(MeterPrint mtrPrint);
     abstract String breadCrumbsFooter();
@@ -41,15 +42,29 @@ public  abstract class PrintLayout {
         strPrint.append(billHeader(mtrPrint));
         //body layout
         strPrint.append(bodyLayout(mtrPrint));
+
+
         //bill advisory
-        strPrint.append(billAdvisory(mtrPrint));
+        //only add the advisory section is the consumption result is very high or very low
+        if(Utils.isNotEmpty(mtrPrint.getRangeCode())){
+            String range =  mtrPrint.getRangeCode();
+            if(range.equals("3")){
+                strPrint.append(billAdvisory(mtrPrint,"decreased"));
+            }
+           else if(range.equals("4")){
+                strPrint.append(billAdvisory(mtrPrint,"increased"));
+            }
+        }
         //footer layout
         strPrint.append(billFooter(mtrPrint));
         strPrint.append(billValidity(mtrPrint));
         //add if there is a disconnection notice in the bill
-        if(mtrPrint.getAcct_status().equals("1")){
+        if(mtrPrint.getDisConStatus().equals("1")){
+
             strPrint.append(billDiscon(mtrPrint));
+
         }
+
         //footer breadcrumbs
         strPrint.append(breadCrumbsFooter());
         Log.i("Test",strPrint.toString());

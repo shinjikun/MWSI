@@ -801,7 +801,7 @@ public class MeterReadingDao extends ModelDao {
     public MeterPrint getMeterPrint(String dldocno){
         MeterPrint meterPrint = null;
         String sql_stmt="Select d.MRU ,bc.BC_DESC,bc.BC_ADDRESS,bc.BC_TIN, \n" +
-                "bl.BILL_CLASS_DESC, d.SOA_NUMBER,\n" +
+                "bl.BILL_CLASS_DESC, d.SOA_NUMBER,c.RANGE_CODE,mi.DUE_DATE,\n" +
                 "d.ACCTNUM,d.CUSTNAME,d.CUSTADDRESS,d.ACCT_STATUS,d.TIN,d.TENANT_NAME,d.SC_ID,\n" +
                 "d.SEQNO,c.METERNO,c.BILLED_CONS,c.CONSTYPE_CODE,c.RDG_DATE,d.PREVRDGDATE,d.ACTPREVRDG,c.PRESRDG,\n" +
                 "d.PREVCONSLINE1, d.PREVCONSLINE2,d.WBPAYDTLS1,d.WBPAYDTLS2,d.GDPAYDTLS,d.MISCPAYDTLS,\n" +
@@ -811,7 +811,9 @@ public class MeterReadingDao extends ModelDao {
                 "INSTALL_WTR_IND,INSTALL_SEWER_DUE,INSTALL_SEW_IND,GD_AMOUNT_DUE,INSTALL_GD_IND,AMORT_DUE,\n" +
                 "INSTALL_AMORT_IND,RESTORATION_DUE,RESTORATION_IND,ILLEGALITIES_DUE,ILLEGALITIES_IND,\n" +
                 "UNMIGRATED_WATER_DUE,UNMIGRATED_WATER_IND,UNMIGRATED_SEWER_DUE,UNMIGRATED_SEWER_IND,\n" +
-                "PENALTIES_DUE,UNMIGRATED_AR_WATER,UNMIGRATED_AR_IC,RECOVERY\n" +
+                "PENALTIES_DUE,UNMIGRATED_AR_WATER,UNMIGRATED_AR_IC,RECOVERY,\n" +
+                "d.DISCHECK_FLAG,u.TOTAL_AMT_DUE,\n"+
+                "d.PREVINVOICENO,u.REOPENING_FEE,u.METER_CHARGES,u.GD_CHARGE,u.OTHER_CHARGES\n"+
                 "from R_BUSINESS_CENTER bc, T_MRU_INFO mi , T_DOWNLOAD d, R_BILL_CLASS bl , T_CURRENT_RDG c,\n" +
                 "T_UPLOAD u\n" +
                 "where mi.BC_CODE=bc.BC_CODE and  d.MRU=mi.MRU and bl.BILL_CLASS=d.BILL_CLASS and c.CRDOCNO = d.DLDOCNO and \n" +

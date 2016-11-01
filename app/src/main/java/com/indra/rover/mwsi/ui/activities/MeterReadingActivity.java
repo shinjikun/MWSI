@@ -1120,7 +1120,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onPrintPageResult(String str) {
-       btHelper.sendData(str.getBytes());
+       //btHelper.sendData(str.getBytes());
         changeToPrinted();
 
     }
@@ -1148,7 +1148,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                     computeBill();
                 }
                 else {
-                   dlgUtils.showOKDialog("Please connect a Printer via Bluetooth  in Settings");
+                   dlgUtils.showOKDialog("Please setup a BLUETOOTH PRINTER in Settings before printing");
                 }
                //
             }

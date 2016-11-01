@@ -5,27 +5,37 @@ import android.util.Log;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 import com.indra.rover.mwsi.print.layout.ZebraLayout;
+import com.indra.rover.mwsi.utils.PreferenceKeys;
+import com.indra.rover.mwsi.utils.Utils;
 
 public class PrintPage {
 
-    PrintPageListener listener;
-    Context context;
+   private PrintPageListener listener;
+   private Context context;
+   private PreferenceKeys prefs;
     public PrintPage(Context context,PrintPageListener listener){
         this.context =context;
         this.listener = listener;
+        prefs = PreferenceKeys.getInstance(this.context);
     }
 
     public void execute(MeterPrint meterPrint){
         if(meterPrint!=null){
-            ZebraLayout zebraLayout =new ZebraLayout(this.context);
-            String str = zebraLayout.contentPrint(meterPrint);
-            Log.i("Test","str"+str);
-            if(listener!=null){
-                listener.onPrintPageResult(str);
+            //determine the print device via bluetooth name
+            String btName = prefs.getData("bname","");
+            if(Utils.isNotEmpty(btName)){
+                btName = btName.toLowerCase();
+                if(btName.contains("zebra")){
+                    ZebraLayout zebraLayout =new ZebraLayout(this.context);
+                    String str = zebraLayout.contentPrint(meterPrint);
+                    Log.i("Test","str"+str);
+                    if(listener!=null){
+                        listener.onPrintPageResult(str);
+                    }
+                }
             }
         }
-
-    }
+   }
 
     public interface  PrintPageListener{
          void onPrintPageResult(String str);

@@ -96,75 +96,75 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("\r\n");
         str.append(context.getString(R.string.print_validity1));
         str.append(setBold(0));
-        str.append("\r\n");
+        str.append("\r\r\r\n");
         return str.toString();
     }
 
     @Override
     public String serviceInfo(MeterPrint mtrPrint) {
+
         StringBuilder str = new StringBuilder();
+        str.append("\r\n");
         str.append("! U1 CENTER\r\n");
-        str.append("! U1 SETLP 5 0 24");
+        str.append("! U1 SETLP 0 3 18");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
         str.append("SOA # ");
         str.append(mtrPrint.getSOA());
-        str.append("\r\n");
+        str.append("\r\r\n");
         str.append("! U1 CENTER 383\r\n");
-        str.append("! U1 SETLP 5 0 24\r\n");
-        str.append("! U1 SETSP 5\r\n");
+        str.append("! U1 SETLP 0 3 18\r\n");
         str.append(setBold(1));
-        str.append(context.getString(R.string.print_statement));
+        String strTitle = context.getString(R.string.print_statement);
+        str.append(centerText(strTitle,52));
         str.append("\r\n");
-        str.append("! U1 SETLP 5 0 24\r\n");
-        str.append("! U1 SETSP 5\r\n");
-        str.append(setBold(0));
-        str.append("For the month of: ");
-        str.append(Utils.getCurrentDate("MMMM yyyy"));
+        str.append("! U1 SETLP 0 3 18\r\n");
+        str.append(setBold(1));
+        String stTemp = "For the month of: "+Utils.getCurrentDate("MMMM yyyy");
+        str.append(centerText(stTemp,52));
         str.append("\r\n");
-        str.append("! U1 SETLP 5 0 24\r\n");
-        str.append("! U1 SETSP 5\r\n");
-        str.append(setBold(0));
-        str.append(context.getString(R.string.print_service));
+        str.append("! U1 SETLP 0 3 18\r\n");
+        str.append(setBold(1));
+        strTitle = context.getString(R.string.print_service);
+        str.append(centerText(strTitle,52));
         str.append("\r\r\n");
         str.append("! U1 CENTER\r\n");
-        str.append("! U1 SETLP 5 0 24");
+        str.append("! U1 SETLP 0 3 18");
         str.append("! U1 SETSP 0\r\r\n");
         str.append(setBold(0));
         str.append(context.getString(R.string.print_contract_num));
         str.append("  : ");
         str.append("! U1 CENTER\r\n");
         str.append("! U1 SETLP 5 1 48");
-        str.append("! U1 SETSP 3\r\n");
         str.append(setBold(1));
         str.append(mtrPrint.getAcctNum());
         str.append("\r\n");
-        str.append("! U1 SETLP 5 0 24\r\n");
+        str.append("! U1 SETLP 0 3 18\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
         str.append(context.getString(R.string.print_acct_name));
-        str.append("          : ");
+        str.append("    : ");
         str.append(mtrPrint.getCustName());
         str.append("\r\n");
-        str.append("! U1 SETLP 5 0 24\r\n");
+        str.append("! U1 SETLP 0 3 18\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
         str.append(context.getString(R.string.print_address));
-        str.append("       : ");
+        str.append(" : ");
         str.append(mtrPrint.getCustAddress());
         str.append("\r\r\n");
-        str.append("! U1 SETLP 5 0 24\r\n");
+        str.append("! U1 SETLP 0 3 18\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
         str.append(context.getString(R.string.print_rate));
-        str.append("            : ");
+        str.append("      : ");
         str.append(mtrPrint.getBillClass());
         str.append("\r\n");
-        str.append("! U1 SETLP 5 0 24\r\n");
+        str.append("! U1 SETLP 0 3 18\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
         str.append(context.getString(R.string.print_business_area));
-        str.append("         : ");
+        str.append("   : ");
         str.append(mtrPrint.getBcDesc());
         str.append("\r\n");
         str.append(linePrint());
@@ -175,20 +175,24 @@ public class ZebraLayout   extends   PrintLayout{
     public String meterInfo(MeterPrint mtrPrint) {
         StringBuilder str = new StringBuilder();
         str.append("! U1 CENTER\r\n");
-        str.append("! U1 SETLP 5 0 24\r\n");
-        str.append("! U1 SETSP 5\r\n");
-        str.append(setBold(0));
-        str.append(context.getString(R.string.print_meter_info));
-        str.append("\r\n");
+        str.append("! U1 SETLP 0 3 18\r\n");
+        str.append(setBold(1));
+        String strTitle = context.getString(R.string.print_meter_info);
+        str.append(centerText(strTitle,52));
+        str.append("\r\r\n");
         str.append("! U1 CENTER\r\n");
-        str.append("! U1 SETLP 5 0 24\r\n");
-        str.append("! U1 SETSP 0\r\r\n");
+        str.append("! U1 SETLP 0 3 18\r\n");
+        str.append("! U1 SETSP 0\r\n");
+        str.append(setBold(1));
+        str.append("Meter No.              MRU No.       Seq No.");
+        str.append("\r\n");
         str.append(setBold(0));
-        str.append("Meter No.       MRU No.     Seq No.");
-        str.append("\r\n");
         str.append("    ");
-        str.append(mtrPrint.getMeterNO());
-        str.append("\r\n");
+        str.append(addSpace(mtrPrint.getMeterNO(),19));
+        str.append(addSpace(mtrPrint.getMru(),14));
+        str.append(mtrPrint.getSeqNo());
+
+        str.append("\r\r\n");
         str.append(context.getString(R.string.print_reading_date));
         str.append("        : ");
         str.append(mtrPrint.getPresRdgDate());
@@ -215,22 +219,24 @@ public class ZebraLayout   extends   PrintLayout{
     public String paymentHistory(MeterPrint mtrPrint) {
         StringBuilder str = new StringBuilder();
         str.append("! U1 CENTER\r\n");
-        str.append("! U1 SETLP 5 0 24");
-        str.append("! U1 SETSP 5\r\n");
-        str.append(setBold(0));
-        str.append(context.getString(R.string.print_bill_payment));
+        str.append("! U1 SETLP 0 3 18");
+
+        str.append(setBold(1));
+        String strTitle = context.getString(R.string.print_bill_payment);
+
+        str.append(centerText(strTitle,52));
         str.append("\r\n");
         str.append("! U1 CENTER\r\n");
-        str.append("! U1 SETLP 5 0 24");
+        str.append("! U1 SETLP 0 3 18");
         str.append("! U1 SETSP 0\r\n");
 
-        str.append(setBold(0));
+        str.append(setBold(1));
         str.append("\r\n");
         str.append("INVOICE NO.");
         str.append("\r\n");
         str.append("\r\n");
         str.append("! U1 CENTER\r\n");
-        str.append("! U1 SETLP 5 0 24\r\n");
+        str.append("! U1 SETLP 0 3 18\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
         str.append("Desc  Net Amount  VAT  Total Amount OR# Date Tax Code\r\n");
@@ -267,25 +273,44 @@ public class ZebraLayout   extends   PrintLayout{
         return strOr.toString();
     }
 
+
+    private String addSpace(String str,int maxSpace){
+        StringBuilder strOr = new StringBuilder();
+        int curLinex = str.length();
+        strOr.append(str);
+        if(curLinex<maxSpace){
+            int s = maxSpace - curLinex;
+            for(int i=0;i<s;i++){
+                strOr.append(' ');
+            }
+        }
+        return strOr.toString();
+    }
+
     @Override
     public String billSummary(MeterPrint mtrPrint) {
         StringBuilder str = new StringBuilder();
         str.append("! U1 CENTER\r\n");
-        str.append("! U1 SETLP 5 0 24\r\n");
-        str.append("! U1 SETSP 5\r\n");
-        str.append(setBold(0));
-        str.append(context.getString(R.string.print_bill_summary));
+        str.append("! U1 SETLP 0 3 18\r\n");
+        str.append(setBold(1));
+        String strTitle = context.getString(R.string.print_bill_summary);
+        str.append(centerText(strTitle,52));
         str.append("\r\n");
-        str.append("! U1 SETLP 5 0 24\r\n");
+        str.append("\r\n");
+        str.append("! U1 SETLP 0 3 18\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(1));
         str.append(context.getString(R.string.print_bill_period));
         str.append("\r\n");
-        str.append("! U1 SETLP 5 0 24\r\n");
+        str.append("! U1 SETLP 0 3 18\r\n");
         str.append("! U1 SETSP 0\r\n");
-        str.append(setBold(0));
-        str.append(context.getString(R.string.print_current_charges));
+        str.append(setBold(1));
+        String str1 = context.getString(R.string.print_current_charges);
+        String value = mtrPrint.getTotcurr_charge();
+        str.append(str1);
+        str.append(addSpace(str1,50,value));
         str.append("\r\n");
+        str.append(setBold(0));
         str.append("! U1 SETLP 7 0 24\r\n");
         str.append("! U1 SETSP 0\r\n");
 
@@ -295,7 +320,7 @@ public class ZebraLayout   extends   PrintLayout{
             str.append(TAB_SPACE);
             str.append(arry[i]);
             String temp =  arry[i];
-            String value = mtrPrint.cur_charges.get(i);
+             value = mtrPrint.cur_charges.get(i);
             if(value.equals("0")){
                 value ="-";
             }
@@ -303,8 +328,19 @@ public class ZebraLayout   extends   PrintLayout{
             str.append(addSpace(temp,63-TAB_SPACE.length(),value));
             str.append("\r\n");
         }
+
         str.append("\r\n");
-        str.append("! U1 SETLP 5 0 24\r\n");
+        str.append("! U1 SETLP 0 3 18\r\n");
+        str.append("! U1 SETSP 0\r\n");
+        str.append(setBold(1));
+        str1 = context.getString(R.string.print_other_charges);
+        value = mtrPrint.getOtherCharges();
+        str.append(str1);
+        str.append(addSpace(str1,50,value));
+        str.append("\r\n");
+
+        /*
+        str.append("! U1 SETLP 0 3 18\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(context.getString(R.string.print_other_charges));
         str.append("\r\n");
@@ -321,13 +357,15 @@ public class ZebraLayout   extends   PrintLayout{
 
             str.append("\r\n");
         }
+
+        */
         str.append("\r\n");
-        str.append("! U1 SETLP 5 0 24\r\n");
+        str.append("! U1 SETLP 0 3 18\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
         str.append(context.getString(R.string.print_refund));
         str.append("\r\r\n");
-        str.append("! U1 SETLP 5 0 24\r\n");
+        str.append("! U1 SETLP 0 3 18\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
         str.append(context.getString(R.string.print_previous));
@@ -335,10 +373,18 @@ public class ZebraLayout   extends   PrintLayout{
         str.append(lineBreakPrint());
         str.append("! U1 SETLP 7 1 48\r\n");
         str.append("! U1 SETSP 3\r\n");
-        str.append(setBold(0));
+        str.append(setBold(1));
         str.append(context.getString(R.string.print_total_amount_due));
+        String temp =  context.getString(R.string.print_total_amount_due);
+        value = "PHP   "+mtrPrint.getTotalamt();
+        str.append(addSpace(temp,55,value));
+
         str.append("\r\n");
-        str.append(context.getString(R.string.print_payment_date));
+        temp =  context.getString(R.string.print_payment_date);
+        str.append(temp);
+         value = mtrPrint.getDueDate();
+        str.append(addSpace(temp,55,value));
+
         str.append("\r\n");
         str.append(lineBreakPrint());
         str.append("! U1 SETLP 5 0 24\r\n");
@@ -350,18 +396,27 @@ public class ZebraLayout   extends   PrintLayout{
     }
 
     @Override
-    String billAdvisory(MeterPrint mtrPrint) {
+    String billAdvisory(MeterPrint mtrPrint,String range) {
         StringBuilder str = new StringBuilder();
         str.append(lineBreakPrint());
         str.append("! U1 CENTER\r\n");
-        str.append("! U1 SETLP 5 0 24\r\n");
-        str.append("! U1 SETSP 5\r\n");
+        str.append("! U1 SETLP 0 3 18\r\n");
+
         str.append(setBold(1));
-        str.append(context.getString(R.string.print_advisory));
+        String strTitle = context.getString(R.string.print_advisory);
+        str.append(centerText(strTitle,52));
         str.append("\r\n");
         str.append("! U1 SETLP 7 0 24\r\n");
         str.append("! U1 SETSP 0");
         str.append(setBold(0));
+
+        str.append(context.getResources().getString(R.string.print_advisory1,range));
+        str.append("\r\n");
+        str.append(context.getResources().getString(R.string.print_advisory2,mtrPrint.getBillCons()));
+        str.append("\r\n");
+        str.append(context.getResources().getString(R.string.print_advisory3,range,mtrPrint.getBillCons()));
+        str.append("\r\n");
+
         String[]   arry = context.getResources().getStringArray(R.array.print_arry_advisory);
         int size=  arry.length;
         for(int i=0;i<size;i++){
@@ -402,10 +457,10 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("T 0 2 470 117 Permit No. 0107-116-00006-CBA/AR\r\n");
         str.append("PRINT\r\n");
         str.append("! U1 CENTER\r\n");
-        str.append("! U1 SETLP 5 0 24");
-        str.append("! U1 SETSP 5\r\n");
+        str.append("! U1 SETLP 0 3 18");
         str.append(setBold(1));
-        str.append(context.getString(R.string.print_notic_discon));
+        String strTitle = centerText(context.getString(R.string.print_notic_discon),52);
+        str.append(strTitle);
         str.append("\r\n");
         str.append("! U1 CENTER\r\n");
         str.append("! U1 SETLP 5 1 48");
@@ -414,13 +469,13 @@ public class ZebraLayout   extends   PrintLayout{
         str.append(mtrPrint.getCustName());
         str.append("\r\n");
         str.append("! U1 CENTER\r\n");
-        str.append("! U1 SETLP 5 0 24");
+        str.append("! U1 SETLP 0 3 18");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
         str.append(context.getString(R.string.print_contract_num));
         str.append("\r\n");
         str.append("! U1 CENTER\r\n");
-        str.append("! U1 SETLP 5 0 24");
+        str.append("! U1 SETLP 0 3 18");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
         str.append("Customer Address");
@@ -429,16 +484,15 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! U1 SETLP 7 0 24\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
-
-        String[]   arry = context.getResources().getStringArray(R.array.print_arry_discon);
-         int size=  arry.length;
-        for(int i=0;i<size;i++){
-            if(i==0){
-
-            }
-            str.append(arry[i]);
-            str.append("\r\n");
-        }
+        str.append(context.getResources().getString(R.string.print_arry_discon1,mtrPrint.getTotalamt()));
+        str.append("\r\n");
+        str.append(context.getResources().getString(R.string.print_arry_discon2));
+        str.append("\r\n");
+        str.append(context.getResources().getString(R.string.print_arry_discon3,mtrPrint.getDueDate()));
+        str.append("\r\n");
+        str.append(context.getResources().getString(R.string.print_arry_discon4));
+        str.append("\r\n");
+        str.append(context.getResources().getString(R.string.print_arry_discon5));
         str.append("\r\n");
         str.append("Respectfully yours,\r\n");
         str.append(setBold(1));
@@ -465,7 +519,7 @@ public class ZebraLayout   extends   PrintLayout{
     }
 
     @Override
-    String testfont() {
+    public String testfont() {
         StringBuilder str = new StringBuilder();
         str.append("! U1 SETLP 0 9 9\r\n");
         str.append("Font 0,9 Height 9\r\n");
@@ -488,6 +542,9 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! U1 SETLP 0 6 36\r\n");
         str.append("Font 0,6 Height 36\r\n");
         str.append(randomString());
+
+
+        /*
         str.append("! U1 SETLP 1 0 48\r\n");
         str.append("Font 1,0 Height 48\r\n");
         str.append(randomString());
@@ -518,6 +575,8 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! U1 SETLP 6 0 27\r\n");
         str.append("Font 6,0 Height 27\r\n");
         str.append(randomString());
+
+        */
         str.append("! U1 SETLP 7 0 24\r\n");
         str.append("Font 7,0 Height 24\r\n");
         str.append(randomString());
@@ -551,5 +610,24 @@ public class ZebraLayout   extends   PrintLayout{
 
     }
 
+    String centerText(String str,int maxlength){
+        StringBuilder stringBuilder = new StringBuilder();
+        int length = str.length();
+        int t_space =maxlength -length;
+        int left_space = t_space/2;
+        int right_space = t_space - left_space;
+        for(int i= 0;i<left_space;i++){
+            stringBuilder.append(' ');
+        }
+        stringBuilder.append(str);
+        for(int i= 0;i<right_space;i++){
+            stringBuilder.append(' ');
+        }
+        return stringBuilder.toString();
+
+    }
+
+
+    
 
 }

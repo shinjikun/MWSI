@@ -16,6 +16,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -387,6 +388,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             if(bluetoothDevice.getBondState()!= BluetoothDevice.BOND_BONDED){
                 btHelper.pairDevice(bluetoothDevice);
             }
+            else if(bluetoothDevice.getBondState()== BluetoothDevice.BOND_BONDED){
+                btHelper.unpairDevice(bluetoothDevice);
+
+            }
             String btName = bluetoothDevice.getName();
             String btMac = bluetoothDevice.getAddress();
 
@@ -419,7 +424,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
                 final int state 		= intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR);
                 final int prevState	= intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, BluetoothDevice.ERROR);
-
+                Log.i("Test","Previous State"+ prevState);
                 if (state == BluetoothDevice.BOND_BONDED && prevState == BluetoothDevice.BOND_BONDING) {
                     //showToast("Paired");
                   String btMac =  prefs.getData(BLUEMAC);
@@ -434,6 +439,13 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                     prefs.setData(BLUEDNAME,"");
                     btnPair.setVisibility(View.VISIBLE);
                     btnUnPair.setVisibility(View.GONE);
+                } else if (state == BluetoothDevice.BOND_BONDED && prevState == BluetoothDevice.BOND_NONE) {
+                    //showToast("Paired");
+                    String btMac =  prefs.getData(BLUEMAC);
+                    String btName =   prefs.getData(BLUEDNAME);
+                    btnPair.setVisibility(View.GONE);
+                    btnUnPair.setVisibility(View.VISIBLE);
+                    btnUnPair.setText(btName+"\n"+btMac);
                 }
 
 

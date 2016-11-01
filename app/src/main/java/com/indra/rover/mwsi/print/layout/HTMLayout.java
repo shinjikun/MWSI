@@ -49,7 +49,7 @@ public class HTMLayout  extends PrintLayout {
     }
 
     @Override
-    String billAdvisory(MeterPrint mtrPrint) {
+    String billAdvisory(MeterPrint mtrPrint,String rangeCode) {
         return "\n";
     }
 
