@@ -11,7 +11,7 @@ public class DeliveryCode implements Serializable {
     private String del_code;
     private String del_desc;
     private int del_signreq_flag;
-
+    private int del_remreq_flag;
 
     public DeliveryCode(){
 
@@ -21,25 +21,19 @@ public class DeliveryCode implements Serializable {
         this.del_code =cursor.getString(cursor.getColumnIndexOrThrow("DEL_CODE"));
         this.del_desc = cursor.getString(cursor.getColumnIndexOrThrow("DEL_DESC"));
         this.del_signreq_flag = cursor.getInt(cursor.getColumnIndexOrThrow("SIGNREQ_FLAG"));
+        this.del_remreq_flag = cursor.getInt(cursor.getColumnIndexOrThrow("REMREQ_FLAG"));
     }
     public String getDel_code() {
         return del_code;
     }
 
-    public void setDel_code(String del_code) {
-        this.del_code = del_code;
-    }
 
     public String getDel_desc() {
         return del_desc;
     }
 
-    public void setDel_desc(String del_desc) {
-        this.del_desc = del_desc;
-    }
-
-    public void setDel_signreq_flag(int del_signreq_flag) {
-        this.del_signreq_flag = del_signreq_flag;
+    public int getRemarksFlag() {
+        return del_remreq_flag;
     }
 
     public int getDel_signreq_flag() {
