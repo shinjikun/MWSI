@@ -232,9 +232,11 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
         int index = deliv_opt.getSelectedItemPosition();
         String deliv_code ="";
         int required_sig =0;
+        int required_remarks =0;
         if(index !=0){
          deliv_code =   arrayList.get(index-1).getDel_code();
           required_sig =  arrayList.get(index-1).getDel_signreq_flag();
+          required_remarks = arrayList.get(index-1).getRemarksFlag();
         }
 
         if(required_sig ==1){
@@ -244,6 +246,14 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
                 return;
             }
         }
+
+        if(required_remarks ==1){
+            if(!Utils.isNotEmpty(remarks)){
+                dialogUtils.showOKDialog("You are required to ask for a signature");
+                return;
+            }
+        }
+
 
 
         String spncode = deliv_opt.getSelectedItem();
