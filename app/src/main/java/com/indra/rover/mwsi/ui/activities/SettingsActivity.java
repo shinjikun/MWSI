@@ -8,12 +8,9 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,7 +20,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -39,10 +35,6 @@ import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.PreferenceKeys;
 import com.indra.rover.mwsi.utils.Utils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener,
         Constants,DialogUtils.DialogListener,BluetoothHelper.BluetoothHelperEventListener {
@@ -283,8 +275,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             else {
                 isBluetoothOn = true;
                 boolean isFound = false;
-                String btName = prefs.getData(BLUEDNAME,"");
-                String btMac = prefs.getData(BLUEMAC,"");
+                String btName = prefs.getData(BTNAME,"");
+                String btMac = prefs.getData(BTADDRESS,"");
 
                 BluetoothDevice btDevice =   btHelper.getBluetoothDevice(btMac);
 
@@ -319,7 +311,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     public void dialog_confirm(int dialog_id, Bundle params) {
         switch (dialog_id){
             case DLG_UNPAIR:
-                String btAddress = prefs.getData(BLUEMAC);
+                String btAddress = prefs.getData(BTADDRESS);
                 BluetoothDevice btDevice =  btHelper.getBluetoothDevice(btAddress);
 
                 if(btDevice!=null){
@@ -381,8 +373,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void bluetoothSelected(BluetoothDevice bluetoothDevice) {
-       prefs.setData(BLUEDNAME,bluetoothDevice.getName());
-        prefs.setData(BLUEMAC,bluetoothDevice.getAddress());
+       prefs.setData(BTNAME,bluetoothDevice.getName());
+        prefs.setData(BTADDRESS,bluetoothDevice.getAddress());
 
 
 
@@ -394,8 +386,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             if(!Utils.isNotEmpty(btName)){
                 btName="";
             }
-            prefs.setData(BLUEDNAME,btName);
-            prefs.setData(BLUEMAC,btMac);
+            prefs.setData(BTNAME,btName);
+            prefs.setData(BTADDRESS,btMac);
 
         if(bluetoothDevice.getBondState()!= BluetoothDevice.BOND_BONDED){
             btHelper.pairDevice(bluetoothDevice);
@@ -428,22 +420,22 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 Log.i("Test","Previous State"+ prevState);
                 if (state == BluetoothDevice.BOND_BONDED && prevState == BluetoothDevice.BOND_BONDING) {
                     //showToast("Paired");
-                  String btMac =  prefs.getData(BLUEMAC);
-                  String btName =   prefs.getData(BLUEDNAME);
+                  String btMac =  prefs.getData(BTADDRESS);
+                  String btName =   prefs.getData(BTNAME);
                     btnPair.setVisibility(View.GONE);
                     btnUnPair.setVisibility(View.VISIBLE);
                     btnUnPair.setText(btName+"\n"+btMac);
                 } else if (state == BluetoothDevice.BOND_NONE && prevState == BluetoothDevice.BOND_BONDED){
                    // showToast("Unpaired");
                     //reset save variable after the device is succesfully unpained
-                    prefs.setData(BLUEMAC,"");
-                    prefs.setData(BLUEDNAME,"");
+                    prefs.setData(BTADDRESS,"");
+                    prefs.setData(BTNAME,"");
                     btnPair.setVisibility(View.VISIBLE);
                     btnUnPair.setVisibility(View.GONE);
                 } else if (state == BluetoothDevice.BOND_BONDED && prevState == BluetoothDevice.BOND_NONE) {
                     //showToast("Paired");
-                    String btMac =  prefs.getData(BLUEMAC);
-                    String btName =   prefs.getData(BLUEDNAME);
+                    String btMac =  prefs.getData(BTADDRESS);
+                    String btName =   prefs.getData(BTNAME);
                     btnPair.setVisibility(View.GONE);
                     btnUnPair.setVisibility(View.VISIBLE);
                     btnUnPair.setText(btName+"\n"+btMac);

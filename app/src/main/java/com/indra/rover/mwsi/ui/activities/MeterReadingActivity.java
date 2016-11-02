@@ -4,12 +4,11 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Vibrator;
+import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -17,7 +16,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -60,7 +58,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 
 public class MeterReadingActivity extends AppCompatActivity implements View.OnClickListener ,
         DialogUtils.DialogListener, Constants, Compute.ConsumptionListener,
@@ -728,7 +726,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             }
         } else if(requestCode == BLUETOOTH_REQ){
             if(resultCode ==  Activity.RESULT_OK){
-                String btAddress = prefs.getData(BLUEMAC);
+                String btAddress = prefs.getData(BTADDRESS);
                 btDevice =  btHelper.getBluetoothDevice(btAddress);
                 if(btDevice!=null){
                     // try to connect to this device
@@ -1119,10 +1117,24 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
-    public void onPrintPageResult(String str) {
-      // btHelper.sendData(str.getBytes());
+    public void onPrintPageResult(String meterPrintPage) {
+       btHelper.sendData(meterPrintPage.getBytes());
         changeToPrinted();
 
+    }
+
+    @Override
+    public void onPrintPageAndMRStub(String meterPrintPage, final String mrStubPage) {
+        btHelper.sendData(meterPrintPage.getBytes());
+        changeToPrinted();
+        // Execute some code after 2 seconds have passed
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                btHelper.sendData(mrStubPage.getBytes());
+            }
+        }, 5000);
     }
 
     /**
@@ -1141,7 +1153,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 startActivityForResult(enableBT, BLUETOOTH_REQ);
             }
             else {
-                String btAddress = prefs.getData(BLUEMAC);
+                String btAddress = prefs.getData(BTADDRESS);
                  btDevice =  btHelper.getBluetoothDevice(btAddress);
                 if(btDevice!=null){
                     BluetoothHelper.instance().connectTo(btDevice);

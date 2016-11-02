@@ -7,12 +7,139 @@ import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 import com.indra.rover.mwsi.utils.Utils;
 
+import java.util.ArrayList;
+
 
 public class ZebraLayout   extends   PrintLayout{
     Utils utils;
     final String TAB_SPACE=" ";
     public ZebraLayout(Context context) {
         super(context);
+    }
+
+    @Override
+    String eodReport(ArrayList<MeterPrint> mtrPrints) {
+        StringBuilder strPrint = new StringBuilder();
+        //header configuration
+        strPrint.append(headerConfig());
+        //header breadcrumbs
+        strPrint.append(breadCrumbsHeader());
+        //add the header
+        strPrint.append(lineBreakPrint());
+        strPrint.append("! U1 SETLP 7 0 24\r\n");
+        strPrint.append("! U1 SETSP 0\r\n");
+        strPrint.append(setBold(2));
+        strPrint.append("  CAN        NAME              READING OC1 OC2 RN PC  TOTAL DUE    ");
+        strPrint.append("\r\n");
+        strPrint.append(setBold(1));
+        //iterate all of accounts
+        int size = mtrPrints.size();
+        for(int i = 0;i<size;i++){
+           MeterPrint mtrPrint =  mtrPrints.get(i);
+            //account number/CAN
+            strPrint.append(addSpace(mtrPrint.getAcctNum(),10));
+            strPrint.append(' ');
+            //acount name
+            strPrint.append(addSpace(mtrPrint.getCustName(),17));
+            strPrint.append(' ');
+            //reading
+            strPrint.append(addSpace(mtrPrint.getPresRdg(),7));
+            strPrint.append(' ');
+            strPrint.append(addSpace(mtrPrint.getOC1(),3));
+            strPrint.append(' ');
+            strPrint.append(addSpace(mtrPrint.getOC2(),3));
+            strPrint.append(' ');
+            strPrint.append(addSpace(mtrPrint.getRangeCode(),2));
+            strPrint.append(' ');
+            strPrint.append(addSpace(mtrPrint.getPrintCount(),2));
+            strPrint.append("  ");
+            //total amount
+            strPrint.append(mtrPrint.getTotalamt());
+            strPrint.append("\r\n");
+        }
+        strPrint.append("\r\r\n");
+        //footer breadcrumbs
+        strPrint.append(breadCrumbsFooter());
+        return strPrint.toString();
+    }
+
+    @Override
+    public String mrStub(MeterPrint meterPrint) {
+        StringBuilder strPrint = new StringBuilder();
+        //header configuration
+        strPrint.append(headerConfig());
+        //header breadcrumbs
+        strPrint.append(breadCrumbsHeader());
+        //content
+        strPrint.append("\r\n");
+        strPrint.append(lineBreakPrint());
+        strPrint.append("! U1 SETLP 7 0 24\r\n");
+        strPrint.append("! U1 SETSP 0\r\n");
+        strPrint.append(setBold(0));
+        strPrint.append("\r\n");
+
+        String strTitle = context.getString(R.string.print_mr_title);
+        strPrint.append(centerText(strTitle,68));
+        strPrint.append("\r\n");
+        strPrint.append(context.getString(R.string.print_mr_mru));
+        strPrint.append("       : ");
+        strPrint.append(meterPrint.getMru());
+        strPrint.append("/");
+        strPrint.append(meterPrint.getSeqNo());
+        strPrint.append("\r\n");
+        strPrint.append(context.getString(R.string.print_mr_contact));
+        strPrint.append("   : ");
+        strPrint.append(meterPrint.getAcctNum());
+        strPrint.append("\r\n");
+        strPrint.append(context.getString(R.string.print_mr_name));
+        strPrint.append("       : ");
+        strPrint.append(meterPrint.getCustName());
+        strPrint.append("\r\n");
+        strPrint.append(context.getString(R.string.print_mr_reading));
+        strPrint.append("    : ");
+        strPrint.append(meterPrint.getPresRdg());
+        strPrint.append("\r\n");
+        strPrint.append(context.getString(R.string.print_mr_billcons));
+        strPrint.append(" : ");
+        strPrint.append(meterPrint.getBillCons());
+        strPrint.append("\r\n");
+        strPrint.append(context.getString(R.string.print_mr_ff1));
+        strPrint.append("    : ");
+        String str = meterPrint.getOC1();
+        if(!Utils.isNotEmpty(str)){
+            str ="-";
+        }
+        strPrint.append(str);
+        strPrint.append("\r\n");
+        strPrint.append(context.getString(R.string.print_mr_ff2));
+        strPrint.append("    : ");
+        str = meterPrint.getOC2();
+        if(!Utils.isNotEmpty(str)){
+            str ="-";
+        }
+        strPrint.append(str);
+        strPrint.append("\r\n");
+        strPrint.append(context.getString(R.string.print_mr_remarks));
+        strPrint.append("            :");
+        str = meterPrint.getRemarks();
+        if(!Utils.isNotEmpty(str)){
+            str ="-";
+        }
+        strPrint.append(str);
+        strPrint.append("\r\n");
+        strPrint.append(context.getString(R.string.print_mr_billdate));
+        strPrint.append("          : ");
+        strPrint.append(meterPrint.getPresRdgDate());
+        strPrint.append("\r\n");
+        strPrint.append(context.getString(R.string.print_total_amount_due));
+        strPrint.append("       : ");
+        strPrint.append(meterPrint.getTotalamt());
+        strPrint.append("\r\n");
+        strPrint.append(lineBreakPrint());
+        strPrint.append("\r\r\n");
+        //footer breadcrumbs
+        strPrint.append(breadCrumbsFooter());
+        return strPrint.toString();
     }
 
     @Override
@@ -67,7 +194,11 @@ public class ZebraLayout   extends   PrintLayout{
         str.append(lineBreakPrint());
         str.append("\r\n");
         str.append("! U1 CENTER\r\n");
-        str.append("! U1 B 128 1 2 100 0 0 59285691 ST 187.10 T 2.60\r\n");
+        str.append("! U1 B 128 1 2 100 0 0 ");
+        str.append(mtrPrint.getAcctNum());
+        str.append(' ');
+        str.append(mtrPrint.getTotalamt());
+        str.append("\r\n");
         str.append("\r\r\n");
         return str.toString();
     }
@@ -147,12 +278,15 @@ public class ZebraLayout   extends   PrintLayout{
         str.append(setBold(1));
         str.append(mtrPrint.getCustName());
         str.append("\r\n");
-        str.append(setBold(0));
-        str.append(context.getString(R.string.print_tenant_name));
-        str.append("    : ");
-        str.append(setBold(1));
-        str.append(mtrPrint.getTenantName());
-        str.append("\r\n");
+        if(Utils.isNotEmpty(mtrPrint.getTenantName())){
+            str.append(setBold(0));
+            str.append(context.getString(R.string.print_tenant_name));
+            str.append("    : ");
+            str.append(setBold(1));
+            str.append(mtrPrint.getTenantName());
+            str.append("\r\n");
+        }
+
 
         str.append("! U1 SETLP 0 3 18\r\n");
         str.append("! U1 SETSP 0\r\n");
@@ -256,20 +390,17 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("\r\n");
         str.append("\r\n");
         str.append("! U1 CENTER\r\n");
-        str.append("! U1 SETLP 0 3 18\r\n");
+        str.append("! U1 SETLP 7 0 24\r\n");
         str.append("! U1 SETSP 0\r\n");
+        str.append(setBold(1));
+        str.append("Desc  Net Amount VAT  Total Amount   OR#         Date      Tax Code");
+        str.append("\r\n");
         str.append(setBold(0));
-        str.append("Desc  Net Amount  VAT  Total Amount OR# Date Tax Code\r\n");
-        str.append("\r\n");
-        str.append("\r\n");
-        str.append(mtrPrint.getWbPaydtls1());
-        str.append("\r\n");
-        str.append(mtrPrint.getWbPaydtls2());
-        str.append("\r\n");
-        str.append(mtrPrint.getMiscPaydtls());
-        str.append("\r\n");
+        str.append(payhistoryDetails(mtrPrint.getWbPaydtls1()));
+        str.append(payhistoryDetails(mtrPrint.getWbPaydtls2()));
+        str.append(payhistoryDetails(mtrPrint.getMiscPaydtls()));
+        str.append(payhistoryDetails(mtrPrint.getGdPaydtls()));
         str.append(mtrPrint.getGdPaydtls());
-        str.append("\r\n");
         str.append("! U1 CENTER\r\n");
         str.append("! U1 SETLP 0 2 18\r\n");
         str.append("! U1 SETSP 0\r\n");
@@ -279,6 +410,28 @@ public class ZebraLayout   extends   PrintLayout{
 
         return str.toString();
     }
+
+    private String payhistoryDetails(String data){
+        StringBuilder strPrint =  new StringBuilder();
+        if(Utils.isNotEmpty(data)){
+          String datas[]  =   data.split(",");
+          strPrint.append(addSpace(datas[0],4));
+            strPrint.append("  ");
+            strPrint.append(addSpace(datas[1],10));
+            strPrint.append(' ');
+            strPrint.append(addSpace(datas[2],4));
+            strPrint.append(' ');
+            strPrint.append(addSpace(datas[3],11));
+            strPrint.append(' ');
+            strPrint.append(addSpace(datas[4],10));
+            strPrint.append("  ");
+            strPrint.append(datas[5]);
+            strPrint.append(datas[6]);
+            strPrint.append("\r\n");
+        }
+        return strPrint.toString();
+    }
+
     private String addSpace(String str,int maxnum,String figure){
         StringBuilder strOr = new StringBuilder();
         int curLinex = str.length();
@@ -346,7 +499,7 @@ public class ZebraLayout   extends   PrintLayout{
             str.append(arry[i]);
             String temp =  arry[i];
              value = mtrPrint.cur_charges.get(i);
-            if(value.equals("0")){
+            if(value.equals("0.00")){
                 value ="-";
             }
 

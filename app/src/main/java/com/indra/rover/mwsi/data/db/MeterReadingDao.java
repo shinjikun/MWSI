@@ -798,6 +798,32 @@ public class MeterReadingDao extends ModelDao {
         return arry;
     }
 
+    public ArrayList<MeterPrint> getEODReport(){
+        ArrayList<MeterPrint> arrys = new ArrayList<>();
+       String sql_stmt = "Select c.ACCTNUM,c.FFCODE1,c.FFCODE2,c.PRESRDG,c.RANGE_CODE,\n" +
+               "d.CUSTNAME,d.ACCTNUM,u.PRINT_COUNT,u.TOTAL_AMT_DUE \n" +
+               "from T_CURRENT_RDG c, T_DOWNLOAD d, T_UPLOAD u \n" +
+               "where  c.CRDOCNO = d.DLDOCNO  and u.ULDOCNO = d.DLDOCNO  \n" +
+               "and  c.READSTAT!='U'";
+        try{
+            open();
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                 MeterPrint   meterPrint = new MeterPrint(cursor);
+                 arrys.add(meterPrint);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+        return arrys;
+    }
+
+
     public MeterPrint getMeterPrint(String dldocno){
         MeterPrint meterPrint = null;
         String sql_stmt="Select d.MRU ,bc.BC_DESC,bc.BC_ADDRESS,bc.BC_TIN, \n" +
@@ -813,7 +839,8 @@ public class MeterReadingDao extends ModelDao {
                 "UNMIGRATED_WATER_DUE,UNMIGRATED_WATER_IND,UNMIGRATED_SEWER_DUE,UNMIGRATED_SEWER_IND,\n" +
                 "PENALTIES_DUE,UNMIGRATED_AR_WATER,UNMIGRATED_AR_IC,RECOVERY,\n" +
                 "d.DISCHECK_FLAG,u.TOTAL_AMT_DUE,mi.SCHED_RDG_DATE,\n"+
-                "d.PREVINVOICENO,u.REOPENING_FEE,u.METER_CHARGES,u.GD_CHARGE,u.OTHER_CHARGES\n"+
+                "d.PREVINVOICENO,u.REOPENING_FEE,u.METER_CHARGES,u.GD_CHARGE,u.OTHER_CHARGES,\n"+
+                "c.FFCODE1,c.FFCODE2,c.REMARKS\n"+
                 "from R_BUSINESS_CENTER bc, T_MRU_INFO mi , T_DOWNLOAD d, R_BILL_CLASS bl , T_CURRENT_RDG c,\n" +
                 "T_UPLOAD u\n" +
                 "where mi.BC_CODE=bc.BC_CODE and  d.MRU=mi.MRU and bl.BILL_CLASS=d.BILL_CLASS and c.CRDOCNO = d.DLDOCNO and \n" +

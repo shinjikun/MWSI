@@ -41,8 +41,8 @@ public interface  Constants {
    String VERY_LOW ="3";
    String VERY_HIGH="4";
 
-   String BLUEDNAME="bname";
-   String BLUEMAC ="bmac";
+   String BTNAME ="bname";
+   String BTADDRESS ="bmac";
 
    int SEARCH_REQ =99;
    int INPUT_REQ =68;

@@ -108,4 +108,18 @@
     <string name="print_valid_until">Valid Until:</string>
     <string name="print_ptu_number">PTU Number:</string>
     <string name="print_bill_pay_h">Desc  Net Amount  VAT  Total Amount OR# Date Tax Code</string>
+
+
+    <!-- MR STUB -->
+    <string name="print_mr_title">MR STUB</string>
+    <string name="print_mr_mru">MRU/Sequence No.</string>
+    <string name="print_mr_contact">Contact Acct No.</string>
+    <string name="print_mr_name">Account Name</string>
+    <string name="print_mr_reading">Present Reading</string>
+    <string name="print_mr_billcons">Billed Consumption</string>
+    <string name="print_mr_ff1">Field Finding 1</string>
+    <string name="print_mr_ff2">Field Finding 2</string>
+    <string name="print_mr_remarks">Remarks</string>
+    <string name="print_mr_billdate">Bill Date</string>
+
 </resources>

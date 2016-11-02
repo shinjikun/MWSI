@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 
+import java.util.ArrayList;
+
 /**
  * Created by Indra on 10/5/2016.
  */
@@ -11,6 +13,16 @@ public class APEXLayout  extends   PrintLayout {
 
     public APEXLayout(Context context) {
         super(context);
+    }
+
+    @Override
+    String eodReport(ArrayList<MeterPrint> mtrPrints) {
+        return null;
+    }
+
+    @Override
+    String mrStub(MeterPrint meterPrint) {
+        return null;
     }
 
     @Override

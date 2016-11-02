@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 import com.indra.rover.mwsi.print.layout.ZebraLayout;
+import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.PreferenceKeys;
 import com.indra.rover.mwsi.utils.Utils;
 
@@ -30,7 +31,17 @@ public class PrintPage {
                     String str = zebraLayout.contentPrint(meterPrint);
                     Log.i("Test","str"+str);
                     if(listener!=null){
-                        listener.onPrintPageResult(str);
+
+                    boolean isMRStubToPrint =    prefs.getData(Constants.PRINT_STUB_ENABLED,true);
+                        if(isMRStubToPrint){
+                            String mrStubPage = zebraLayout.mrStub(meterPrint);
+                            Log.i("Test",mrStubPage);
+                            listener.onPrintPageAndMRStub(str,mrStubPage);
+                        }
+                        else {
+                            listener.onPrintPageResult(str);
+                        }
+
                     }
                 }
             }
@@ -38,7 +49,8 @@ public class PrintPage {
    }
 
     public interface  PrintPageListener{
-         void onPrintPageResult(String str);
+         void onPrintPageResult(String meterPrintPage);
+         void onPrintPageAndMRStub(String meterPrintPage,String mrStubPage);
     }
 
 }

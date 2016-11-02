@@ -61,10 +61,24 @@ public class MeterPrint {
   private String rangeCode;
   private String dueDate;
   private String schedRdgDate;
+  private String remarks;
   public MeterPrint(){
 
   }
  public ArrayList<String> cur_charges;
+
+  public MeterPrint(Cursor cursor,boolean type){
+        this.OC1 =  cursor.getString(cursor.getColumnIndexOrThrow("FFCODE1"));
+        this.OC2 =  cursor.getString(cursor.getColumnIndexOrThrow("FFCODE2"));
+        this.presRdg =  cursor.getString(cursor.getColumnIndexOrThrow("PRESRDG"));
+        this.rangeCode = cursor.getString(cursor.getColumnIndexOrThrow("RANGE_CODE"));
+        this.custName = cursor.getString(cursor.getColumnIndexOrThrow("CUSTNAME"));
+        this.acctNum = cursor.getString(cursor.getColumnIndexOrThrow("ACCTNUM"));
+        this.printCount = cursor.getString(cursor.getColumnIndexOrThrow("PRINT_COUNT"));
+        this.totalamt = cursor.getString(cursor.getColumnIndexOrThrow("TOTAL_AMT_DUE"));
+  }
+
+
   public MeterPrint(Cursor cursor){
       this.billClass = cursor.getString(cursor.getColumnIndexOrThrow("BILL_CLASS_DESC"));
       this.bcDesc = cursor.getString(cursor.getColumnIndexOrThrow("BC_DESC"));
@@ -99,6 +113,7 @@ public class MeterPrint {
     this.gdPaydtls = cursor.getString(cursor.getColumnIndexOrThrow("GDPAYDTLS"));
     this.miscPaydtls = cursor.getString(cursor.getColumnIndexOrThrow("MISCPAYDTLS"));
     this.prevInvoiceNo = cursor.getString(cursor.getColumnIndexOrThrow("PREVINVOICENO"));
+    this.remarks = cursor.getString(cursor.getColumnIndexOrThrow("REMARKS"));
 
 
 
@@ -149,6 +164,8 @@ public class MeterPrint {
       double d = cursor.getDouble(cursor.getColumnIndexOrThrow("TOTAL_AMT_DUE"));
       this.totalamt = Utils.formatValue(d);
   }
+
+
 
     public String getBillClass() {
         return billClass;
@@ -301,5 +318,24 @@ public class MeterPrint {
 
     public String getSchedRdgDate() {
         return schedRdgDate;
+    }
+
+    String OC1, OC2;
+    String printCount;
+
+    public String getOC1() {
+        return OC1;
+    }
+
+    public String getOC2() {
+        return OC2;
+    }
+
+    public String getPrintCount() {
+        return printCount;
+    }
+
+    public String getRemarks() {
+        return remarks;
     }
 }

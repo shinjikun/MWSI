@@ -6,6 +6,8 @@ import android.util.Log;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 import com.indra.rover.mwsi.utils.Utils;
 
+import java.util.ArrayList;
+
 /**
  * Created by Indra on 10/5/2016.
  */
@@ -25,7 +27,7 @@ public  abstract class PrintLayout {
     abstract String billValidity(MeterPrint mtrPrint);
     abstract String breadCrumbsFooter();
     abstract String testfont();
-   abstract String billDiscon(MeterPrint mtrPrint);
+    abstract String billDiscon(MeterPrint mtrPrint);
     public PrintLayout(Context context){
         this.context = context;
     }
@@ -67,7 +69,6 @@ public  abstract class PrintLayout {
 
         //footer breadcrumbs
         strPrint.append(breadCrumbsFooter());
-        Log.i("Test",strPrint.toString());
         return strPrint.toString();
     }
 
@@ -87,5 +88,18 @@ public  abstract class PrintLayout {
         strBuild.append(billSummary(mtrPrint));
         return strBuild.toString();
     }
+
+
+    /**
+     *  End of the Report Print
+     *  Details Report consisting of info about the meter reading such as the ff
+     *  CAN, Name, Reading, OC1, OC2, Remarks, Range Code, Print Count and Total Due
+     * @param mtrPrints
+     * @return
+     */
+    abstract String eodReport(ArrayList<MeterPrint> mtrPrints);
+
+    abstract  String mrStub(MeterPrint meterPrint);
+
 
 }
