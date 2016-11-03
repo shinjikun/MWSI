@@ -85,6 +85,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     final int DLG_RESET=75;
     final int DLG_EDITMODE=67;
     final int DLG_DELIV = 779;
+    final int DLG_PRINTMRSTUB=800;
     DialogUtils dlgUtils;
     TextView txtFilter;
     //Button btnPrint;
@@ -730,7 +731,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 btDevice =  btHelper.getBluetoothDevice(btAddress);
                 if(btDevice!=null){
                     // try to connect to this device
-                    BluetoothHelper.instance().connectTo(btDevice);
+                   BluetoothHelper.instance().connectTo(btDevice);
                     computeBill();
                 }
                 else {
@@ -775,6 +776,12 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             case DLG_DELIV:
                 mViewPager.setCurrentItem(2);
                 scrollUp();
+                break;
+            case DLG_PRINTMRSTUB:
+                String value = params.getString("value");
+                if(Utils.isNotEmpty(value)){
+                    btHelper.sendData(value.getBytes());
+                }
                 break;
         }
     }
@@ -1127,14 +1134,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     public void onPrintPageAndMRStub(String meterPrintPage, final String mrStubPage) {
         btHelper.sendData(meterPrintPage.getBytes());
         changeToPrinted();
-        // Execute some code after 2 seconds have passed
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                btHelper.sendData(mrStubPage.getBytes());
-            }
-        }, 5000);
+        Bundle b = new Bundle();
+        b.putString("value",mrStubPage);
+        dlgUtils.showYesNoDialog(DLG_PRINTMRSTUB,"MR Stub",b);
+
     }
 
     /**
@@ -1179,9 +1182,11 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 startActivityForResult(enableBT, BLUETOOTH_REQ);
                 break;
             case NOT_SUPPORTED:
-                // if there is no bluetooth
+                dlgUtils.showOKDialog("BLUETOOTH NOT SUPPORTED","Your phone " +
+                        "does not support bluetooth");
                 break;
             case CONNECTION_FAILED:
+                break;
             case CONNECTION_STABLISHED:
 
                 break;

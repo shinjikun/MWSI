@@ -249,7 +249,7 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
 
         if(required_remarks ==1){
             if(!Utils.isNotEmpty(remarks)){
-                dialogUtils.showOKDialog("You are required to ask for a signature");
+                dialogUtils.showOKDialog("You are required to enter a remarks");
                 return;
             }
         }

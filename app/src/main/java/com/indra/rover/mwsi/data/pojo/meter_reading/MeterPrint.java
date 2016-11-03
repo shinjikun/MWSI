@@ -62,6 +62,18 @@ public class MeterPrint {
   private String dueDate;
   private String schedRdgDate;
   private String remarks;
+
+  private double prevUnPaid;
+
+  public double[] otherCharges0;
+  public double[] otherCharges1;
+  public double[] otherCharges2;
+  public double[] otherCharges3;
+  public double[] otherCharges4;
+
+  public String[] otherChrgInd1;
+  public String[] otherChrgInd2;
+
   public MeterPrint(){
 
   }
@@ -76,6 +88,9 @@ public class MeterPrint {
         this.acctNum = cursor.getString(cursor.getColumnIndexOrThrow("ACCTNUM"));
         this.printCount = cursor.getString(cursor.getColumnIndexOrThrow("PRINT_COUNT"));
         this.totalamt = cursor.getString(cursor.getColumnIndexOrThrow("TOTAL_AMT_DUE"));
+        otherCharges0 = new double[4];
+
+        otherCharges2 = new double[7];
   }
 
 
@@ -163,6 +178,54 @@ public class MeterPrint {
       this.schedRdgDate = cursor.getString(cursor.getColumnIndexOrThrow("SCHED_RDG_DATE"));
       double d = cursor.getDouble(cursor.getColumnIndexOrThrow("TOTAL_AMT_DUE"));
       this.totalamt = Utils.formatValue(d);
+
+      prevUnPaid  = cursor.getDouble(cursor.getColumnIndexOrThrow("PREVUNPAID"));
+
+      otherCharges0 = new double[4];
+      otherCharges0[0] = cursor.getDouble(cursor.getColumnIndexOrThrow("GD_CHARGE"));
+      otherCharges0[1] = cursor.getDouble(cursor.getColumnIndexOrThrow("INSTALL_WATER_CHARGE"));
+      otherCharges0[2] = cursor.getDouble(cursor.getColumnIndexOrThrow("INSTALL_SEWER_CHARGE"));
+      otherCharges0[3] = cursor.getDouble(cursor.getColumnIndexOrThrow("AMORTIZATION"));
+
+      otherCharges1 = new double[6];
+      otherCharges1[0] = cursor.getDouble(cursor.getColumnIndexOrThrow("GD_AMOUNT_DUE"));
+      otherCharges1[1] = cursor.getDouble(cursor.getColumnIndexOrThrow("INSTALL_WATER_DUE"));
+      otherCharges1[2] = cursor.getDouble(cursor.getColumnIndexOrThrow("INSTALL_WATER_DUE"));
+      otherCharges1[3] = cursor.getDouble(cursor.getColumnIndexOrThrow("AMORT_DUE"));
+      otherCharges1[4] = cursor.getDouble(cursor.getColumnIndexOrThrow("RESTORATION_DUE"));
+      otherCharges1[5] = cursor.getDouble(cursor.getColumnIndexOrThrow("ILLEGALITIES_DUE"));
+
+      otherChrgInd1 = new String[6];
+      otherChrgInd1[0] = cursor.getString(cursor.getColumnIndexOrThrow("INSTALL_GD_IND"));
+      otherChrgInd1[1] = cursor.getString(cursor.getColumnIndexOrThrow("INSTALL_WTR_IND"));
+      otherChrgInd1[2] = cursor.getString(cursor.getColumnIndexOrThrow("INSTALL_SEW_IND"));
+      otherChrgInd1[3] = cursor.getString(cursor.getColumnIndexOrThrow("INSTALL_AMORT_IND"));
+      otherChrgInd1[4] = cursor.getString(cursor.getColumnIndexOrThrow("RESTORATION_IND"));
+      otherChrgInd1[5] = cursor.getString(cursor.getColumnIndexOrThrow("ILLEGALITIES_IND"));
+
+      otherCharges2 = new double[7];
+      otherCharges2[0] = cursor.getDouble(cursor.getColumnIndexOrThrow("REOPENING_FEE"));
+      otherCharges2[1] = cursor.getDouble(cursor.getColumnIndexOrThrow("METER_CHARGES"));
+      otherCharges2[2] = cursor.getDouble(cursor.getColumnIndexOrThrow("SEPTIC_CHARGE"));
+      otherCharges2[3] = cursor.getDouble(cursor.getColumnIndexOrThrow("CHANGESIZE_CHARGE"));
+      otherCharges2[4] = cursor.getDouble(cursor.getColumnIndexOrThrow("PENALTIES_DUE"));
+      otherCharges2[5] = cursor.getDouble(cursor.getColumnIndexOrThrow("UNMIGRATED_AR_WATER"));
+      otherCharges2[6] = cursor.getDouble(cursor.getColumnIndexOrThrow("UNMIGRATED_AR_IC"));
+
+      otherCharges3 = new double[2];
+      otherCharges3[0] = cursor.getDouble(cursor.getColumnIndexOrThrow("UNMIGRATED_WATER_DUE"));
+      otherCharges3[1] = cursor.getDouble(cursor.getColumnIndexOrThrow("UNMIGRATED_SEWER_DUE"));
+
+      otherChrgInd2 = new String[2];
+      otherChrgInd2[0] = cursor.getString(cursor.getColumnIndexOrThrow("UNMIGRATED_WATER_IND"));
+      otherChrgInd2[1] = cursor.getString(cursor.getColumnIndexOrThrow("UNMIGRATED_SEWER_IND"));
+
+
+      otherCharges4 = new double[2];
+      otherCharges4[0] = cursor.getDouble(cursor.getColumnIndexOrThrow("RECOVERY"));
+      otherCharges4[1] = cursor.getDouble(cursor.getColumnIndexOrThrow("MISC_CHARGE"));
+
+
   }
 
 
@@ -337,5 +400,9 @@ public class MeterPrint {
 
     public String getRemarks() {
         return remarks;
+    }
+
+    public double getPrevUnPaid() {
+        return prevUnPaid;
     }
 }

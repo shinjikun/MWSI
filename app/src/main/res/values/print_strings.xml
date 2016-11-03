@@ -34,6 +34,9 @@
     <string name="print_bill_period">BILLING PERIOD</string>
     <string name="print_other_charges">Other Charges</string>
     <string name="print_current_charges">Current Charges</string>
+
+
+    <!-- BILLING SUMMARY - CURRENT CHARGES -->
     <array name="print_arry_curcharnges">
         <item>Basic Charge</item>
         <item>FCDA</item>
@@ -43,31 +46,47 @@
         <item>Total Current Charges  before Taxes</item>
         <item>Value Added Tax (VAT) </item>
     </array>
-    <array name="print_arry_othercharge">
-        <item>Installment Due: Guarantee Deposit (4th of 6)</item>
-        <item>Installment Due: Installation Cost - Water (99th of 99)</item>
-        <item>Installment Due: Installation Cost - Sewer (nth of n)</item>
-        <item>Installment Due: Project Amortization Cost (nth of n)</item>
-        <item>Installment Due: Restoration Charges (nth of n)</item>
-        <item>Installment Due: Penalties for Illegalities (nth of n)</item>
-     </array>
+
+
+
+    <!-- BILLING SUMMARY - OTHER CHARGES -->
+    <array name="print_arry_othercharge0">
+        <item>Guarantee Deposit</item>
+        <item>Installation Cost - Water</item>
+        <item>Installation Cost - Sewer</item>
+        <item>Project Amortization Cost</item>
+    </array>
+
     <array name="print_arry_othercharge1">
+        <item>Installment Due: Guarantee Deposit</item>
+        <item>Installment Due: Installation Cost - Water</item>
+        <item>Installment Due: Installation Cost - Sewer</item>
+        <item>Installment Due: Project Amortization Cost</item>
+        <item>Installment Due: Restoration Charges</item>
+        <item>Installment Due: Penalties for Illegalities</item>
+     </array>
+    <array name="print_arry_othercharge2">
         <item>Reopening Fee</item>
         <item>Metering Charge</item>
         <item>Septic Desludging Charge</item>
         <item>Sprtn/Trnsfr/Chnge Size Charge</item>
         <item>Penalties for Illegalities</item>
+        <item>Unmigrated AR - Water</item>
+        <item>Unmigrated AR - Installation Cost</item>
     </array>
 
-    <array name="print_arry_othercharge2">
-        <item>Installment Due: Unmigrated AR - Water (nth of n)</item>
-        <item>Installment Due: Unmigrated AR - IC (nth of n)</item>
+    <array name="print_arry_othercharge3">
+        <item>Installment Due: Unmigrated AR - Water</item>
+        <item>Installment Due: Unmigrated AR - IC</item>
+    </array>
+
+    <array name="print_arry_othercharge4">
+
         <item>Recovery of Accounts</item>
         <item>Other Miscellaneous Charges</item>
     </array>
-
     <string name="print_refund">Refund/ Rebate/ Overpayment</string>
-   <string name="print_previous">Previous Unpaid Amount (Please pay immediately)</string>
+   <string name="print_previous">Previous Unpaid Amount</string>
 
 
     <!--  NOTICE OF DISCONNECTION SECTION -->
@@ -95,7 +114,7 @@
 
     <string name="print_total_amount_due">TOTAL AMOUNT DUE</string>
     <string name="print_payment_date">PAYMENT DUE DATE</string>
-    <string name="print_instruction">Please examine your bill carefully. If no complaint is made within 60 days of  receipt,
+    <string name="print_instruction">Please examine your bill carefully. If no complaint is made within 60 days of   receipt,
         the bill is considered true and correct.</string>
 
     <string name="print_payment_invoice">INOVOICE NO.</string>
