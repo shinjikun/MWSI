@@ -363,6 +363,24 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("\r\r\n");
         str.append(setBold(0));
         str.append(context.getString(R.string.print_prevcons));
+        str.append("      ");
+        String prevConsline1 = mtrPrint.getPrevConsLine1();
+        String prevConsline2 = mtrPrint.getPrevConsLine2();
+        if(Utils.isNotEmpty(prevConsline1)&& Utils.isNotEmpty(prevConsline2)){
+            String[] str1 = prevConsline1.split(",");
+            String[] str2 = prevConsline2.split(",");
+            int size = str1.length;
+            for(int i=0;i<size;i++){
+                str.append(str1[i]);
+                str.append("      ");
+            }
+            str.append("\r\n");
+            str.append("   Consumption         ");
+            for(int i=0;i<size;i++){
+                str.append(str2[i]);
+                str.append("      ");
+            }
+        }
         str.append("\r\n");
         str.append(linePrint());
         return str.toString();
@@ -597,8 +615,13 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! U1 SETLP 5 0 24\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
-        str.append(context.getString(R.string.print_instruction));
-        str.append("\r\n");
+        arry = context.getResources().getStringArray(R.array.arry_instruction);
+        for (String string: arry
+             ) {
+            str.append(string);
+            str.append("\r\n");
+        }
+
         return str.toString();
     }
 

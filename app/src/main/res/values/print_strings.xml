@@ -114,8 +114,10 @@
 
     <string name="print_total_amount_due">TOTAL AMOUNT DUE</string>
     <string name="print_payment_date">PAYMENT DUE DATE</string>
-    <string name="print_instruction">Please examine your bill carefully. If no complaint is made within 60 days of   receipt,
-        the bill is considered true and correct.</string>
+    <string-array name="arry_instruction">
+        <item>Please examine your bill carefully. If no complaint is made within 60 days of</item>
+        <item>receipt, the bill is considered true and correct.</item>
+    </string-array>
 
     <string name="print_payment_invoice">INOVOICE NO.</string>
 
