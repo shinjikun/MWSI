@@ -26,7 +26,7 @@ public class PrintPage {
             String btName = prefs.getData("bname","");
             if(Utils.isNotEmpty(btName)){
                 btName = btName.toLowerCase();
-                if(btName.contains("zebra")){
+            //    if(btName.contains("zebra")){
                     ZebraLayout zebraLayout =new ZebraLayout(this.context);
                     String str = zebraLayout.contentPrint(meterPrint);
                     Log.i("Test","str"+str);
@@ -43,7 +43,7 @@ public class PrintPage {
                         }
 
                     }
-                }
+             //   }
             }
         }
    }

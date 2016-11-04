@@ -141,7 +141,7 @@ public class BluetoothHelper {
 				break;
 				
 			case WRITE:
-				
+
 				break;
 
 			case CONNECTED:
@@ -169,6 +169,10 @@ public class BluetoothHelper {
 					// notify that a connection started
 					Log.e(TAG, "Notifying connection failed!");
 					eventListener.bluetoothEventChange(BluetoothHelperEvent.CONNECTION_FAILED);
+				}
+				if(connection!=null){
+					connection.cancel();
+					connection = null;
 				}
 				break;
 

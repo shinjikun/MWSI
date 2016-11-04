@@ -20,11 +20,12 @@ import android.widget.Toast;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.adapters.DiscoveredPrinterAdapter;
 import com.indra.rover.mwsi.print.utils.BluetoothHelper;
+import com.indra.rover.mwsi.utils.Constants;
 
 
 import java.util.ArrayList;
 
-public class PrinterConnectionDialog extends DialogFragment implements AdapterView.OnItemClickListener {
+public class PrinterConnectionDialog extends DialogFragment implements AdapterView.OnItemClickListener,Constants {
     private static final String TAG = "Test";
 
      TextView emptyView;
@@ -95,8 +96,15 @@ public class PrinterConnectionDialog extends DialogFragment implements AdapterVi
                 if(discoveredPrinters.size()<1) // this checks if the size of bluetooth device is 0,then add the
                 {                                           // device to the arraylist.
                  //   adapter.add(device);
-                    discoveredPrinters.add(device);
-                    adapter.notifyDataSetChanged();
+                    if(device.getAddress().startsWith(zebraPrinters)){
+                        discoveredPrinters.add(device);
+                        adapter.notifyDataSetChanged();
+                    }
+                    else if(device.getAddress().startsWith(apexPrinters)){
+                        discoveredPrinters.add(device);
+                        adapter.notifyDataSetChanged();
+                    }
+
                 }
                 else
                 {
@@ -107,6 +115,8 @@ public class PrinterConnectionDialog extends DialogFragment implements AdapterVi
                         {
                             flag = false;
                         }
+
+
                     }
                     if(flag)
                     {

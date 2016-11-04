@@ -2,6 +2,7 @@ package com.indra.rover.mwsi.ui.activities;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.View;
@@ -162,11 +163,11 @@ public class ConnectivityDemo extends Activity {
     private void storeImage(){
 
         try {
-            ZebraImageI zebraImageI = ZebraImageFactory.getImage(getAssets().open("maynilad.png"));
-            ZebraImageI zebraImageI2 = ZebraImageFactory.getImage(getAssets().open("maynilad_m.png"));
+            ZebraImageI zebraImageI = ZebraImageFactory.getImage(getAssets().open("maynilad_big.png"));
+           // ZebraImageI zebraImageI2 = ZebraImageFactory.getImage(getAssets().open("maynilad_m.png"));
 
-            printer.storeImage("e:maynilad.png",zebraImageI,-1,-1);
-            printer.storeImage("e:maynilad_m.png",zebraImageI,-1,-1);
+            printer.storeImage("e:maynilad_big.png",zebraImageI,-1,-1);
+         //   printer.storeImage("e:maynilad_m.png",zebraImageI,-1,-1);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -213,11 +214,33 @@ public class ConnectivityDemo extends Activity {
     */
     private byte[] getConfigLabel() {
         byte[] configLabel = null;
-            //String cpclConfigLabel = "! U1 setvar \"device.languages\", \"line_print\"\r\n"
-             //       + "! U1 PCX 0 30 !<maynilad.pcx\n";
-            PrintLayout s = new ZebraLayout(this);
+            String cpclConfigLabel = "! U1 setvar \"device.languages\", \"line_print\"\r\n"
+                    +"U"
+                    + "! U1 PCX 0 30 !<maynilad.pcx\r\n"
+                    +"PRINT";
+        StringBuilder str = new StringBuilder();
+        str.append("! U1 setvar \"device.languages\", \"line_print\"\r\n");
+        str.append("! U1 BEGIN-PAGE\r\n");
+        str.append("! 0 200 200 175 1\r\n");
+        str.append("JOURNAL\r\n");
+        str.append("! U1 PAGE-WIDTH 100\r\n");
+        str.append("PRINT\r\n");
+        str.append("Maynilad Water Services Inc the quick brown foxs jumps over the lazy dog\r\n" );
+        str.append("Permit No. 0107-116-00006-CBA/AR\r\n" );
+       /* str.append("PCX 42 10 !<maynilad.pcx\r\n");
+        str.append("C Maynilad Water Services Inc\r\n" );
+        str.append("T 5 0 400 39 MWSS Compound\r\n" );
+        str.append("T 7 0 400 62 ");
 
-            String toPrint = s.contentPrint(new MeterPrint());
+        str.append("\r\n");
+        str.append("T 7 0 400 86 VAT Reg TIN ");
+        str.append("\r\n");
+        str.append("T 7 0 400 117 Permit No. 0107-116-00006-CBA/AR\r\n" );
+        str.append("T 7 0 400 150 Machine No. "+ Build.SERIAL+" \r\n" );
+        */
+
+
+            String toPrint = str.toString();// s.contentPrint(new MeterPrint());
         try {
             configLabel = toPrint.getBytes("US-ASCII");
         } catch (UnsupportedEncodingException e) {

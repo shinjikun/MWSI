@@ -780,7 +780,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             case DLG_PRINTMRSTUB:
                 String value = params.getString("value");
                 if(Utils.isNotEmpty(value)){
-                    btHelper.sendData(value.getBytes());
+                      btHelper.sendData(value.getBytes());
                 }
                 break;
         }
@@ -1186,16 +1186,19 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                         "does not support bluetooth");
                 break;
             case CONNECTION_FAILED:
+                dlgUtils.showOKDialog("Please check the status of device printer. " +
+                        "It might be turn off or not correctly pair to the device");
+
                 break;
             case CONNECTION_STABLISHED:
-
+                dlgUtils.showOKDialog("Connection Established");
                 break;
         }
     }
 
     @Override
     public void bluetoothConnectionStart(ConnectThread connection) {
-
+        dlgUtils.showOKDialog("Connection Started");
     }
 
     @Override
