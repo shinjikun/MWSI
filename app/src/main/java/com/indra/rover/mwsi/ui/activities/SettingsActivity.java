@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -86,6 +87,11 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         if (item.getItemId() == android.R.id.home) {
             finish(); // close this activity and return to preview activity (if there is any)
         }
+        else if(item.getItemId() == R.id.mnuChangeStatus ){
+            Intent intent =new Intent(this,ChangeStatusActivity.class);
+            startActivity(intent);
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -406,6 +412,15 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         BluetoothHelper.instance().destroy();
         unregisterReceiver(mPairReceiver);
         super.onDestroy();
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.statusmenu, menu);
+        return true;
     }
 
 

@@ -169,4 +169,13 @@
     <string name="printer_address">Printer address:</string>
     <string name="discovered_printers">Discovered printers</string>
     <string name="searching_for_printers">Searching for printers&#8230;</string>
+    <string name="title_activity_change_status">ChangeStatusActivity</string>
+
+    <string name="chg_rover_status">Change Rover Status</string>
+    <string-array name="rover_statuses">
+        <item>DOWNLOADED</item>
+        <item>UPLOADED</item>
+        <item>MODIFIED</item>
+        <item>ALL READ</item>
+    </string-array>
 </resources>

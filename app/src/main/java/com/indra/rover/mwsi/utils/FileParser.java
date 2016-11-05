@@ -86,7 +86,6 @@ public class FileParser extends AsyncTask<File,Integer,String> {
             deleteFiles();
             while ((record = reader.readNext()) != null) {
                 // nextLine[] is an array of values from the line
-
                 mRDao.insertTUploadData(record);
                 mRDao.insertTDLData(record);
                 mRDao.insertTCurrRDGData(record);
@@ -164,8 +163,8 @@ public class FileParser extends AsyncTask<File,Integer,String> {
         }
     }
     private void deleteFiles(){
-        deleteFiles("/uploads/signatures");
-        deleteFiles("/uploads/images");
+        deleteFiles("/uploads/");
+
     }
 
 
