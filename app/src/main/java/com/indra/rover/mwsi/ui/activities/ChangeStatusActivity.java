@@ -39,7 +39,7 @@ public class ChangeStatusActivity extends AppCompatActivity implements View.OnCl
         dialogUtils = new DialogUtils(this);
         dialogUtils.setListener(this);
         String appStatus =   prefs.getData(Constants.APP_STATUS,"DOWNLOADED");
-        arryStatus =  getResources().getStringArray(R.array.arry_instruction);
+        arryStatus =  getResources().getStringArray(R.array.rover_statuses);
          spn =  (Spinner)findViewById(R.id.spn);
          for(int i=0;i<arryStatus.length;i++){
              String spnStatus = arryStatus[i];

@@ -42,6 +42,7 @@ public  abstract class PrintLayout {
         //header layout
 
         strPrint.append(billHeader(mtrPrint));
+        /*
         //body layout
         strPrint.append(bodyLayout(mtrPrint));
 
@@ -66,6 +67,7 @@ public  abstract class PrintLayout {
             strPrint.append(billDiscon(mtrPrint));
 
         }
+        */
 
         //footer breadcrumbs
         strPrint.append(breadCrumbsFooter());

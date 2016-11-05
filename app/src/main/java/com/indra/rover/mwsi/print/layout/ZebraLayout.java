@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 
 public class ZebraLayout   extends   PrintLayout{
-    Utils utils;
+
     final String TAB_SPACE=" ";
     public ZebraLayout(Context context) {
         super(context);
@@ -157,7 +157,7 @@ public class ZebraLayout   extends   PrintLayout{
         StringBuilder str = new StringBuilder();
         str.append("! 0 200 200 210 1\r\n");
         str.append("JOURNAL\r\n");
-        str.append("PCX 50 20 !<maynilad.pcx\r\n");
+        str.append("PCX 110 20 !<maynilad.pcx\r\n");
         str.append("T 5 0 400 6 Maynilad Water Services Inc\r\n" );
         str.append("T 5 0 400 39 MWSS Compound\r\n" );
         ArrayList<String> arry =  stringSplit(mtrPrint.getBcAddress(), 30);
@@ -329,8 +329,17 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
         str.append(context.getString(R.string.print_rate));
-        str.append("      : ");
-        str.append(mtrPrint.getBillClass());
+        if(Utils.isNotEmpty(mtrPrint.getTIN())){
+            str.append("      : ");
+            str.append(mtrPrint.getBillClass());
+            str.append(" ");
+            str.append("TIN : ");
+            str.append(mtrPrint.getTIN());
+        }
+        else {
+            str.append("      : ");
+            str.append(mtrPrint.getBillClass());
+        }
         str.append("\r\n");
         str.append("! U1 SETLP 0 3 18\r\n");
         str.append("! U1 SETSP 0\r\n");
@@ -339,6 +348,12 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("   : ");
         str.append(mtrPrint.getBcDesc());
         str.append("\r\n");
+
+        if(Utils.isNotEmpty(mtrPrint.getSc_id())){
+           str.append("Senior Citezen ID : ");
+            str.append(mtrPrint.getSc_id());
+            str.append("\r\n");
+        }
         str.append(linePrint());
         return str.toString();
     }
@@ -676,7 +691,7 @@ public class ZebraLayout   extends   PrintLayout{
         StringBuilder str = new StringBuilder();
         str.append("! 0 200 200 210 1\r\n");
         str.append("JOURNAL\r\n");
-        str.append("PCX 42 20 !<maynilad.pcx\r\n");
+        str.append("PCX 110 20 !<maynilad.pcx\r\n");
         str.append("T 5 0 400 6 Maynilad Water Services Inc\r\n" );
         str.append("T 5 0 400 39 MWSS Compound\r\n" );
         ArrayList<String> arry =  stringSplit(mtrPrint.getBcAddress(), 30);

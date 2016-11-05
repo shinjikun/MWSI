@@ -4,9 +4,7 @@ import android.content.Context;
 
 import java.io.File;
 
-/**
- * Created by Indra on 9/2/2016.
- */
+
 public class FileUtils {
 
 
@@ -27,17 +25,27 @@ public class FileUtils {
         if(!downloadDir.exists()){
             downloadDir.mkdirs();
         }
+      String str =  PreferenceKeys.getInstance(context).getData(Constants.contentFolder,"");
+        if(Utils.isNotEmpty(str)){
+            File dataCont =  new File(uploadDir,str);
+            if(!dataCont.exists()){
+                dataCont.mkdir();
+            }
+
         //this will contain the capture images of reported OCs
-        File imagesDir = new File(uploadDir,"images");
+        File imagesDir = new File(dataCont,"images");
         if(!imagesDir.exists()){
             imagesDir.mkdirs();
         }
 
         //this will contain the signature of customer who received the receipt of meter reading
-        File signatures = new File(uploadDir,"signatures");
+        File signatures = new File(dataCont,"signatures");
         if(!signatures.exists()){
             signatures.mkdirs();
         }
+    }
+
+
 
         //create directory for database files
       File  db = new File(contentDir,"db");

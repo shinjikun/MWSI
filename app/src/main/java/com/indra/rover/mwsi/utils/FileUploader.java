@@ -64,20 +64,24 @@ public class FileUploader  extends AsyncTask<String[],Integer,String> {
     private void generate_uploadfile(String mruNo, boolean isMultiBook){
 
         try {
-            String fileName = "BK"+mruNo.substring(mruNo.length()-4)+"U.txt";
-            if(isMultiBook){
-                fileName = "BKUMB_"+ Build.SERIAL+"_"+Utils.getCurrentDate("MMdd")+".txt";
+
+            File uploadDir=new File(android.os.Environment.getExternalStorageDirectory(),
+                    mContext.getPackageName()+"/uploads");
+            if(!uploadDir.exists()){
+                uploadDir.mkdir();
             }
-            File contentDir=new File(android.os.Environment.getExternalStorageDirectory(),mContext.getPackageName()+"/uploads");
+            String fileName = "BK"+mruNo+"U.txt";
+            File   contentDir = new File(uploadDir,mruNo);
+            if(isMultiBook){
+                String str =Build.SERIAL+"_"+Utils.getCurrentDate("MMdd");
+                fileName = "BKUMB_"+str+".txt";
+                contentDir = new File(uploadDir,str);
+            }
             if(!contentDir.exists()){
                 contentDir.mkdir();
             }
             File file = new File(contentDir, fileName);
-
             CSVWriter writer = new CSVWriter(new FileWriter(file), '|',CSVWriter.NO_QUOTE_CHARACTER);
-
-           // String[] column_names =    mContext.getResources().getStringArray(R.array.upload_columns);
-          //  writer.writeNext(column_names);
             List<String[]> mete = mrDao.query_upload(mruNo, isMultiBook);
             int size = mete.size();
             for(int i=0;i<size;i++){
@@ -92,14 +96,24 @@ public class FileUploader  extends AsyncTask<String[],Integer,String> {
     }
     private void generate_fconnfile(String mruNo, boolean isMultiBook){
         try{
-            String fileName = "FC"+mruNo.substring(mruNo.length()-4)+".txt";
-            if(isMultiBook){
-                fileName = "FCMB_"+ Build.SERIAL+"_"+Utils.getCurrentDate("MMdd")+".txt";
+
+            File uploadDir=new File(android.os.Environment.getExternalStorageDirectory(),
+                    mContext.getPackageName()+"/uploads");
+            if(!uploadDir.exists()){
+                uploadDir.mkdir();
             }
-            File contentDir=new File(android.os.Environment.getExternalStorageDirectory(),mContext.getPackageName()+"/uploads");
+
+            File   contentDir = new File(uploadDir,mruNo);
+            String fileName = "FC"+mruNo+".txt";
+            if(isMultiBook){
+                String str =Build.SERIAL+"_"+Utils.getCurrentDate("MMdd");
+                fileName = "FCMB_"+str+".txt";
+                contentDir = new File(uploadDir,str);
+            }
             if(!contentDir.exists()){
                 contentDir.mkdir();
             }
+
             List<String[]> mete = mrDao.query_fconn();
             if(mete.isEmpty())
                 return;
@@ -123,19 +137,27 @@ public class FileUploader  extends AsyncTask<String[],Integer,String> {
     private void generate_sapfile(String mruNo, boolean isMultiBook){
         try{
 
+            File uploadDir=new File(android.os.Environment.getExternalStorageDirectory(),
+                    mContext.getPackageName()+"/uploads");
 
-            String fileName = "SAP"+mruNo.substring(mruNo.length()-4)+".txt";
-            if(isMultiBook){
-                fileName = "SAPMB_"+ Build.SERIAL+"_"+Utils.getCurrentDate("MMdd")+".txt";
+            if(!uploadDir.exists()){
+                uploadDir.mkdir();
             }
-            File contentDir=new File(android.os.Environment.getExternalStorageDirectory(),mContext.getPackageName()+"/uploads");
-            File file = new File(contentDir, fileName);
+
+            File   contentDir = new File(uploadDir,mruNo);
+            String fileName = "SAP"+mruNo+".txt";
+            if(isMultiBook){
+                String str =Build.SERIAL+"_"+Utils.getCurrentDate("MMdd");
+                fileName = "SAPMB_"+str+".txt";
+                contentDir = new File(uploadDir,str);
+            }
             if(!contentDir.exists()){
                 contentDir.mkdir();
             }
             List<String[]> mete = mrDao.query_sap();
             if(mete.isEmpty())
                 return;
+            File file = new File(contentDir, fileName);
             CSVWriter writer = new CSVWriter(new FileWriter(file), '|',CSVWriter.NO_QUOTE_CHARACTER);
             //String[] column_names =    mContext.getResources().getStringArray(R.array.fc_columns);
             //writer.writeNext(column_names);

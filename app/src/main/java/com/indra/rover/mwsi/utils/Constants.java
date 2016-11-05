@@ -53,4 +53,7 @@ public interface  Constants {
 
    String zebraPrinters= "AC:3F:A4";
    String apexPrinters = "00:12:F3";
+
+   String contentFolder ="contentFolder";
+
 }

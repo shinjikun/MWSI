@@ -33,6 +33,7 @@ import com.indra.rover.mwsi.ui.widgets.CustomSpinView;
 import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.MessageTransport;
+import com.indra.rover.mwsi.utils.PreferenceKeys;
 import com.indra.rover.mwsi.utils.Utils;
 import com.squareup.otto.Subscribe;
 
@@ -511,9 +512,26 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
 
     private void saveCaptureImage(int ocType,Bitmap bitMap){
         File    contentDir=new File(android.os.Environment.getExternalStorageDirectory()
-                ,getActivity().getPackageName()+"/uploads/images");
+                ,"com.indra.rover.mwsi/uploads/");
         if(!contentDir.exists())
             contentDir.mkdir();
+
+        String str =  PreferenceKeys.getInstance(getActivity()).getData(Constants.contentFolder,"");
+        if(Utils.isNotEmpty(str)){
+            File dataCont =  new File(contentDir,str);
+            if(!dataCont.exists()){
+                dataCont.mkdir();
+            }
+
+            //this will contain the signature of customer who received the receipt of meter reading
+            contentDir= new File(dataCont,"images");
+            if(!contentDir.exists()){
+                contentDir.mkdir();
+            }
+        }
+
+
+
         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append(crdocno);
         strBuilder.append('-');
@@ -623,9 +641,28 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
 
 
      File getImageFile(int ocType){
-        File    contentDir=new File(android.os.Environment.getExternalStorageDirectory()
-                ,"com.indra.rover.mwsi/uploads/images");
-        StringBuilder strBuilder = new StringBuilder();
+         File    contentDir=new File(android.os.Environment.getExternalStorageDirectory()
+                 ,"com.indra.rover.mwsi/uploads/");
+         if(!contentDir.exists())
+             contentDir.mkdir();
+
+         String str =  PreferenceKeys.getInstance(getActivity()).getData(Constants.contentFolder,"");
+         if(Utils.isNotEmpty(str)){
+             File dataCont =  new File(contentDir,str);
+             if(!dataCont.exists()){
+                 dataCont.mkdir();
+             }
+
+             //this will contain the signature of customer who received the receipt of meter reading
+             contentDir= new File(dataCont,"images");
+             if(!contentDir.exists()){
+                 contentDir.mkdir();
+             }
+         }
+
+
+
+         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append(crdocno);
         strBuilder.append('-');
         if(ocType == CAM_OC1){

@@ -18,7 +18,10 @@ import android.widget.TextView;
 
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.ui.widgets.SignatureArea;
+import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.DialogUtils;
+import com.indra.rover.mwsi.utils.PreferenceKeys;
+import com.indra.rover.mwsi.utils.Utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -111,10 +114,27 @@ public class SignatureActivity extends AppCompatActivity implements
 
     private void saveSignature(){
         Bitmap bitMap = signPanel.getBitmap();
-        File contentDir=new File(android.os.Environment.getExternalStorageDirectory()
-                ,getPackageName()+"/uploads/signatures");
+        File    contentDir=new File(android.os.Environment.getExternalStorageDirectory()
+                ,"com.indra.rover.mwsi/uploads/");
         if(!contentDir.exists())
             contentDir.mkdir();
+
+        String str =  PreferenceKeys.getInstance(this).getData(Constants.contentFolder,"");
+        if(Utils.isNotEmpty(str)){
+            File dataCont =  new File(contentDir,str);
+            if(!dataCont.exists()){
+                dataCont.mkdir();
+            }
+
+            //this will contain the signature of customer who received the receipt of meter reading
+            contentDir= new File(dataCont,"signatures");
+            if(!contentDir.exists()){
+                contentDir.mkdir();
+            }
+        }
+
+
+
         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append(crdocno);
         strBuilder.append('-');

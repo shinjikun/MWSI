@@ -2,6 +2,7 @@ package com.indra.rover.mwsi.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 
 import com.indra.rover.mwsi.data.db.ConnectDao;
 import com.opencsv.CSVReader;
@@ -9,6 +10,7 @@ import com.opencsv.CSVReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 public class FileParser extends AsyncTask<File,Integer,String> {
 
@@ -134,7 +136,7 @@ public class FileParser extends AsyncTask<File,Integer,String> {
             CSVReader reader = new CSVReader(new FileReader(file), '|', '\"');
             //truncate T_MRU table
             mRDao.truncateMRUTable();
-
+            PreferenceKeys.getInstance(context).setData(Constants.contentFolder,"");
             String [] record;
             while ((record = reader.readNext()) != null) {
                 // nextLine[] is an array of values from the line
@@ -142,9 +144,22 @@ public class FileParser extends AsyncTask<File,Integer,String> {
             }
 
 
+
         }
         catch (IOException e) {
 
+        }finally {
+            List<String> arry =       mRDao.fetchMRUs();
+            if(!arry.isEmpty()){
+                if(arry.size()>1){
+                    String str = Build.SERIAL+"_"+Utils.getCurrentDate("MMdd");
+                    PreferenceKeys.getInstance(context).setData(Constants.contentFolder,str);
+                }
+                else {
+                    String mru =  arry.get(0);
+                    PreferenceKeys.getInstance(context).setData(Constants.contentFolder,mru);
+                }
+            }
         }
     }
 

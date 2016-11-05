@@ -447,7 +447,7 @@ public class BillCompute extends BCompute {
     private void computeForVAT(MeterBill meterBill){
         String vatExempt = meterBill.getVatExempt();
         if(Utils.isNotEmpty(vatExempt)){
-            if(vatExempt.equals("1")){
+            if(vatExempt.equals("0")){
                 double  totChargeB4Tax = meterBill.getTotcurb4tax();
                 GLCharge glVAT =  getGLCharge(VATX);
                 double vat =  totChargeB4Tax * glVAT.getGl_rate();
