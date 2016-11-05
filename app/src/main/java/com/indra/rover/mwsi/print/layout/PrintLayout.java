@@ -22,6 +22,7 @@ public  abstract class PrintLayout {
     abstract String meterInfo(MeterPrint mtrPrint);
     abstract String paymentHistory(MeterPrint mtrPrint);
     abstract String billSummary(MeterPrint mtrPrint);
+    abstract String promoMsg(MeterPrint mtrPrint);
     abstract String billAdvisory(MeterPrint mtrPrint,String range);
     abstract String billFooter(MeterPrint mtrPrint);
     abstract String billValidity(MeterPrint mtrPrint);
@@ -42,10 +43,10 @@ public  abstract class PrintLayout {
         //header layout
 
         strPrint.append(billHeader(mtrPrint));
-        /*
         //body layout
         strPrint.append(bodyLayout(mtrPrint));
 
+        strPrint.append(promoMsg(mtrPrint));
 
         //bill advisory
         //only add the advisory section is the consumption result is very high or very low
@@ -67,7 +68,6 @@ public  abstract class PrintLayout {
             strPrint.append(billDiscon(mtrPrint));
 
         }
-        */
 
         //footer breadcrumbs
         strPrint.append(breadCrumbsFooter());

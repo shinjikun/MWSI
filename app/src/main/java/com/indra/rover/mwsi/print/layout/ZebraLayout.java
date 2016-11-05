@@ -210,14 +210,40 @@ public class ZebraLayout   extends   PrintLayout{
     public String billFooter(MeterPrint mtrPrint) {
         StringBuilder str = new StringBuilder();
         str.append(lineBreakPrint());
+        str.append("! U1 SETLP 7 0 24\r\n");
+        str.append("! U1 SETSP 0\r\n");
+        str.append(setBold(0));
+        str.append(rightJustify(67,context.getString(R.string.print_payment_center)));
+        str.append("\r\n");
+        StringBuilder str1 = new StringBuilder();
+        str1.append("Contract Account No.  : ");
+        str1.append(mtrPrint.getAcctNum());
+        str.append(str1.toString());
+        str.append(addSpace(str1.toString(),68,"Amount Due "+mtrPrint.getTotalamt()));
+        str.append("\r\n");
+         str1 = new StringBuilder();
+        str1.append("Account Name :");
+        str1.append(mtrPrint.getCustName());
+        str.append(str1.toString());
+        StringBuilder str2 = new StringBuilder();
+        str.append("! U1 SETLP 0 2 18\r\n");
+        str2.append(context.getString(R.string.print_bill_period));
+        str2.append(":");
+        str2.append(mtrPrint.getSchedRdgDate());
+        str2.append(" TO ");
+        str2.append(mtrPrint.getDueDate());
+
+
+        str.append(addSpace(str1.toString(),90,str2.toString()));
+        str.append("! U1 SETLP 7 0 24\r\n");
         str.append("\r\n");
         str.append("! U1 CENTER\r\n");
-        str.append("! U1 B 128 1 2 100 0 0 ");
+        str.append("! U1 B 39 1 30 78 13 1 ");
         str.append(mtrPrint.getAcctNum());
         str.append(' ');
-        str.append(mtrPrint.getTotalamt());
+        str.append(mtrPrint.getOrig_totalamt());
         str.append("\r\n");
-        str.append("\r\r\n");
+        str.append("\r\r\r\n");
         return str.toString();
     }
 
@@ -512,6 +538,18 @@ public class ZebraLayout   extends   PrintLayout{
     }
 
 
+    private String rightJustify(int max,String value){
+        int val_lenght =  value.length();
+        StringBuilder str = new StringBuilder();
+        int x = max - val_lenght;
+        for(int i=0;i<x;i++){
+            str.append(' ');
+        }
+        str.append(value);
+        return str.toString();
+    }
+
+
     private String addSpace(String str,int maxSpace){
         StringBuilder strOr = new StringBuilder();
         int curLinex = str.length();
@@ -653,6 +691,12 @@ public class ZebraLayout   extends   PrintLayout{
         }
 
         return str.toString();
+    }
+
+    @Override
+    String promoMsg(MeterPrint mtrPrint) {
+
+        return "";
     }
 
     @Override

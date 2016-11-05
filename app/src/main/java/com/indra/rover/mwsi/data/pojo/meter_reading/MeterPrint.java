@@ -53,6 +53,7 @@ public class MeterPrint {
      * total amount due
      */
   private String totalamt;
+  private String orig_totalamt;
   private String otherCharges;
 
 
@@ -87,7 +88,7 @@ public class MeterPrint {
         this.custName = cursor.getString(cursor.getColumnIndexOrThrow("CUSTNAME"));
         this.acctNum = cursor.getString(cursor.getColumnIndexOrThrow("ACCTNUM"));
         this.printCount = cursor.getString(cursor.getColumnIndexOrThrow("PRINT_COUNT"));
-        this.totalamt = cursor.getString(cursor.getColumnIndexOrThrow("TOTAL_AMT_DUE"));
+        this.orig_totalamt = cursor.getString(cursor.getColumnIndexOrThrow("TOTAL_AMT_DUE"));
         otherCharges0 = new double[4];
 
         otherCharges2 = new double[7];
@@ -130,7 +131,7 @@ public class MeterPrint {
     this.prevInvoiceNo = cursor.getString(cursor.getColumnIndexOrThrow("PREVINVOICENO"));
     this.remarks = cursor.getString(cursor.getColumnIndexOrThrow("REMARKS"));
 
-
+      this.orig_totalamt = cursor.getString(cursor.getColumnIndexOrThrow("TOTAL_AMT_DUE"));
 
 
       //billing summary - current charges
@@ -406,5 +407,7 @@ public class MeterPrint {
         return prevUnPaid;
     }
 
-
+    public String getOrig_totalamt() {
+        return orig_totalamt;
+    }
 }

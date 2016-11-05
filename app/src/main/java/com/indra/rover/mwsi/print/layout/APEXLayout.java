@@ -61,6 +61,11 @@ public class APEXLayout  extends   PrintLayout {
     }
 
     @Override
+    String promoMsg(MeterPrint mtrPrint) {
+        return null;
+    }
+
+    @Override
     String billAdvisory(MeterPrint mtrPrint,String range) {
         return "";
     }

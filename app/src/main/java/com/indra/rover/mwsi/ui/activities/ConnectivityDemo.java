@@ -153,7 +153,7 @@ public class ConnectivityDemo extends Activity {
     private void doConnectionTest() {
         printer = connect();
         if (printer != null) {
-            storeImage();
+          //  storeImage();
             sendTestLabel();
         } else {
             disconnect();
@@ -223,10 +223,9 @@ public class ConnectivityDemo extends Activity {
         str.append("! U1 BEGIN-PAGE\r\n");
         str.append("! 0 200 200 175 1\r\n");
         str.append("JOURNAL\r\n");
-        str.append("! U1 PAGE-WIDTH 100\r\n");
+        str.append("B 39 1 30 78 1 1 12345678 1335446\r\n");
         str.append("PRINT\r\n");
-        str.append("Maynilad Water Services Inc the quick brown foxs jumps over the lazy dog\r\n" );
-        str.append("Permit No. 0107-116-00006-CBA/AR\r\n" );
+
        /* str.append("PCX 42 10 !<maynilad.pcx\r\n");
         str.append("C Maynilad Water Services Inc\r\n" );
         str.append("T 5 0 400 39 MWSS Compound\r\n" );

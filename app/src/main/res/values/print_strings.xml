@@ -48,6 +48,8 @@
     </array>
 
 
+    <!--BILL FOOTER-->
+    <string name="print_payment_center">PAYMENT CENTER/BANK COPY</string>
 
     <!-- BILLING SUMMARY - OTHER CHARGES -->
     <array name="print_arry_othercharge0">

@@ -61,6 +61,11 @@ public class HTMLayout  extends PrintLayout {
     }
 
     @Override
+    String promoMsg(MeterPrint mtrPrint) {
+        return null;
+    }
+
+    @Override
     String billAdvisory(MeterPrint mtrPrint,String rangeCode) {
         return "\n";
     }

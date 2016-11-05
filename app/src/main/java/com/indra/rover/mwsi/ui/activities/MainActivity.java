@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnSettings:
             //    Log.i("Test","android.os.Build.SERIAL: " + Build.SERIAL);
-                intent =  new Intent(this,SettingsActivity.class);
+                intent =  new Intent(this,ConnectivityDemo.class);
                 startActivity(intent);
                 break;
         }
