@@ -50,6 +50,7 @@ public interface  Constants {
    int DLG_RESET=75;
    int DLG_EDITMODE=67;
    int DLG_DELIV = 779;
+   int DLG_PRINTMRSTUB=800;
 
    String zebraPrinters= "AC:3F:A4";
    String apexPrinters = "00:12:F3";

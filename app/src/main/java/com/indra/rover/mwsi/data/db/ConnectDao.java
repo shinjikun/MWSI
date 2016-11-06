@@ -220,6 +220,7 @@ public class ConnectDao extends ModelDao {
                     case CSMother:
                     case CSChild:
                     case MBMother:
+                    case MBChild:
                         values.put("PRINT_TAG", MeterInfo.BILLNOPRINT);
                         break;
                 }

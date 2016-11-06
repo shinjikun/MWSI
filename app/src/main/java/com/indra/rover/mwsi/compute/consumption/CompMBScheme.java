@@ -67,6 +67,7 @@ public class CompMBScheme extends Compute implements Compute.ConsumptionListener
             int a = childMeter.getBilled_cons();
             int sharedcons = x * a /totalCons;
             childMeter.setBilled_cons(a+sharedcons);
+            childMeter.setPrintTag(MeterInfo.BILLABLE);
             //if child meter is tagged as actual
             if(childMeter.getConstype_code().equals("0")){
                 //tag parent as adjusted

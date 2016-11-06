@@ -157,6 +157,10 @@ public class MeterPrint {
       str = Utils.formatValue(data);
       cur_charges.add(str);
 
+      data = cursor.getDouble(cursor.getColumnIndexOrThrow("SC_DISCOUNT"));
+      str = Utils.formatValue(data);
+      cur_charges.add(str);
+
       data = cursor.getDouble(cursor.getColumnIndexOrThrow("TOTCHRG_WO_TAX"));
       str = Utils.formatValue(data);
       cur_charges.add(str);

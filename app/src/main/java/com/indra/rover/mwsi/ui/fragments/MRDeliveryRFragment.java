@@ -188,7 +188,7 @@ public class MRDeliveryRFragment extends Fragment  implements View.OnClickListen
         switch (id){
             case R.id.btnEditMRDelivery:
                 String readstat = meterDelivery.getReadstat();
-                if(readstat.equals("P")&&readstat.equals("Q")){
+                if(readstat.equals("P")||readstat.equals("Q")){
                     editMode(true);
                 }
                 else {

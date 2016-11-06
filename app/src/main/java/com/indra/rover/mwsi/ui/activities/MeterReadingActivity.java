@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -79,13 +78,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
      * Button for navigating previous or next records
      */
     ImageButton btnPrev, btnNext;
-    final int SEARCH_REQ =99;
-    final int INPUT_REQ =68;
-    final int BLUETOOTH_REQ=72;
-    final int DLG_RESET=75;
-    final int DLG_EDITMODE=67;
-    final int DLG_DELIV = 779;
-    final int DLG_PRINTMRSTUB=800;
+
     DialogUtils dlgUtils;
     TextView txtFilter;
     //Button btnPrint;
@@ -578,22 +571,26 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     /**
      * change the current read status to status printed 'P'
+     * @param reqDelivCode
      */
-    void changeToPrinted(){
+    void changeToPrinted(boolean reqDelivCode){
         String readstatstr = meterInfo.getReadStat();
         char readstat = readstatstr.charAt(0);
         String newReadStat;
         switch(readstat){
             case 'P':
             case 'Q':
-                meterDao.updatePrintDate(Utils.getFormattedDate(),meterInfo.getDldocno());
+
                 break;
             case 'E':
                 newReadStat="Q";
                 meterDao.updateReadStatus(newReadStat,meterInfo.getDldocno());
                 updateReadStatusDisplay(newReadStat);
-                mViewPager.setCurrentItem(2);
-                scrollUp();
+                if(reqDelivCode){
+                    mViewPager.setCurrentItem(2);
+                    scrollUp();
+                }
+
                 try{
                     MainApp.bus.post(new MessageTransport("readstat",newReadStat));
                 }catch (Exception e){
@@ -605,8 +602,11 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 newReadStat="P";
                 meterDao.updateReadStatus(newReadStat,meterInfo.getDldocno());
                 updateReadStatusDisplay(newReadStat);
-                mViewPager.setCurrentItem(2);
-                scrollUp();
+                if(reqDelivCode){
+                    mViewPager.setCurrentItem(2);
+                    scrollUp();
+                }
+
                 try{
                     MainApp.bus.post(new MessageTransport("readstat",newReadStat));
                 }catch (Exception e){
@@ -959,8 +959,6 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                         return;
                     }
                 }
-
-
                 // bill already printed, no recompute required, just reprint!
                 norecompute =1;
                 break;
@@ -1089,6 +1087,18 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         computeConsRange(meterConsumption);
     }
 
+    private void updateArry(MeterConsumption childMeter){
+        int size = arry.size();
+        for(int i=0;i<size;i++){
+            MeterInfo mtrInfo = arry.get(i);
+            if(mtrInfo.getMru_id().equals(childMeter.getId())){
+               mtrInfo.setPrintTag(childMeter.getPrintTag());
+                arry.set(i,mtrInfo);
+                break;
+            }
+        }
+    }
+
     @Override
     public void onPrintChildMeters(MeterConsumption meterConsumption,
                                    List<MeterConsumption> childMeters) {
@@ -1103,6 +1113,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         int size = childMeters.size();
         for(int i= 0; i<size;i++){
             MeterConsumption childMeter = childMeters.get(i);
+            updateArry(childMeter);
             meterDao.updateConsumption(childMeter,childMeter.getId());
 
             //print child
@@ -1114,26 +1125,32 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     public void onPostBillResult(MeterBill mtrBill) {
 
         meterDao.updateMeterBill(mtrBill);
+        if(meterInfo.getGrp_flag().equals("K")){
+            changeToPrinted(false);
+            return;
+        }
         switch(meterInfo.getPrintTag()){
             case MeterInfo.BILLABLE:
                 startPrinting();
                 break;
+            case MeterInfo.BILLNOPRINT:
+                changeToPrinted(false);
+                break;
         }
-
 
     }
 
     @Override
     public void onPrintPageResult(String meterPrintPage) {
        btHelper.sendData(meterPrintPage.getBytes());
-        changeToPrinted();
+        changeToPrinted(true);
 
     }
 
     @Override
     public void onPrintPageAndMRStub(String meterPrintPage, final String mrStubPage) {
         btHelper.sendData(meterPrintPage.getBytes());
-        changeToPrinted();
+        changeToPrinted(true);
         Bundle b = new Bundle();
         b.putString("value",mrStubPage);
         dlgUtils.showYesNoDialog(DLG_PRINTMRSTUB,"MR Stub",b);
@@ -1186,19 +1203,18 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                         "does not support bluetooth");
                 break;
             case CONNECTION_FAILED:
-                dlgUtils.showOKDialog("Please check the status of device printer. " +
-                        "It might be turn off or not correctly pair to the device");
+
 
                 break;
             case CONNECTION_STABLISHED:
-                dlgUtils.showOKDialog("Connection Established");
+
                 break;
         }
     }
 
     @Override
     public void bluetoothConnectionStart(ConnectThread connection) {
-        dlgUtils.showOKDialog("Connection Started");
+
     }
 
     @Override

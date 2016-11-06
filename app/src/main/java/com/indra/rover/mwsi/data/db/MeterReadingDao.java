@@ -685,7 +685,7 @@ public class MeterReadingDao extends ModelDao {
         try {
             open();
             String str ="Select count(*) as COUNTNUM from T_CURRENT_RDG where  ACCTNUM='"+parent_id
-                    +"' and MRU = '"+mru_id+"'";
+                    +"' and MRU = '"+mru_id+" and READSTAT !='U''";
             Cursor cursor = database.rawQuery(str,null);
             if (cursor.moveToFirst()) {
                 do {
@@ -831,7 +831,7 @@ public class MeterReadingDao extends ModelDao {
                 "d.ACCTNUM,d.CUSTNAME,d.CUSTADDRESS,d.ACCT_STATUS,d.TIN,d.TENANT_NAME,d.SC_ID,\n" +
                 "d.SEQNO,c.METERNO,c.BILLED_CONS,c.CONSTYPE_CODE,c.RDG_DATE,d.PREVRDGDATE,d.ACTPREVRDG,c.PRESRDG,\n" +
                 "d.PREVCONSLINE1, d.PREVCONSLINE2,d.WBPAYDTLS1,d.WBPAYDTLS2,d.GDPAYDTLS,d.MISCPAYDTLS,\n" +
-                "u.BASIC_CHARGE,u.FCDA,u.CERA,u.ENV_CHARGE,u.SEWER_CHARGE,u.MSC_AMOUNT,\n" +
+                "u.BASIC_CHARGE,u.FCDA,u.CERA,u.ENV_CHARGE,u.SEWER_CHARGE,u.MSC_AMOUNT,u.SC_DISCOUNT,\n" +
                 "u.TOTCHRG_WO_TAX,u.VAT_CHARGE,u.TOT_CURR_CHARGE,d.SPBILL_RULE,\n" +
                 "INSTALL_WATER_DUE,INSTALL_WATER_CHARGE,\n"+
                 "SEPTIC_CHARGE,CHANGESIZE_CHARGE,MISC_CHARGE,INSTALL_SEWER_CHARGE,AMORTIZATION,\n" +

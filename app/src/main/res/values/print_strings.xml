@@ -43,6 +43,7 @@
         <item>Environmental Charges (20% of Basic Charge and FCDA)</item>
         <item>Sewer Charges (20% of Basic Charge and FCDA)</item>
         <item>Maintenance Service Charge (MSC)</item>
+        <item>Senior Citezen Discount</item>
         <item>Total Current Charges  before Taxes</item>
         <item>Value Added Tax (VAT) </item>
     </array>

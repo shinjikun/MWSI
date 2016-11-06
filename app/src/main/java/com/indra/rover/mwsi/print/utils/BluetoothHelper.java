@@ -87,7 +87,7 @@ public class BluetoothHelper {
 	/**
 	 * Will test out wether a connection to a specific device can be stablished
 	 * will not sent any data and will not keep the connection open for too
-	 * long, it is only for the purposes of ensure that the device is in there.
+	 * long, it is only for the purposefs of ensure that the device is in there.
 	 * 
 	 * */
 	public void connectTo(BluetoothDevice device) {
