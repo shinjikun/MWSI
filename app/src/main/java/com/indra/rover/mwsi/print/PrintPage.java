@@ -9,6 +9,8 @@ import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.PreferenceKeys;
 import com.indra.rover.mwsi.utils.Utils;
 
+import java.util.ArrayList;
+
 public class PrintPage {
 
    private PrintPageListener listener;
@@ -19,6 +21,19 @@ public class PrintPage {
         this.listener = listener;
         prefs = PreferenceKeys.getInstance(this.context);
     }
+
+
+
+    public void printEOD(ArrayList<MeterPrint> mtrPrints){
+            ZebraLayout zebraLayout = new ZebraLayout(this.context);
+            String str =zebraLayout.eodReport(mtrPrints);
+            if(listener!=null){
+                listener.onPrintPageResult(str);
+            }
+    }
+
+
+
 
     public void execute(MeterPrint meterPrint){
         if(meterPrint!=null){

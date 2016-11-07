@@ -19,7 +19,7 @@ public class ZebraLayout   extends   PrintLayout{
     }
 
     @Override
-    String eodReport(ArrayList<MeterPrint> mtrPrints) {
+   public String eodReport(ArrayList<MeterPrint> mtrPrints) {
         StringBuilder strPrint = new StringBuilder();
         //header configuration
         strPrint.append(headerConfig());
@@ -29,10 +29,26 @@ public class ZebraLayout   extends   PrintLayout{
         strPrint.append(lineBreakPrint());
         strPrint.append("! U1 SETLP 7 0 24\r\n");
         strPrint.append("! U1 SETSP 0\r\n");
-        strPrint.append(setBold(2));
-        strPrint.append("  CAN        NAME              READING OC1 OC2 RN PC  TOTAL DUE    ");
-        strPrint.append("\r\n");
         strPrint.append(setBold(1));
+        strPrint.append("\r\n");
+        strPrint.append(centerText("EOD Report",68));
+        strPrint.append(setBold(0));
+        strPrint.append("\r\n");
+        strPrint.append(context.getString(R.string.print_eod_reader));
+        strPrint.append(' ');
+        strPrint.append("\r\n");
+        strPrint.append(context.getString(R.string.print_eod_mru));
+        strPrint.append(' ');
+        strPrint.append("\r\n");
+        strPrint.append(context.getString(R.string.print_eod_num));
+        strPrint.append(' ');
+        strPrint.append("\r\n");
+        strPrint.append(context.getString(R.string.print_eod_reading_date));
+        strPrint.append(' ');
+        strPrint.append("\r\n");
+
+        strPrint.append("CAN        NAME              READING OC1 OC2 RN PC  TOTAL DUE    ");
+        strPrint.append("\r\n");
         //iterate all of accounts
         int size = mtrPrints.size();
         for(int i = 0;i<size;i++){
@@ -214,16 +230,33 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! U1 SETLP 7 0 24\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
-        str.append(rightJustify(67,context.getString(R.string.print_payment_center)));
+
+        if(Utils.isNotEmpty(mtrPrint.getDisCheckFlg())){
+            if(mtrPrint.getDisCheckFlg().equals("1")){
+                str.append("CASH PAYMENT ONLY");
+                str.append(addSpace("CASH PAYMENT ONLY",67,
+                        context.getString(R.string.print_payment_center)));
+            }
+            else {
+                str.append(rightJustify(67,context.getString(R.string.print_payment_center)));
+            }
+        }
+        else {
+            str.append(rightJustify(67,context.getString(R.string.print_payment_center)));
+        }
+
+
+
+
         str.append("\r\n");
         StringBuilder str1 = new StringBuilder();
-        str1.append("Contract Account No.  : ");
+        str1.append("Contract Account No. : ");
         str1.append(mtrPrint.getAcctNum());
         str.append(str1.toString());
         str.append(addSpace(str1.toString(),68,"Amount Due "+mtrPrint.getTotalamt()));
         str.append("\r\n");
          str1 = new StringBuilder();
-        str1.append("Account Name :");
+        str1.append("Account Name : ");
         str1.append(mtrPrint.getCustName());
         str.append(str1.toString());
         StringBuilder str2 = new StringBuilder();
@@ -312,6 +345,7 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("  : ");
         str.append("! U1 CENTER\r\n");
         str.append("! U1 SETLP 5 1 48");
+        str.append("! U1 SETSP 3\r\n");
         str.append(setBold(1));
         str.append(mtrPrint.getAcctNum());
         str.append("\r\n");
@@ -351,7 +385,7 @@ public class ZebraLayout   extends   PrintLayout{
                 str.append("\r\n");
             }
         }
-        str.append("\r\r\n");
+        str.append("\r\n");
         str.append("! U1 SETLP 0 3 18\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
@@ -914,6 +948,31 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("Font 7,1 Height 48\r\n");
         str.append(randomString());
         str.append("\r\n");
+        return str.toString();
+    }
+
+    @Override
+    String billReminder(MeterPrint mtrPrint) {
+        StringBuilder str = new StringBuilder();
+        str.append(lineBreakPrint());
+        str.append("! U1 CENTER\r\n");
+        str.append("! U1 SETLP 0 3 18\r\n");
+
+        str.append(setBold(1));
+        String strTitle = context.getString(R.string.print_reminder_title);
+        str.append(centerText(strTitle,52));
+        str.append("\r\n");
+        str.append("! U1 SETLP 7 0 24\r\n");
+        str.append("! U1 SETSP 0");
+        str.append(setBold(0));
+
+
+        String[]   arry = context.getResources().getStringArray(R.array.print_reminder);
+        int size=  arry.length;
+        for(int i=0;i<size;i++){
+            str.append(centerText(arry[i],68));
+            str.append("\r\n");
+        }
         return str.toString();
     }
 

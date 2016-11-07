@@ -43,7 +43,7 @@
         <item>Environmental Charges (20% of Basic Charge and FCDA)</item>
         <item>Sewer Charges (20% of Basic Charge and FCDA)</item>
         <item>Maintenance Service Charge (MSC)</item>
-        <item>Senior Citezen Discount</item>
+        <item>Senior Citizen Discount</item>
         <item>Total Current Charges  before Taxes</item>
         <item>Value Added Tax (VAT) </item>
     </array>
@@ -146,4 +146,19 @@
     <string name="print_mr_remarks">Remarks</string>
     <string name="print_mr_billdate">Bill Date</string>
 
+    <!-- EOD REPORT-->
+    <string name="print_eod_reader">Meter Reader :</string>
+    <string name="print_eod_mru">Meter Reading Unit:</string>
+    <string name="print_eod_num">Accounts in MRU:</string>
+    <string name="print_eod_reading_date">Reading Date:</string>
+    <string name="print_eod_total_read">Total Accounts Read :</string>
+
+    <!--REMINDER -->
+    <string-array name="print_reminder">
+        <item>To avoid the inconvenience of a disconnected water service, please</item>
+        <item>pay your water bill on time. Kindly disregard this notice if payment</item>
+        <item>has been made. Thank you.</item>
+    </string-array>
+
+    <string name="print_reminder_title">R E M I N D E R</string>
 </resources>

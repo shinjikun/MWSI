@@ -91,6 +91,11 @@ public class APEXLayout  extends   PrintLayout {
     }
 
     @Override
+    String billReminder(MeterPrint mtrPrint) {
+        return null;
+    }
+
+    @Override
     String billDiscon(MeterPrint mtrPrint) {
         return "";
     }

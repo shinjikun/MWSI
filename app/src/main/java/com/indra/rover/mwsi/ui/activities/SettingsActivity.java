@@ -29,6 +29,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.data.db.MeterBillDao;
+import com.indra.rover.mwsi.data.db.MeterReadingDao;
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
+import com.indra.rover.mwsi.print.PrintPage;
 import com.indra.rover.mwsi.print.utils.BluetoothHelper;
 import com.indra.rover.mwsi.print.utils.ConnectThread;
 import com.indra.rover.mwsi.ui.fragments.PrinterConnectionDialog;
@@ -37,8 +41,10 @@ import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.PreferenceKeys;
 import com.indra.rover.mwsi.utils.Utils;
 
+import java.util.ArrayList;
+
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener,
-        Constants,DialogUtils.DialogListener,BluetoothHelper.BluetoothHelperEventListener {
+        Constants,DialogUtils.DialogListener,BluetoothHelper.BluetoothHelperEventListener,PrintPage.PrintPageListener {
 
     PreferenceKeys prefs;
     DialogUtils dialogUtils;
@@ -114,7 +120,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 }
                 break;
             case R.id.btnPrint:
-
+               chkBluetoothConn();
                 break;
 
             case R.id.btnUnPair:
@@ -366,6 +372,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 // if there is no bluetooth
                 break;
             case CONNECTION_FAILED:
+                break;
             case CONNECTION_STABLISHED:
 
                 break;
@@ -424,6 +431,41 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
+    private void chkBluetoothConn(){
+        BluetoothAdapter   BTAdapter = BluetoothAdapter.getDefaultAdapter();
+        if(BTAdapter == null){
+            dialogUtils.showOKDialog("BLUETOOTH NOT SUPPORTED","Your phone " +
+                    "does not support bluetooth");
+        }else {
+            if (!BTAdapter.isEnabled()) {
+                // Bluetooth is not enable :)
+                Intent enableBT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBT, REQUEST_BLUETOOTH);
+            }
+            else {
+                String btAddress = prefs.getData(BTADDRESS);
+                BluetoothDevice btDevice =  btHelper.getBluetoothDevice(btAddress);
+                if(btDevice!=null){
+                   btHelper.connectTo(btDevice);
+                    printEODReport();
+
+                }
+                else {
+                    dialogUtils.showOKDialog("Please setup a BLUETOOTH PRINTER in Settings before printing");
+                }
+                //
+            }
+        }
+    }
+
+    private void printEODReport(){
+        MeterReadingDao mtrDao = new MeterReadingDao(this);
+        ArrayList<MeterPrint> arry = mtrDao.getEODReport();
+        PrintPage printPage = new PrintPage(this,this);
+        printPage.printEOD(arry);
+    }
+
+
 
     private final BroadcastReceiver mPairReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -460,4 +502,15 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             }
         }
     };
+
+    @Override
+    public void onPrintPageResult(String meterPrintPage) {
+
+        btHelper.sendData(meterPrintPage.getBytes());
+    }
+
+    @Override
+    public void onPrintPageAndMRStub(String meterPrintPage, String mrStubPage) {
+
+    }
 }

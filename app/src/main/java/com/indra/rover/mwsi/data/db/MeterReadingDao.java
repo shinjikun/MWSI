@@ -806,11 +806,12 @@ public class MeterReadingDao extends ModelDao {
                "where  c.CRDOCNO = d.DLDOCNO  and u.ULDOCNO = d.DLDOCNO  \n" +
                "and  c.READSTAT!='U'";
         try{
+            Log.i("Test",sql_stmt);
             open();
             Cursor cursor = database.rawQuery(sql_stmt,null);
             if (cursor.moveToFirst()) {
                 do {
-                 MeterPrint   meterPrint = new MeterPrint(cursor);
+                 MeterPrint   meterPrint = new MeterPrint(cursor,false);
                  arrys.add(meterPrint);
                 } while (cursor.moveToNext());
             }
@@ -828,7 +829,7 @@ public class MeterReadingDao extends ModelDao {
         MeterPrint meterPrint = null;
         String sql_stmt="Select d.MRU ,bc.BC_DESC,bc.BC_ADDRESS,bc.BC_TIN, \n" +
                 "bl.BILL_CLASS_DESC, d.SOA_NUMBER,c.RANGE_CODE,mi.DUE_DATE,\n" +
-                "d.ACCTNUM,d.CUSTNAME,d.CUSTADDRESS,d.ACCT_STATUS,d.TIN,d.TENANT_NAME,d.SC_ID,\n" +
+                "d.ACCTNUM,d.CUSTNAME,d.CUSTADDRESS,d.ACCT_STATUS,d.TIN,d.TENANT_NAME,d.SC_ID,d.DISC_TAG,\n" +
                 "d.SEQNO,c.METERNO,c.BILLED_CONS,c.CONSTYPE_CODE,c.RDG_DATE,d.PREVRDGDATE,d.ACTPREVRDG,c.PRESRDG,\n" +
                 "d.PREVCONSLINE1, d.PREVCONSLINE2,d.WBPAYDTLS1,d.WBPAYDTLS2,d.GDPAYDTLS,d.MISCPAYDTLS,\n" +
                 "u.BASIC_CHARGE,u.FCDA,u.CERA,u.ENV_CHARGE,u.SEWER_CHARGE,u.MSC_AMOUNT,u.SC_DISCOUNT,\n" +

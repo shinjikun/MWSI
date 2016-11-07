@@ -57,8 +57,9 @@ public class MeterPrint {
   private String otherCharges;
 
 
-  private String disConStatus;
+  private String disCheckFlg;
 
+  private String disConFlg;
   private String rangeCode;
   private String dueDate;
   private String schedRdgDate;
@@ -82,13 +83,30 @@ public class MeterPrint {
 
   public MeterPrint(Cursor cursor,boolean type){
         this.OC1 =  cursor.getString(cursor.getColumnIndexOrThrow("FFCODE1"));
+        if(!Utils.isNotEmpty(this.OC1)){
+            this.OC1 = "";
+        }
         this.OC2 =  cursor.getString(cursor.getColumnIndexOrThrow("FFCODE2"));
+       if(!Utils.isNotEmpty(this.OC2)){
+          this.OC2 = "";
+       }
         this.presRdg =  cursor.getString(cursor.getColumnIndexOrThrow("PRESRDG"));
-        this.rangeCode = cursor.getString(cursor.getColumnIndexOrThrow("RANGE_CODE"));
+      if(!Utils.isNotEmpty(this.presRdg)){
+          this.presRdg = "";
+      }
+      this.rangeCode = cursor.getString(cursor.getColumnIndexOrThrow("RANGE_CODE"));
+      if(!Utils.isNotEmpty(this.rangeCode)){
+          this.rangeCode = "";
+      }
         this.custName = cursor.getString(cursor.getColumnIndexOrThrow("CUSTNAME"));
         this.acctNum = cursor.getString(cursor.getColumnIndexOrThrow("ACCTNUM"));
         this.printCount = cursor.getString(cursor.getColumnIndexOrThrow("PRINT_COUNT"));
         this.orig_totalamt = cursor.getString(cursor.getColumnIndexOrThrow("TOTAL_AMT_DUE"));
+      if(!Utils.isNotEmpty(this.orig_totalamt)){
+          this.orig_totalamt = "";
+      }
+      double d = cursor.getDouble(cursor.getColumnIndexOrThrow("TOTAL_AMT_DUE"));
+      this.totalamt = Utils.formatValue(d);
         otherCharges0 = new double[4];
 
         otherCharges2 = new double[7];
@@ -177,7 +195,7 @@ public class MeterPrint {
       data =  cursor.getDouble(cursor.getColumnIndexOrThrow("OTHER_CHARGES"));
       str =  Utils.formatValue(data);
       this.otherCharges =str;
-      this.disConStatus = cursor.getString(cursor.getColumnIndexOrThrow("DISCHECK_FLAG"));
+      this.disCheckFlg = cursor.getString(cursor.getColumnIndexOrThrow("DISCHECK_FLAG"));
       this.rangeCode = cursor.getString(cursor.getColumnIndexOrThrow("RANGE_CODE"));
       this.dueDate = cursor.getString(cursor.getColumnIndexOrThrow("DUE_DATE"));
       this.schedRdgDate = cursor.getString(cursor.getColumnIndexOrThrow("SCHED_RDG_DATE"));
@@ -231,6 +249,7 @@ public class MeterPrint {
       otherCharges4[1] = cursor.getDouble(cursor.getColumnIndexOrThrow("MISC_CHARGE"));
 
 
+     this.disConFlg = cursor.getString(cursor.getColumnIndexOrThrow("DISC_TAG"));
   }
 
 
@@ -360,8 +379,12 @@ public class MeterPrint {
         return soa;
     }
 
-    public String getDisConStatus() {
-        return disConStatus;
+    public String getDisCheckFlg() {
+        return disCheckFlg;
+    }
+
+    public String getDisConFlg() {
+        return disConFlg;
     }
 
     public String getRangeCode() {
