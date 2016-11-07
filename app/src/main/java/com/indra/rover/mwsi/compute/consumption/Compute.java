@@ -194,12 +194,14 @@ public class Compute {
           if(Utils.isNotEmpty(prev_reading)){
             int billed_consumption =  defaultCondition();
               meterConsObj.setBilled_cons(billed_consumption);
+              meterConsObj.setMrType(MeterInfo.MRTYPE01);
               //tag as actual
               decisionA();
           }
           else {
               int billed_consumption = scenario4();
               meterConsObj.setBilled_cons(billed_consumption);
+              meterConsObj.setMrType(MeterInfo.MRTYPE01);
               //tag as adjusted
               decisionC();
           }

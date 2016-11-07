@@ -19,7 +19,7 @@ public class BluetoothHelper {
 	private static final String[] SUPPORTED_DEVICES = { "APEX3","ZEBRA","HTML" };
 
 	public enum BluetoothHelperEvent {
-		NOT_SUPPORTED, NOT_ENABLED, CONNECTION_STABLISHED, CONNECTION_FAILED;
+		NOT_SUPPORTED, NOT_ENABLED, CONNECTION_STABLISHED, CONNECTION_FAILED,CONNECTION_LOST;
 	}
 
 	private static BluetoothHelper instance;
@@ -162,6 +162,11 @@ public class BluetoothHelper {
 					getBluetoothAdapter().cancelDiscovery();
 				break;
 			case CONNECTION_LOST:
+				if (eventListener != null) {
+					// notify that a connection started
+					Log.e(TAG, "Notifying connection failed!");
+					eventListener.bluetoothEventChange(BluetoothHelperEvent.CONNECTION_LOST);
+				}
 				Log.d(TAG, "Connection was lost");
 				break;
 			case CONNECTION_FAILED:

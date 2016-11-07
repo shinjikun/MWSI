@@ -65,6 +65,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
             else if(Utils.isNotEmpty(oc1)){
                 meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                 //tag as average
+                meterConsObj.setMrType(MeterInfo.MRTYPE93);
                 decisionB();
             }
             else {
@@ -88,11 +89,13 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                         meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                         meterConsObj.setSpComp("0");
                         //use decision B  average consumption set to billed consumption - tag as average
+                        meterConsObj.setMrType(MeterInfo.MRTYPE93);
                         decisionB();
                     }
                 }else{
                     meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                     meterConsObj.setSpComp("0");
+                    meterConsObj.setMrType(MeterInfo.MRTYPE93);
                     decisionB();
                 }
             }
@@ -100,6 +103,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                 meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                 meterConsObj.setSpComp("0");
                 //or OC only excluding 11,12,14
+                meterConsObj.setMrType(MeterInfo.MRTYPE93);
                 decisionB();
             }
         }
@@ -157,6 +161,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                 }
                 else {
                     meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                    meterConsObj.setMrType(MeterInfo.MRTYPE93);
                     //otherwise tag as AVERAGE
                     decisionB();
                 }
@@ -181,6 +186,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
             }
             else if(dreplmtr_code.equals("2")){
                 meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                meterConsObj.setMrType(MeterInfo.MRTYPE93);
                 //tag as average
                 decisionB();
 
@@ -197,6 +203,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                 else {
                     //otherwise tag as AVERAGE
                     meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                    meterConsObj.setMrType(MeterInfo.MRTYPE93);
                     decisionB();
                 }
             }
@@ -219,6 +226,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                 if(prev_oc1.equals(INTERCHANGEMR)||prev_oc2.equals(NEW_METER)){
                     //if yes
                     meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+
                     decisionD();
                 }else{
                 int bill_consumption =   defaultCondition();
@@ -275,6 +283,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                         meterConsObj.setBilled_cons(bill_consumption);
                         meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                         //tag as adjusted
+
                         decisionC();
                     }
                     else {
@@ -283,6 +292,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                         //consumption computed less than zero
                         if(bill_cosumption<0){
                             meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                            meterConsObj.setMrType(MeterInfo.MRTYPE93);
                             decisionB();
                         }else {
                             //use consumption computed as consumption
@@ -332,6 +342,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                 if(Utils.isNotEmpty(oc2)){
                     if(oc2.equals(NEW_METER)){
                         meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                        meterConsObj.setMrType(MeterInfo.MRTYPE93);
                         //TAG AS average
                         decisionB();
                     }
@@ -352,6 +363,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
             else {
                 //tag as average
                 meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                meterConsObj.setMrType(MeterInfo.MRTYPE93);
                 decisionB();
             }
         }

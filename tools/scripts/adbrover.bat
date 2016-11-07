@@ -296,7 +296,7 @@ exit /B 0
             @rem remove trailing spaces
             For /f "tokens=* delims= " %%a in ("!mytime!") do (set mytime=%%a)
 
-            adb pull %rover_app_dir%/uploads/	%ds_download_dir%\!mydate!_!mytime!
+      echo      adb pull %rover_app_dir%/uploads/	%ds_download_dir%\!mydate!_!mytime!
 			set statustype=ended
 			call :send_broadmsg
 			echo Completed

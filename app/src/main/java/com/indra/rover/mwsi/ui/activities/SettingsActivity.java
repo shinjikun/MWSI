@@ -196,7 +196,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         });
 
        Switch switch2 = (Switch)findViewById(R.id.swtmrStub);
-        switch2.setChecked(prefs.getData(PRINT_STUB_ENABLED,true));
+        switch2.setChecked(prefs.getData(PRINT_STUB_ENABLED,false));
         switch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 prefs.setData(PRINT_STUB_ENABLED,isChecked);
@@ -207,14 +207,14 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         });
 
         Switch switch3 = (Switch)findViewById(R.id.swteod);
-        boolean isEODEnabled =prefs.getData(PRINT_EOD_ENABLED,true);
+        boolean isEODEnabled =prefs.getData(PRINT_EOD_ENABLED,false);
         if(isEODEnabled){
             findViewById(R.id.pnl_eod).setVisibility(View.VISIBLE);
         }
         else {
             findViewById(R.id.pnl_eod).setVisibility(View.GONE);
         }
-        switch3.setChecked(prefs.getData(PRINT_EOD_ENABLED,true));
+        switch3.setChecked(prefs.getData(PRINT_EOD_ENABLED,false));
         switch3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 prefs.setData(PRINT_EOD_ENABLED,isChecked);
@@ -380,6 +380,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case CONNECTION_STABLISHED:
 
+                break;
+            case CONNECTION_LOST:
+                dialogUtils.showOKDialog("Connection Lost! Please check your Printer");
                 break;
         }
     }

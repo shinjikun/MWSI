@@ -46,7 +46,7 @@ public class PrintPage {
                     String str = zebraLayout.contentPrint(meterPrint);
                     if(listener!=null){
 
-                    boolean isMRStubToPrint =    prefs.getData(Constants.PRINT_STUB_ENABLED,true);
+                    boolean isMRStubToPrint =    prefs.getData(Constants.PRINT_STUB_ENABLED,false);
                         if(isMRStubToPrint){
                             String mrStubPage = zebraLayout.mrStub(meterPrint);
                             Log.i("Test",mrStubPage);

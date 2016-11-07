@@ -404,7 +404,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         if(!prefs.getData(IS_END_RDG,false)){
             int countUnRead = meterDao.countUnRead();
 
-            if(prefs.getData(PRINT_EOD_ENABLED,true)){
+            if(prefs.getData(PRINT_EOD_ENABLED,false)){
                 if(!prefs.getData(PRINT_EOD_PRINTED,false)){
                     int count = prefs.getData(PRINT_EOD_COUNT,MainApp.total_records);
                     if(count == countUnRead){
@@ -742,7 +742,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 btDevice =  btHelper.getBluetoothDevice(btAddress);
                 if(btDevice!=null){
                     // try to connect to this device
-                   BluetoothHelper.instance().connectTo(btDevice);
+               //    BluetoothHelper.instance().connectTo(btDevice);
                     computeBill();
                 }
                 else {
@@ -1163,14 +1163,14 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onPrintPageResult(String meterPrintPage) {
-       btHelper.sendData(meterPrintPage.getBytes());
-      //  changeToPrinted(true);
+      // btHelper.sendData(meterPrintPage.getBytes());
+        changeToPrinted(true);
 
     }
 
     @Override
     public void onPrintPageAndMRStub(String meterPrintPage, final String mrStubPage) {
-    //    btHelper.sendData(meterPrintPage.getBytes());
+       // btHelper.sendData(meterPrintPage.getBytes());
         changeToPrinted(true);
         Bundle b = new Bundle();
         b.putString("value",mrStubPage);
@@ -1197,7 +1197,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 String btAddress = prefs.getData(BTADDRESS);
                  btDevice =  btHelper.getBluetoothDevice(btAddress);
                 if(btDevice!=null){
-                    BluetoothHelper.instance().connectTo(btDevice);
+                   // BluetoothHelper.instance().connectTo(btDevice);
                     computeBill();
                 }
                 else {
@@ -1229,6 +1229,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 break;
             case CONNECTION_STABLISHED:
 
+                break;
+
+            case CONNECTION_LOST:
+                dlgUtils.showOKDialog("Connection Lost! Please check your Printer");
                 break;
         }
     }

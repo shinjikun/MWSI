@@ -476,16 +476,23 @@ public class ZebraLayout   extends   PrintLayout{
         if(Utils.isNotEmpty(prevConsline1)&& Utils.isNotEmpty(prevConsline2)){
             String[] str1 = prevConsline1.split(",");
             String[] str2 = prevConsline2.split(",");
+
             int size = str1.length;
             for(int i=0;i<size;i++){
-                str.append(str1[i]);
-                str.append("      ");
+                if(Utils.isNotEmpty(str1[i])){
+                    str.append(str1[i]);
+                    str.append("      ");
+                }
             }
             str.append("\r\n");
             str.append("   Consumption         ");
+             size = str2.length;
             for(int i=0;i<size;i++){
-                str.append(str2[i]);
-                str.append("      ");
+                if(Utils.isNotEmpty(str2[i])){
+                    str.append(str2[i]);
+                    str.append("      ");
+                }
+
             }
         }
         str.append("\r\n");
@@ -538,6 +545,8 @@ public class ZebraLayout   extends   PrintLayout{
 
     private String payhistoryDetails(String data){
         StringBuilder strPrint =  new StringBuilder();
+
+
         if(Utils.isNotEmpty(data)){
           String datas[]  =   data.split(",");
           strPrint.append(addSpace(datas[0],4));
@@ -546,12 +555,16 @@ public class ZebraLayout   extends   PrintLayout{
             strPrint.append(' ');
             strPrint.append(addSpace(datas[2],4));
             strPrint.append(' ');
+            if(datas.length>3)
             strPrint.append(addSpace(datas[3],11));
             strPrint.append(' ');
+            if(datas.length>4)
             strPrint.append(addSpace(datas[4],10));
             strPrint.append(' ');
+            if(datas.length>5)
             strPrint.append(datas[5]);
             strPrint.append(' ');
+            if(datas.length>6)
             strPrint.append(datas[6]);
             strPrint.append("\r\n");
         }
@@ -973,6 +986,7 @@ public class ZebraLayout   extends   PrintLayout{
             str.append(centerText(arry[i],68));
             str.append("\r\n");
         }
+        str.append("\r\r\r\n");
         return str.toString();
     }
 

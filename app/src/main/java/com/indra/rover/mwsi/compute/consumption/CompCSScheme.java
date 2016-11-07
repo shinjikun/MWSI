@@ -43,10 +43,12 @@ public class CompCSScheme extends Compute implements Compute.ConsumptionListener
                 int sum = parent_consumption - totalCons;
                 if(sum>=0){
                     meterConsumption.setPrintTag(MeterInfo.BILLNOPRINT);
+                    meterConsObj.setMrType(MeterInfo.MRTYPE01);
                     decisionA();
                 }
                 else {
                     meterConsumption.setPrintTag(MeterInfo.BILLNOPRINT);
+                    meterConsObj.setMrType(MeterInfo.MRTYPE93);
                     decisionB();
                 }
             }

@@ -125,7 +125,7 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,
             txtFiles.setText("");
             setDrawable(R.drawable.ic_completed);
             prefs.setData(HAS_ROVER_UPDATE,false);
-            deleteFiles("uploads");
+            deleteFiles1("uploads");
         }
     }
 
@@ -273,6 +273,21 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,
         String[] lst = new String[arry.size()];
         lst = arry.toArray(lst);
         fileUploader.execute(lst);
+    }
+
+    private void deleteFiles1(String directoryName){
+        //create root content folder
+        File parent=new File(android.os.Environment.getExternalStorageDirectory(),getPackageName());
+
+        File  dir = new File(parent,directoryName);
+        if (dir.isDirectory())
+        {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++)
+            {
+                new File(dir, children[i]).delete();
+            }
+        }
     }
 
 

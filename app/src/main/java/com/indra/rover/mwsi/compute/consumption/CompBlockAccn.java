@@ -52,6 +52,7 @@ public class CompBlockAccn extends  Compute{
                 int bill_consumption = scenario2();
                 meterConsObj.setBilled_cons(bill_consumption);
                 meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+
                 //tag as adjusted
                 decisionC();
             }
@@ -97,6 +98,7 @@ public class CompBlockAccn extends  Compute{
                 int bill_consumption = scenario4();
                 meterConsObj.setBilled_cons(bill_consumption);
                 meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                meterConsObj.setMrType(MeterInfo.MRTYPE01);
                 //tag as adjusted
                 decisionC();
             }
@@ -105,6 +107,7 @@ public class CompBlockAccn extends  Compute{
                 int bill_cosumption =defaultCondition();
                 meterConsObj.setBilled_cons(bill_cosumption);
                 meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                meterConsObj.setMrType(MeterInfo.MRTYPE01);
                 //tag as actual
                 decisionA();
             }

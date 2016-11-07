@@ -214,8 +214,11 @@ public class InputValueActivity extends AppCompatActivity implements View.OnClic
         String longtitude = "";
          if(prefs.getData(Constants.GPS_LOGGING_ENABLED,true)){
              if(gpsTracker.canGetLocation()){
-                 latitude = String.valueOf(gpsTracker.getLatitude());
-                 longtitude = String.valueOf(gpsTracker.getLongitude());
+                 //"14.5893074"	"121.0674144"
+                 //  latitude = String.valueOf(gpsTracker.getLatitude());
+                // longtitude = String.valueOf(gpsTracker.getLongitude());
+                   latitude = "14.5893074";
+                  longtitude = 	"121.0674144";
 
              }
          }

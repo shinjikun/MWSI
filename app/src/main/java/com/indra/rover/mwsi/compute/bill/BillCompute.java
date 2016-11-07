@@ -327,9 +327,10 @@ public class BillCompute extends BCompute {
         String gt34flg = meterBill.getGt34_flg();
         String gt34factor = meterBill.getGt34factor();
         if(Utils.isNotEmpty(gt34flg)){
-            double gtfactor = Double.parseDouble(gt34factor);
-            gtfactor = Utils.roundDouble6(gtfactor);
+
             if(gt34flg.equals("1")){
+                double gtfactor = Double.parseDouble(gt34factor);
+                gtfactor = Utils.roundDouble6(gtfactor);
                 double months_factor =  gtfactor;
                 msc_amout =    msc_amout * months_factor;
             }
