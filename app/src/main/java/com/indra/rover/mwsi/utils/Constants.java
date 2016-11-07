@@ -12,6 +12,7 @@ public interface  Constants {
 
    String PRINT_EOD_ENABLED="eod";
    String PRINT_EOD_COUNT = "eodcount";
+   String PRINT_EOD_PRINTED="eodprinted";
 
    String APP_STATUS = "app_status";
 
@@ -51,6 +52,7 @@ public interface  Constants {
    int DLG_EDITMODE=67;
    int DLG_DELIV = 779;
    int DLG_PRINTMRSTUB=800;
+   int DLG_EOD =900;
 
    String zebraPrinters= "AC:3F:A4";
    String apexPrinters = "00:12:F3";

@@ -403,10 +403,21 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         }
         if(!prefs.getData(IS_END_RDG,false)){
             int countUnRead = meterDao.countUnRead();
+
+            if(prefs.getData(PRINT_EOD_ENABLED,true)){
+                if(!prefs.getData(PRINT_EOD_PRINTED,false)){
+                    int count = prefs.getData(PRINT_EOD_COUNT,MainApp.total_records);
+                    if(count == countUnRead){
+                        dlgUtils.showYesNoDialog(DLG_EOD,"Print EOD Report?",new Bundle());
+                    }
+                }
+            }
             if(MainApp.total_records == countUnRead){
                 prefs.setData(READ_END_TIME,formattedTime);
                 prefs.setData(IS_END_RDG,true);
                 prefs.setData(APP_STATUS,"ALL READ");
+
+
             }
         }
 
@@ -783,6 +794,9 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                       btHelper.sendData(value.getBytes());
                 }
                 break;
+            case DLG_EOD:
+                eodReportPrint();
+                break;
         }
     }
 
@@ -1009,6 +1023,13 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         printPage.execute(meterPrint);
     }
 
+    void eodReportPrint(){
+        MeterReadingDao mtrDao = new MeterReadingDao(this);
+        ArrayList<MeterPrint> arry = mtrDao.getEODReport();
+        PrintPage printPage = new PrintPage(this,this);
+        printPage.printEOD(arry);
+    }
+
 
 
     /**
@@ -1143,13 +1164,13 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onPrintPageResult(String meterPrintPage) {
        btHelper.sendData(meterPrintPage.getBytes());
-        changeToPrinted(true);
+      //  changeToPrinted(true);
 
     }
 
     @Override
     public void onPrintPageAndMRStub(String meterPrintPage, final String mrStubPage) {
-        btHelper.sendData(meterPrintPage.getBytes());
+    //    btHelper.sendData(meterPrintPage.getBytes());
         changeToPrinted(true);
         Bundle b = new Bundle();
         b.putString("value",mrStubPage);

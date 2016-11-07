@@ -28,7 +28,9 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.data.db.MRUDao;
 import com.indra.rover.mwsi.data.db.MeterBillDao;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
@@ -83,6 +85,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         btnPrint = (ImageButton)findViewById(R.id.btnPrint);
         btnPrint.setOnClickListener(this);
         registerReceiver(mPairReceiver, new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED));
+
         init();
     }
 
@@ -237,7 +240,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         });
 
         final EditText editText = (EditText) findViewById(R.id.txtEODcount);
-        editText.setText(prefs.getData(PRINT_EOD_COUNT,"30"));
+        MRUDao mruDao = new MRUDao(this);
+       int val = mruDao.countRecords();
+        editText.setText(String.valueOf(prefs.getData(PRINT_EOD_COUNT,val)));
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -249,7 +254,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
                     }
                     else {
-                        prefs.setData(PRINT_EOD_COUNT,value);
+                        prefs.setData(PRINT_EOD_COUNT,Integer.parseInt(value));
                         dialogUtils.showOKDialog("EOD Count Changed Successfully!");
                     }
 

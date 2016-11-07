@@ -44,7 +44,6 @@ public class PrintPage {
             //    if(btName.contains("zebra")){
                     ZebraLayout zebraLayout =new ZebraLayout(this.context);
                     String str = zebraLayout.contentPrint(meterPrint);
-                    Log.i("Test","str"+str);
                     if(listener!=null){
 
                     boolean isMRStubToPrint =    prefs.getData(Constants.PRINT_STUB_ENABLED,true);
