@@ -9,7 +9,7 @@
     <string name="print_bill_summary">BILLING SUMMARY</string>
     <string name="print_advisory">A D V I S O R Y</string>
     <string name="print_notic_discon">NOTICE OF DISCONNECTION</string>
-
+    <string name="print_promo">P R O M O</string>
 
     <!--SERVICE INFORMATION SECTION -->
     <string name="print_contract_num">Contract Account No.</string>

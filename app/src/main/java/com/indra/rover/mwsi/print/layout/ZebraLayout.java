@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.data.db.MeterBillDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 import com.indra.rover.mwsi.utils.Utils;
 
@@ -695,6 +696,32 @@ public class ZebraLayout   extends   PrintLayout{
 
     @Override
     String promoMsg(MeterPrint mtrPrint) {
+        MeterBillDao mtrDao = new MeterBillDao(context);
+        ArrayList<String> arry = mtrDao.getPromoMessages();
+        if(arry.size()!=0){
+            StringBuilder str = new StringBuilder();
+            str.append(lineBreakPrint());
+            str.append("! U1 CENTER\r\n");
+            str.append("! U1 SETLP 0 3 18\r\n");
+
+            str.append(setBold(1));
+            String strTitle = context.getString(R.string.print_promo);
+            str.append(centerText(strTitle,52));
+            str.append("\r\n");
+            str.append("! U1 SETLP 7 0 24\r\n");
+            str.append("! U1 SETSP 0");
+            str.append(setBold(0));
+            for(int i=0;i<arry.size();i++){
+                str.append("\r\n");
+                str.append(centerText(arry.get(i),68));
+                str.append("\r\n");
+                str.append("\r\n");
+            }
+            return str.toString();
+        }
+
+
+
 
         return "";
     }

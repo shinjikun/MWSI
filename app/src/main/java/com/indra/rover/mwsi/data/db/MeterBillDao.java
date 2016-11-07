@@ -8,6 +8,7 @@ import com.indra.rover.mwsi.data.pojo.meter_reading.references.GLCharge;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.SAPData;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.SPBillRule;
 import com.indra.rover.mwsi.data.pojo.meter_reading.references.Tariff;
+import com.indra.rover.mwsi.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -194,10 +195,30 @@ public class MeterBillDao extends ModelDao {
        }finally {
            close();
        }
-
-
     }
 
+
+
+    public ArrayList<String> getPromoMessages(){
+        ArrayList<String> arry = new ArrayList<>();
+        try {
+            open();
+            String sql_stmt = "Select PROMO_MSG from T_PROMO_MESSAGE where PROMO_STARTDT < '"
+                    + Utils.getFormattedDate()
+                    +"' and '"+Utils.getFormattedDate()+"' < PROMO_ENDDT";
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                    String message =  cursor.getString(cursor.getColumnIndexOrThrow("PROMO_MSG"));
+                    arry.add(message);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }finally {
+            close();
+        }
+        return arry;
+    }
 
 
 }

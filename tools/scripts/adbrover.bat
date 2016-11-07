@@ -337,7 +337,7 @@ exit /B 0
     			set statustype=ended
     			call :send_broadmsg
     			echo Completed
-    			)else (zz
+    			)else (
     			echo Rover App not installed
     	)
 exit /B 0
