@@ -472,8 +472,42 @@ public class BillCompute extends BCompute {
             GLCharge glpatr = getGLCharge(PATR);
             GLCharge glrdls = getGLCharge(RLDS);
             basic_Charge = glres.getGl_rate();
-            meterBill.setBasicCharge(basic_Charge);
-            double zdiscn = basic_Charge * -(glrdls.getGl_rate());
+
+
+
+           //old days -  effective date - previous reading date
+           int OD = Utils.dateDiff(glres.getEffectivity_date(),meterBill.getPrevRdgDate()) +1;
+           //new days = present reading date - effectivity  date +1
+           int ND = Utils.dateDiff(meterBill.getPresRdgDate(),glres.getEffectivity_date())+1;
+           //billing period present reading date - previous reading date
+           int DBP = Utils.dateDiff(meterBill.getPresRdgDate(),meterBill.getPrevRdgDate());
+
+
+           double  gl_rate =  glres.getGl_rate();
+           double  gl_rate_old =  glres.getGl_rate_old();
+
+           if(Utils.isNotEmpty(strpro)){
+               char proratetype =  strpro.charAt(0);
+               switch (proratetype){
+                   case PRO_TYPE1 :
+                       old_price = gl_rate_old;
+                       old_amount = gl_rate_old;
+                       break;
+                   case WITHPRORATE:
+                       old_price = glres.getGl_rate_old();
+                       old_amount = old_price *((double) OD/(double) DBP);
+                       basic_Charge = basic_Charge * ((double)ND/(double) DBP);
+                       old_amount = Utils.roundDouble(old_amount);
+
+                       break;
+
+
+               }
+           }
+
+
+
+           double zdiscn = basic_Charge * -(glrdls.getGl_rate());
             double zdispa = basic_Charge * -(glpatr.getGl_rate());
             //round values
             zdiscn = Utils.roundDouble(zdiscn);
@@ -484,7 +518,6 @@ public class BillCompute extends BCompute {
             updateBasicCharge(meterBill,basic_Charge,discount);
             insertSAPData(meterBill,"ZBASIC",basic_Charge,basic_Charge,old_price,
                     old_amount,String.valueOf(meterBill.getConsumption()));
-            insertSAPData(meterBill,"ZBASIC",basic_Charge,basic_Charge,meterBill.getConsumption() );
             insertSAPData(meterBill,"ZDISCN",0.00,zdiscn,0 );
             insertSAPData(meterBill,"ZDISPA",0.00,zdispa,0 );
             meterBill.setBasicCharge(basic_Charge+zdiscn+zdispa);
@@ -493,8 +526,6 @@ public class BillCompute extends BCompute {
             ArrayList<Tariff> arryTariff = billDao.getTariffs(meterBill.getBillClass());
             Tariff tariff = arryTariff.get(0);
             basic_Charge =  tariff.getTierAmount();
-            basic_Charge = Utils.roundDouble(basic_Charge);
-            updateBasicCharge(meterBill,basic_Charge,0.0);
 
 
 
@@ -525,7 +556,8 @@ public class BillCompute extends BCompute {
                }
            }
 
-
+           basic_Charge = Utils.roundDouble(basic_Charge);
+           updateBasicCharge(meterBill,basic_Charge,0.0);
            insertSAPData(meterBill,"ZBASIC",basic_Charge,basic_Charge,old_price,
                    old_amount,String.valueOf(meterBill.getConsumption()));
             meterBill.setBasicCharge(basic_Charge);

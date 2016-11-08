@@ -169,74 +169,74 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
 
     }
 
-     void navigate(String dldocno){
-         try{
-             MainApp.bus.post(new MessageTransport("navigate",dldocno));
-         }catch (Exception e){
-             e.printStackTrace();
-         }
+    void navigate(String dldocno){
+        try{
+            MainApp.bus.post(new MessageTransport("navigate",dldocno));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
-     void prepareData(int index){
-       if(!arry.isEmpty()){
-           meterInfo = this.arry.get(index);
-           CustomerInfo  customerInfo = meterInfo.getCustomer();
-           TextView txt = (TextView)findViewById(R.id.txtCAN);
-           txt.setText(customerInfo.getAccn());
-           txt = (TextView)findViewById(R.id.txtName);
-           txt.setText(customerInfo.getCname());
-           txt = (TextView)findViewById(R.id.txtAddress);
-           txt.setText(customerInfo.getAddress());
-           txt = (TextView)findViewById(R.id.txtMeterNumber);
-           txt.setText(meterInfo.getMeter_number());
-           txt = (TextView)findViewById(R.id.txtMeterNumber);
-           txt.setText(meterInfo.getMeter_number());
-           txt = (TextView)findViewById(R.id.txtMRUID);
-           txt.setText(meterInfo.getMru_id());
-           txt = (TextView)findViewById(R.id.txtSeqNum);
-           txt.setText(meterInfo.getSeq_number());
-           String page = (current+1)+"/"+arry.size();
+    void prepareData(int index){
+        if(!arry.isEmpty()){
+            meterInfo = this.arry.get(index);
+            CustomerInfo  customerInfo = meterInfo.getCustomer();
+            TextView txt = (TextView)findViewById(R.id.txtCAN);
+            txt.setText(customerInfo.getAccn());
+            txt = (TextView)findViewById(R.id.txtName);
+            txt.setText(customerInfo.getCname());
+            txt = (TextView)findViewById(R.id.txtAddress);
+            txt.setText(customerInfo.getAddress());
+            txt = (TextView)findViewById(R.id.txtMeterNumber);
+            txt.setText(meterInfo.getMeter_number());
+            txt = (TextView)findViewById(R.id.txtMeterNumber);
+            txt.setText(meterInfo.getMeter_number());
+            txt = (TextView)findViewById(R.id.txtMRUID);
+            txt.setText(meterInfo.getMru_id());
+            txt = (TextView)findViewById(R.id.txtSeqNum);
+            txt.setText(meterInfo.getSeq_number());
+            String page = (current+1)+"/"+arry.size();
 
-           txt = (TextView)findViewById(R.id.txtPagination);
-           txt.setText(page);
-           txt = (TextView)findViewById(R.id.txtRateCode);
-           txt.setText(meterInfo.getBillClass().getDesc());
-           txt.setOnClickListener(this);
-           meterStatus();
-           navigate(meterInfo.getDldocno());
-           int textColor = Color.BLACK;
-           if(Utils.isNotEmpty(meterInfo.getRange_code())){
-              String rcodestr = meterInfo.getRange_code();
-               char rangecode = rcodestr.charAt(0);
-               switch (rangecode){
-                   case '-':
-                       textColor = getResources().getColor(R.color.red_colr);
-                       break;
-                   case '3':
-                       textColor = getResources().getColor(R.color.red_colr);
-                       break;
-                   case '4':
-                       textColor = getResources().getColor(R.color.red_colr);
-                       break;
+            txt = (TextView)findViewById(R.id.txtPagination);
+            txt.setText(page);
+            txt = (TextView)findViewById(R.id.txtRateCode);
+            txt.setText(meterInfo.getBillClass().getDesc());
+            txt.setOnClickListener(this);
+            meterStatus();
+            navigate(meterInfo.getDldocno());
+            int textColor = Color.BLACK;
+            if(Utils.isNotEmpty(meterInfo.getRange_code())){
+                String rcodestr = meterInfo.getRange_code();
+                char rangecode = rcodestr.charAt(0);
+                switch (rangecode){
+                    case '-':
+                        textColor = getResources().getColor(R.color.red_colr);
+                        break;
+                    case '3':
+                        textColor = getResources().getColor(R.color.red_colr);
+                        break;
+                    case '4':
+                        textColor = getResources().getColor(R.color.red_colr);
+                        break;
 
-               }
-           }
+                }
+            }
 
-           txt = (TextView)findViewById(R.id.txtReading);
-           txt.setTextColor(textColor);
-           if(Utils.isNotEmpty(meterInfo.getPresRdg())){
+            txt = (TextView)findViewById(R.id.txtReading);
+            txt.setTextColor(textColor);
+            if(Utils.isNotEmpty(meterInfo.getPresRdg())){
 
-               txt.setText(meterInfo.getPresRdg());
-           }
-           else {
-               txt.setText("");
-           }
-       }
+                txt.setText(meterInfo.getPresRdg());
+            }
+            else {
+                txt.setText("");
+            }
+        }
     }
 
 
-     void meterStatus(){
+    void meterStatus(){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(meterInfo.getReadStat());
 
@@ -254,7 +254,7 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
         txt.setText(stringBuilder.toString());
     }
 
-     int[] getViewLocations(View view) {
+    int[] getViewLocations(View view) {
         int[] locations = new int[2];
         view.getLocationOnScreen(locations);
         return locations;
@@ -267,9 +267,9 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
         mScrollView.smoothScrollBy(x,y);
     }
 
-     void setupViewPager(ViewPager mViewPager){
+    void setupViewPager(ViewPager mViewPager){
         StatusViewPagerAdapter adapter = new StatusViewPagerAdapter(getSupportFragmentManager());
-         String dldcono = meterInfo.getDldocno();
+        String dldcono = meterInfo.getDldocno();
         adapter.addFragment(MRCustomerInfoFragment.newInstance(dldcono), "Customer Info");
         adapter.addFragment(MROCFragment.newInstance(dldcono), "OC");
         adapter.addFragment(MRDeliveryRFragment.newInstance(dldcono), "Delivery Remarks");
@@ -280,19 +280,19 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
 
 
 
-     void updateReadStatusDisplay(String readStatus){
+    void updateReadStatusDisplay(String readStatus){
         meterInfo.setReadStat(readStatus);
-         arry.get(current).setReadStat(readStatus);
-         meterStatus();
+        arry.get(current).setReadStat(readStatus);
+        meterStatus();
     }
 
 
 
 
-     void updateMeterReading(){
+    void updateMeterReading(){
         String bill_str = meterInfo.getBill_scheme();
         String readStat = meterInfo.getReadStat();
-     if(readStat.equals("P")||readStat.equals("Q")){
+        if(readStat.equals("P")||readStat.equals("Q")){
             rdg_disabled(0);
             return;
         }
@@ -302,7 +302,7 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
             switch(bill_scheme){
                 case CS_CHILD:
                 case REG_SCHEME:
-                        loadMeterInput();
+                    loadMeterInput();
                     break;
                 case MB_MOTHER:
                     int countUnRead = meterDao.countChildUnRead(accoutNumb);
@@ -336,7 +336,7 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
                         rdg_disabled(4);
                         return;
                     }
-                   loadMeterInput();
+                    loadMeterInput();
                     break;
             }
 
@@ -347,8 +347,8 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
     }
 
 
-     void loadMeterInput(){
-         Intent    intent = new Intent(this, InputValueActivity.class);
+    void loadMeterInput(){
+        Intent    intent = new Intent(this, InputValueActivity.class);
         intent.putExtra("id",meterInfo.getDldocno());
         intent.putExtra("type",1);
         startActivityForResult(intent, INPUT_REQ);
@@ -358,7 +358,7 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
 
 
     public void snackbar(String message){
-         Snackbar snackbar = Snackbar
+        Snackbar snackbar = Snackbar
                 .make(coordinatorLayout, message, Snackbar.LENGTH_LONG);
 
         if(!meterInfo.getReadStat().equals("P")|| !meterInfo.getReadStat().equals("Q")){
@@ -390,11 +390,11 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
         Utils.vibrate(this);
     }
 
-     void setReadingValue(String value){
+    void setReadingValue(String value){
         TextView txt = (TextView)findViewById(R.id.txtReading);
         txt.setText(value);
 
-         arry.get(current).setPresent_reading(value);
+        arry.get(current).setPresent_reading(value);
         meterInfo.setPresent_reading(value);
 
         String formattedTime = Utils.getFormattedTime();
@@ -457,7 +457,7 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
                 finish(); // close this activity and return to preview activity (if there is any)
                 break;
             case R.id.action_search:
-               intent = new Intent(this, SearchActivity.class);
+                intent = new Intent(this, SearchActivity.class);
                 startActivityForResult(intent,SEARCH_REQ);
                 break;
             case R.id.action_customer:
@@ -559,7 +559,7 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
                 }
                 break;
             case R.id.btnPrint:
-               computeBill();
+                computeBill();
                 break;
             case R.id.txtReading:
                 if(Utils.isNotEmpty(meterInfo.getRange_code())){
@@ -567,10 +567,10 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
                     char rangecode = rcodestr.charAt(0);
                     switch (rangecode){
                         case '-':
-                           snackbar("Negative Consumption");
+                            snackbar("Negative Consumption");
                             break;
                         case '3':
-                           snackbar("Very Low Consumption");
+                            snackbar("Very Low Consumption");
                             break;
                         case '4':
                             snackbar("Very High Consumption");
@@ -594,7 +594,7 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
             case 'P':
             case 'Q':
                 int tries = meterInfo.getPrintCount();
-                     tries = tries+1;
+                tries = tries+1;
                 meterDao.updatePrintCount(tries,meterInfo.getDldocno());
                 meterInfo.setPrintCount(tries);
                 arry.get(current).setPrintCount(tries);
@@ -638,7 +638,7 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
 
     }
 
-     void movePrevious(){
+    void movePrevious(){
         if(current!=0){
             current--;
             prepareData(current);
@@ -653,7 +653,7 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
         btnNext.setEnabled(true);
 
     }
-     void moveNext(){
+    void moveNext(){
         if(current< arry.size()-1){
             current++;
             prepareData(current);
@@ -671,7 +671,7 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
 
 
     Dialog dlgSeqNumber;
-     void showNewSeqDialog(){
+    void showNewSeqDialog(){
         dlgSeqNumber = new Dialog(this);
         dlgSeqNumber.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dlgSeqNumber.setContentView(R.layout.dialog_new_sequence);
@@ -714,7 +714,7 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
 
         if(requestCode == SEARCH_REQ){
             if(resultCode ==  Activity.RESULT_OK){
-               Bundle  bundle = data.getExtras();
+                Bundle  bundle = data.getExtras();
                 String columnSearch = bundle.getString("key");
                 String searchValue = bundle.getString("value");
                 List<MeterInfo> temp= meterDao.fetchInfos(this.mru_id,columnSearch,searchValue);
@@ -750,7 +750,7 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
                 btDevice =  btHelper.getBluetoothDevice(btAddress);
                 if(btDevice!=null){
                     // try to connect to this device
-                   BluetoothHelper.instance().connectTo(btDevice);
+                    BluetoothHelper.instance().connectTo(btDevice);
 
                 }
                 else {
@@ -777,7 +777,7 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
     public void dialog_confirm(int dialog_id, Bundle params) {
         switch(dialog_id){
             case DLG_RESET:
-                 this.arry =   meterDao.fetchInfos(this.mru_id);
+                this.arry =   meterDao.fetchInfos(this.mru_id);
                 showFilterSign(false);
                 current =0;
                 btnPrev.setEnabled(false);
@@ -799,7 +799,7 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
             case DLG_PRINTMRSTUB:
                 String value = params.getString("value");
                 if(Utils.isNotEmpty(value)){
-                      btHelper.sendData(value.getBytes());
+                    btHelper.sendData(value.getBytes());
                 }
                 break;
             case DLG_EOD:
@@ -821,11 +821,11 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
         String action = msgTransport.getAction();
         if(action.equals("reading")){
 
-                String readStat = meterInfo.getReadStat();
-                if(readStat.equals("U")) {
-                    meterInfo.setReadStat("R");
-                    arry.get(current).setReadStat("R");
-                }
+            String readStat = meterInfo.getReadStat();
+            if(readStat.equals("U")) {
+                meterInfo.setReadStat("R");
+                arry.get(current).setReadStat("R");
+            }
             updateReadingInDB(meterInfo.getPresRdg());
             //update read status
             updateReadStatusDisplay(meterInfo.getReadStat());
@@ -842,10 +842,10 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
      * Compute Consumption
      * @param dldocno
      */
-     void computeConsumption(String dldocno){
+    void computeConsumption(String dldocno){
         MeterConsumption mterCons = meterDao.getConsumption(dldocno);
-         if(mterCons==null)
-             return;
+        if(mterCons==null)
+            return;
         String bill_str = mterCons.getCsmb_type_code();
         if(Utils.isNotEmpty(bill_str)){
             int bill_scheme = Integer.parseInt(bill_str);
@@ -1000,37 +1000,37 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
 
         }
 
-    if(meterInfo.getPrintTag()!=MeterInfo.NONBILLABLE){
-        String bill_str = meterInfo.getBill_scheme();
-        int bill_scheme =  Integer.parseInt(bill_str);
-        //dont print the bill if the mb child's parent is not yet read
-        if(bill_scheme == MB_CHILD){
-            String parent_id = meterInfo.getParentID();
-            boolean  isRead =meterDao.isParentMeterRead(parent_id,mru_id);
-            if(!isRead){
-                noPrint_Bill(3);
-                return;
+        if(meterInfo.getPrintTag()!=MeterInfo.NONBILLABLE){
+            String bill_str = meterInfo.getBill_scheme();
+            int bill_scheme =  Integer.parseInt(bill_str);
+            //dont print the bill if the mb child's parent is not yet read
+            if(bill_scheme == MB_CHILD){
+                String parent_id = meterInfo.getParentID();
+                boolean  isRead =meterDao.isParentMeterRead(parent_id,mru_id);
+                if(!isRead){
+                    noPrint_Bill(3);
+                    return;
+                }
+            }
+            if(norecompute==0){
+                BillCompute bill = new BillCompute(this,this);
+                bill.compute(meterDao.getMeterBill(meterInfo.getDldocno()));
+            }
+            else {
+                if(meterInfo.getPrintTag()==MeterInfo.BILLNOPRINT){
+                    noPrint_Bill(5);
+                }
+                else {
+
+                    if(MainApp.BTCONNECTED){
+                        startPrinting();
+                    }
+                    else
+                        chkBluetoothConn();
+                }
+
             }
         }
-        if(norecompute==0){
-            BillCompute bill = new BillCompute(this,this);
-            bill.compute(meterDao.getMeterBill(meterInfo.getDldocno()));
-        }
-        else {
-           if(meterInfo.getPrintTag()==MeterInfo.BILLNOPRINT){
-               noPrint_Bill(5);
-           }
-            else {
-
-               if(MainApp.BTCONNECTED){
-                   startPrinting();
-               }
-               else
-                chkBluetoothConn();
-           }
-
-        }
-    }
 
 
 
@@ -1054,22 +1054,22 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
     /**
      *  Message based on parameter: 0=unread,  2=blocked, 3=unread MB mother meter
      */
-     void noPrint_Bill(int type){
-          StringBuilder  strBuilder = new StringBuilder();
-          strBuilder.append("Cannot print bill for ");
-          strBuilder.append('\n');
-           switch(type){
-               case 0: strBuilder.append("Unread Meters!"); break;
-               case 1: strBuilder.append("More than 9x!"); break;
-               case 2: strBuilder.append("Blocked Acct!"); break;
-               case 3:
-                   strBuilder.append("Child Meter w/");
-                   strBuilder.append('\n');
-                   strBuilder.append("Unread MB Mother Meter");
-                   break;
-               case 4: strBuilder.append("KAM Acct!"); break;
-               case 5: strBuilder.append("CS Meters Acct!"); break;
-           }
+    void noPrint_Bill(int type){
+        StringBuilder  strBuilder = new StringBuilder();
+        strBuilder.append("Cannot print bill for ");
+        strBuilder.append('\n');
+        switch(type){
+            case 0: strBuilder.append("Unread Meters!"); break;
+            case 1: strBuilder.append("More than 9x!"); break;
+            case 2: strBuilder.append("Blocked Acct!"); break;
+            case 3:
+                strBuilder.append("Child Meter w/");
+                strBuilder.append('\n');
+                strBuilder.append("Unread MB Mother Meter");
+                break;
+            case 4: strBuilder.append("KAM Acct!"); break;
+            case 5: strBuilder.append("CS Meters Acct!"); break;
+        }
         dlgUtils.showOKDialog("BILL GENERATION",strBuilder.toString());
     }
 
@@ -1082,7 +1082,7 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
      *  4 -  for mb child meter
      * @param type type
      */
-     void rdg_disabled(int type){
+    void rdg_disabled(int type){
         StringBuilder  strBuilder = new StringBuilder();
         strBuilder.append("Cannot enter reading ");
         strBuilder.append('\n');
@@ -1133,7 +1133,7 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
         for(int i=0;i<size;i++){
             MeterInfo mtrInfo = arry.get(i);
             if(mtrInfo.getMru_id().equals(childMeter.getId())){
-               mtrInfo.setPrintTag(childMeter.getPrintTag());
+                mtrInfo.setPrintTag(childMeter.getPrintTag());
                 arry.set(i,mtrInfo);
                 break;
             }
@@ -1176,7 +1176,7 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
                 if(MainApp.BTCONNECTED)
                     startPrinting();
                 else
-                 chkBluetoothConn();
+                    chkBluetoothConn();
                 break;
             case MeterInfo.BILLNOPRINT:
                 changeToPrinted(false);
@@ -1186,9 +1186,9 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
     }
 
     @Override
-    public void onPrintPageResult(String meterPrintPage) {
+    public void onPrintPageResult(String meterPrintPage, boolean isMeterprint) {
         changeToPrinted(true);
-       btHelper.sendData(meterPrintPage.getBytes());
+        btHelper.sendData(meterPrintPage.getBytes());
 
 
     }
@@ -1220,15 +1220,15 @@ public class MeterReadingActivityBackup extends AppCompatActivity implements Vie
             }
             else {
                 String btAddress = prefs.getData(BTADDRESS);
-                 btDevice =  btHelper.getBluetoothDevice(btAddress);
+                btDevice =  btHelper.getBluetoothDevice(btAddress);
                 if(btDevice!=null){
                     BluetoothHelper.instance().connectTo(btDevice);
-                  //  startPrinting();
+                    //  startPrinting();
                 }
                 else {
-                   dlgUtils.showOKDialog("Please setup a BLUETOOTH PRINTER in Settings before printing");
+                    dlgUtils.showOKDialog("Please setup a BLUETOOTH PRINTER in Settings before printing");
                 }
-               //
+                //
             }
         }
     }

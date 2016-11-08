@@ -3,7 +3,6 @@ package com.indra.rover.mwsi.ui.activities;
 import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -41,7 +40,6 @@ import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.CustomerInfo;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 import com.indra.rover.mwsi.print.PrintPage;
-
 import com.indra.rover.mwsi.print.utils.ZebraPrinterUtils;
 import com.indra.rover.mwsi.ui.fragments.MRCustomerInfoFragment;
 import com.indra.rover.mwsi.ui.fragments.MRDeliveryRFragment;
@@ -62,7 +60,7 @@ import java.util.List;
 public class MeterReadingActivity extends AppCompatActivity implements View.OnClickListener ,
         DialogUtils.DialogListener, Constants, Compute.ConsumptionListener,
         BCompute.BillComputeListener, PrintPage.PrintPageListener,
-        ZebraPrinterUtils.ZPrinterEventListener
+         ZebraPrinterUtils.ZebraPrintListener
 {
 
     ViewPager mViewPager;
@@ -85,8 +83,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     //Button btnPrint;
     CoordinatorLayout coordinatorLayout;
     GPSTracker gpsTracker;
-    BluetoothDevice btDevice;
-    ZebraPrinterUtils zebraPrinterUtils;
+    ZebraPrinterUtils zebraUtils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,8 +97,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         MainApp.bus.register(this);
         gpsTracker =  new GPSTracker(this);
 
-        zebraPrinterUtils = ZebraPrinterUtils.getInstance();
-        zebraPrinterUtils.setBtEventListener(this);
+
+        zebraUtils = ZebraPrinterUtils.getInstance(this);
+        zebraUtils.setListener(this);
+
         // add back arrow to toolbar
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -747,10 +747,9 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         } else if(requestCode == BLUETOOTH_REQ){
             if(resultCode ==  Activity.RESULT_OK){
                 String btAddress = prefs.getData(BTADDRESS,"");
-
                 if(Utils.isNotEmpty(btAddress)){
                     // try to connect to this device
-                    //zebraPrinterUtils.sendData();
+                    zebraUtils.setBtAddress(btAddress);
 
                 }
                 else {
@@ -799,7 +798,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             case DLG_PRINTMRSTUB:
                 String value = params.getString("value");
                 if(Utils.isNotEmpty(value)){
-                      zebraPrinterUtils.sendData(value.getBytes());
+                      zebraUtils.sendData(value.getBytes(),0);
                 }
                 break;
             case DLG_EOD:
@@ -1168,6 +1167,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         switch(meterInfo.getPrintTag()){
             case MeterInfo.BILLABLE:
                 changeToPrinted(false);
+
                  chkBluetoothConn();
                 break;
             case MeterInfo.BILLNOPRINT:
@@ -1178,17 +1178,20 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
-    public void onPrintPageResult(String meterPrintPage) {
-        changeToPrinted(true);
-       zebraPrinterUtils.sendData(meterPrintPage.getBytes());
-
-
+    public void onPrintPageResult(String meterPrintPage, boolean isMeterprint) {
+        if(isMeterprint){
+            changeToPrinted(true);
+            zebraUtils.printMeterReading(meterPrintPage.getBytes());
+        }
+        else {
+            zebraUtils.sendData(meterPrintPage.getBytes());
+        }
     }
 
     @Override
     public void onPrintPageAndMRStub(String meterPrintPage, final String mrStubPage) {
-        zebraPrinterUtils.sendData(meterPrintPage.getBytes());
         changeToPrinted(true);
+        zebraUtils.printMeterReading(meterPrintPage.getBytes());
         Bundle b = new Bundle();
         b.putString("value",mrStubPage);
         dlgUtils.showYesNoDialog(DLG_PRINTMRSTUB,"MR Stub",b);
@@ -1212,9 +1215,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             }
             else {
                 String btAddress = prefs.getData(BTADDRESS,"");
-
                 if(Utils.isNotEmpty(btAddress)){
-                    zebraPrinterUtils.setBtAddress(btAddress);
                     startPrinting();
                 }
                 else {
@@ -1226,13 +1227,23 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-
-
-
-
-
     @Override
-    public void onFinishPrinting() {
+    public void onFinishPrinting(int type) {
+        switch (type){
+            case ZebraPrinterUtils.PRINT_ONLY:
+                break;
 
+            case ZebraPrinterUtils.PRINT_READING:
+                if(!Utils.isNotEmpty(meterInfo.getDelCode())){
+                mViewPager.setCurrentItem(2);
+                scrollUp();
+
+            }
+                break;
+
+            case ZebraPrinterUtils.PRINT_W_MRSTUB:
+                break;
+
+        }
     }
 }
