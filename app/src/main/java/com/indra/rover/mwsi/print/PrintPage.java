@@ -28,7 +28,7 @@ public class PrintPage {
             ZebraLayout zebraLayout = new ZebraLayout(this.context);
             String str =zebraLayout.eodReport(mtrPrints);
             if(listener!=null){
-                listener.onPrintPageResult(str);
+                listener.onPrintPageResult(str, false);
             }
     }
 
@@ -53,7 +53,7 @@ public class PrintPage {
                             listener.onPrintPageAndMRStub(str,mrStubPage);
                         }
                         else {
-                            listener.onPrintPageResult(str);
+                            listener.onPrintPageResult(str, true);
                         }
 
                     }
@@ -63,7 +63,7 @@ public class PrintPage {
    }
 
     public interface  PrintPageListener{
-         void onPrintPageResult(String meterPrintPage);
+         void onPrintPageResult(String meterPrintPage, boolean isMeterprint);
          void onPrintPageAndMRStub(String meterPrintPage,String mrStubPage);
     }
 

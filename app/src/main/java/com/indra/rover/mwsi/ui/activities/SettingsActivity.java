@@ -31,7 +31,6 @@ import android.widget.TextView;
 import com.indra.rover.mwsi.MainApp;
 import com.indra.rover.mwsi.R;
 import com.indra.rover.mwsi.data.db.MRUDao;
-import com.indra.rover.mwsi.data.db.MeterBillDao;
 import com.indra.rover.mwsi.data.db.MeterReadingDao;
 import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 import com.indra.rover.mwsi.print.PrintPage;
@@ -521,7 +520,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     };
 
     @Override
-    public void onPrintPageResult(String meterPrintPage) {
+    public void onPrintPageResult(String meterPrintPage, boolean isMeterprint) {
 
         btHelper.sendData(meterPrintPage.getBytes());
     }

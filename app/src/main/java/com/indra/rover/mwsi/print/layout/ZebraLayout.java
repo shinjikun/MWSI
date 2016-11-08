@@ -626,9 +626,9 @@ public class ZebraLayout   extends   PrintLayout{
         str.append(setBold(1));
         str.append(context.getString(R.string.print_bill_period));
         str.append("   ");
-        str.append(mtrPrint.getSchedRdgDate());
+        str.append(mtrPrint.getPrevRdgDate());
         str.append("-");
-        str.append(mtrPrint.getDueDate());
+        str.append(mtrPrint.getPresRdgDate());
 
         str.append("\r\n");
         str.append("! U1 SETLP 0 3 18\r\n");
