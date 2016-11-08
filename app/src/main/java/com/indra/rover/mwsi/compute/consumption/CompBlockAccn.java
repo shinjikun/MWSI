@@ -157,7 +157,7 @@ public class CompBlockAccn extends  Compute{
                         int bill_consumption = scenario6();
                         meterConsObj.setBilled_cons(bill_consumption);
                         meterConsObj.setPrintTag(MeterInfo.BILLABLE);
-                        meterConsObj.setMrType(MeterInfo.MRTYPE91);
+                        meterConsObj.setMrType(MeterInfo.MRTYPE93);
                         decisionC();
                         //tag as adjusted
                     }

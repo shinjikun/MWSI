@@ -41,8 +41,8 @@ import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 import com.indra.rover.mwsi.data.pojo.meter_reading.misc.CustomerInfo;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 import com.indra.rover.mwsi.print.PrintPage;
-import com.indra.rover.mwsi.print.utils.BluetoothHelper;
-import com.indra.rover.mwsi.print.utils.ConnectThread;
+
+import com.indra.rover.mwsi.print.utils.ZebraPrinterUtils;
 import com.indra.rover.mwsi.ui.fragments.MRCustomerInfoFragment;
 import com.indra.rover.mwsi.ui.fragments.MRDeliveryRFragment;
 import com.indra.rover.mwsi.ui.fragments.MROCFragment;
@@ -62,7 +62,7 @@ import java.util.List;
 public class MeterReadingActivity extends AppCompatActivity implements View.OnClickListener ,
         DialogUtils.DialogListener, Constants, Compute.ConsumptionListener,
         BCompute.BillComputeListener, PrintPage.PrintPageListener,
-        BluetoothHelper.BluetoothHelperEventListener
+        ZebraPrinterUtils.ZPrinterEventListener
 {
 
     ViewPager mViewPager;
@@ -85,8 +85,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     //Button btnPrint;
     CoordinatorLayout coordinatorLayout;
     GPSTracker gpsTracker;
-    BluetoothHelper btHelper;
     BluetoothDevice btDevice;
+    ZebraPrinterUtils zebraPrinterUtils;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,9 +99,8 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         MainApp.bus.register(this);
         gpsTracker =  new GPSTracker(this);
 
-        btHelper = BluetoothHelper.instance();
-        btHelper.setOnBuetoothHelperEventListener(this);
-
+        zebraPrinterUtils = ZebraPrinterUtils.getInstance();
+        zebraPrinterUtils.setBtEventListener(this);
         // add back arrow to toolbar
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -747,11 +746,11 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             }
         } else if(requestCode == BLUETOOTH_REQ){
             if(resultCode ==  Activity.RESULT_OK){
-                String btAddress = prefs.getData(BTADDRESS);
-                btDevice =  btHelper.getBluetoothDevice(btAddress);
-                if(btDevice!=null){
+                String btAddress = prefs.getData(BTADDRESS,"");
+
+                if(Utils.isNotEmpty(btAddress)){
                     // try to connect to this device
-                   BluetoothHelper.instance().connectTo(btDevice);
+                    //zebraPrinterUtils.sendData();
 
                 }
                 else {
@@ -800,7 +799,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             case DLG_PRINTMRSTUB:
                 String value = params.getString("value");
                 if(Utils.isNotEmpty(value)){
-                      btHelper.sendData(value.getBytes());
+                      zebraPrinterUtils.sendData(value.getBytes());
                 }
                 break;
             case DLG_EOD:
@@ -1022,11 +1021,6 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                noPrint_Bill(5);
            }
             else {
-
-               if(MainApp.BTCONNECTED){
-                   startPrinting();
-               }
-               else
                 chkBluetoothConn();
            }
 
@@ -1174,9 +1168,6 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         switch(meterInfo.getPrintTag()){
             case MeterInfo.BILLABLE:
                 changeToPrinted(false);
-                if(MainApp.BTCONNECTED)
-                    startPrinting();
-                else
                  chkBluetoothConn();
                 break;
             case MeterInfo.BILLNOPRINT:
@@ -1189,14 +1180,14 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onPrintPageResult(String meterPrintPage) {
         changeToPrinted(true);
-       btHelper.sendData(meterPrintPage.getBytes());
+       zebraPrinterUtils.sendData(meterPrintPage.getBytes());
 
 
     }
 
     @Override
     public void onPrintPageAndMRStub(String meterPrintPage, final String mrStubPage) {
-        btHelper.sendData(meterPrintPage.getBytes());
+        zebraPrinterUtils.sendData(meterPrintPage.getBytes());
         changeToPrinted(true);
         Bundle b = new Bundle();
         b.putString("value",mrStubPage);
@@ -1220,11 +1211,11 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 startActivityForResult(enableBT, BLUETOOTH_REQ);
             }
             else {
-                String btAddress = prefs.getData(BTADDRESS);
-                 btDevice =  btHelper.getBluetoothDevice(btAddress);
-                if(btDevice!=null){
-                    BluetoothHelper.instance().connectTo(btDevice);
-                  //  startPrinting();
+                String btAddress = prefs.getData(BTADDRESS,"");
+
+                if(Utils.isNotEmpty(btAddress)){
+                    zebraPrinterUtils.setBtAddress(btAddress);
+                    startPrinting();
                 }
                 else {
                    dlgUtils.showOKDialog("Please setup a BLUETOOTH PRINTER in Settings before printing");
@@ -1238,42 +1229,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
 
 
-    @Override
-    public void bluetoothEventChange(BluetoothHelper.BluetoothHelperEvent event) {
-        switch (event) {
-            case NOT_ENABLED:
-                Intent enableBT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBT, BLUETOOTH_REQ);
-                break;
-            case NOT_SUPPORTED:
-                dlgUtils.showOKDialog("BLUETOOTH NOT SUPPORTED","Your phone " +
-                        "does not support bluetooth");
-                break;
-            case CONNECTION_FAILED:
-                MainApp.BTCONNECTED = false;
-                dlgUtils.showOKDialog("Connection Failed! Please check the status of the printer");
 
-                break;
-            case CONNECTION_STABLISHED:
-                MainApp.BTCONNECTED = true;
-                startPrinting();
-                break;
-
-            case CONNECTION_LOST:
-                MainApp.BTCONNECTED =false;
-                dlgUtils.showOKDialog("Connection Lost! Please check status of the printer");
-
-                break;
-        }
-    }
 
     @Override
-    public void bluetoothConnectionStart(ConnectThread connection) {
-
-    }
-
-    @Override
-    public void bluetoothSelected(BluetoothDevice bluetoothDevice) {
+    public void onFinishPrinting() {
 
     }
 }

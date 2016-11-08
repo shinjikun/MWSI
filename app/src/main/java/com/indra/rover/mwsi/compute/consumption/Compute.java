@@ -201,7 +201,7 @@ public class Compute {
           else {
               int billed_consumption = scenario4();
               meterConsObj.setBilled_cons(billed_consumption);
-              meterConsObj.setMrType(MeterInfo.MRTYPE01);
+              meterConsObj.setMrType(MeterInfo.MRTYPE93);
               //tag as adjusted
               decisionC();
           }
@@ -222,6 +222,7 @@ public class Compute {
     }
 
      void noBill(){
+         meterConsObj.setMrType(MeterInfo.MRTYPE01);
          meterConsObj.setPrintTag(MeterInfo.NONBILLABLE);
         if(listener!=null){
             listener.onPostConsResult(meterConsObj);
