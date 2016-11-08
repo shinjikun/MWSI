@@ -74,6 +74,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     MeterInfo meterInfo;
     List<MeterInfo> arry;
     PreferenceKeys prefs;
+
     /**
      * Button for navigating previous or next records
      */
@@ -593,11 +594,16 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         switch(readstat){
             case 'P':
             case 'Q':
-
+                int tries = meterInfo.getPrintCount();
+                     tries = tries+1;
+                meterDao.updatePrintCount(tries,meterInfo.getDldocno());
+                meterInfo.setPrintCount(tries);
+                arry.get(current).setPrintCount(tries);
                 break;
             case 'E':
                 newReadStat="Q";
                 meterDao.updateReadStatus(newReadStat,meterInfo.getDldocno());
+                meterDao.updatePrintDate(Utils.getFormattedDate(),meterInfo.getDldocno());
                 updateReadStatusDisplay(newReadStat);
                 if(reqDelivCode){
                     mViewPager.setCurrentItem(2);
@@ -614,6 +620,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             case 'R':
                 newReadStat="P";
                 meterDao.updateReadStatus(newReadStat,meterInfo.getDldocno());
+                meterDao.updatePrintDate(Utils.getFormattedDate(),meterInfo.getDldocno());
                 updateReadStatusDisplay(newReadStat);
                 if(reqDelivCode){
                     mViewPager.setCurrentItem(2);
@@ -1011,7 +1018,18 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             bill.compute(meterDao.getMeterBill(meterInfo.getDldocno()));
         }
         else {
-           chkBluetoothConn();
+           if(meterInfo.getPrintTag()==MeterInfo.BILLNOPRINT){
+               noPrint_Bill(5);
+           }
+            else {
+
+               if(MainApp.BTCONNECTED){
+                   startPrinting();
+               }
+               else
+                chkBluetoothConn();
+           }
+
         }
     }
 
@@ -1051,6 +1069,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                    strBuilder.append("Unread MB Mother Meter");
                    break;
                case 4: strBuilder.append("KAM Acct!"); break;
+               case 5: strBuilder.append("CS Meters Acct!"); break;
            }
         dlgUtils.showOKDialog("BILL GENERATION",strBuilder.toString());
     }
@@ -1154,7 +1173,11 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         }
         switch(meterInfo.getPrintTag()){
             case MeterInfo.BILLABLE:
-               chkBluetoothConn();
+                changeToPrinted(false);
+                if(MainApp.BTCONNECTED)
+                    startPrinting();
+                else
+                 chkBluetoothConn();
                 break;
             case MeterInfo.BILLNOPRINT:
                 changeToPrinted(false);
@@ -1165,14 +1188,15 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onPrintPageResult(String meterPrintPage) {
-      // btHelper.sendData(meterPrintPage.getBytes());
         changeToPrinted(true);
+       btHelper.sendData(meterPrintPage.getBytes());
+
 
     }
 
     @Override
     public void onPrintPageAndMRStub(String meterPrintPage, final String mrStubPage) {
-       // btHelper.sendData(meterPrintPage.getBytes());
+        btHelper.sendData(meterPrintPage.getBytes());
         changeToPrinted(true);
         Bundle b = new Bundle();
         b.putString("value",mrStubPage);
@@ -1200,7 +1224,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                  btDevice =  btHelper.getBluetoothDevice(btAddress);
                 if(btDevice!=null){
                     BluetoothHelper.instance().connectTo(btDevice);
-                    startPrinting();
+                  //  startPrinting();
                 }
                 else {
                    dlgUtils.showOKDialog("Please setup a BLUETOOTH PRINTER in Settings before printing");
@@ -1226,15 +1250,19 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                         "does not support bluetooth");
                 break;
             case CONNECTION_FAILED:
-
+                MainApp.BTCONNECTED = false;
+                dlgUtils.showOKDialog("Connection Failed! Please check the status of the printer");
 
                 break;
             case CONNECTION_STABLISHED:
-
+                MainApp.BTCONNECTED = true;
+                startPrinting();
                 break;
 
             case CONNECTION_LOST:
-                dlgUtils.showOKDialog("Connection Lost! Please check your Printer");
+                MainApp.BTCONNECTED =false;
+                dlgUtils.showOKDialog("Connection Lost! Please check status of the printer");
+
                 break;
         }
     }

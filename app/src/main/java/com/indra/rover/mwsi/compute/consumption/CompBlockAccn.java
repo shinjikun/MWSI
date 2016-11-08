@@ -52,13 +52,14 @@ public class CompBlockAccn extends  Compute{
                 int bill_consumption = scenario2();
                 meterConsObj.setBilled_cons(bill_consumption);
                 meterConsObj.setPrintTag(MeterInfo.BILLABLE);
-
+                meterConsObj.setMrType(MeterInfo.MRTYPE93);
                 //tag as adjusted
                 decisionC();
             }
             int bill_consumption =   scenario2();
             meterConsObj.setBilled_cons(bill_consumption);
             meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+            meterConsObj.setMrType(MeterInfo.MRTYPE93);
             //tag as adjusted
             decisionC();
         }
@@ -68,6 +69,7 @@ public class CompBlockAccn extends  Compute{
             meterConsObj.setBilled_cons(average_consumption);
             meterConsObj.setConstype_code(AVERAGE);
             meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+            meterConsObj.setMrType(MeterInfo.MRTYPE93);
             decisionC();
 
         }else if(dreplmtr_code.equals("3")){
@@ -78,6 +80,7 @@ public class CompBlockAccn extends  Compute{
                 meterConsObj.setBilled_cons(bill_consumption);
                 meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                 //tag as adjusted
+                meterConsObj.setMrType(MeterInfo.MRTYPE93);
                 decisionC();
             }
             else {
@@ -117,6 +120,7 @@ public class CompBlockAccn extends  Compute{
                 meterConsObj.setBilled_cons(bill_cosumption);
                 //tag as adjusted
                 meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                meterConsObj.setMrType(MeterInfo.MRTYPE93);
                 decisionC();
             }
             else {
@@ -141,6 +145,7 @@ public class CompBlockAccn extends  Compute{
                     int bill_consumption = scenario4();
                     meterConsObj.setBilled_cons(bill_consumption);
                     meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                    meterConsObj.setMrType(MeterInfo.MRTYPE01);
                     //tag as actual
                     decisionA();
                 }
@@ -159,6 +164,7 @@ public class CompBlockAccn extends  Compute{
                     else  {
                         meterConsObj.setBilled_cons(0);
                         meterConsObj.setSpComp("0");
+
                         meterConsObj.setConstype_code(ACTUAL);
                         noBill();
                     }

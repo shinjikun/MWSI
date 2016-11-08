@@ -285,7 +285,8 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,
             String[] children = dir.list();
             for (int i = 0; i < children.length; i++)
             {
-                new File(dir, children[i]).delete();
+                deleteRecursive(new File(dir, children[i]));
+
             }
         }
     }

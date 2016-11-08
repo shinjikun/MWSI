@@ -65,7 +65,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
             else if(Utils.isNotEmpty(oc1)){
                 meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                 //tag as average
-                meterConsObj.setMrType(MeterInfo.MRTYPE93);
+                meterConsObj.setMrType(MeterInfo.MRTYPE91);
                 decisionB();
             }
             else {
@@ -89,13 +89,13 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                         meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                         meterConsObj.setSpComp("0");
                         //use decision B  average consumption set to billed consumption - tag as average
-                        meterConsObj.setMrType(MeterInfo.MRTYPE93);
+                        meterConsObj.setMrType(MeterInfo.MRTYPE91);
                         decisionB();
                     }
                 }else{
                     meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                     meterConsObj.setSpComp("0");
-                    meterConsObj.setMrType(MeterInfo.MRTYPE93);
+                    meterConsObj.setMrType(MeterInfo.MRTYPE91);
                     decisionB();
                 }
             }
@@ -103,7 +103,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                 meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                 meterConsObj.setSpComp("0");
                 //or OC only excluding 11,12,14
-                meterConsObj.setMrType(MeterInfo.MRTYPE93);
+                meterConsObj.setMrType(MeterInfo.MRTYPE91);
                 decisionB();
             }
         }
@@ -140,6 +140,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                     int bill_consumption = scenario4();
                     meterConsObj.setBilled_cons(bill_consumption);
                     meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                    meterConsObj.setMrType(MeterInfo.MRTYPE93);
                     //tag as adjusted
                     decisionC();
                 }else{
@@ -147,6 +148,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                     int bill_consumption =  defaultCondition();
                     meterConsObj.setBilled_cons(bill_consumption);
                     meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                    meterConsObj.setMrType(MeterInfo.MRTYPE01);
                     decisionA();
                 }
             }else {
@@ -175,12 +177,14 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                     int bill_consumption = scenario2();
                     meterConsObj.setBilled_cons(bill_consumption);
                     meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                    meterConsObj.setMrType(MeterInfo.MRTYPE93);
                     //tag as adjusted
                     decisionC();
                 }
                int bill_consumption =   scenario2();
                 meterConsObj.setBilled_cons(bill_consumption);
                 meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                meterConsObj.setMrType(MeterInfo.MRTYPE93);
                 //tag as adjusted
                 decisionC();
             }
@@ -232,6 +236,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                 int bill_consumption =   defaultCondition();
                 meterConsObj.setBilled_cons(bill_consumption);
                     meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                    meterConsObj.setMrType(MeterInfo.MRTYPE93);
                     decisionC();
                 }
 
@@ -241,6 +246,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                 int bill_consumption =   defaultCondition();
                 meterConsObj.setBilled_cons(bill_consumption);
                 meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                meterConsObj.setMrType(MeterInfo.MRTYPE01);
                 decisionA();
             }
         }else {
@@ -283,7 +289,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                         meterConsObj.setBilled_cons(bill_consumption);
                         meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                         //tag as adjusted
-
+                        meterConsObj.setMrType(MeterInfo.MRTYPE93);
                         decisionC();
                     }
                     else {
@@ -298,6 +304,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                             //use consumption computed as consumption
                             meterConsObj.setBilled_cons(bill_cosumption);
                             meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                            meterConsObj.setMrType(MeterInfo.MRTYPE93);
                             //tag as adjusted
                             decisionC();
                         }
@@ -308,6 +315,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                     int bill_consumption = scenario4();
                     meterConsObj.setBilled_cons(bill_consumption);
                     meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                    meterConsObj.setMrType(MeterInfo.MRTYPE93);
                     //tag as adjusted
                     decisionC();
                 }
@@ -317,6 +325,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                 int bill_consumption = scenario4();
                 meterConsObj.setBilled_cons(bill_consumption);
                 meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                meterConsObj.setMrType(MeterInfo.MRTYPE93);
                 //tag as adjusted
                 decisionC();
             }
@@ -326,6 +335,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
             int bill_consumption = scenario4();
             meterConsObj.setBilled_cons(bill_consumption);
             meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+            meterConsObj.setMrType(MeterInfo.MRTYPE93);
             //tag as adjusted
             decisionC();
         }
@@ -349,6 +359,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                     else {
                         meterConsObj.setBilled_cons(bill_consumption);
                         meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                        meterConsObj.setMrType(MeterInfo.MRTYPE01);
                         //tag as actual
                         decisionA();
                     }
@@ -356,6 +367,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                 else {
                     meterConsObj.setBilled_cons(bill_consumption);
                     meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                    meterConsObj.setMrType(MeterInfo.MRTYPE01);
                     //tag as actual
                     decisionA();
                 }

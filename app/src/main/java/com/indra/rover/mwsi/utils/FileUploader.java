@@ -145,7 +145,7 @@ public class FileUploader  extends AsyncTask<String[],Integer,String> {
             }
 
             File   contentDir = new File(uploadDir,mruNo);
-            String fileName = "SAP"+mruNo+".txt";
+            String fileName = "SAPB"+mruNo+".txt";
             if(isMultiBook){
                 String str =Build.SERIAL+"_"+Utils.getCurrentDate("MMdd");
                 fileName = "SAPMB_"+str+".txt";

@@ -162,7 +162,9 @@ public class BluetoothHelper {
 					getBluetoothAdapter().cancelDiscovery();
 				break;
 			case CONNECTION_LOST:
+				Log.i(TAG,"Connection Lost before");
 				if (eventListener != null) {
+					Log.i(TAG,"Connection Lost");
 					// notify that a connection started
 					Log.e(TAG, "Notifying connection failed!");
 					eventListener.bluetoothEventChange(BluetoothHelperEvent.CONNECTION_LOST);
@@ -170,7 +172,9 @@ public class BluetoothHelper {
 				Log.d(TAG, "Connection was lost");
 				break;
 			case CONNECTION_FAILED:
+				Log.i(TAG,"Connection failed before");
 				if (eventListener != null) {
+					Log.i(TAG,"Connection Failed");
 					// notify that a connection started
 					Log.e(TAG, "Notifying connection failed!");
 					eventListener.bluetoothEventChange(BluetoothHelperEvent.CONNECTION_FAILED);

@@ -331,6 +331,24 @@ public class MeterReadingDao extends ModelDao {
         }
     }
 
+
+    public void updatePrintCount(int count , String uldocid){
+        try{
+            open();
+            ContentValues contentValues = new ContentValues();
+
+
+            contentValues.put("PRINT_COUNT",count);
+            String where= "ULDOCNO=?";
+            database.update("T_UPLOAD",contentValues,where,new String[]{uldocid});
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+    }
+
+
     public void updatePrintTag(MeterConsumption meterCons , String uldocid){
         try{
             open();

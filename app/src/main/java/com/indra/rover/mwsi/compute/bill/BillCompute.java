@@ -617,7 +617,7 @@ public class BillCompute extends BCompute {
                         amount = price * quantity1;
                         totalAmount = amount +old_amount;
                         basic_charge += totalAmount;
-                         insertSAPData(meterBill,"ZAVEPRC",price,amount,old_price,old_amount,
+                         insertSAPData(meterBill,"ZAVPRC",price,amount,old_price,old_amount,
                                  String.valueOf(quantity1));
                         break;
                     }
@@ -625,7 +625,7 @@ public class BillCompute extends BCompute {
                     basic_charge += totalAmount;
                     meterBill.newbasic+=amount;
                     meterBill.oldbasic+=old_amount;
-                    insertSAPData(meterBill,"ZAVEPRC",price,amount,old_price,
+                    insertSAPData(meterBill,"ZAVPRC",price,amount,old_price,
                             old_amount,String.valueOf(quantity));
 
                 }

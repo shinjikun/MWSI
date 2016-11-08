@@ -13,6 +13,7 @@ public class MainApp extends Application {
     public static String selectedMRU;
     public static boolean isEditMode;
     public static int total_records;
+    public static boolean BTCONNECTED =false;
     @Override
     public void onCreate() {
         super.onCreate();

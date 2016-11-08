@@ -223,8 +223,15 @@ public class ConnectivityDemo extends Activity {
         str.append("! U1 BEGIN-PAGE\r\n");
         str.append("! 0 200 200 175 1\r\n");
         str.append("JOURNAL\r\n");
-        str.append("B 39 1 30 78 1 1 12345678 1335446\r\n");
-        str.append("PRINT\r\n");
+        str.append("T 7 0 2 2 CASH PAYMENT ONLY\r\n");
+        str.append("IL 2 2 223 2 24\r\n" );
+        str.append("T 7 0 514 2 PAYMENT CENTER/BANK COPY\r\n" );
+        str.append("T 7 0 547 25 Amount Due 111,888.50\r\n");
+        str.append("T 0 2 471 53 BILLING PERIOD:11/07/2016 TO 11/14/2016\r\n");
+        str.append("T 7 0 5 58 Account Name: Imelda de guzman\r\n");
+        str.append("BT 7 0 3\r\n");
+        str.append("  B 39 2 30 119 96 100 101000 11111\r\n");
+        str.append("PRINT");
 
        /* str.append("PCX 42 10 !<maynilad.pcx\r\n");
         str.append("C Maynilad Water Services Inc\r\n" );
@@ -239,7 +246,7 @@ public class ConnectivityDemo extends Activity {
         */
 
 
-            String toPrint = str.toString();// s.contentPrint(new MeterPrint());
+            String toPrint = cpclConfigLabel.toString();// s.contentPrint(new MeterPrint());
         try {
             configLabel = toPrint.getBytes("US-ASCII");
         } catch (UnsupportedEncodingException e) {

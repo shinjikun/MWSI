@@ -123,7 +123,13 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 }
                 break;
             case R.id.btnPrint:
-               chkBluetoothConn();
+                if(MainApp.BTCONNECTED){
+                    printEODReport();
+                }
+                else {
+                    chkBluetoothConn();
+                }
+
                 break;
 
             case R.id.btnUnPair:
@@ -377,11 +383,15 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 // if there is no bluetooth
                 break;
             case CONNECTION_FAILED:
+                MainApp.BTCONNECTED = false;
+                dialogUtils.showOKDialog("Connection Failed! Please check your Printer");
                 break;
             case CONNECTION_STABLISHED:
-
+                MainApp.BTCONNECTED = true;
+                printEODReport();
                 break;
             case CONNECTION_LOST:
+                MainApp.BTCONNECTED = false;
                 dialogUtils.showOKDialog("Connection Lost! Please check your Printer");
                 break;
         }
@@ -455,7 +465,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 BluetoothDevice btDevice =  btHelper.getBluetoothDevice(btAddress);
                 if(btDevice!=null){
                    btHelper.connectTo(btDevice);
-                    printEODReport();
 
                 }
                 else {
