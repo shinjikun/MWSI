@@ -258,12 +258,12 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! U1 SETLP 0 2 18\r\n");
         str2.append(context.getString(R.string.print_bill_period));
         str2.append(":");
-        str2.append(mtrPrint.getSchedRdgDate());
+        str2.append(mtrPrint.getPrevRdg());
         str2.append(" TO ");
-        str2.append(mtrPrint.getDueDate());
+        str2.append(mtrPrint.getPresRdg());
 
 
-        str.append(addSpace(str1.toString(),90,str2.toString()));
+        str.append(addSpace(str1.toString(),88,str2.toString()));
         str.append("! U1 SETLP 7 0 24\r\n");
         str.append("\r\n");
         str.append("! U1 CENTER\r\n");

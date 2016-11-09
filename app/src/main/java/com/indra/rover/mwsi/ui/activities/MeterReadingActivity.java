@@ -1167,7 +1167,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         }
         switch(meterInfo.getPrintTag()){
             case MeterInfo.BILLABLE:
-                changeToPrinted(false);
+
 
                  chkBluetoothConn();
                 break;
@@ -1181,7 +1181,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onPrintPageResult(String meterPrintPage, boolean isMeterprint) {
         if(isMeterprint){
-            changeToPrinted(true);
+
             zebraUtils.printMeterReading(meterPrintPage.getBytes());
         }
         else {
@@ -1192,7 +1192,6 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     String mrStubPage;
     @Override
     public void onPrintPageAndMRStub(String meterPrintPage, final String mrStubPage) {
-        changeToPrinted(true);
         this.mrStubPage = mrStubPage;
         zebraUtils.sendData(meterPrintPage.getBytes(),ZebraPrinterUtils.PRINT_W_MRSTUB);
 
@@ -1238,18 +1237,34 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case ZebraPrinterUtils.PRINT_READING:
-                int tries = meterInfo.getPrintCount();
-                tries = tries+1;
-                meterDao.updatePrintCount(tries,meterInfo.getDldocno());
-                meterInfo.setPrintCount(tries);
-                arry.get(current).setPrintCount(tries);
+
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        changeToPrinted(true);
+                        int tries = meterInfo.getPrintCount();
+                        tries = tries+1;
+                        meterDao.updatePrintCount(tries,meterInfo.getDldocno());
+                        meterInfo.setPrintCount(tries);
+                        arry.get(current).setPrintCount(tries);
+                    }
+                });
+
+
+
 
                 break;
 
             case ZebraPrinterUtils.PRINT_W_MRSTUB:
-                Bundle b = new Bundle();
-                b.putString("value",mrStubPage);
-                dlgUtils.showYesNoDialog(DLG_PRINTMRSTUB,"MR Stub",b);
+
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        changeToPrinted(true);
+                        Bundle b = new Bundle();
+                        b.putString("value",mrStubPage);
+                        dlgUtils.showYesNoDialog(DLG_PRINTMRSTUB,"MR Stub",b);
+                    }
+                });
+
                 break;
 
         }
