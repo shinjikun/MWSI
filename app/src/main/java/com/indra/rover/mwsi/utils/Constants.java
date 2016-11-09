@@ -53,6 +53,7 @@ public interface  Constants {
    int DLG_DELIV = 779;
    int DLG_PRINTMRSTUB=800;
    int DLG_EOD =900;
+   int DLG_ENTER_DELIVCODE=1000;
 
    String zebraPrinters= "AC:3F:A4";
    String apexPrinters = "00:12:F3";

@@ -34,6 +34,7 @@ public class ZebraLayout   extends   PrintLayout{
         strPrint.append(centerText("EOD Report",68));
         strPrint.append(setBold(0));
         strPrint.append("\r\n");
+        /*
         strPrint.append(context.getString(R.string.print_eod_reader));
         strPrint.append(' ');
         strPrint.append("\r\n");
@@ -46,7 +47,7 @@ public class ZebraLayout   extends   PrintLayout{
         strPrint.append(context.getString(R.string.print_eod_reading_date));
         strPrint.append(' ');
         strPrint.append("\r\n");
-
+        */
         strPrint.append("CAN        NAME              READING OC1 OC2 RN PC  TOTAL DUE    ");
         strPrint.append("\r\n");
         //iterate all of accounts
@@ -231,24 +232,18 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
 
+
+        boolean isCashOnly =false;
         if(Utils.isNotEmpty(mtrPrint.getDisCheckFlg())){
             if(mtrPrint.getDisCheckFlg().equals("1")){
-                str.append("CASH PAYMENT ONLY");
-                str.append(addSpace("CASH PAYMENT ONLY",67,
-                        context.getString(R.string.print_payment_center)));
+                isCashOnly = true;
             }
-            else {
-                str.append(rightJustify(67,context.getString(R.string.print_payment_center)));
-            }
-        }
-        else {
-            str.append(rightJustify(67,context.getString(R.string.print_payment_center)));
+
         }
 
 
+       str.append(paymentInverse(isCashOnly));
 
-
-        str.append("\r\n");
         StringBuilder str1 = new StringBuilder();
         str1.append("Contract Account No. : ");
         str1.append(mtrPrint.getAcctNum());
@@ -996,6 +991,22 @@ public class ZebraLayout   extends   PrintLayout{
                 + "PRINT\r\n";
         return cpclData;
     }
+
+    String paymentInverse(boolean isInverse){
+        StringBuilder strPrint = new StringBuilder();
+        strPrint.append("! 0 200 200 30 1\r\n");
+        if(isInverse){
+            strPrint.append("T 7 0 2 2 CASH PAYMENT ONLY\r\n");
+            strPrint.append("IL 2 2 223 2 24\r\n");
+        }
+        strPrint.append("T 7 0 514 2 PAYMENT CENTER/BANK COPY\r\n");
+        strPrint.append("PRINT\r\n");
+
+
+        return strPrint.toString();
+    }
+
+
 
     String lineBreakPrint(){
         StringBuilder str = new StringBuilder();

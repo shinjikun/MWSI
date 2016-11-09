@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 
 import com.indra.rover.mwsi.utils.DialogUtils;
 import com.zebra.sdk.comm.BluetoothConnection;
@@ -45,6 +46,7 @@ public class ZebraPrinterUtils implements DialogUtils.DialogListener {
 
 
     private void setStatus(final String statusMessage, final int color) {
+        Log.i("Test",statusMessage);
 
         sleep(1000);
     }
@@ -78,6 +80,8 @@ public class ZebraPrinterUtils implements DialogUtils.DialogListener {
 
     public interface ZebraPrintListener{
         void onFinishPrinting(int type);
+        void onErrorPrinting();
+        void onStartPrinting();
 
     }
 
@@ -87,6 +91,9 @@ public class ZebraPrinterUtils implements DialogUtils.DialogListener {
 
 
     public void sendData(final byte[] data,final  int type){
+        if(listener!=null){
+            listener.onStartPrinting();
+        }
         new Thread(new Runnable() {
             public void run() {
 
@@ -137,12 +144,17 @@ public class ZebraPrinterUtils implements DialogUtils.DialogListener {
 
     public ZebraPrinter connect() {
         setStatus("Connecting...", Color.YELLOW);
+
         printerConnection = null;
         printerConnection = new BluetoothConnection(getBtAddress());
         try {
             printerConnection.open();
             setStatus("Connected", Color.GREEN);
         } catch (ConnectionException e) {
+            if(listener!=null){
+                listener.onErrorPrinting();
+            }
+
             setStatus("Comm Error! Disconnecting", Color.RED);
             sleep(1000);
             disconnect(true, 0);
@@ -177,11 +189,18 @@ public class ZebraPrinterUtils implements DialogUtils.DialogListener {
             }
             setStatus("Not Connected", Color.RED);
         } catch (ConnectionException e) {
+            if(listener!=null){
+                listener.onErrorPrinting();
+            }
+
             setStatus("COMM Error! Disconnected", Color.RED);
         } finally {
 
             if(!isError){
-                listener.onFinishPrinting(type);
+                if(listener!=null){
+                    listener.onFinishPrinting(type);
+                }
+
             }
 
         }

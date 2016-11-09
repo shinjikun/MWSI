@@ -2,6 +2,7 @@ package com.indra.rover.mwsi.ui.activities;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.graphics.Color;
@@ -593,11 +594,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         switch(readstat){
             case 'P':
             case 'Q':
-                int tries = meterInfo.getPrintCount();
-                     tries = tries+1;
-                meterDao.updatePrintCount(tries,meterInfo.getDldocno());
-                meterInfo.setPrintCount(tries);
-                arry.get(current).setPrintCount(tries);
+
                 break;
             case 'E':
                 newReadStat="Q";
@@ -803,6 +800,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 break;
             case DLG_EOD:
                 eodReportPrint();
+                break;
+            case DLG_ENTER_DELIVCODE:
+                mViewPager.setCurrentItem(2);
+                scrollUp();
                 break;
         }
     }
@@ -1188,13 +1189,13 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
+    String mrStubPage;
     @Override
     public void onPrintPageAndMRStub(String meterPrintPage, final String mrStubPage) {
         changeToPrinted(true);
-        zebraUtils.printMeterReading(meterPrintPage.getBytes());
-        Bundle b = new Bundle();
-        b.putString("value",mrStubPage);
-        dlgUtils.showYesNoDialog(DLG_PRINTMRSTUB,"MR Stub",b);
+        this.mrStubPage = mrStubPage;
+        zebraUtils.sendData(meterPrintPage.getBytes(),ZebraPrinterUtils.PRINT_W_MRSTUB);
+
 
     }
 
@@ -1216,6 +1217,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
             else {
                 String btAddress = prefs.getData(BTADDRESS,"");
                 if(Utils.isNotEmpty(btAddress)){
+                    zebraUtils.setBtAddress(btAddress);
                     startPrinting();
                 }
                 else {
@@ -1229,21 +1231,41 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onFinishPrinting(int type) {
+        if(progressDialog!=null)
+            progressDialog.dismiss();
         switch (type){
             case ZebraPrinterUtils.PRINT_ONLY:
                 break;
 
             case ZebraPrinterUtils.PRINT_READING:
-                if(!Utils.isNotEmpty(meterInfo.getDelCode())){
-                mViewPager.setCurrentItem(2);
-                scrollUp();
+                int tries = meterInfo.getPrintCount();
+                tries = tries+1;
+                meterDao.updatePrintCount(tries,meterInfo.getDldocno());
+                meterInfo.setPrintCount(tries);
+                arry.get(current).setPrintCount(tries);
 
-            }
                 break;
 
             case ZebraPrinterUtils.PRINT_W_MRSTUB:
+                Bundle b = new Bundle();
+                b.putString("value",mrStubPage);
+                dlgUtils.showYesNoDialog(DLG_PRINTMRSTUB,"MR Stub",b);
                 break;
 
         }
+    }
+
+    @Override
+    public void onErrorPrinting() {
+        if(progressDialog!=null)
+          progressDialog.dismiss();
+        dlgUtils.showOKDialog("Please check the status of the Bluetooth Printer");
+    }
+
+    ProgressDialog progressDialog;
+    @Override
+    public void onStartPrinting() {
+        progressDialog = ProgressDialog.show(this, "", "Printing! Please wait...");
+
     }
 }

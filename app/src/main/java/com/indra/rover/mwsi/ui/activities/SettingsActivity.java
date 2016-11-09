@@ -4,6 +4,7 @@ package com.indra.rover.mwsi.ui.activities;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -36,6 +37,7 @@ import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 import com.indra.rover.mwsi.print.PrintPage;
 import com.indra.rover.mwsi.print.utils.BluetoothHelper;
 import com.indra.rover.mwsi.print.utils.ConnectThread;
+import com.indra.rover.mwsi.print.utils.ZebraPrinterUtils;
 import com.indra.rover.mwsi.ui.fragments.PrinterConnectionDialog;
 import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.DialogUtils;
@@ -45,7 +47,8 @@ import com.indra.rover.mwsi.utils.Utils;
 import java.util.ArrayList;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener,
-        Constants,DialogUtils.DialogListener,BluetoothHelper.BluetoothHelperEventListener,PrintPage.PrintPageListener {
+        Constants,DialogUtils.DialogListener,BluetoothHelper.BluetoothHelperEventListener,
+        PrintPage.PrintPageListener,ZebraPrinterUtils.ZebraPrintListener {
 
     PreferenceKeys prefs;
     DialogUtils dialogUtils;
@@ -54,9 +57,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     final int REQUEST_BLUETOOTH = 700;
     boolean isBluetoothOn = true;
     final int DLG_UNPAIR =123;
-
     ImageButton btnPrint;
     BluetoothHelper btHelper;
+    ZebraPrinterUtils zebraUtils;
     private static final String DIALOG_PRINTER_CONNECT_TAG = "printer_connect";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         btHelper = BluetoothHelper.instance();
         btHelper.setOnBuetoothHelperEventListener(this);
+
+        zebraUtils = ZebraPrinterUtils.getInstance(this);
+        zebraUtils.setListener(this);
         prefs = PreferenceKeys.getInstance(this);
         dialogUtils = new DialogUtils(this);
         dialogUtils.setListener(this);
@@ -421,6 +427,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         if(bluetoothDevice.getBondState()!= BluetoothDevice.BOND_BONDED){
             btHelper.pairDevice(bluetoothDevice);
+            zebraUtils.setBtAddress(bluetoothDevice.getAddress());
         } else if(bluetoothDevice.getBondState()== BluetoothDevice.BOND_BONDED){
             btnPair.setVisibility(View.GONE);
             btnUnPair.setVisibility(View.VISIBLE);
@@ -460,10 +467,11 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 startActivityForResult(enableBT, REQUEST_BLUETOOTH);
             }
             else {
-                String btAddress = prefs.getData(BTADDRESS);
+                String btAddress = prefs.getData(BTADDRESS,"");
                 BluetoothDevice btDevice =  btHelper.getBluetoothDevice(btAddress);
                 if(btDevice!=null){
-                   btHelper.connectTo(btDevice);
+                   zebraUtils.setBtAddress(btAddress);
+                   printEODReport();
 
                 }
                 else {
@@ -498,6 +506,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                     btnPair.setVisibility(View.GONE);
                     btnUnPair.setVisibility(View.VISIBLE);
                     btnUnPair.setText(btName+"\n"+btMac);
+                    zebraUtils.setBtAddress(btMac);
                 } else if (state == BluetoothDevice.BOND_NONE && prevState == BluetoothDevice.BOND_BONDED){
                    // showToast("Unpaired");
                     //reset save variable after the device is succesfully unpained
@@ -505,6 +514,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                     prefs.setData(BTNAME,"");
                     btnPair.setVisibility(View.VISIBLE);
                     btnUnPair.setVisibility(View.GONE);
+                    zebraUtils.setBtAddress("");
                 } else if (state == BluetoothDevice.BOND_BONDED && prevState == BluetoothDevice.BOND_NONE) {
                     //showToast("Paired");
                     String btMac =  prefs.getData(BTADDRESS);
@@ -512,6 +522,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                     btnPair.setVisibility(View.GONE);
                     btnUnPair.setVisibility(View.VISIBLE);
                     btnUnPair.setText(btName+"\n"+btMac);
+                    zebraUtils.setBtAddress(btMac);
                 }
 
 
@@ -521,12 +532,31 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onPrintPageResult(String meterPrintPage, boolean isMeterprint) {
+        zebraUtils.sendData(meterPrintPage.getBytes());
 
-        btHelper.sendData(meterPrintPage.getBytes());
     }
 
     @Override
     public void onPrintPageAndMRStub(String meterPrintPage, String mrStubPage) {
 
+    }
+    ProgressDialog progressDialog;
+
+    @Override
+    public void onFinishPrinting(int type) {
+        if(progressDialog!=null)
+            progressDialog.dismiss();
+    }
+
+    @Override
+    public void onErrorPrinting() {
+        if(progressDialog!=null)
+            progressDialog.dismiss();
+        dialogUtils.showOKDialog("Please check the status of the Bluetooth Printer");
+    }
+
+    @Override
+    public void onStartPrinting() {
+        progressDialog = ProgressDialog.show(this, "", "Printing! Please wait...");
     }
 }
