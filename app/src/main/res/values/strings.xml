@@ -24,6 +24,7 @@
     <string name="str_mru_list_title">MRU(s)</string>
     <string name="str_mru_unread">Unread</string>
     <string name="str_mru_unprinted">Printed :</string>
+    <string name="str_mru_unbilled">UnBilled :</string>
     <string name="str_mru_undelivered">UnDelivered:</string>
     <string name="str_mru_total">Total :</string>
     <string name="str_mru_id">MRU ID :</string>

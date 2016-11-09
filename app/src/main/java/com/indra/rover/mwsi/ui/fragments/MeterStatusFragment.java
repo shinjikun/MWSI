@@ -152,7 +152,8 @@ public class MeterStatusFragment extends Fragment {
 
         CustomItemView item = new CustomItemView(getActivity());
         item.setLabel("Total Accounts :");
-        String totalAcount = String.valueOf(selectedMRU.getCustomer_count());
+        int totalAccount = selectedMRU.getCustomer_count();
+        String totalAcount = String.valueOf(totalAccount);
         item.setValue(totalAcount);
         item.setLayoutParams(layoutParams);
         mLayout.addView(item);
@@ -171,16 +172,18 @@ public class MeterStatusFragment extends Fragment {
         mLayout.addView(item);
 
 
+         int billed = mruDao.countBilled(mSelectedMRU);
 
         item = new CustomItemView(getActivity());
         item.setLabel("Billed :");
-        item.setValue("0");
+        item.setValue(String.valueOf(billed));
         item.setLayoutParams(layoutParams);
         mLayout.addView(item);
 
+        int unbilled = totalAccount - billed;
         item = new CustomItemView(getActivity());
         item.setLabel("UnBilled :");
-        item.setValue("0");
+        item.setValue(String.valueOf(unbilled));
         item.setLayoutParams(layoutParams);
         mLayout.addView(item);
 
