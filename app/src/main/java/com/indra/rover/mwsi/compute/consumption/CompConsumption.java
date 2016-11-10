@@ -83,6 +83,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                     if(prev_oc2.equals("11")||prev_oc2.equals("12")||prev_oc2.equals("14")){
                         //use decision D - bill consumption set to minimum - tag as average
                         meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                        meterConsObj.setMrType(MeterInfo.MRTYPE91);
                         decisionE();
                     }
                     else {
@@ -157,6 +158,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                     //if yes use secnario3 to get the bill consumption
                     int bill_consumption = scenario3();
                     meterConsObj.setBilled_cons(bill_consumption);
+                    meterConsObj.setMrType(MeterInfo.MRTYPE01);
                     meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                     //tag as adjusted
                     decisionC();
@@ -201,6 +203,7 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                     int bill_consumption = scenario3();
                     meterConsObj.setBilled_cons(bill_consumption);
                     //tag as adjusted
+                    meterConsObj.setMrType(MeterInfo.MRTYPE01);
                     meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                     decisionC();
                 }

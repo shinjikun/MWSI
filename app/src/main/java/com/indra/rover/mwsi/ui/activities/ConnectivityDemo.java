@@ -153,7 +153,7 @@ public class ConnectivityDemo extends Activity {
     private void doConnectionTest() {
         printer = connect();
         if (printer != null) {
-          //  storeImage();
+            storeImage();
             sendTestLabel();
         } else {
             disconnect();
@@ -215,7 +215,7 @@ public class ConnectivityDemo extends Activity {
     private byte[] getConfigLabel() {
         byte[] configLabel = null;
             String cpclConfigLabel = "! U1 setvar \"device.languages\", \"line_print\"\r\n"
-                    +"U"
+     +"! 0 200 200 175 1\r\n"
                     + "! U1 PCX 0 30 !<maynilad.pcx\r\n"
                     +"PRINT";
         StringBuilder str = new StringBuilder();
@@ -246,7 +246,7 @@ public class ConnectivityDemo extends Activity {
         */
 
 
-            String toPrint = cpclConfigLabel.toString();// s.contentPrint(new MeterPrint());
+            String toPrint = cpclConfigLabel;// s.contentPrint(new MeterPrint());
         try {
             configLabel = toPrint.getBytes("US-ASCII");
         } catch (UnsupportedEncodingException e) {

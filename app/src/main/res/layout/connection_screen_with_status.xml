@@ -34,7 +34,7 @@
 			android:enabled="false"
 			android:inputType="textNoSuggestions|text"
 			android:layout_weight="1"
-			android:text="AC:3F:A4:1F:46:E2"/>
+			android:text="AC:3F:A4:58:AD:DE"/>
 	</LinearLayout>
 
 	<Button

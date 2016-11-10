@@ -48,7 +48,7 @@ public class ZebraPrinterUtils implements DialogUtils.DialogListener {
     private void setStatus(final String statusMessage, final int color) {
         Log.i("Test",statusMessage);
 
-        sleep(1000);
+    //    sleep(1000);
     }
 
 
@@ -128,12 +128,14 @@ public class ZebraPrinterUtils implements DialogUtils.DialogListener {
 
             printerConnection.write(data);
             setStatus("Sending Data", Color.BLUE);
-            sleep(1500);
+            sleep(1000);
+            /*
             if (printerConnection instanceof BluetoothConnection) {
                 String friendlyName = ((BluetoothConnection) printerConnection).getFriendlyName();
                 setStatus(friendlyName, Color.MAGENTA);
                 sleep(500);
             }
+            */
         } catch (ConnectionException e) {
             setStatus(e.getMessage(), Color.RED);
         } finally {
@@ -156,7 +158,7 @@ public class ZebraPrinterUtils implements DialogUtils.DialogListener {
             }
 
             setStatus("Comm Error! Disconnecting", Color.RED);
-            sleep(1000);
+            sleep(500);
             disconnect(true, 0);
         }
 
@@ -168,12 +170,12 @@ public class ZebraPrinterUtils implements DialogUtils.DialogListener {
             } catch (ConnectionException e) {
                 setStatus("Unknown Printer Language", Color.RED);
                 printer = null;
-                sleep(1000);
+                sleep(500);
                 disconnect(true, 0);
             } catch (ZebraPrinterLanguageUnknownException e) {
                 setStatus("Unknown Printer Language", Color.RED);
                 printer = null;
-                sleep(1000);
+                sleep(500);
                 disconnect(true, 0);
             }
         }

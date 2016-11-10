@@ -5,7 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,10 +14,7 @@ import com.indra.rover.mwsi.utils.DialogUtils;
 import com.indra.rover.mwsi.utils.FileUploader;
 import com.indra.rover.mwsi.utils.GPSTracker;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.nio.channels.FileChannel;
+
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener ,
