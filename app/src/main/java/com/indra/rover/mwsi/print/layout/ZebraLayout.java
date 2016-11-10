@@ -176,25 +176,25 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! 0 200 200 210 1\r\n");
         str.append("JOURNAL\r\n");
         str.append("PCX 110 20 !<maynilad.pcx\r\n");
-        str.append("T 5 0 400 6 Maynilad Water Services Inc\r\n" );
-        str.append("T 5 0 400 39 MWSS Compound\r\n" );
+        str.append("T 5 0 380 6 Maynilad Water Services Inc\r\n" );
+        str.append("T 5 0 380 39 MWSS Compound\r\n" );
         ArrayList<String> arry =  stringSplit(mtrPrint.getBcAddress(), 30);
         int xpost = 62;
         for(int i=0;i<arry.size();i++){
-            str.append("T 7 0 400 "+xpost);
+            str.append("T 7 0 380 "+xpost);
             str.append(' ');
             str.append(arry.get(i));
             str.append("\r\n");
             xpost =xpost+24;
         }
 
-        str.append("T 7 0 400 "+xpost+" VAT Reg TIN ");
+        str.append("T 7 0 380 "+xpost+" VAT Reg TIN ");
         str.append(mtrPrint.getBcTin());
         str.append("\r\n");
         xpost = xpost+30;
-        str.append("T 7 0 400 "+xpost+" Permit No. 0107-116-00006-CBA/AR\r\n" );
+        str.append("T 7 0 380 "+xpost+" Permit No. 0107-116-00006-CBA/AR\r\n" );
         xpost = xpost+30;
-        str.append("T 7 0 400 "+xpost+" Machine No. "+Build.SERIAL+" \r\n" );
+        str.append("T 7 0 380 "+xpost+" Machine No. "+Build.SERIAL+" \r\n" );
         str.append("PRINT\r\n");
 
 
@@ -258,9 +258,9 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! U1 SETLP 0 2 18\r\n");
         str2.append(context.getString(R.string.print_bill_period));
         str2.append(":");
-        str2.append(mtrPrint.getPrevRdg());
+        str2.append(mtrPrint.getPrevRdgDate());
         str2.append(" TO ");
-        str2.append(mtrPrint.getPresRdg());
+        str2.append(mtrPrint.getPresRdgDate());
 
 
         str.append(addSpace(str1.toString(),88,str2.toString()));
@@ -661,26 +661,30 @@ public class ZebraLayout   extends   PrintLayout{
         str.append(setBold(1));
         str1 = context.getString(R.string.print_other_charges);
         value = mtrPrint.getOtherCharges();
-        str.append(str1);
-        str.append(addSpace(str1,50,value));
-        str.append("\r\n");
+        if(!value.equals("0.00")){
+            str.append(str1);
+            str.append(addSpace(str1,50,value));
+            str.append("\r\n");
 
-        str.append("! U1 SETLP 7 0 24\r\n");
-        str.append("! U1 SETSP 0\r\n");
-        str.append(setBold(0));
-        String result =  othrChgContent(R.array.print_arry_othercharge0,mtrPrint.otherCharges0,63);
-        str.append(result);
-        result =  othrChgContent(R.array.print_arry_othercharge1,
-                mtrPrint.otherCharges1,mtrPrint.otherChrgInd1,69);
-        str.append(result);
-         result =  othrChgContent(R.array.print_arry_othercharge2,mtrPrint.otherCharges2,63);
-        str.append(result);
-        result =  othrChgContent(R.array.print_arry_othercharge3,
-                mtrPrint.otherCharges3,mtrPrint.otherChrgInd2,69);
-        str.append(result);
+            str.append("! U1 SETLP 7 0 24\r\n");
+            str.append("! U1 SETSP 0\r\n");
+            str.append(setBold(0));
 
-        result =  othrChgContent(R.array.print_arry_othercharge4,mtrPrint.otherCharges4,63);
-        str.append(result);
+            String result =  othrChgContent(R.array.print_arry_othercharge0,mtrPrint.otherCharges0,63);
+            str.append(result);
+            result =  othrChgContent(R.array.print_arry_othercharge1,
+                    mtrPrint.otherCharges1,mtrPrint.otherChrgInd1,69);
+            str.append(result);
+            result =  othrChgContent(R.array.print_arry_othercharge2,mtrPrint.otherCharges2,63);
+            str.append(result);
+            result =  othrChgContent(R.array.print_arry_othercharge3,
+                    mtrPrint.otherCharges3,mtrPrint.otherChrgInd2,69);
+            str.append(result);
+
+            result =  othrChgContent(R.array.print_arry_othercharge4,mtrPrint.otherCharges4,63);
+            str.append(result);
+        }
+
         str.append("\r\n");
         double prevUnpaid =  mtrPrint.getPrevUnPaid();
         if(prevUnpaid!=0.00){
@@ -699,7 +703,8 @@ public class ZebraLayout   extends   PrintLayout{
             else if(prevUnpaid<0.00) {
                 str1 = context.getString(R.string.print_refund);
                 str.append(str1);
-                str.append(addSpace(str1,50,unpaidStr));
+                String str2 = Utils.formatValue(Math.abs(prevUnpaid));
+                str.append(addSpace(str1,50,str2));
             }
 
 
@@ -805,23 +810,23 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! 0 200 200 210 1\r\n");
         str.append("JOURNAL\r\n");
         str.append("PCX 110 20 !<maynilad.pcx\r\n");
-        str.append("T 5 0 400 6 Maynilad Water Services Inc\r\n" );
-        str.append("T 5 0 400 39 MWSS Compound\r\n" );
+        str.append("T 5 0 380 6 Maynilad Water Services Inc\r\n" );
+        str.append("T 5 0 380 39 MWSS Compound\r\n" );
         ArrayList<String> arry =  stringSplit(mtrPrint.getBcAddress(), 30);
         int xpost = 62;
         for(int i=0;i<arry.size();i++){
-            str.append("T 7 0 400 "+xpost);
+            str.append("T 7 0 380 "+xpost);
             str.append(' ');
             str.append(arry.get(i));
             str.append("\r\n");
             xpost =xpost+24;
         }
 
-        str.append("T 7 0 400 "+xpost+" VAT Reg TIN ");
+        str.append("T 7 0 380 "+xpost+" VAT Reg TIN ");
         str.append(mtrPrint.getBcTin());
         str.append("\r\n");
         xpost = xpost+30;
-        str.append("T 7 0 400 "+xpost+" Permit No. 0107-116-00006-CBA/AR\r\n" );
+        str.append("T 7 0 380 "+xpost+" Permit No. 0107-116-00006-CBA/AR\r\n" );
 
         str.append("PRINT\r\n");
 

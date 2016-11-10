@@ -398,6 +398,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             case CONNECTION_LOST:
                 MainApp.BTCONNECTED = false;
                 dialogUtils.showOKDialog("Connection Lost! Please check your Printer");
+                dialogUtils.showOKDialog("Connection Lost! Please check your Printer");
                 break;
         }
     }

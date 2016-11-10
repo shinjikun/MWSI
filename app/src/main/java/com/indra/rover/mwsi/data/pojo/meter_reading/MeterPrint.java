@@ -321,6 +321,8 @@ public class MeterPrint {
 
 
     public String getPresRdg() {
+        if(!Utils.isNotEmpty(presRdg))
+            presRdg="";
         return presRdg;
     }
 
