@@ -66,7 +66,7 @@ public class PrinterConnectionDialog extends DialogFragment implements AdapterVi
 
         BluetoothHelper btHelper =  BluetoothHelper.instance();
 
-        BluetoothHelper.instance().connectTo(discoveredPrinters.get(i));
+      //  BluetoothHelper.instance().connectTo(discoveredPrinters.get(i));
         btHelper.bluetoothSelected(discoveredPrinters.get(i));
 
 
