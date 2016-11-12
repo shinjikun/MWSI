@@ -5,6 +5,7 @@ public interface  Constants {
    String HAS_ROVER_UPDATE = "has_rover_update";
 
    String HAS_ROVER_DBUPDATE = "has_rover_db";
+   String HAS_BILL_REPRINT = "has_bill_reprint";
 
    String GPS_LOGGING_ENABLED="gpslogging";
 

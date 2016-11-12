@@ -174,7 +174,7 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,
         prefs.setData(APP_STATUS,"DOWNLOADED");
     }
 
-    private void updatedbAction(String status, Bundle b){
+    private void updatedResourceAction(String status, int type){
         if(status.equals("started")){
             btnRestart.setVisibility(View.GONE);
             txtTitle.setText(getResources().getText(R.string.lock_title_inprogress));
@@ -184,7 +184,13 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,
             txtTitle.setText(getResources().getText(R.string.lock_title_completed));
             txtSubTitle.setText("");
             txtFiles.setText("");
-            prefs.setData(HAS_ROVER_DBUPDATE,true);
+            if(type == 0){
+                prefs.setData(HAS_ROVER_DBUPDATE,true);
+            }
+            else {
+                prefs.setData(HAS_BILL_REPRINT,true);
+            }
+
             setDrawable(R.drawable.ic_completed);
         }
     }
@@ -230,7 +236,7 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,
             else if(action.equals("updatedb")){
                 setDrawable(R.drawable.ic_db_update);
                 txtSubTitle.setText(String.valueOf("Fetching DB dump file to DS"));
-                updatedbAction(status,b);
+                updatedResourceAction(status, 0);
             }
             else if(action.equals("pulldb")){
                 setDrawable(R.drawable.ic_db_update);
@@ -241,6 +247,11 @@ public class LockedAppActivity extends AppCompatActivity implements Constants,
                 setDrawable(R.drawable.ic_db_update);
                 txtSubTitle.setText(String.valueOf("Dumping Rover DB to DS"));
                 datadumpAction(status ,b);
+            }
+            else if(action.equals("billreprint")){
+                setDrawable(R.drawable.ic_reprint);
+                txtSubTitle.setText(String.valueOf("Accepting File for Bill Reprinting"));
+                updatedResourceAction(status, 1);
             }
 
 

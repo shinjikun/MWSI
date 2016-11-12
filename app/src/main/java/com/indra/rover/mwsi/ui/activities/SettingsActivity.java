@@ -105,6 +105,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             Intent intent =new Intent(this,ChangeStatusActivity.class);
             startActivity(intent);
         }
+        else if(item.getItemId() == R.id.mnuBillReprint){
+            Intent intent =new Intent(this,BillReprintActivity.class);
+            startActivity(intent);
+        }
 
 
         return super.onOptionsItemSelected(item);

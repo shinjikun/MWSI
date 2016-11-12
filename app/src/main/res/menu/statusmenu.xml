@@ -3,4 +3,6 @@
   >
     <item android:title="@string/chg_rover_status"
         android:id="@+id/mnuChangeStatus" />
+    <item android:title="@string/billreprint"
+        android:id="@+id/mnuBillReprint" />
 </menu>

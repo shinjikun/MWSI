@@ -183,10 +183,23 @@ if /I "%cmd_arg%"=="upload" (
 		)
 	goto :skip
 		)
+
 if /I "%cmd_arg%"=="download" (
 	call :check_devices
 	if  "!is_device!"=="1" (
 			call :push_files_block
+		) else (
+		echo No connected device
+		)
+	goto :skip
+		)
+
+
+
+if /I "%cmd_arg%"=="billreprint" (
+	call :check_devices
+	if  "!is_device!"=="1" (
+			call :billreprint
 		) else (
 		echo No connected device
 		)
@@ -305,6 +318,25 @@ exit /B 0
 	)
 
 exit /B 0
+
+:billreprint
+	call :start_app
+	if  "!is_installed!"=="1" (
+			set actiontype=billreprint
+			set statustype=started
+			call :send_broadmsg
+
+
+			call :push_db
+
+			set statustype=ended
+			call :send_broadmsg
+			echo Completed
+			)else (
+			echo Rover App not installed
+	)
+exit /B 0
+
 
 :push_files_block
 	call :start_app

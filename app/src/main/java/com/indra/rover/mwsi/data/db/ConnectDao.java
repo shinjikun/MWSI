@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 ;
+import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.data.pojo.meter_reading.MeterPrint;
 import com.indra.rover.mwsi.data.pojo.meter_reading.display.MeterInfo;
 import com.indra.rover.mwsi.utils.Utils;
 
@@ -18,8 +20,10 @@ import java.util.List;
 
 public class ConnectDao extends ModelDao {
 
+    Context context;
     public ConnectDao(Context context){
         super(context);
+        this.context =context;
     }
     final int MBMother =2 ;
     final int MBChild =5;
@@ -144,6 +148,26 @@ public class ConnectDao extends ModelDao {
         return rowInsert;
     }
 
+
+    public long insertBillReprintData(String[] records){
+        long rowInsert =0;
+        try {
+            open();
+            ContentValues values = new ContentValues();
+            String[] headers = context.getResources().getStringArray(R.array.bill_reprint_headers);
+            for(int i =0;i<headers.length;i++){
+                values.put(headers[i],records[i]);
+
+            }
+            rowInsert = database.insert("T_BILL_REPRINT", null, values);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+        return rowInsert;
+    }
 
 
     public long insertResourceData(String tableName, String[] headers, String[] records){
@@ -397,5 +421,32 @@ public class ConnectDao extends ModelDao {
         truncateTable("T_UPLOAD");
         truncateTable("T_SAP_DETAILS");
     }
+
+
+    public ArrayList<MeterPrint> getReprintItems(){
+        ArrayList<MeterPrint> arry = new ArrayList<>();
+        try{
+            open();
+            String selectstmt = "Select * from T_BILL_REPRINT";
+            Cursor cursor = database.rawQuery(selectstmt, null);
+            if (cursor.moveToFirst()) {
+                do {
+
+                    MeterPrint meterPrint = new MeterPrint(cursor);
+
+                    arry.add(meterPrint);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+
+
+        return arry;
+    }
+
 
 }

@@ -74,4 +74,91 @@
         <item>ADDRESS</item>
         <item>READING</item>
     </string-array>
+
+
+
+    <string-array name="bill_reprint_headers">
+        <item>MRU</item>
+        <item>BC_DESC</item>
+        <item>BC_ADDRESS</item>
+        <item>BC_TIN</item>
+        <item>BILL_CLASS_DESC</item>
+        <item>SOA_NUMBER</item>
+        <item>RANGE_CODE</item>
+        <item>DUE_DATE</item>
+        <item>DUE_DATE</item>
+        <item>ACCTNUM</item>
+        <item>CUSTNAME</item>
+        <item>CUSTADDRESS</item>
+        <item>ACCT_STATUS</item>
+        <item>TIN</item>
+        <item>TENANT_NAME</item>
+        <item>SC_ID</item>
+        <item>DISC_TAG</item>
+        <item>SEQNO</item>
+        <item>METERNO</item>
+        <item>BILLED_CONS</item>
+        <item>CONSTYPE_CODE</item>
+        <item>RDG_DATE</item>
+        <item>PREVRDGDATE</item>
+        <item>ACTPREVRDG</item>
+        <item>PRESRDG</item>
+        <item>PREVCONSLINE1</item>
+        <item>PREVCONSLINE2</item>
+        <item>WBPAYDTLS1</item>
+        <item>WBPAYDTLS2</item>
+        <item>GDPAYDTLS</item>
+        <item>MISCPAYDTLS</item>
+        <item>BASIC_CHARGE</item>
+        <item>FCDA</item>
+        <item>CERA</item>
+        <item>ENV_CHARGE</item>
+        <item>SEWER_CHARGE</item>
+        <item>MSC_AMOUNT</item>
+        <item>SC_DISCOUNT</item>
+        <item>TOTCHRG_WO_TAX</item>
+        <item>VAT_CHARGE</item>
+        <item>TOT_CURR_CHARGE</item>
+        <item>SPBILL_RULE</item>
+        <item>INSTALL_WATER_DUE</item>
+        <item>INSTALL_WATER_CHARGE</item>
+        <item>SEPTIC_CHARGE</item>
+        <item>CHANGESIZE_CHARGE</item>
+        <item>MISC_CHARGE</item>
+        <item>INSTALL_SEWER_CHARGE</item>
+        <item>AMORTIZATION</item>
+        <item>INSTALL_WTR_IND</item>
+        <item>INSTALL_SEWER_DUE</item>
+        <item>INSTALL_SEW_IND</item>
+        <item>GD_AMOUNT_DUE</item>
+        <item>INSTALL_GD_IND</item>
+        <item>AMORT_DUE</item>
+        <item>INSTALL_AMORT_IND</item>
+        <item>RESTORATION_DUE</item>
+        <item>RESTORATION_IND</item>
+        <item>ILLEGALITIES_DUE</item>
+        <item>ILLEGALITIES_IND</item>
+        <item>UNMIGRATED_WATER_DUE</item>
+        <item>UNMIGRATED_WATER_IND</item>
+        <item>UNMIGRATED_SEWER_DUE</item>
+        <item>UNMIGRATED_SEWER_IND</item>
+        <item>PENALTIES_DUE</item>
+        <item>UNMIGRATED_AR_WATER</item>
+        <item>UNMIGRATED_AR_IC</item>
+        <item>RECOVERY</item>
+        <item>DISCHECK_FLAG</item>
+        <item>TOTAL_AMT_DUE</item>
+        <item>SCHED_RDG_DATE</item>
+        <item>PREVINVOICENO</item>
+        <item>REOPENING_FEE</item>
+        <item>METER_CHARGES</item>
+        <item>GD_CHARGE</item>
+        <item>OTHER_CHARGES</item>
+        <item>FFCODE1</item>
+        <item>FFCODE2</item>
+        <item>REMARKS</item>
+        <item>PREVUNPAID</item>
+    </string-array>
+
+
 </resources>

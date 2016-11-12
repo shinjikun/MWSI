@@ -29,13 +29,16 @@ public class SplashActivity extends AppCompatActivity  implements Constants,
         //check first if there is downloaded files from DS that needs to insert on db
         boolean mhas_update = prefs.getData(HAS_ROVER_UPDATE,true);
         boolean mhas_db_update = prefs.getData(HAS_ROVER_DBUPDATE,false);
-
+        boolean mhas_billreprint_update = prefs.getData(HAS_BILL_REPRINT,false);
         if(mhas_db_update){
 
             parseRFiles();
         }
         else if(mhas_update){
             parseFiles();
+        }
+        else if(mhas_billreprint_update){
+            parseRFiles();
         }
         else {
             Thread startThread =  new Thread(){

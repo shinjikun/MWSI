@@ -47,7 +47,15 @@ public class FileParser extends AsyncTask<File,Integer,String> {
             if (!file.isDirectory()) {
                 if(file.getName().endsWith(".txt")){
                     if(isResourceFile){
-                        parseRFile(file);
+                        String fileName =  file.getName();
+                        if(fileName.startsWith("BR")){
+                            parseRFile(file, false);
+                        }
+                        else {
+                            parseRFile(file, true);
+                        }
+
+
                     } else
                         parseFile(file);
                     //remove the parsed file in directory
@@ -98,7 +106,7 @@ public class FileParser extends AsyncTask<File,Integer,String> {
         }
     }
 
-    private void parseRFile(File file){
+    private void parseRFile(File file, boolean isResource){
         try{
             //get the file name of the file this will be the tablename
             String tableName = file.getName();
@@ -113,12 +121,17 @@ public class FileParser extends AsyncTask<File,Integer,String> {
             int i=0;
             while ((record = reader.readNext()) != null) {
                 // nextLine[] is an array of values from the line
-                if(i==0){
-                    header = record;
+                if(isResource){
+                    if(i==0){
+                        header = record;
+                    }
+                    else {
+                        mRDao.insertResourceData(tableName,header,record);
+                    }
+                }else {
+                    mRDao.insertBillReprintData(record);
                 }
-                else {
-                 mRDao.insertResourceData(tableName,header,record);
-                }
+
                 i++;
 
 

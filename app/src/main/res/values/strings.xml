@@ -179,4 +179,5 @@
         <item>MODIFIED</item>
         <item>ALL READ</item>
     </string-array>
+    <string name="billreprint">Bill Reprint</string>
 </resources>
