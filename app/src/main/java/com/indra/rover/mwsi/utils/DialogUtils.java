@@ -104,7 +104,7 @@ public class DialogUtils  {
             }
         });
         TextView txt = (TextView)dialog.findViewById(R.id.dlg_title);
-        if(title == null){
+        if(!Utils.isNotEmpty(title)){
             txt.setVisibility(View.GONE);
         }
         else {

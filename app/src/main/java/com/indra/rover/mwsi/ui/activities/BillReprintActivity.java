@@ -1,10 +1,9 @@
 package com.indra.rover.mwsi.ui.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.indra.rover.mwsi.R;
@@ -29,6 +28,7 @@ public class BillReprintActivity extends AppCompatActivity implements Constants,
     ZebraPrinterUtils zebraUtils;
     int currentIndex =0;
     ArrayList<MeterPrint> arrayList;
+    final int DLG_NOITEMS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +36,27 @@ public class BillReprintActivity extends AppCompatActivity implements Constants,
         setContentView(R.layout.activity_bill_reprint);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        // add back arrow to toolbar
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
         dlgUtils = new DialogUtils(this);
         dlgUtils.setListener(this);
+        ConnectDao dbDao = new ConnectDao(this);
+        arrayList = dbDao.getReprintItems();
+        if(arrayList.isEmpty()){
+            dlgUtils.showOKDialog(DLG_NOITEMS,"","There is no items to be printed!",new Bundle());
+            return;
+        }
         prefs =  PreferenceKeys.getInstance(this);
         zebraUtils = ZebraPrinterUtils.getInstance(this);
         zebraUtils.setListener(this);
-        ConnectDao dbDao = new ConnectDao(this);
-        arrayList = dbDao.getReprintItems();
+
         String btAddress = prefs.getData(BTADDRESS,"");
         if(Utils.isNotEmpty(btAddress)){
             // try to connect to this device
@@ -55,9 +69,26 @@ public class BillReprintActivity extends AppCompatActivity implements Constants,
 
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     public void dialog_confirm(int dialog_id, Bundle params) {
+        switch (dialog_id){
 
+            case DLG_NOITEMS:
+                finish();
+                break;
+        }
     }
 
     @Override

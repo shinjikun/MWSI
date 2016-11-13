@@ -3,6 +3,6 @@
   >
     <item android:title="@string/chg_rover_status"
         android:id="@+id/mnuChangeStatus" />
-    <item android:title="@string/billreprint"
+    <item android:title="@string/billreprint_title"
         android:id="@+id/mnuBillReprint" />
 </menu>
