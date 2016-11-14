@@ -75,7 +75,7 @@ public class MeterPrint {
 
   public String[] otherChrgInd1;
   public String[] otherChrgInd2;
-
+    private int constype;
   public MeterPrint(){
 
   }
@@ -203,7 +203,7 @@ public class MeterPrint {
       this.totalamt = Utils.formatValue(d);
 
       prevUnPaid  = cursor.getDouble(cursor.getColumnIndexOrThrow("PREVUNPAID"));
-
+        constype = cursor.getInt(cursor.getColumnIndexOrThrow("CONSTYPE_CODE"));
       otherCharges0 = new double[4];
       otherCharges0[0] = cursor.getDouble(cursor.getColumnIndexOrThrow("GD_CHARGE"));
       otherCharges0[1] = cursor.getDouble(cursor.getColumnIndexOrThrow("INSTALL_WATER_CHARGE"));
@@ -438,5 +438,9 @@ public class MeterPrint {
 
     public String getOrig_totalamt() {
         return orig_totalamt;
+    }
+
+    public int getConstype() {
+        return constype;
     }
 }

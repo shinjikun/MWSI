@@ -176,25 +176,25 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! 0 200 200 210 1\r\n");
         str.append("JOURNAL\r\n");
         str.append("PCX 110 20 !<maynilad.pcx\r\n");
-        str.append("T 5 0 380 6 Maynilad Water Services Inc\r\n" );
-        str.append("T 5 0 380 39 MWSS Compound\r\n" );
+        str.append("T 5 0 378 6 Maynilad Water Services Inc\r\n" );
+        //str.append("T 5 0 380 39 MWSS Compound\r\n" );
         ArrayList<String> arry =  stringSplit(mtrPrint.getBcAddress(), 30);
-        int xpost = 62;
+        int xpost = 39;
         for(int i=0;i<arry.size();i++){
-            str.append("T 7 0 380 "+xpost);
+            str.append("T 7 0 378 "+xpost);
             str.append(' ');
             str.append(arry.get(i));
             str.append("\r\n");
             xpost =xpost+24;
         }
 
-        str.append("T 7 0 380 "+xpost+" VAT Reg TIN ");
+        str.append("T 7 0 378 "+xpost+" VAT Reg TIN ");
         str.append(mtrPrint.getBcTin());
         str.append("\r\n");
         xpost = xpost+30;
-        str.append("T 7 0 380 "+xpost+" Permit No. 0107-116-00006-CBA/AR\r\n" );
+        str.append("T 7 0 378 "+xpost+" Permit No. 0107-116-00006-CBA/AR\r\n" );
         xpost = xpost+30;
-        str.append("T 7 0 380 "+xpost+" Machine No. "+Build.SERIAL+" \r\n" );
+        str.append("T 7 0 378 "+xpost+" Machine No. "+Build.SERIAL+" \r\n" );
         str.append("PRINT\r\n");
 
 
@@ -228,6 +228,17 @@ public class ZebraLayout   extends   PrintLayout{
     public String billFooter(MeterPrint mtrPrint) {
         StringBuilder str = new StringBuilder();
         str.append(lineBreakPrint());
+
+
+        str.append("! U1 SETLP 7 0 24\r\n");
+        str.append("\r\n");
+        str.append("! U1 CENTER\r\n");
+        str.append("! U1 B 39 1 30 78 13 1 ");
+        str.append(mtrPrint.getAcctNum());
+        str.append(' ');
+        str.append(mtrPrint.getOrig_totalamt());
+        str.append("\r\n");
+
         str.append("! U1 SETLP 7 0 24\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
@@ -245,6 +256,8 @@ public class ZebraLayout   extends   PrintLayout{
        str.append(paymentInverse(isCashOnly));
 
         StringBuilder str1 = new StringBuilder();
+
+
         str1.append("Contract Account No. : ");
         str1.append(mtrPrint.getAcctNum());
         str.append(str1.toString());
@@ -264,6 +277,7 @@ public class ZebraLayout   extends   PrintLayout{
 
 
         str.append(addSpace(str1.toString(),88,str2.toString()));
+        /*
         str.append("! U1 SETLP 7 0 24\r\n");
         str.append("\r\n");
         str.append("! U1 CENTER\r\n");
@@ -272,6 +286,7 @@ public class ZebraLayout   extends   PrintLayout{
         str.append(' ');
         str.append(mtrPrint.getOrig_totalamt());
         str.append("\r\n");
+        */
         str.append("\r\r\r\n");
         return str.toString();
     }
@@ -461,6 +476,15 @@ public class ZebraLayout   extends   PrintLayout{
         str.append(mtrPrint.getBillCons());
         if(mtrPrint.getBillCons()<=10){
             str.append(" minimum");
+        }
+        else {
+            int constypecode = mtrPrint.getConstype();
+            if(constypecode == 1){
+                str.append(" AVE");
+            }
+            else if(constypecode == 2) {
+                str.append(" ADJ");
+            }
         }
         str.append("\r\r\n");
         str.append(setBold(0));
@@ -810,23 +834,23 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! 0 200 200 210 1\r\n");
         str.append("JOURNAL\r\n");
         str.append("PCX 110 20 !<maynilad.pcx\r\n");
-        str.append("T 5 0 380 6 Maynilad Water Services Inc\r\n" );
-        str.append("T 5 0 380 39 MWSS Compound\r\n" );
+        str.append("T 5 0 378 6 Maynilad Water Services Inc\r\n" );
+        //str.append("T 5 0 380 39 MWSS Compound\r\n" );
         ArrayList<String> arry =  stringSplit(mtrPrint.getBcAddress(), 30);
-        int xpost = 62;
+        int xpost = 39;
         for(int i=0;i<arry.size();i++){
-            str.append("T 7 0 380 "+xpost);
+            str.append("T 7 0 378 "+xpost);
             str.append(' ');
             str.append(arry.get(i));
             str.append("\r\n");
             xpost =xpost+24;
         }
 
-        str.append("T 7 0 380 "+xpost+" VAT Reg TIN ");
+        str.append("T 7 0 378 "+xpost+" VAT Reg TIN ");
         str.append(mtrPrint.getBcTin());
         str.append("\r\n");
         xpost = xpost+30;
-        str.append("T 7 0 380 "+xpost+" Permit No. 0107-116-00006-CBA/AR\r\n" );
+        str.append("T 7 0 378 "+xpost+" Permit No. 0107-116-00006-CBA/AR\r\n" );
 
         str.append("PRINT\r\n");
 
@@ -991,10 +1015,22 @@ public class ZebraLayout   extends   PrintLayout{
     }
 
     String linePrint(){
+        /*
         String cpclData = "! 0 200 200 30 1\r\n"
                 + "LINE 1 0 811 0 2\r\n"
                 + "PRINT\r\n";
         return cpclData;
+        *
+        */
+        StringBuilder str = new StringBuilder();
+        str.append("\r\n");
+        str.append("! U1 SETLP 7 0 24\r\n");
+        str.append("! U1 SETSP 0\r\n");
+        for(int i=0;i<68;i++){
+            str.append('_');
+        }
+        str.append("\r\n");
+        return str.toString();
     }
 
     String paymentInverse(boolean isInverse){

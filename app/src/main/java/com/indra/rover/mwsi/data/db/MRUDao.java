@@ -165,6 +165,35 @@ public class MRUDao  extends  ModelDao{
     }
 
 
+    public int countRead(String mruid){
+        int count =0;
+        try {
+            open();
+            StringBuilder str_b_stmt = new StringBuilder();
+            str_b_stmt.append("Select count(READSTAT)  as COUNTNUM from T_CURRENT_RDG  t, T_DOWNLOAD d  " +
+                    "where  t.READSTAT !='U' and t.CRDOCNO = d.DLDOCNO ");
+              if(!mruid.equals("All")){
+                str_b_stmt.append(" and d.MRU = '");
+                str_b_stmt.append(mruid);
+                str_b_stmt.append('\'');
+            }
+            Cursor cursor = database.rawQuery(str_b_stmt.toString(),null);
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNTNUM"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+
+        }catch (Exception sql){
+            sql.printStackTrace();
+        }finally {
+            close();
+        }
+        return count;
+    }
+
+
     public int countUnRead(String mruid,String type){
         int count =0;
         try {

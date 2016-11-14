@@ -121,7 +121,7 @@ public class MeterStatusFragment extends Fragment {
 
         item = new CustomItemView(getActivity());
         item.setLabel("Read Meter :");
-        item.setValue(String.valueOf(mruDao.countUnRead(mSelectedMRU,"R")));
+        item.setValue(String.valueOf(mruDao.countRead(mSelectedMRU)));
         item.setLayoutParams(layoutParams);
         mLayout.addView(item);
 

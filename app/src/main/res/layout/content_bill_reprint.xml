@@ -18,14 +18,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView"
-        android:textAlignment="center"
+
+        android:gravity="center"
         tools:text="@string/billreprint_title"
         android:textStyle="bold"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/pnl1"
+        android:visibility="gone">
 
         <TextView
             android:text="@string/billreprint_txt1"
@@ -34,7 +37,133 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp"
-            android:id="@+id/textView16" />
+            android:id="@+id/txtInstruction"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:gravity="center"
+            android:textStyle="bold"
+          />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Start Printing?"
+            android:id="@+id/textView16"
+            android:layout_below="@+id/txtInstruction"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView2"
+            android:src="@drawable/ic_print_black"
+            android:layout_below="@+id/textView16"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/print"
+            android:id="@+id/btnPrint"
+            android:layout_below="@+id/imageView2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:background="@drawable/btn_active_rounded"
+            android:textColor="@android:color/white"
+            android:padding="10dp"
+            android:onClick="onClick"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/pnl2"
+        android:visibility="gone">
+        <TextView
+            android:text="@string/lock_title_completed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
+            android:id="@+id/txt1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:gravity="center"
+            android:textStyle="bold"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView3"
+            android:src="@drawable/ic_completed"
+            android:layout_marginTop="29dp"
+            android:layout_below="@+id/txt1"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Close"
+            android:id="@+id/btnClose"
+            android:layout_below="@+id/imageView3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:background="@drawable/btn_active_rounded"
+            android:textColor="@android:color/white"
+            android:padding="10dp"
+            android:onClick="onClick"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/pnl3"
+        >
+        <TextView
+            android:text="@string/billreprint_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
+            android:id="@+id/txtTotal"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:gravity="center"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/billreprint_item"
+            android:id="@+id/txtItemIns"
+            android:layout_below="@+id/txtTotal"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:gravity="center"
+            android:id="@+id/txtCounter"
+            android:textStyle="bold"
+            android:textSize="100sp"
+
+            android:layout_marginTop="39dp"
+            android:layout_below="@+id/txtItemIns"
+            android:layout_centerHorizontal="true" />
+
     </RelativeLayout>
 
 </LinearLayout>

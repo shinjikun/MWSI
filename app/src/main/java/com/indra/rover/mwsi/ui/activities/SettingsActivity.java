@@ -218,6 +218,12 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 String message = isChecked?"Enabled":"Disabled";
 
                 dialogUtils.showOKDialog("MR PRINT STUB: "+message);
+                if(isChecked){
+                    findViewById(R.id.pnl_mrstub).setVisibility(View.VISIBLE);
+                }
+                else {
+                    findViewById(R.id.pnl_mrstub).setVisibility(View.GONE);
+                }
             }
         });
 
@@ -480,7 +486,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
                 }
                 else {
-                    dialogUtils.showOKDialog("Please setup a BLUETOOTH PRINTER in Settings before printing");
+                    dialogUtils.showOKDialog("Please setup a BLUETOOTH PRINTER in Option before printing");
                 }
                 //
             }

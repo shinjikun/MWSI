@@ -362,15 +362,6 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
          Snackbar snackbar = Snackbar
                 .make(coordinatorLayout, message, Snackbar.LENGTH_LONG);
 
-        if(!meterInfo.getReadStat().equals("P")|| !meterInfo.getReadStat().equals("Q")){
-            snackbar.setAction("Re Enter", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    loadMeterInput();
-                }
-            });
-        }
 
 
 
@@ -1182,10 +1173,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     public void onPrintPageResult(String meterPrintPage, boolean isMeterprint) {
         if(isMeterprint){
 
-            zebraUtils.printMeterReading(meterPrintPage.getBytes());
+            zebraUtils.printMeterReading("hello".getBytes());
         }
         else {
-            zebraUtils.sendData(meterPrintPage.getBytes());
+            zebraUtils.sendData("hello".getBytes());
         }
     }
 
@@ -1220,7 +1211,7 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                     startPrinting();
                 }
                 else {
-                   dlgUtils.showOKDialog("Please setup a BLUETOOTH PRINTER in Settings before printing");
+                   dlgUtils.showOKDialog("Please setup a BLUETOOTH PRINTER in Option before printing");
                 }
                //
             }
