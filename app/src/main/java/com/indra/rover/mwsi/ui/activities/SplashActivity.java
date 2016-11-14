@@ -7,12 +7,14 @@ import android.widget.TextView;
 
 import com.indra.rover.mwsi.BuildConfig;
 import com.indra.rover.mwsi.R;
+import com.indra.rover.mwsi.data.db.ConnectDao;
 import com.indra.rover.mwsi.utils.Constants;
 import com.indra.rover.mwsi.utils.FileParser;
 import com.indra.rover.mwsi.utils.FileUtils;
 import com.indra.rover.mwsi.utils.PreferenceKeys;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class SplashActivity extends AppCompatActivity  implements Constants,
         FileParser.DownloadListener {
@@ -26,7 +28,7 @@ public class SplashActivity extends AppCompatActivity  implements Constants,
 
         init();
 
-        //check first if there is downloaded files from DS that needs to insert on db
+        //check first if there is downloaded files from DS that needs to inserted on db
         boolean mhas_update = prefs.getData(HAS_ROVER_UPDATE,true);
         boolean mhas_db_update = prefs.getData(HAS_ROVER_DBUPDATE,false);
         boolean mhas_billreprint_update = prefs.getData(HAS_BILL_REPRINT,false);

@@ -10,6 +10,7 @@ import com.opencsv.CSVReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileParser extends AsyncTask<File,Integer,String> {
@@ -113,6 +114,40 @@ public class FileParser extends AsyncTask<File,Integer,String> {
             //remove the extension from the fileNmae
             tableName = tableName.substring(0, tableName.lastIndexOf('.'));
             //upper case the tableName
+            String [] header = mRDao.getColumnNames(tableName);
+            CSVReader reader = new CSVReader(new FileReader(file), '|', '\"');
+
+            String [] record;
+
+            //int i=0;
+            while ((record = reader.readNext()) != null) {
+                // nextLine[] is an array of values from the line
+                if(isResource){
+                        mRDao.insertResourceData(tableName,header,record);
+
+                }else {
+                    mRDao.insertResourceData("T_BILL_REPRINT",header,record);
+                   // mRDao.insertBillReprintData(record);
+                }
+
+              //  i++;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /*
+      This is old code but im keeping this code
+      What is does is inserting to a table with a given header or arrays of columns names
+      array of column names are in the index 0 of the parsed file
+    private void parseRFile(File file, boolean isResource){
+        try{
+            //get the file name of the file this will be the tablename
+            String tableName = file.getName();
+            //remove the extension from the fileNmae
+            tableName = tableName.substring(0, tableName.lastIndexOf('.'));
+            //upper case the tableName
 
             CSVReader reader = new CSVReader(new FileReader(file), '|', '\"');
 
@@ -133,14 +168,14 @@ public class FileParser extends AsyncTask<File,Integer,String> {
                 }
 
                 i++;
-
-
             }
-
         }catch(Exception e){
             e.printStackTrace();
         }
     }
+    */
+
+
 
 
     private void parseMRUFile(File file){

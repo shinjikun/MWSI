@@ -423,6 +423,33 @@ public class ConnectDao extends ModelDao {
     }
 
 
+    public String[] getColumnNames(String tablename){
+        ArrayList<String> arry = new ArrayList<>();
+        try {
+            open();
+            String sql_stmt = "PRAGMA table_info('"+tablename+"')";
+            Cursor cursor = database.rawQuery(sql_stmt, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    String columnName = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+                    arry.add(columnName);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+        String[] stockArr = new String[arry.size()];
+        stockArr = arry.toArray(stockArr);
+
+
+        return stockArr;
+    }
+
+
+
     public ArrayList<MeterPrint> getReprintItems(){
         ArrayList<MeterPrint> arry = new ArrayList<>();
         try{
