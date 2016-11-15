@@ -46,7 +46,7 @@ public class FileParser extends AsyncTask<File,Integer,String> {
     protected String doInBackground(File... files) {
         for (File file : files) {
             if (!file.isDirectory()) {
-                if(file.getName().endsWith(".txt")){
+
                     if(isResourceFile){
                         String fileName =  file.getName();
                         if(fileName.startsWith("BR")){
@@ -61,7 +61,7 @@ public class FileParser extends AsyncTask<File,Integer,String> {
                         parseFile(file);
                     //remove the parsed file in directory
                     file.delete();
-                }
+
             }
         }
         return null;
@@ -111,9 +111,14 @@ public class FileParser extends AsyncTask<File,Integer,String> {
         try{
             //get the file name of the file this will be the tablename
             String tableName = file.getName();
+
             //remove the extension from the fileNmae
             tableName = tableName.substring(0, tableName.lastIndexOf('.'));
+
+            if(!isResource)
+                tableName="T_BILL_REPRINT";
             //upper case the tableName
+            tableName = tableName.toUpperCase();
             String [] header = mRDao.getColumnNames(tableName);
             CSVReader reader = new CSVReader(new FileReader(file), '|', '\"');
 

@@ -370,9 +370,9 @@ public class CompConsumption extends Compute implements Compute.ConsumptionListe
                 else {
                     meterConsObj.setBilled_cons(bill_consumption);
                     meterConsObj.setPrintTag(MeterInfo.BILLABLE);
-                    meterConsObj.setMrType(MeterInfo.MRTYPE01);
-                    //tag as actual
-                    decisionA();
+                    meterConsObj.setMrType(MeterInfo.MRTYPE93);
+                    //tag as average
+                    decisionB();
                 }
             }
             else {
