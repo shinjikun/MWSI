@@ -29,6 +29,7 @@ public class MRRemarksFragment extends Fragment  implements View.OnClickListener
     MeterReadingDao meterReadingDao;
     MeterRemarks meterRemarks;
     DialogUtils  dialogUtils;
+    String crdocno;
     public MRRemarksFragment() {
     }
 
@@ -47,8 +48,8 @@ public class MRRemarksFragment extends Fragment  implements View.OnClickListener
         meterReadingDao = new MeterReadingDao(getActivity());
         dialogUtils = new DialogUtils(getActivity());
         if (getArguments() != null) {
-            String   mParamID = getArguments().getString(IDPARAM);
-             meterRemarks = meterReadingDao.getRemarks(mParamID);
+            crdocno = getArguments().getString(IDPARAM);
+            meterRemarks = meterReadingDao.getRemarks(crdocno);
         }
 
 
@@ -124,6 +125,12 @@ public class MRRemarksFragment extends Fragment  implements View.OnClickListener
         if(meterRemarks!=null){
             meterReadingDao.addRemarks(remarks,meterRemarks.getCrdodcno());
             meterRemarks.setRemarks(remarks);
+
+            try {
+                MainApp.bus.post(new MessageTransport("remarks"));
+            }catch (Exception e){
+
+            }
         }
         setEditMode(false);
     }
@@ -131,6 +138,12 @@ public class MRRemarksFragment extends Fragment  implements View.OnClickListener
     private void clearRemarks(){
         if(meterRemarks!=null){
             meterReadingDao.addRemarks("",meterRemarks.getCrdodcno());
+        }
+
+        try {
+            MainApp.bus.post(new MessageTransport("remarks"));
+        }catch (Exception e){
+
         }
         EditText editText=  (EditText) mView.findViewById(R.id.txtMRCDesc);
         editText.setText("");
@@ -168,13 +181,17 @@ public class MRRemarksFragment extends Fragment  implements View.OnClickListener
     public void getMessage(MessageTransport msgTransport) {
         String action = msgTransport.getAction();
         if(action.equals("navigate")){
-            String id = msgTransport.getMessage();
-            meterRemarks = meterReadingDao.getRemarks(id);
+            crdocno = msgTransport.getMessage();
+            meterRemarks = meterReadingDao.getRemarks(crdocno);
             setUp();
         }
         else if(action.equals("readstat")){
             String readstat = msgTransport.getMessage();
             meterRemarks.setReadstat(readstat);
+        }
+        else  if(action.equals("reading")){
+            meterRemarks = meterReadingDao.getRemarks(crdocno);
+            setUp();
         }
     }
 

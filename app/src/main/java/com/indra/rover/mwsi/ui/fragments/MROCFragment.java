@@ -278,6 +278,9 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
         else if(action.equals("readstat")){
             String readstat = msgTransport.getMessage();
             meterOC.setReadstat(readstat);
+        } else if(action.equals("remarks")){
+            meterOC = mtrDao.getMeterOCs(crdocno);
+            setUp();
         }
     }
 
@@ -318,9 +321,9 @@ public class MROCFragment extends Fragment implements View.OnClickListener,
                 btnCapOC2.setText("Capture Image");
             }
             String remarks =  meterOC.getRemarks();
-            if(Utils.isNotEmpty(remarks)){
+
                 txtRemarks.setText(remarks);
-            }
+
         }
 
         editMode(false);

@@ -185,7 +185,7 @@ public class BillReprintActivity extends AppCompatActivity implements Constants,
 
     @Override
     public void onPrintPageResult(String meterPrintPage, boolean isMeterprint) {
-        zebraUtils.sendData("hello".getBytes());
+        zebraUtils.sendData(meterPrintPage.getBytes());
     }
 
     @Override
@@ -198,7 +198,7 @@ public class BillReprintActivity extends AppCompatActivity implements Constants,
         switch(paneltypes){
 
             case 0:
-                //display the panel whick ask the user to start printing
+                //display the panel which ask the user to start printing
                 findViewById(R.id.pnl1).setVisibility(View.VISIBLE);
                 findViewById(R.id.pnl2).setVisibility(View.GONE);
                 findViewById(R.id.pnl3).setVisibility(View.GONE);
