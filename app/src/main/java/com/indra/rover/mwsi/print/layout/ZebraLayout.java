@@ -160,6 +160,49 @@ public class ZebraLayout   extends   PrintLayout{
     }
 
     @Override
+    String mrStubEnhance(ArrayList<MeterPrint> mtrPrints,int total) {
+        StringBuilder strPrint = new StringBuilder();
+        //header configuration
+        strPrint.append(headerConfig());
+        //header breadcrumbs
+        strPrint.append(breadCrumbsHeader());
+        //content
+        strPrint.append(lineBreakPrint());
+        strPrint.append("! U1 SETLP 7 0 24\r\n");
+        strPrint.append("! U1 SETSP 0\r\n");
+        strPrint.append(setBold(0));
+        strPrint.append("\r\n");
+
+        String strTitle = context.getString(R.string.print_mr_title);
+        strPrint.append(centerText(strTitle,68));
+        strPrint.append("\r\n");
+
+        if(!mtrPrints.isEmpty()){
+            StringBuilder strItem = new StringBuilder();
+            strItem.append(context.getString(R.string.print_mr_mru1));
+            strItem.append(mtrPrints.get(0).getMru());
+            String s = context.getString(R.string.print_mr_pdate);
+            strPrint.append(strItem.toString());
+            strPrint.append(addSpace(strItem.toString(),68,s+Utils.getFormattedDate()));
+            strPrint.append("\r\n");
+            strItem = new StringBuilder();
+            strItem.append(context.getString(R.string.print_mr_total));
+            strItem.append(total);
+            s = context.getString(R.string.print_mr_ptime);
+            strPrint.append(strItem.toString());
+            strPrint.append(addSpace(strItem.toString(),68,s+Utils.getFormattedTime()));
+            strPrint.append("\r\n");
+            strPrint.append(context.getString(R.string.print_mr_date));
+            strPrint.append(Utils.getFormattedDate());
+            strPrint.append("\r\n");
+        }
+
+        //footer breadcrumbs
+        strPrint.append(breadCrumbsFooter());
+        return strPrint.toString();
+    }
+
+    @Override
     public String headerConfig() {
         //needed for the printer to know you request a line print mode
         return "! U1 setvar \"device.languages\", \"line_print\"\r\n";

@@ -109,4 +109,7 @@ public  abstract class PrintLayout {
     abstract  String mrStub(MeterPrint meterPrint);
 
 
+    abstract  String mrStubEnhance(ArrayList<MeterPrint> mtrPrints,int total);
+
+
 }

@@ -26,6 +26,11 @@ public class APEXLayout  extends   PrintLayout {
     }
 
     @Override
+    String mrStubEnhance(ArrayList<MeterPrint> mtrPrints,int total) {
+        return null;
+    }
+
+    @Override
     String headerConfig() {
         return "";
     }

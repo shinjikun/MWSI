@@ -145,6 +145,11 @@
     <string name="print_mr_ff2">Field Finding 2</string>
     <string name="print_mr_remarks">Remarks</string>
     <string name="print_mr_billdate">Bill Date</string>
+    <string name="print_mr_mru1">Meter Reading Stub for MRU: </string>
+    <string name="print_mr_total">Total Number of Account: </string>
+    <string name="print_mr_date">Meter Reading Date: </string>
+    <string name="print_mr_pdate">Printing Date: </string>
+    <string name="print_mr_ptime">Printing Time: </string>
 
     <!-- EOD REPORT-->
     <string name="print_eod_reader">Meter Reader :</string>
