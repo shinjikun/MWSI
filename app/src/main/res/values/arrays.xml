@@ -3,8 +3,8 @@
 
     <string-array name="search_filter_ids">
         <item>SEQNO</item>
-        <item>ACCTNUM</item>
-        <item>METERNO</item>
+        <item>t.ACCTNUM</item>
+        <item>t.METERNO</item>
         <item>CUSTNAME</item>
         <item>CUSTADDRESS</item>
     </string-array>

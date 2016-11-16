@@ -1173,10 +1173,10 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     public void onPrintPageResult(String meterPrintPage, boolean isMeterprint) {
         if(isMeterprint){
 
-            zebraUtils.printMeterReading("hello".getBytes());
+            zebraUtils.printMeterReading(meterPrintPage.getBytes());
         }
         else {
-            zebraUtils.sendData("hello".getBytes());
+            zebraUtils.sendData(meterPrintPage.getBytes());
         }
     }
 

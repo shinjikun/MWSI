@@ -230,15 +230,15 @@ public class ZebraLayout   extends   PrintLayout{
         str.append(lineBreakPrint());
 
 
-        str.append("! U1 SETLP 7 0 24\r\n");
-        str.append("\r\n");
+       // str.append("! U1 SETLP 7 0 24\r\n");
         str.append("! U1 CENTER\r\n");
         str.append("! U1 B 39 1 30 78 13 1 ");
+
         str.append(mtrPrint.getAcctNum());
         str.append(' ');
         str.append(mtrPrint.getOrig_totalamt());
         str.append("\r\n");
-
+        str.append("\r\n");
         str.append("! U1 SETLP 7 0 24\r\n");
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
@@ -287,7 +287,7 @@ public class ZebraLayout   extends   PrintLayout{
         str.append(mtrPrint.getOrig_totalamt());
         str.append("\r\n");
         */
-        str.append("\r\r\r\n");
+        str.append("\r\n");
         return str.toString();
     }
 
