@@ -173,7 +173,7 @@ public class ConnectDao extends ModelDao {
     public long insertResourceData(String tableName, String[] headers, String[] records){
         long rowInsert =0;
         try {
-            truncateTable(tableName);
+
             open();
             ContentValues values = new ContentValues();
             int size = headers.length;
@@ -388,7 +388,7 @@ public class ConnectDao extends ModelDao {
 
         String selectstmt = " Select u.MRU as BOOKNO, u.ACCTNUM,u.ULDOCNO, c.METERNO,c.MR_TYPE_CODE as READTAG , c.RDG_DATE as RDGDATE ,c.RDG_TIME as RDGTIME ,\n" +
                 "c.RECMD_SEQNO as SEQNO, c.FFCODE1 as BILLR_OC, c.FFCODE2 as FFCODE,c.REMARKS, c.PRESRDG as BILLED_RDG, c.RDG_TRIES as TRIES,\n" +
-                "c.BILLED_CONS as BILLED_CONS, c.RANGE_CODE as RANGECODE, c.CONSTYPE_CODE as CONSTAG, c.MR_TYPE_CODE as NEWMTRBRAND,\n" +
+                "c.BILLED_CONS as BILLED_CONS, c.RANGE_CODE as RANGECODE, c.CONSTYPE_CODE as CONSTAG, c.NEW_METERNO as NEWMTRBRAND,\n" +
                 "c.NEW_METERNO as NEWMTRNUM, c.DEL_CODE as DEL_CODE,c.DELIV_DATE as DELIVERY_DATE, c.DELIV_TIME as DELIVERY_TIME, c.DELIV_REMARKS as DEL_REMARKS,\n" +
                 "d.NUMUSERS as SANZPER,\n" +
                 "d.TARIFF_PRORATE,d.CERA_PRORATE,d.FCDA_PRORATE,d.ENV_PRORATE,d.SEW_PROATE,\n" +

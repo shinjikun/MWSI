@@ -117,9 +117,11 @@ public class FileParser extends AsyncTask<File,Integer,String> {
 
             if(!isResource)
                 tableName="T_BILL_REPRINT";
+
             //upper case the tableName
             tableName = tableName.toUpperCase();
             String [] header = mRDao.getColumnNames(tableName);
+            mRDao.truncateTable(tableName);
             CSVReader reader = new CSVReader(new FileReader(file), '|', '\"');
 
             String [] record;

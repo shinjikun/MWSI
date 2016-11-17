@@ -885,6 +885,30 @@ public class MeterReadingDao extends ModelDao {
     }
 
 
+
+    public ArrayList<MeterPrint> getMeterPrints(){
+        ArrayList<MeterPrint> arry = new ArrayList<>();
+        String sql_stmt ="";
+        try{
+            open();
+            Cursor cursor = database.rawQuery(sql_stmt,null);
+            if (cursor.moveToFirst()) {
+                do {
+                  //  meterPrint = new MeterPrint(cursor);
+
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+
+        return arry;
+    }
+
+
     public void deleteFMeter(NewMeterInfo meterInfo){
         try {
             open();

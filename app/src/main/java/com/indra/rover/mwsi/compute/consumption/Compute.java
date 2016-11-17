@@ -110,9 +110,9 @@ public class Compute {
      int scenario3(){
         int present_reading=  Integer.parseInt(meterConsObj.getPresent_rdg());
         int  nminitrdg = Integer.parseInt(meterConsObj.getNminitrdg());
-        int  nmconsfactor =  Integer.parseInt(meterConsObj.getNminconsfactor());
+        double  nmconsfactor =  Double.parseDouble(meterConsObj.getNminconsfactor());
         meterConsObj.setSpComp(SP3);
-        return (present_reading-nminitrdg)*nmconsfactor;
+        return (int)((present_reading-nminitrdg)*nmconsfactor);
     }
 
     /**

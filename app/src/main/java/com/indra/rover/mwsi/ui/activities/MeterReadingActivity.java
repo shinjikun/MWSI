@@ -1023,9 +1023,12 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
     }
 
     void startPrinting(){
+
         PrintPage printPage = new PrintPage(this,this);
         MeterPrint meterPrint = meterDao.getMeterPrint(meterInfo.getDldocno());
         printPage.execute(meterPrint);
+
+        //byPassPrinting();
     }
 
     void eodReportPrint(){
@@ -1259,6 +1262,15 @@ public class MeterReadingActivity extends AppCompatActivity implements View.OnCl
                 break;
 
         }
+    }
+
+    private void byPassPrinting(){
+        changeToPrinted(true);
+        int tries = meterInfo.getPrintCount();
+        tries = tries+1;
+        meterDao.updatePrintCount(tries,meterInfo.getDldocno());
+        meterInfo.setPrintCount(tries);
+        arry.get(current).setPrintCount(tries);
     }
 
     @Override

@@ -195,7 +195,25 @@ public class ZebraLayout   extends   PrintLayout{
             strPrint.append(context.getString(R.string.print_mr_date));
             strPrint.append(Utils.getFormattedDate());
             strPrint.append("\r\n");
+            strPrint.append("\r\n");
+            strPrint.append("Count    CAN      Pres Rdg   Cons      OC1  OC2   Remarks          ");
+            strPrint.append("\r\n");
+            strPrint.append("\r\n");
+            for(int i=0;i<mtrPrints.size();i++){
+                MeterPrint mtrPrint = mtrPrints.get(i);
+                strPrint.append(addSpace(mtrPrint.getSeqNo(),2));
+                strPrint.append(addSpace(mtrPrint.getAcctNum(),3));
+                strPrint.append(addSpace(mtrPrint.getPresRdg(),3));
+                strPrint.append(addSpace(String.valueOf(mtrPrint.getBillCons()),2));
+                strPrint.append(addSpace(String.valueOf(mtrPrint.getOC1()),3));
+                strPrint.append(addSpace(String.valueOf(mtrPrint.getOC2()),2));
+                strPrint.append(mtrPrint.getRemarks());
+                strPrint.append("\r\n");
+            }
+
         }
+
+
 
         //footer breadcrumbs
         strPrint.append(breadCrumbsFooter());
@@ -443,17 +461,12 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("! U1 SETSP 0\r\n");
         str.append(setBold(0));
         str.append(context.getString(R.string.print_rate));
-        if(Utils.isNotEmpty(mtrPrint.getTIN())){
-            str.append("      : ");
-            str.append(mtrPrint.getBillClass());
-            str.append(" ");
-            str.append("TIN : ");
-            str.append(mtrPrint.getTIN());
-        }
-        else {
-            str.append("      : ");
-            str.append(mtrPrint.getBillClass());
-        }
+        str.append("      : ");
+        str.append(mtrPrint.getBillClass());
+        str.append(" ");
+        str.append("TIN : ");
+        str.append(mtrPrint.getTIN());
+
         str.append("\r\n");
         str.append("! U1 SETLP 0 3 18\r\n");
         str.append("! U1 SETSP 0\r\n");
@@ -464,7 +477,7 @@ public class ZebraLayout   extends   PrintLayout{
         str.append("\r\n");
 
         if(Utils.isNotEmpty(mtrPrint.getSc_id())){
-           str.append("Senior Citezen ID : ");
+           str.append("Senior Citizen ID : ");
             str.append(mtrPrint.getSc_id());
             str.append("\r\n");
         }
