@@ -48,7 +48,7 @@
         android:background="@drawable/panel_rounded_border"
         android:padding="10dp"
         android:layout_marginTop="10dp"
-        android:visibility="visible">
+        android:visibility="gone">
 
 
         <TextView
@@ -118,7 +118,7 @@
         android:layout_marginTop="10dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/panel_rounded_border"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <Button
             android:layout_width="wrap_content"

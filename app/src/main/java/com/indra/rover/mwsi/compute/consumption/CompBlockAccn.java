@@ -50,27 +50,57 @@ public class CompBlockAccn extends  Compute{
             if(checkValues2()){
                 //if yes use secnario3 to get the bill consumption
                 int bill_consumption = scenario2();
+
+                boolean isLess = isLessMaxCapacity(bill_consumption);
+                if(isLess){
+                    int average_consumption=  Integer.parseInt(meterConsObj.getAve_consumption());
+                    meterConsObj.setBilled_cons(average_consumption);
+
+                    meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                    meterConsObj.setMrType(MeterInfo.MRTYPE93);
+                    decisionC();
+                }
+                else {
+                    //if yes use secnario3 to get the bill consumption
+                     bill_consumption = scenario3();
+                    meterConsObj.setBilled_cons(bill_consumption);
+                    meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                    //tag as adjusted
+                    meterConsObj.setMrType(MeterInfo.MRTYPE93);
+                    decisionC();
+                }
+
+
+                /*
                 meterConsObj.setBilled_cons(bill_consumption);
                 meterConsObj.setPrintTag(MeterInfo.BILLABLE);
                 meterConsObj.setMrType(MeterInfo.MRTYPE93);
                 //tag as adjusted
                 decisionC();
+                */
             }
-            int bill_consumption =   scenario2();
-            meterConsObj.setBilled_cons(bill_consumption);
-            meterConsObj.setPrintTag(MeterInfo.BILLABLE);
-            meterConsObj.setMrType(MeterInfo.MRTYPE93);
-            //tag as adjusted
-            decisionC();
+            else {
+                //otherwise NO BILL
+                noBill();
+            }
+
         }
         else if(dreplmtr_code.equals("2")){
             //tag as adjusted
-            int average_consumption=  Integer.parseInt(meterConsObj.getAve_consumption());
-            meterConsObj.setBilled_cons(average_consumption);
-            meterConsObj.setConstype_code(AVERAGE);
-            meterConsObj.setPrintTag(MeterInfo.BILLABLE);
-            meterConsObj.setMrType(MeterInfo.MRTYPE93);
-            decisionC();
+
+            if(checkValues()){
+                int average_consumption=  Integer.parseInt(meterConsObj.getAve_consumption());
+                meterConsObj.setBilled_cons(average_consumption);
+                meterConsObj.setConstype_code(AVERAGE);
+                meterConsObj.setPrintTag(MeterInfo.BILLABLE);
+                meterConsObj.setMrType(MeterInfo.MRTYPE93);
+                decisionC();
+            }
+            else {
+                //otherwise NO BILL
+                noBill();
+            }
+
 
         }else if(dreplmtr_code.equals("3")){
             //check values/component for compution is present
@@ -186,6 +216,32 @@ public class CompBlockAccn extends  Compute{
             //NO BILL
             noBill();
         }
+    }
+
+
+    private boolean isLessMaxCapacity(int bill_consumption){
+        //get num dials
+        int num_dials = Integer.parseInt(meterConsObj.getNum_dials());
+        int max_capacity = meterConsObj.getMax_cap();
+        boolean isMaxed = false;
+        float percent = 0.0f;
+        switch(num_dials){
+            case 4:
+                percent = .10f;
+                break;
+            case 5:
+                percent = .20f;
+                break;
+            case 6:
+            case 7:
+            case 8:
+                percent = .40f;
+                break;
+        }
+        percent = .50f;
+        if(bill_consumption<(max_capacity*percent))
+            isMaxed = true;
+        return  isMaxed;
     }
 
 
